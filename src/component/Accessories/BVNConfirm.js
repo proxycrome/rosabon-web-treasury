@@ -1,0 +1,350 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+import Confetti from "../../asset/confetti.png";
+import Checked from "../../asset/checked.png";
+import Caneled from "../../asset/cnaceled.png";
+import ModalComponent from "../ModalComponent";
+import OtpInput from "react-otp-input";
+
+
+export function BVNConfirm({ bank, show, handleClose }) {
+  const [complete, setComplete] = useState(false);
+
+  return !complete ? (
+    <ConfirmBVN>
+      <div className={""}>
+        <Wrapper>
+          <div className="d-flex justify-content-center align-items-center">
+            <WrappCongrate>
+              <div className="container">
+                <div className="row">
+                  <div className="col text-left">
+                    {bank ? (
+                      <>
+                        <h4>Note</h4>
+                        <p className="pt-5">
+                          Your name on our system will be
+                          <br /> updated with Ekiyee Bilaowei to reflect <br />
+                          exactly as it appears on your BVN
+                        </p>
+                        <div className=" text-center pt-3">
+                          <button
+                            onClick={() => setComplete(true)}
+                            type="button"
+                            className=" verify_congrates_btn">
+                            ok
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <h4>BVN Verification</h4>
+                        <p className="pt-5">
+                          Your name on our system will be updated
+                          <br /> with Ekiyee Bilaowei to reflect exactly as it{" "}
+                          <br />
+                          appears on your BVN
+                        </p>
+                        <div className=" text-center pt-3">
+                          <button
+                            onClick={() => setComplete(true)}
+                            type="button"
+                            className=" verify_congrates_btn">
+                            ok
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </WrappCongrate>
+          </div>
+        </Wrapper>
+      </div>
+    </ConfirmBVN>
+  ) : (
+    <SuccessConfirm bank="bank" handleClose={handleClose} />
+  );
+}
+
+const ConfirmBVN = styled.div`
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .modal-main {
+    position: fixed;
+    background: white;
+    width: 80%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .display-block {
+    display: block;
+  }
+
+  .display-none {
+    display: none;
+  }
+`;
+
+export function SuccessConfirm({ bank, handleClose }) {
+  return (
+    <div>
+      <Wrapper>
+        <div className="d-flex justify-content-center align-items-center">
+          <WrappCongrate>
+            <div className="container">
+              <div className="row">
+                <div className="col text-center">
+                  <div>
+                    {bank ? (
+                      <img
+                        className="congrate_confet"
+                        src={Checked}
+                        alt="Confetti"
+                      />
+                    ) : (
+                      <img
+                        className="congrate_confet"
+                        src={Confetti}
+                        alt="Confetti"
+                      />
+                    )}
+                  </div>
+                  {bank ? (
+                    <>
+                      <p className="">
+                        Your bank details have been updated <br />
+                        successfully
+                      </p>
+                      <div className=" ">
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="verify_congrates_btn">
+                          ok
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <h4>Success!</h4>
+                      <p className="">BVN validation Successful</p>
+                      <div className=" ">
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="verify_congrates_btn">
+                          Continue
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </WrappCongrate>
+        </div>
+      </Wrapper>
+    </div>
+  );
+}
+
+export function OTPVerify({ handleClose }) {
+  const [otp, setOtp] = useState("");
+
+  return (
+    <div>
+      <Wrapper>
+        <div className="d-flex justify-content-center align-items-center">
+          <WrappCongrate>
+            <div className="container">
+              <div className="row">
+                <div className="col text-left">
+                  <h4>OTP Verification</h4>
+                  <p className="">Enter OTP sent to this Phone Number</p>
+                  <div class="otp_verify">
+                    <div class=" ">
+                      <div class="">
+                        <OtpInput
+                          value={otp}
+                          onChange={(e) => setOtp(e)}
+                          inputStyle={"input"}
+                          numInputs={5}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-center">Didn’t get an OTP? Resend</p>
+                  <OTPButton>
+                    <div className="d-flex justify-content-between align-items-center ">
+                      <button
+                        style={{
+                          outline: "none",
+                          border: "none",
+                        }}
+                        onClick={handleClose}
+                        className=" ">
+                        Cancel
+                      </button>
+                      <button
+                        style={{
+                          outline: "none",
+                          border: "none",
+                        }}
+                        onClick={handleClose}
+                        className=" otp_button_blue ">
+                        OK
+                      </button>
+                    </div>
+                  </OTPButton>
+                </div>
+              </div>
+            </div>
+          </WrappCongrate>
+        </div>
+      </Wrapper>
+    </div>
+  );
+}
+
+export function SuccessOTP() {
+  return (
+    <div>
+      <Wrapper>
+        <div className="d-flex justify-content-center align-items-center">
+          <WrappCongrate>
+            <div className="container">
+              <div className="row">
+                <div className="col text-center">
+                  <div>
+                    <img
+                      className="congrate_confet"
+                      src={Checked}
+                      alt="Checked"
+                    />
+                  </div>
+                  <p className="pt-5">Number verified Successfully</p>
+                  <div className="pt-5 ">
+                    <button type="button" className="btn verify_congrates_btn">
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </WrappCongrate>
+        </div>
+      </Wrapper>
+    </div>
+  );
+}
+
+export function Unsuccessful() {
+  return (
+    <div>
+      <Wrapper>
+        <div className="d-flex justify-content-center align-items-center">
+          <WrappCongrate>
+            <div className="container">
+              <div className="row">
+                <div className="col text-center">
+                  <div>
+                    <img
+                      className="congrate_confet"
+                      src={Caneled}
+                      alt="Canceled"
+                    />
+                  </div>
+                  <p className="pt-5">
+                    Unable to complete, please provied a bank <br /> account
+                    tied to your BVN
+                  </p>
+                  <div className="pt-5 ">
+                    <button type="button" className="btn verify_congrates_btn">
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </WrappCongrate>
+        </div>
+      </Wrapper>
+    </div>
+  );
+}
+
+const OTPButton = styled.div`
+  button {
+    width: 146px;
+    height: 41px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: #111e6c;
+    outline: "none";
+    border: "none";
+  }
+  .otp_button_blue {
+    background: #111e6c;
+    color: #ffffff;
+  }
+`;
+
+const Wrapper = styled.div``;
+
+const WrappCongrate = styled.div`
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: left;
+  input {
+    border: 1px solid #e0e0e0;
+    padding: 1rem 2rem;
+    border-radius: 3px;
+    margin-right: 10px;
+    outline: "none";
+    border: "none";
+  }
+
+  h4 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 150%;
+    letter-spacing: -0.15px;
+    text-transform: capitalize;
+    color: #242424;
+    padding-top: 9px;
+  }
+  p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: -0.15px;
+    color: #4f4f4f;
+    padding-top: 9px;
+    padding-bottom: 20px;
+  }
+  .verify_congrates_btn {
+    background: #111e6c;
+    color: #f2f2f2;
+    border-radius: 10px;
+    padding: 8px 80px;
+  }
+`;
+
