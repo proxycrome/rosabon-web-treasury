@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import rootReducer from "../redux/reducer/rootReducer";
+import rootReducer from "./reducer/rootReducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { persistReducer } from "redux-persist";
 import { createLogger } from "redux-logger";
@@ -11,7 +11,7 @@ const logger = createLogger();
 const persistConfig = {
 	key: "root",
 	storage,
-	whitelist: ["savingsProduct", "appTheme", ],
+	whitelist: [ ],
 	blacklist: ["auth"]
 };
 

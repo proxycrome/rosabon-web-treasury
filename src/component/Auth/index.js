@@ -1,30 +1,59 @@
 import React from "react";
+import styled from "styled-components";
 import Login from "./Login";
 import LoginLeftView from "./loginLeftView";
 import Signup from "./signup";
 
 const Authentication = ({ signup }) => {
-
   return (
     <div>
-      <div className="">
-        <div className="d-flex flex-row">
-          <div className="w-50 position-relative d-block">
+      <Wrapper>
+        <div
+          style={{
+            height: "100vh",
+            overflow: "hidden",
+          }}
+          className="content">
+          <div className="login-left-view">
             <LoginLeftView signup={signup} />
           </div>
           {signup ? (
-            <div className="w-50">
+            <div style={{ overflowY: "auto", gridTemplateColumns: "auto", }} className="login-right-view">
               <Signup />
             </div>
           ) : (
-            <div className="col-lg-6">
+            <div style={{ overflowY: "auto" }} className="">
               <Login />
             </div>
           )}
         </div>
-      </div>
+      </Wrapper>
     </div>
   );
 };
 
 export default Authentication;
+
+const Wrapper = styled.div`
+.content{
+  display: grid;
+  @media(min-width: 900px){
+    grid-template-columns: 1fr 1fr;
+  }
+}
+  /* .content {
+    display: "grid",
+    grid-template-columns: "1fr 1fr",
+    height: "100vh",
+    overflow: "hidden",
+  }
+  @media (max-width: 900px) {
+    .login-left-view {
+      display: none;
+    }
+    .login-right-view {
+      display: "grid" !important;
+      grid-template-columns: auto;
+    }
+  } */
+`;

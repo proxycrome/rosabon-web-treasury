@@ -5,6 +5,11 @@ import { BVNConfirm } from "../../Accessories/BVNConfirm";
 
 const BankDetails = () => {
   const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(true);
+  const toggleEdit = () => {
+    setShowEdit(!showEdit);
+  };
+
   return (
     <div>
       <WrapperBody>
@@ -14,7 +19,19 @@ const BankDetails = () => {
               <div className="d-flex justify-content-between">
                 <h4 className="">My Bank Details</h4>
                 <div>
-                  <button>Edit</button>
+                  <div>
+                    {showEdit ? (
+                      <button
+                        className={showEdit ? " btn_bg_blue" : ""}
+                        onClick={toggleEdit}>
+                        Choose file
+                      </button>
+                    ) : (
+                      <button className="grey-button" onClick={toggleEdit}>
+                        Cancel
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -24,7 +41,12 @@ const BankDetails = () => {
               <div class="col-md-8 ">
                 <label>Select Bank</label>
                 <div class="input-group mb-4">
-                  <input class="form-control" placeholder="" type="text" />
+                  <input
+                    class="form-control"
+                    placeholder=""
+                    type="text"
+                    disabled={showEdit}
+                  />
                 </div>
               </div>
             </div>
@@ -36,14 +58,19 @@ const BankDetails = () => {
                   <div class="col-6 ">
                     <label>Account Number</label>
                     <div class="input-group mb-4">
-                      <input class="form-control" placeholder="" type="text" />
+                      <input class="form-control" placeholder="" type="text" disabled={showEdit}/>
                     </div>
                   </div>
                   <div class="col-6 ">
                     <button
                       type="button"
                       onClick={() => setShow(true)}
-                      className="profile_vify_btn">
+                      disabled={showEdit}
+                      className={
+                        showEdit
+                          ? " btn_bg_grey profile_vify_btn"
+                          : "btn_bg_blue profile_vify_btn"
+                      }>
                       Verify
                     </button>
                   </div>
@@ -63,7 +90,12 @@ const BankDetails = () => {
               <div class="col-md-6 ">
                 <label>Acount Name</label>
                 <div class="input-group mb-4">
-                  <input class="form-control" placeholder="" type="text" />
+                  <input
+                    class="form-control"
+                    placeholder=""
+                    type="text"
+                    disabled={showEdit}
+                  />
                 </div>
               </div>
             </div>
@@ -81,13 +113,22 @@ const WrapperBody = styled.div`
   .content {
     padding-top: 45px;
   }
+  .btn_bg_blue {
+    background: #111e6c !important;
+  }
+  .btn_bg_grey {
+    background: #BDBDBD !important;
+  }
   button {
-    background: #111e6c;
     border-radius: 5px;
     outline: none;
     border: none;
     padding: 10px 27px;
     color: #f2f2f2;
+  }
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
   }
   .input-font-awe {
     position: absolute;
@@ -153,8 +194,6 @@ const WrapperBody = styled.div`
     padding-left: 10px;
   }
   .profile_vify_btn {
-    width: 83px;
-    height: 54px;
     margin-top: 35px;
     background: #111e6c;
     border-radius: 8px;
@@ -164,5 +203,6 @@ const WrapperBody = styled.div`
     line-height: 21px;
     text-align: right;
     color: #ffffff;
+    padding: 15px 25px;
   }
 `;

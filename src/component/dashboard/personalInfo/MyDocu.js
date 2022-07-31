@@ -6,6 +6,11 @@ import FileDoc from "../../../asset/file.png";
 import User from "../../../asset/user.png";
 
 const MyDocu = () => {
+  const [showEdit, setShowEdit] = useState(true);
+  const toggleEdit = () => {
+    setShowEdit(!showEdit);
+  };
+
   return (
     <div>
       <WrapperBody>
@@ -24,29 +29,36 @@ const MyDocu = () => {
                 <h5 className="">Upload ID (front)</h5>
                 <h5 className="">jpg, png. 2 MB</h5>
               </div>
-              <button>Choose file</button>
+              <div>
+                {showEdit ? (
+                  <button onClick={toggleEdit}>Choose file</button>
+                ) : (
+                  <button className="grey-button" onClick={toggleEdit}>
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
         <div class="row pt-5">
           <div class="col-md-6 ">
             <label>Gender</label>
-            <div class="input-group mb-4">
-              <input
-                class="form-control"
-                placeholder="Gender"
-                aria-label="First Name..."
-                type="text"
-              />
-            </div>
+            <select
+              class="form-select form-select-lg mb-3"
+              aria-label=".form-select-lg">
+              <option selected>National ID card</option>
+              <option value="2">Driver’s License </option>
+              <option value="2">International Passport</option>
+              <option value="2">Voter’s Card </option>
+            </select>
           </div>
           <div class="col-md-6 ">
-            <label>Date of Birth</label>
+            <label>ID Number</label>
             <div class="input-group mb-4">
               <input
                 class="form-control"
-                placeholder="Date of Birth"
-                aria-label="First Name..."
+                placeholder="123-000-3456"
                 type="text"
               />
             </div>
@@ -64,7 +76,7 @@ const MyDocu = () => {
                   />
                   <div className="progress-bar-style">
                     <h5 className="position-relative">
-                      Certificate of Incoporation{" "}
+                      Upload ID (front){" "}
                       <span className="">
                         <i class="fa-solid fa-xmark"></i>
                       </span>
@@ -101,44 +113,7 @@ const MyDocu = () => {
                   />
                   <div className="progress-bar-style">
                     <h5 className="position-relative">
-                      Certificate of Incoporation{" "}
-                      <span className="">
-                        <i class="fa-solid fa-xmark"></i>
-                      </span>
-                    </h5>
-                    <div class="progress" style={{ height: "3px" }}>
-                      <div
-                        class="progress-bar"
-                        role="progressbar"
-                        style={{ width: "75%" }}
-                        aria-valuenow="25"
-                        aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-30 style-attachment">
-                  <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
-                  </button>
-                  <button className="normal-btn grey-button">
-                    Choose file
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="row pb-4">
-              <div className="d-flex align-items-center justify-content-between w-100">
-                <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                  <img
-                    className="file-image image-fluid"
-                    src={FileDoc}
-                    alt="FileDoc"
-                  />
-                  <div className="progress-bar-style">
-                    <h5 className="position-relative">
-                      Certificate of Incoporation{" "}
+                      Upload ID (back){" "}
                       <span className="">
                         <i class="fa-solid fa-xmark"></i>
                       </span>
@@ -174,76 +149,7 @@ const MyDocu = () => {
                     alt="FileDoc"
                   />
                   <div>
-                    <h5 className="">Certificate of Incoporation</h5>
-                    <h5 className="">jpg, png. 2 MB</h5>
-                  </div>
-                </div>
-                <div className=" style-attachment">
-                  <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
-                  </button>
-                  <button className="normal-btn grey-button">
-                    Choose file
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="row pb-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center justify-content-center">
-                  <img
-                    className="file-image image-fluid"
-                    src={FileDoc}
-                    alt="FileDoc"
-                  />
-                  <div>
-                    <h5 className="">Certificate of Incoporation</h5>
-                    <h5 className="">jpg, png. 2 MB</h5>
-                  </div>
-                </div>
-                <div className=" style-attachment">
-                  <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
-                  </button>
-                  <button className="normal-btn grey-button">
-                    Choose file
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="row pb-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center justify-content-center">
-                  <img
-                    className="file-image image-fluid"
-                    src={FileDoc}
-                    alt="FileDoc"
-                  />
-                  <div>
-                    <h5 className="">Certificate of Incoporation</h5>
-                    <h5 className="">jpg, png. 2 MB</h5>
-                  </div>
-                </div>
-                <div className=" style-attachment">
-                  <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
-                  </button>
-                  <button className="normal-btn grey-button">
-                    Choose file
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="row pb-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center justify-content-center">
-                  <img
-                    className="file-image image-fluid"
-                    src={FileDoc}
-                    alt="FileDoc"
-                  />
-                  <div>
-                    <h5 className="">Certificate of Incoporation</h5>
+                    <h5 className="">Upload Utility Bill</h5>
                     <h5 className="">jpg, png. 2 MB</h5>
                   </div>
                 </div>
@@ -267,6 +173,10 @@ const MyDocu = () => {
 export default MyDocu;
 
 const WrapperBody = styled.div`
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
+  }
   padding: 0 2rem 7rem 1rem;
   .style-attachment {
     .font-awe-btn {

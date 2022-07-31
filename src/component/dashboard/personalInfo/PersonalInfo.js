@@ -2,6 +2,24 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const PersonalInfo = () => {
+  const [showEditProf, setShowEditProf] = useState(true);
+  const [showEditCont, setShowEditCont] = useState(true);
+  const [showEditEmpoy, setShowEditEmpoy] = useState(true);
+  const [showEditNOK, setShowEditNOK] = useState(true);
+
+  const toggleProf = () => {
+    setShowEditProf(!showEditProf);
+  };
+  const toggleCont = () => {
+    setShowEditCont(!showEditCont);
+  };
+  const toggleEmploy = () => {
+    setShowEditEmpoy(!showEditEmpoy);
+  };
+  const toggleNOK = () => {
+    setShowEditNOK(!showEditNOK);
+  };
+
   return (
     <div>
       <WrapperBody>
@@ -11,7 +29,13 @@ const PersonalInfo = () => {
               <div className="d-flex justify-content-between">
                 <h4>Personal Details</h4>
                 <div>
-                  <button>Edit</button>
+                  {showEditProf ? (
+                    <button onClick={toggleProf}>Edit</button>
+                  ) : (
+                    <button className="grey-button" onClick={toggleProf}>
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -22,8 +46,8 @@ const PersonalInfo = () => {
                   <input
                     class="form-control"
                     placeholder="First Name"
-                    aria-label="First Name..."
                     type="text"
+                    disabled={showEditProf}
                   />
                 </div>
               </div>
@@ -33,8 +57,8 @@ const PersonalInfo = () => {
                   <input
                     class="form-control"
                     placeholder="Middle Name"
-                    aria-label="First Name..."
                     type="text"
+                    disabled={showEditProf}
                   />
                 </div>
               </div>
@@ -45,7 +69,7 @@ const PersonalInfo = () => {
                     type="text"
                     class="form-control"
                     placeholder="Last Name"
-                    aria-label="Last Name..."
+                    disabled={showEditProf}
                   />
                 </div>
               </div>
@@ -55,7 +79,8 @@ const PersonalInfo = () => {
                 <label>Gender</label>
                 <select
                   class="form-select form-select-lg mb-3"
-                  aria-label=".form-select-lg">
+                  aria-label=".form-select-lg"
+                  disabled={showEditProf}>
                   <option selected>Male</option>
                   <option value="2">Female</option>
                 </select>
@@ -68,6 +93,7 @@ const PersonalInfo = () => {
                     placeholder="Date of Birth"
                     aria-label="First Name..."
                     type="text"
+                    disabled={showEditProf}
                   />
                   <span className=" input-font-awe">
                     <i class="fa-solid fa-calendar"></i>
@@ -78,10 +104,10 @@ const PersonalInfo = () => {
                 <label>Primary phone number</label>
                 <div class="input-group">
                   <input
-                    type="text"
+                    type="tel"
                     class="form-control"
                     placeholder="Primary phone number"
-                    aria-label="Last Name..."
+                    disabled={showEditProf}
                   />
                 </div>
               </div>
@@ -93,8 +119,8 @@ const PersonalInfo = () => {
                   <input
                     class="form-control"
                     placeholder="Contact Person  Email Address"
-                    aria-label="First Name..."
                     type="text"
+                    disabled={showEditProf}
                   />
                 </div>
               </div>
@@ -104,8 +130,8 @@ const PersonalInfo = () => {
                   <input
                     type="text"
                     class="form-control"
-                    placeholder=""
-                    aria-label="Last Name..."
+                    placeholder="BVN"
+                    disabled={showEditProf}
                   />
                 </div>
               </div>
@@ -114,7 +140,12 @@ const PersonalInfo = () => {
               <div class="col-lg-4 ">
                 <label>Customer ID Number</label>
                 <div class="input-group mb-4">
-                  <input class="form-control" placeholder="" type="text" />
+                  <input
+                    class="form-control"
+                    placeholder="Customer ID Number"
+                    type="text"
+                    disabled={showEditProf}
+                  />
                 </div>
               </div>
             </div>
@@ -123,7 +154,15 @@ const PersonalInfo = () => {
             <div className="row">
               <div className="d-flex align-items-center justify-content-between">
                 <h4 className="pt-5">Contact Details</h4>
-                <button>Edit</button>
+                {showEditCont ? (
+                  <button onClick={toggleCont}>Edit</button>
+                ) : (
+                  <>
+                    <button className="grey-button" onClick={toggleCont}>
+                      Cancel
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             <div>
@@ -131,7 +170,12 @@ const PersonalInfo = () => {
                 <div class="col-md-8 ">
                   <label>Secondary Phone Number</label>
                   <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEditCont}
+                    />
                   </div>
                 </div>
                 <div class="col-md-4 ">
@@ -142,6 +186,7 @@ const PersonalInfo = () => {
                       placeholder="Middle Name"
                       aria-label="First Name..."
                       type="text"
+                      disabled={showEditCont}
                     />
                     <span className=" input-font-awe">
                       <i class="fa-solid fa-angle-down"></i>
@@ -154,7 +199,8 @@ const PersonalInfo = () => {
                   <label>State</label>
                   <select
                     class="form-select form-select-lg mb-3"
-                    aria-label=".form-select-lg">
+                    aria-label=".form-select-lg"
+                    disabled={showEditCont}>
                     <option selected>Male</option>
                     <option value="2">Female</option>
                   </select>
@@ -167,6 +213,7 @@ const PersonalInfo = () => {
                       placeholder="City"
                       aria-label="First Name..."
                       type="text"
+                      disabled={showEditCont}
                     />
                   </div>
                 </div>
@@ -176,8 +223,8 @@ const PersonalInfo = () => {
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="City"
-                      aria-label="City..."
+                      placeholder="Nationality"
+                      disabled={showEditCont}
                     />
                     <span className=" input-font-awe">
                       <i class="fa-solid fa-angle-down"></i>
@@ -191,9 +238,9 @@ const PersonalInfo = () => {
                   <div class="input-group mb-4">
                     <input
                       class="form-control"
-                      placeholder=""
-                      aria-label="First Name..."
+                      placeholder="Address"
                       type="text"
+                      disabled={showEditCont}
                     />
                   </div>
                 </div>
@@ -203,20 +250,36 @@ const PersonalInfo = () => {
               <div className="row">
                 <div className="d-flex align-items-center justify-content-between">
                   <h4 className="pt-5">Employment Details</h4>
-                  <button>Edit</button>
+                  {showEditEmpoy ? (
+                    <button onClick={toggleEmploy}>Edit</button>
+                  ) : (
+                    <button className="grey-button" onClick={toggleEmploy}>
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-4 ">
                   <label>Occupation</label>
                   <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                    <input
+                      class="form-control"
+                      placeholder="Occupation"
+                      type="text"
+                      disabled={showEditEmpoy}
+                    />
                   </div>
                 </div>
                 <div class="col-md-4 ">
                   <label>Employer’s name</label>
                   <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                    <input
+                      class="form-control"
+                      placeholder="Employer’s name"
+                      type="text"
+                      disabled={showEditEmpoy}
+                    />
                   </div>
                 </div>
               </div>
@@ -226,9 +289,9 @@ const PersonalInfo = () => {
                   <div class="input-group mb-4">
                     <input
                       class="form-control"
-                      placeholder=""
-                      aria-label="First Name..."
+                      placeholder="Employers Address"
                       type="text"
+                      disabled={showEditEmpoy}
                     />
                   </div>
                 </div>
@@ -238,20 +301,36 @@ const PersonalInfo = () => {
               <div className="row">
                 <div className="d-flex align-items-center justify-content-between">
                   <h4 className="pt-5">Next Of kin details</h4>
-                  <button>Edit</button>
+                  {showEditNOK ? (
+                    <button onClick={toggleNOK}>Edit</button>
+                  ) : (
+                    <button className="grey-button" onClick={toggleNOK}>
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-4 ">
                   <label>Next of Kin Name</label>
                   <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                    <input
+                      class="form-control"
+                      placeholder="Next of Kin Name"
+                      type="text"
+                      disabled={showEditNOK}
+                    />
                   </div>
                 </div>
                 <div class="col-md-8 ">
                   <label>Next of Kin Email</label>
                   <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEditNOK}
+                    />
                   </div>
                 </div>
               </div>
@@ -259,7 +338,12 @@ const PersonalInfo = () => {
                 <div class=" ">
                   <label>Next of Kin Address</label>
                   <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEditNOK}
+                    />
                   </div>
                 </div>
               </div>
@@ -267,7 +351,12 @@ const PersonalInfo = () => {
                 <div class="col-md-8 ">
                   <label>next of kin phone number</label>
                   <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEditNOK}
+                    />
                     <span className="font-awe">
                       <i class=" fa-solid fa-angle-down"></i>
                       <i class="fa-solid fa-angle-down"></i>
@@ -299,6 +388,10 @@ const WrapperBody = styled.div`
     border: none;
     padding: 10px 27px;
     color: #f2f2f2;
+  }
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
   }
   .input-font-awe {
     position: absolute;

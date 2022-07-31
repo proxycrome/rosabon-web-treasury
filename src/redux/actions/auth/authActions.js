@@ -1,27 +1,5 @@
-import * as types from "../../constant/auth";
-import { register_company, login_user } from "../../api/auth";
 
-export const register = (dataObj) => async (dispatch) => {
-  try {
-    const { formData } = await register_company(dataObj);
-    console.log(formData)
-    dispatch({ type: types.REGISTER_COMPANY, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
-  } catch (error) {}
-};
 
-export const loginUser = (dataObj) => async (dispatch) => {
-  try {
-    const { formData } = await login_user(dataObj);
-    console.log(formData)
-    dispatch({ type: types.LOGIN_USER, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
-  } catch (error) {}
-};
-
-export const successMessage = (success) => (dispatch) => {
-  dispatch({ type: types.AUTHORIZE_SUCCESS, payload: success });
-}
 
 // export const user_login = (obj) => async (dispatch) => {
 // 	try {
@@ -92,6 +70,12 @@ export const successMessage = (success) => (dispatch) => {
 // 	}
 // };
 
-export const set_signup = (data) => (dispatch) => {
-  dispatch({ type: types.SET_SIGNUPBTN, payload: data });
-};
+// export const user_logout = () => (dispatch) => {
+// 	localStorage.removeItem("@token");
+// 	dispatch({ type: types.LOG_OUT });
+// 	if (process.env.NODE_ENV === "production") {
+// 		window.location.href = `${config.accountUrl}?application=getrisave#logout`;
+// 	} else {
+// 		document.location.href = "/";
+// 	}
+// };

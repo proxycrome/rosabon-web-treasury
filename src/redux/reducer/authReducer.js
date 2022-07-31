@@ -1,18 +1,35 @@
 import * as types from "../constant/auth";
 
-const authReducer = (state = { signup_btn: true }, action) => {
+const authReducer = (state = {}, action) => {
   switch (action.type) {
     case types.SET_SIGNUPBTN:
       return {
         ...state,
         signup_btn: action.payload,
       };
-    // case types.AUTHORIZE_SUCCESS:
-    // 	return { loading: false, user: action.payload, logged_in: true };
-    // case types.AUTHORIZE_FAIL:
-    // 	return { loading: false, error: action.payload };
-    // case types.LOG_OUT:
-    // 	return { logged_in: false };
+    case types.REGISTER_COMPANY:
+      console.log(action.payload);
+      return {
+        ...state,
+        company: action.payload,
+      };
+    case types.LOGIN_USER:
+      console.log(action.payload);
+      return {
+        ...state,
+        company: action.payload,
+      };
+    case types.AUTHORIZE_SUCCESS:
+      console.log(action.payload);
+      return {
+        ...state,
+        success: action.payload,
+      };
+    case types.REGISTER_USER:
+      return {
+        ...state,
+        user: action.payload,
+      };
     default:
       return state;
   }
