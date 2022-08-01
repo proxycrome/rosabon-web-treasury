@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Confetti from "../../asset/confetti.png";
-import Ellipse from "../../asset/Ellipse.png";
+import Confetti from "../../asset/confetti-cake.png";
+// import ConfettiLetter from "../../asset/confetti-letter.png";
+import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { successMessage } from "../../redux/actions/auth/SignupAction";
 
-function Congratulatios() {
+function Congratulatios(props) {
   const dispatch = useDispatch();
+  const location = useLocation();
+  console.log(location.state);
 
   useEffect(() => {
     dispatch(successMessage(false));
@@ -21,22 +24,41 @@ function Congratulatios() {
             <div className="row">
               <div className="col congrate_body">
                 <div>
-                  <img
-                    className="congrate_confet"
-                    src={Confetti}
-                    alt="Confetti"
-                  />
-                </div>
-                <div className="congrate_eclips">
-                  <img src={Ellipse} alt="Ellipse" />
+                  {location.state == "success_signup" ? (
+                    <>
+                      <img
+                        className="congrate_confet"
+                        src={Confetti}
+                        alt="Confetti"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        className="congrate_confet"
+                        src={Confetti}
+                        alt="Confetti"
+                      />
+                    </>
+                  )}
                 </div>
                 <h4>Congratulations! </h4>
-                <p className="">
-                  your account was created successfully. Please take a moment to
-                  verify your <br /> email address. We sent an email with a
-                  verification link to Info@optisoft.ng if <br /> you did not
-                  receive this in your inbox, please check your spam folder.
-                </p>
+                {location.state == "success_signup" ? (
+                  <>
+                    <p className="">
+                      your account was created successfully. Please take a
+                      moment to verify your <br /> email address. We sent an
+                      email with a verification link to Info@optisoft.ng if{" "}
+                      <br /> you did not receive this in your inbox, please
+                      check your spam folder.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p>Your email has been verified successfully</p>
+                  </>
+                )}
+
                 <Link to="/login">
                   <button className="verify_congrates_btn">Ok</button>
                 </Link>

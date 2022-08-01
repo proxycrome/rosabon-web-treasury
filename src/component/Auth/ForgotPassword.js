@@ -1,9 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { forgotPassword } from "../../redux/actions/auth/SignupAction";
 
 function ForgotPassword() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const success = useSelector((state) => state.auth.success);
+
+  const data = {
+    email: "",
+  };
+  const [formData, setformData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { email } = formData;
+    dispatch(forgotPassword(email));
+  };
+
+  useEffect(() => {
+    if (success) {
+      navigate("/reset-password");
+    }
+  }, [success]);
+
   return (
     <WrapperContainer>
       <div className="view_content"></div>
@@ -21,28 +52,37 @@ function ForgotPassword() {
                     Please, enter your email address. You will receive a link{" "}
                     <br /> to create a new password via email.
                   </p>
-                  <div className="mb-4 text-left ">
-                    <label className="pb-2">Email Address</label>
-                    <div className="input-group">
-                      <input
-                        type="email"
-                        className="form-control"
-                        placeholder="Email Address"
-                      />
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div>
-                      <Link to="/reset-password">
-                        <button className="verify_congrates_btn">Send</button>
-                      </Link>
-                      <p className="text-center">
-                        Do you remember your password?
-                        <span className="">
-                          <Link to="/login"> Try Signing in </Link>{" "}
-                        </span>
-                      </p>
-                    </div>
+                  <div>
+                    <form autoComplete="off" onSubmit={handleSubmit}>
+                      <div className="mb-4 text-left ">
+                        <label className="pb-2">Email Address</label>
+                        <div className="input-group">
+                          <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Email Address"
+                            onChange={handleChange}
+                            name="email"
+                            value={formData.email}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div>
+                          {/* <Link to="/reset-password"> */}
+                            <button className="verify_congrates_btn">
+                              Send
+                            </button>
+                          {/* </Link> */}
+                          <p className="text-center">
+                            Do you remember your password?
+                            <span className="">
+                              <Link to="/login"> Try Signing in </Link>{" "}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

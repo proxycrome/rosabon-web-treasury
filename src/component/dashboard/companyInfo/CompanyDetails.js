@@ -15,38 +15,35 @@ const CompanyDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="content">
+            <div className="body-content">
               <div class="row">
-                <div class="col-md-4 ">
+                <div class="col-md-6">
                   <label>Company Name</label>
                   <div class="input-group mb-4">
                     <input
                       class="form-control"
-                      placeholder="First Name"
-                      aria-label="First Name..."
+                      placeholder=""
                       type="text"
                     />
                   </div>
                 </div>
-                <div class="col-md-4 ">
+                <div class="col-md-6">
                   <label>Company RC Number</label>
                   <div class="input-group mb-4">
                     <input
                       class="form-control"
-                      placeholder="Middle Name"
-                      aria-label="First Name..."
+                      placeholder=""
                       type="text"
                     />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-8 mb-4">
                   <label>Company Registration Date</label>
                   <div class="input-group">
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="Last Name"
-                      aria-label="Last Name..."
+                      placeholder=""
                     />
                     <span className=" input-font-awe">
                       <i class="fa-solid fa-calendar"></i>
@@ -63,13 +60,12 @@ const CompanyDetails = () => {
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 ">
+                <div class="col-md-6 col-lg-4 ">
                   <label>Customer ID Number</label>
                   <div class="input-group mb-4">
                     <input
                       class="form-control"
-                      placeholder="First Name"
-                      aria-label="First Name..."
+                      placeholder=""
                       type="text"
                     />
                     <span className=" input-font-awe">
@@ -77,25 +73,23 @@ const CompanyDetails = () => {
                     </span>
                   </div>
                 </div>
-                <div class="col-md-4 ">
+                <div class="col-md-6 col-lg-4 ">
                   <label>Nature of Business</label>
                   <div class="input-group mb-4">
                     <input
                       class="form-control"
-                      placeholder="Middle Name"
-                      aria-label="First Name..."
+                      placeholder=""
                       type="text"
                     />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-8 col-lg-4 mb-4">
                   <label>Company Type</label>
                   <div class="input-group">
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="Last Name"
-                      aria-label="Last Name..."
+                      placeholder=""
                     />
                     <span className=" input-font-awe">
                       <i class="fa-solid fa-angle-down"></i>
@@ -104,7 +98,7 @@ const CompanyDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="content">
+            <div className="body-content">
               <div className="row">
                 <div className="d-flex justify-content-between">
                   <h4>Contact Person Details</h4>
@@ -114,25 +108,23 @@ const CompanyDetails = () => {
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 ">
+                <div class="col-md-6">
                   <label>Contact Person First Name</label>
                   <div class="input-group mb-4">
                     <input
                       class="form-control"
-                      placeholder="First Name"
-                      aria-label="First Name..."
+                      placeholder=""
                       type="text"
                     />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6 mb-4">
                   <label>Contact Person Last Name</label>
                   <div class="input-group">
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="Last Name"
-                      aria-label="Last Name..."
+                      placeholder=""
                     />
                   </div>
                 </div>
@@ -163,7 +155,7 @@ export default CompanyDetails;
 
 const WrapperBody = styled.div`
   padding: 0 4rem 7rem 1rem;
-  .content {
+  .body-content {
     /* padding-top: 45px; */
   }
   button {

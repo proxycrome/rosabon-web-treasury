@@ -1,12 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
 import { ProfileSideBar } from "./ProfileSideBar";
 import { BVNConfirm } from "../Accessories/BVNConfirm";
 import ModalComponent from "../ModalComponent";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuthUser } from "../../redux/actions/personalInfo/userProfile.actions";
 
 const ProfileUpdate = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const count = useSelector((state) => state.auth.signup_btn);
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const tokenString = localStorage.getItem('token');
+    if(tokenString) {
+      dispatch(getAuthUser())
+    }else{
+      navigate("/login");
+    }
+  }, []);
+
 
   return (
     <div>
@@ -242,8 +257,8 @@ const WrapperFooter = styled.div`
   padding: 0 5rem;
 
   button {
-    width: 328px;
-    height: 54px;
+    width: 228px;
+    height: 44px;
     background: #f2f2f2;
     border-radius: 10px;
     outline: none;

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import RFSLogo from "../../asset/RFS-Logo.png";
-import SpiralImage from "../../asset/spiral-image.png";
+import SpiralImage from "../../asset/spiral-arrow.png";
 import styled from "styled-components";
 import { set_signup } from "../../redux/actions/auth/SignupAction";
 
@@ -88,8 +88,6 @@ export default LoginLeftView;
 
 const Wrapper = styled.div`
   background: #111e6c;
-  /* position: fixed; */
-  /* width: 100%; */
   height: 100vh;
 
   @media (max-width: 900px) {

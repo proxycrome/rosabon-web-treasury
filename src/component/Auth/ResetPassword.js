@@ -1,9 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { resetPassword } from "../../redux/actions/auth/SignupAction";
 
 function ResetPassword() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const success = useSelector((state) => state.auth.success);
+  const data = {
+    newPassword: "",
+    c_password: "",
+  };
+  const [formData, setformData] = useState(data);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { newPassword } = formData;
+    dispatch(resetPassword(newPassword));
+  };
+
+  useEffect(() => {
+    if (success) {
+      navigate("/congrates");
+    }
+  }, [success]);
+
   return (
     <WrapperContainer>
       <div className="view_content"></div>
@@ -22,36 +51,46 @@ function ResetPassword() {
                     should include a <br /> combination of Upper-case, Lowercase
                     and special characters (@$#%)
                   </p>
-                  <div className="mb-4 text-left input_password">
-                    <label className="pb-2">New Password</label>
-                    <div className="input-group">
-                      <input
-                        type="password"
-                        className="form-control"
-                        placeholder="New Password"
-                      />
-                      <i class="far fa-eye-slash"></i>
-                    </div>
-                  </div>
-                  <div className="mb-4 text-left input_password">
-                    <label className="pb-2">Confirm Password</label>
-                    <div className="input-group">
-                      <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Confirm Password"
-                      />
-                      <i class="far fa-eye-slash"></i>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div>
-                      <Link to="/login">
-                        <button className="verify_congrates_btn">
-                          Reset Password
-                        </button>
-                      </Link>
-                    </div>
+                  <div>
+                    <form autoComplete="off" onSubmit={handleSubmit}>
+                      <div className="mb-4 text-left input_password">
+                        <label className="pb-2">New Password</label>
+                        <div className="input-group">
+                          <input
+                            type="password"
+                            className="form-control"
+                            placeholder="New Password"
+                            onChange={handleChange}
+                            name="password"
+                            value={formData.newPassword}
+                          />
+                          <i class="far fa-eye-slash"></i>
+                        </div>
+                      </div>
+                      <div className="mb-4 text-left input_password">
+                        <label className="pb-2">Confirm Password</label>
+                        <div className="input-group">
+                          <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Confirm Password"
+                            onChange={handleChange}
+                            name="password"
+                            value={formData.c_password}
+                          />
+                          <i class="far fa-eye-slash"></i>
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div>
+                          <button
+                            type="submit"
+                            className="verify_congrates_btn">
+                            Reset Password
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

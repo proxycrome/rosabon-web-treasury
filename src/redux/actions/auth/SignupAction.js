@@ -1,10 +1,15 @@
 import * as types from "../../constant/auth";
-import { register_company, login_user } from "../../api/auth";
+import {
+  register_company,
+  login_user,
+  reset_password,
+  forgot_password,
+} from "../../api/auth";
+
 
 export const register = (dataObj) => async (dispatch) => {
   try {
     const { formData } = await register_company(dataObj);
-    console.log(formData)
     dispatch({ type: types.REGISTER_COMPANY, payload: formData });
     dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
   } catch (error) {}
@@ -13,15 +18,31 @@ export const register = (dataObj) => async (dispatch) => {
 export const loginUser = (dataObj) => async (dispatch) => {
   try {
     const { formData } = await login_user(dataObj);
-    console.log(formData)
+    localStorage.setItem('token', JSON.stringify());
     dispatch({ type: types.LOGIN_USER, payload: formData });
+    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+  } catch (error) {}
+};
+
+export const resetPassword = (dataObj) => async (dispatch) => {
+  try {
+    const { formData } = await reset_password(dataObj);
+    dispatch({ type: types.RESET_PASSWORD, payload: formData });
+    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+  } catch (error) {}
+};
+
+export const forgotPassword = (dataObj) => async (dispatch) => {
+  try {
+    const { formData } = await forgot_password(dataObj);
+    dispatch({ type: types.FORGOT_PASSWORD, payload: formData });
     dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
   } catch (error) {}
 };
 
 export const successMessage = (success) => (dispatch) => {
   dispatch({ type: types.AUTHORIZE_SUCCESS, payload: success });
-}
+};
 
 // export const user_login = (obj) => async (dispatch) => {
 // 	try {

@@ -1,8 +1,5 @@
 import React from 'react'
 import { Routes, Route } from "react-router-dom"
-import Login from './component/Auth/Login'
-import Signup from './component/Auth/signup'
-import { Profile } from './pages/ProfileUpdate'
 import ProfileUpdate from './component/dashboard/ProfileUpdate'
 import ForgotPassword from './component/Auth/ForgotPassword'
 import Congratulatios from './component/Auth/Congratulatios'
@@ -23,7 +20,7 @@ function PageRoutes() {
         <Route path="/forgot-password" element={ <ForgotPassword/> } />
         <Route path="/congrates" element={ <Congratulatios/> } />
         <Route path="/reset-password" element={ <ResetPassword/> } />
-        <Route path="/personal-profile" element={ <PersonalProfile/> } />
+        <Route path="/personal-profile" element={ <PersonalProfile  user_profile="user_profile"/> } />
         <Route path="/company-profile" element={ <CompanyProfile/> } />
     </Routes>
   )

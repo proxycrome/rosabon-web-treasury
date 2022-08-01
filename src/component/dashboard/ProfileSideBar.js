@@ -82,7 +82,7 @@ const WrappSideBarList = styled.div`
     display: none;
   }
   @media (max-width: 900px) {
-    padding: 0 30px;
+    padding: 0 10px;
     .style-hamburga {
       display: block;
       font-size: 26px;
@@ -106,7 +106,7 @@ const WrappSideBarList = styled.div`
     margin: 0;
     padding: 0;
     padding-top: 6rem;
-    padding-left: 4rem;
+    padding-left: 2rem;
   }
   li {
     font-style: normal;
@@ -156,6 +156,9 @@ export const ProfileSideBar = () => {
 const ProfileSideBarWrapper = styled.div`
   background: #111e6c;
   height: 100vh;
+  @media (max-width: 900px) {
+    display: none;
+  }
   h3 {
     font-style: normal;
     font-weight: 600;

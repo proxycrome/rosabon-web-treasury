@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ModalComponent from "../../ModalComponent";
 import { BVNConfirm } from "../../Accessories/BVNConfirm";
 
+
 const BankDetails = () => {
+
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(true);
   const toggleEdit = () => {
     setShowEdit(!showEdit);
   };
+
+
 
   return (
     <div>
@@ -58,7 +62,12 @@ const BankDetails = () => {
                   <div class="col-6 ">
                     <label>Account Number</label>
                     <div class="input-group mb-4">
-                      <input class="form-control" placeholder="" type="text" disabled={showEdit}/>
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEdit}
+                      />
                     </div>
                   </div>
                   <div class="col-6 ">
@@ -117,7 +126,7 @@ const WrapperBody = styled.div`
     background: #111e6c !important;
   }
   .btn_bg_grey {
-    background: #BDBDBD !important;
+    background: #bdbdbd !important;
   }
   button {
     border-radius: 5px;

@@ -9,7 +9,7 @@ import Authentication from './component/Auth';
 function App() {
   return (
     <div className="App">
-      <PageRoutes />
+      <Profile />
     </div>
   );
 }

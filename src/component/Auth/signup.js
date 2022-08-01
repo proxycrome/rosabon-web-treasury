@@ -121,21 +121,21 @@ function Signup() {
       refferedBy,
     } = formData;
     let company = {
-      contactFirstName: "COMPANY",
-      contactLastName: "COMPANY",
-      name: "COMPANY",
+      contactFirstName,
+      contactLastName,
+      name,
     };
 
     let data = {
       company,
-      email: "COMPANY",
+      email,
       isAssited: true,
       isNewsLetters: isNewsLetters ? true : false,
-      password: "COMPANY",
-      phone: "COMPANY",
+      password,
+      phone,
       role: "COMPANY",
-      source: "COMPANY",
-      sourceOthers: "COMPANY",
+      source,
+      sourceOthers,
       usage: "TREASURY",
       refferedBy,
     };
@@ -148,7 +148,7 @@ function Signup() {
   useEffect(() => {
     console.log(success)
      if(success) {
-      navigate('/congrates')
+      navigate('/congrates', {state: 'success_signup'})
     }
   }, [success]);
 
