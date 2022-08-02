@@ -69,11 +69,9 @@ function ForgotPassword() {
                       </div>
                       <div className="text-center">
                         <div>
-                          {/* <Link to="/reset-password"> */}
                             <button className="verify_congrates_btn">
                               Send
                             </button>
-                          {/* </Link> */}
                           <p className="text-center">
                             Do you remember your password?
                             <span className="">

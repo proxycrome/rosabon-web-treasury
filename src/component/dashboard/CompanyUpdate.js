@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
+import { ProfileSideBar } from "./ProfileSideBar";
 import { BVNConfirm } from "../Accessories/BVNConfirm";
 import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthUser } from "../../redux/actions/personalInfo/userProfile.actions";
 
-const ProfileUpdate = () => {
+const CompanyUpdate = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
   const [show, setShow] = useState(false);
 
-
-
   useEffect(() => {
-    const tokenString = localStorage.getItem("user-token");
+    const tokenString = localStorage.getItem("company-token");
     if (tokenString) {
       dispatch(getAuthUser());
     } else {
@@ -27,7 +26,7 @@ const ProfileUpdate = () => {
     <div>
       <div className="">
         <div>
-          <div className="" style={{ overflowY: "auto" }}>
+          <div className="">
             <WrapperBody>
               <div>
                 <div>
@@ -35,177 +34,117 @@ const ProfileUpdate = () => {
                   <p>
                     Kindly update your profile, it will only take a few minutes
                   </p>
-                  <h4>Personal Details</h4>
+                  <h4>Company Details</h4>
                   <div>
                     <div class="row">
-                      <div class="col-md-6 col-lg-4">
-                        <label>First Name</label>
+                      <div class="col-md-8">
+                        <label>Company Name</label>
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="First Name"
+                            placeholder="Company Name"
                             type="text"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-md-6 col-lg-4 ">
-                        <label>Middle Name</label>
-                        <div class="input-group mb-4">
-                          <input
-                            class="form-control"
-                            placeholder="Middle Name"
-                            type="text"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-md-8 col-lg-4 pb-4">
-                        <label>Last Name</label>
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Last Name"
                           />
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6 col-lg-4 ">
-                        <label>Gender</label>
+                        <label>Company RC number</label>
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="Gender"
+                            placeholder="Company RC number"
                             type="text"
                           />
                         </div>
                       </div>
                       <div class="col-md-6 col-lg-4 ">
-                        <label>Date of Birth</label>
+                        <label>Company Registration Date</label>
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="Date of Birth"
+                            placeholder="Company Registration Date"
                             type="text"
                           />
                         </div>
                       </div>
-                      <div class="col-md-6 col-lg-4 ">
-                        <label>Primary phone number</label>
-                        <div class="input-group mb-4">
+                    </div>
+                    <div className="row">
+                      <div class="mb-4">
+                        <label>Company Address</label>
+                        <div class="input-group">
                           <input
-                            class="form-control"
-                            placeholder="Primary phone number"
                             type="text"
+                            class="form-control"
+                            placeholder="Company Address"
+                            aria-label="Last Name..."
                           />
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-8 ">
-                        <label>Bank verification number (BVN)</label>
+                        <label>Nature of Business</label>
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="Bank verification number (BVN)"
+                            placeholder="Nature of Business"
                             type="text"
                           />
                         </div>
                       </div>
-
                       <div class="col-md-4 ">
-                        <button
-                          type="button"
-                          onClick={() => setShow(true)}
-                          className="profile_vify_btn">
-                          Verify
-                        </button>
-                      </div>
-                      <div>
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "100px",
-                            right: "300px",
-                          }}>
-                          <ModalComponent
-                            show={show}
-                            size={"md"}
-                            handleClose={() => setShow(false)}>
-                            <BVNConfirm
-                              show={show}
-                              handleClose={() => setShow(false)}
-                            />
-                          </ModalComponent>
+                        <label>Company Type</label>
+                        <div class="input-group mb-4">
+                          <input class="form-control" type="text" />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <h4 className="pt-5">Contact Details</h4>
+                  <h4 className="pt-5">Contact Person Details</h4>
                   <div>
                     <div class="row">
+                      <div class="col-md-4 ">
+                        <label>Contact Person First Name</label>
+                        <div class="input-group mb-4">
+                          <input
+                            class="form-control"
+                            placeholder=""
+                            type="text"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-4 ">
+                        <label>Contact Person Last Name</label>
+                        <div class="input-group mb-4">
+                          <input
+                            class="form-control"
+                            placeholder=""
+                            type="text"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
                       <div class="col-md-8 ">
-                        <label>Email</label>
+                        <label>Contact Person Email Address</label>
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="Email"
+                            placeholder=""
                             type="text"
                           />
                         </div>
                       </div>
                       <div class="col-md-4 ">
-                        <label>Country of Residence</label>
+                        <label>Contact person Number</label>
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="Middle Name"
+                            placeholder=""
                             type="text"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class=" ">
-                        <label>Contact Address</label>
-                        <div class="input-group mb-4">
-                          <input
-                            class="form-control"
-                            placeholder="Contact Address"
-                            type="text"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4 ">
-                        <label>State</label>
-                        <div class="input-group mb-4">
-                          <input
-                            class="form-control"
-                            placeholder="State"
-                            type="text"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-md-4 ">
-                        <label>City</label>
-                        <div class="input-group mb-4">
-                          <input
-                            class="form-control"
-                            placeholder="City"
-                            type="text"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <label>Nationality</label>
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Nationality"
                           />
                         </div>
                       </div>
@@ -229,7 +168,7 @@ const ProfileUpdate = () => {
   );
 };
 
-export default ProfileUpdate;
+export default CompanyUpdate;
 
 const WrapperFooter = styled.div`
   width: 100%;
@@ -268,7 +207,7 @@ const WrapperBody = styled.div`
     line-height: 40px;
     color: #222222;
     padding-bottom: 15px;
-    padding-left: 10px;
+    /* padding-left: 10px; */
   }
   p {
     font-style: normal;

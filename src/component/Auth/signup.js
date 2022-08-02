@@ -3,7 +3,7 @@ import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { register } from "../../redux/actions/auth/SignupAction";
+import { registerCompany, registerUser } from "../../redux/actions/auth/SignupAction";
 
 function Signup() {
   const dispatch = useDispatch();
@@ -103,7 +103,7 @@ function Signup() {
       refferedBy,
       usage: "TREASURY",
     };
-    dispatch(register(data));
+    dispatch(registerUser(data));
   };
 
   const handleCompanySubmit = async (e) => {
@@ -140,13 +140,12 @@ function Signup() {
       refferedBy,
     };
    
-    dispatch(register(data))
+    dispatch(registerCompany(data))
     
   };
  
 
   useEffect(() => {
-    console.log(success)
      if(success) {
       navigate('/congrates', {state: 'success_signup'})
     }

@@ -37,7 +37,7 @@ const Login = () => {
     let data = {
       email,
       password,
-      platformType: "TREASURY"
+      platformType: "WEB"
     };
     dispatch(loginUser(data));
   };

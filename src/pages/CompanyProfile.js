@@ -12,12 +12,12 @@ const CompanyProfile = () => {
   const navigate = useNavigate();
   const [tabs, setTabs] = useState("company");
 
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("token");
-  //   if (!tokenString) {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const tokenString = localStorage.getItem("company-token");
+    if (!tokenString) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <WrapperBody>

@@ -2,7 +2,7 @@ import { config } from "../config";
 import axios from "axios";
 
 
-export const register_company = async (obj) => {
+export const register = async (obj) => {
   const response = await axios.post(`${config.rosobon}users`, obj, {
     headers: {
       "Content-Type": "application/json",

@@ -11,12 +11,12 @@ const PersonalProfile = () => {
   const navigate = useNavigate();
   const [tabs, setTabs] = useState("profile");
 
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("token");
-  //   if (!tokenString) {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const tokenString = localStorage.getItem("user-token");
+    if (!tokenString) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <WrapperBody>
