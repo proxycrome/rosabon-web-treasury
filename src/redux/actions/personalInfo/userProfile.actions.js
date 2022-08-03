@@ -4,6 +4,7 @@ import { get_users, get_user } from "../../api/userProfile.api";
 export const getAuthUsers = (token) => async (dispatch) => {
   try {
     const { formData } = await get_users(token);
+    console.log(formData)
     dispatch({ type: types.GET_AUTH_USERS, payload: formData });
     dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
   } catch (error) {}

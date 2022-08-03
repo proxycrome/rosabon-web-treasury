@@ -5,18 +5,21 @@ import { ProfileSideBar } from "./ProfileSideBar";
 import { BVNConfirm } from "../Accessories/BVNConfirm";
 import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuthUser } from "../../redux/actions/personalInfo/userProfile.actions";
+import { getAuthUsers } from "../../redux/actions/personalInfo/userProfile.actions";
 
 const CompanyUpdate = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
+  const company_details = useSelector((state) => state.user_profile.users);
   const [show, setShow] = useState(false);
 
+  console.log(company_details)
+
   useEffect(() => {
-    const tokenString = localStorage.getItem("company-token");
+    const tokenString = JSON.parse(localStorage.getItem("company-token"));
     if (tokenString) {
-      dispatch(getAuthUser());
+      dispatch(getAuthUsers(tokenString));
     } else {
       navigate("/login");
     }
@@ -30,7 +33,7 @@ const CompanyUpdate = () => {
             <WrapperBody>
               <div>
                 <div>
-                  <h3>Hello Ekiyee,</h3>
+                  <h3>Hello {(company_details.company.name).toUpperCase()},</h3>
                   <p>
                     Kindly update your profile, it will only take a few minutes
                   </p>
@@ -42,7 +45,7 @@ const CompanyUpdate = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="Company Name"
+                            placeholder={company_details.company.name}
                             type="text"
                           />
                         </div>
@@ -133,7 +136,7 @@ const CompanyUpdate = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder=""
+                            placeholder={company_details.email}
                             type="text"
                           />
                         </div>
@@ -143,7 +146,7 @@ const CompanyUpdate = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder=""
+                            placeholder={company_details.phone}
                             type="text"
                           />
                         </div>
@@ -154,10 +157,10 @@ const CompanyUpdate = () => {
               </div>
             </WrapperBody>
             <WrapperFooter>
-              <Link to="/profile-details">
+              <Link to="/company-profile">
                 <button className="">Save and Continue</button>
               </Link>
-              <Link to="/profile-details">
+              <Link to="/company-profile">
                 <button className="">Save and Invest Now</button>
               </Link>
             </WrapperFooter>
@@ -187,6 +190,7 @@ const WrapperFooter = styled.div`
     border-radius: 10px;
     outline: none;
     border: none;
+    color: #111e6c;
   }
 `;
 const WrapperBody = styled.div`

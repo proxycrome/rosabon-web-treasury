@@ -21,7 +21,7 @@ const MoreDetails = () => {
               </div>
             </div>
           </div>
-          <div className="content">
+          <div className="content-more-details">
             <div className="image-holder">
               <div className="row">
                 <div className="d-flex align-items-center justify-content-between">
@@ -188,7 +188,7 @@ const WrapperBody = styled.div`
     color: #222222;
     padding-bottom: 45px;
   }
-  .content {
+  .content-more-details {
     padding-top: 45px;
   }
 

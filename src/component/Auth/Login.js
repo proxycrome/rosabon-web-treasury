@@ -11,6 +11,7 @@ const Login = () => {
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
   const success = useSelector((state) => state.auth.success);
+  const user_login = useSelector((state) => state.auth.login);
   const [passwordShown, setPasswordShown] = useState(false);
 
   const togglePassword1 = () => {
@@ -47,8 +48,12 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
+    
     if (success) {
-      navigate("/");
+      if(user_login.role.name == 'COMPANY') {
+        console.log(user_login.role.name)
+        navigate("/company");
+      } 
     }
   }, [success]);
 

@@ -11,13 +11,13 @@ const authReducer = (state = {}, action) => {
       console.log(action.payload);
       return {
         ...state,
-        company: action.payload,
+        register: action.payload,
       };
     case types.LOGIN_USER:
       console.log(action.payload);
       return {
         ...state,
-        company: action.payload,
+        login: action.payload,
       };
     case types.AUTHORIZE_SUCCESS:
       console.log(action.payload);
