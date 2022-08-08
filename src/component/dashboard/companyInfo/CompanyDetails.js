@@ -130,13 +130,13 @@ const CompanyDetails = () => {
                 </div>
               </div>
               <div class="row">
-                <div class="col-8 ">
+                <div class="col-md-8 ">
                   <label>Email Address</label>
                   <div class="input-group mb-4">
                     <input class="form-control" placeholder="" type="text" />
                   </div>
                 </div>
-                <div class="col-4 ">
+                <div class="col-md-4 ">
                   <label>Phone Number</label>
                   <div class="input-group mb-4">
                     <input class="form-control" placeholder="" type="text" />
@@ -155,6 +155,9 @@ export default CompanyDetails;
 
 const WrapperBody = styled.div`
   padding: 0 4rem 7rem 1rem;
+  @media (max-width: 600px) {
+    padding: 0 1rem 7rem 1rem;
+  }
   .body-content {
     /* padding-top: 45px; */
   }

@@ -65,7 +65,7 @@ const MyDocu = () => {
           </div>
         </div>
         <div>
-          <div className="content">
+          <div className="content-doc">
             <div className="row pb-4">
               <div className="d-flex align-items-center justify-content-between w-100">
                 <div className="progress-bar-style d-flex align-items-center justify-content-start">
@@ -230,7 +230,7 @@ const WrapperBody = styled.div`
     color: #828282;
   }
 
-  .content {
+  .content-doc {
     padding-top: 45px;
   }
   button {

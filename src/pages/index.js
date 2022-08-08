@@ -15,7 +15,7 @@ const Profile = ({ user_profile }) => {
           }}
           className="content">
           <div className="">
-            <ProfileSideBarList />
+            <ProfileSideBarList  profile="profile" />
           </div>
 
           {user_profile ? (
@@ -42,7 +42,7 @@ export default Profile;
 const WrapperBody = styled.div`
   .content {
     display: grid;
-    @media (min-width: 900px) {
+    @media (min-width: 1200px) {
       grid-template-columns: 0.2fr 1fr;
     }
   }

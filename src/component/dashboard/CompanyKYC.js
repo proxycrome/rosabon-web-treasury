@@ -7,20 +7,20 @@ import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthUser } from "../../redux/actions/personalInfo/userProfile.actions";
 
-const CompanyUpdate = () => {
+const CompanyKYC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem("company-token");
-    if (tokenString) {
-      dispatch(getAuthUser());
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("company-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser());
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   return (
     <div>
@@ -154,12 +154,18 @@ const CompanyUpdate = () => {
               </div>
             </WrapperBody>
             <WrapperFooter>
-              <Link to="/profile-details">
-                <button className="">Save and Continue</button>
-              </Link>
-              <Link to="/profile-details">
-                <button className="">Save and Invest Now</button>
-              </Link>
+              <div className="d-flex align-items-center justify-content-between">
+                <div>
+                  <Link to="/profile-details">
+                    <button className="">Save and Invest Now</button>
+                  </Link>
+                </div>
+                <div>
+                  <Link to="/profile-details">
+                    <button className="">Save and Invest Now</button>
+                  </Link>
+                </div>
+              </div>
             </WrapperFooter>
           </div>
         </div>
@@ -168,25 +174,21 @@ const CompanyUpdate = () => {
   );
 };
 
-export default CompanyUpdate;
+export default CompanyKYC;
 
 const WrapperFooter = styled.div`
-  width: 100%;
-  height: 114px;
   background: #ffffff;
   box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 5rem;
-
+  padding: 40px 30px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
   button {
-    width: 228px;
-    height: 44px;
     background: #f2f2f2;
     border-radius: 10px;
     outline: none;
     border: none;
+    padding: 10px 10px;
   }
 `;
 const WrapperBody = styled.div`

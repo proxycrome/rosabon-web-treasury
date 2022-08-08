@@ -48,7 +48,7 @@ const Login = () => {
 
   useEffect(() => {
     if (success) {
-      navigate("/");
+      navigate("/person");
     }
   }, [success]);
 
@@ -56,10 +56,6 @@ const Login = () => {
     <div className="">
       <div className="">
         <RightWrapper>
-          {/* <div className="d-flex top_login_btn justify-content-end">
-            <button class="btn bg-gradient-primary w-auto me-2">Login</button>
-            <button class="blue_login_btn">Get started</button>
-          </div> */}
           <h4>Login</h4>
           <div className="container">
             <form autoComplete="off" onSubmit={handleUserSubmit}>
@@ -114,11 +110,9 @@ const Login = () => {
               </LoginInput>
               <LoginButton>
                 <div className="">
-                  {/* <Link to="/"> */}
                   <button type="submit" className="verify_congrates_btn">
                     Login
                   </button>
-                  {/* </Link> */}
                   <Link to="/signup">
                     <p className="text-center">
                       Don’t have an account? <span className="">Sign up</span>

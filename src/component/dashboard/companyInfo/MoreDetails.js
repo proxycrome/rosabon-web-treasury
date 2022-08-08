@@ -21,7 +21,7 @@ const MoreDetails = () => {
               </div>
             </div>
           </div>
-          <div className="content">
+          <div className="details-content">
             <div className="image-holder">
               <div className="row">
                 <div className="d-flex align-items-center justify-content-between">
@@ -173,7 +173,7 @@ export default MoreDetails;
 
 const WrapperBody = styled.div`
   padding: 0 4rem 7rem 1rem;
-  .content {
+  .details-content {
     padding-top: 70px;
   }
   @media (max-width: 560px) {
@@ -188,7 +188,7 @@ const WrapperBody = styled.div`
     color: #222222;
     padding-bottom: 45px;
   }
-  .content {
+  .details-content {
     padding-top: 45px;
   }
 

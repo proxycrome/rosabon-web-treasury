@@ -378,6 +378,9 @@ export default PersonalInfo;
 
 const WrapperBody = styled.div`
   padding: 0 4rem 7rem 1rem;
+  @media (max-width: 600px) {
+    padding: 0 2rem 7rem 1rem;
+  }
   .content {
     padding-top: 45px;
   }

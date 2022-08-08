@@ -19,7 +19,6 @@ const LoginLeftView = ({ signup }) => {
   }
  
   return (
-    // <div className="">
     <Wrapper>
       <div className="wrapper_content">
         <img src={RFSLogo} alt="RFSLogo" />
@@ -44,43 +43,46 @@ const LoginLeftView = ({ signup }) => {
                 </p>
               </>
             )}
-
-            <img className="spiral" src={SpiralImage} alt="RFSLogo" />
-            <div className="d-flex">
-              <>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault(e);
-                    dispatch(set_signup(true));
-                  }}
-                  type="button"
-                  class={" continue_login_btn " + indiv_btn}>
-                  Register as an Invididual
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault(e);
-                    dispatch(set_signup(false));
-                  }}
-                  type="button"
-                  class={"mx-5 p-3 continue_login_btn " + cop_btn}>
-                  Register as a Coporate
-                </button>
-              </>
-              {/* {signup ? (
+            <div className="spiral-content position-absolute">
+              <img className="spiral" src={SpiralImage} alt="RFSLogo" />
+            </div>
+            <div>
+              
+              {signup ? (
+                <>
+                <div>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault(e);
+                      dispatch(set_signup(true));
+                    }}
+                    type="button"
+                    class={" continue_login_btn " + indiv_btn}>
+                    Register as an Invididual
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault(e);
+                      dispatch(set_signup(false));
+                    }}
+                    type="button"
+                    class={"mx-5 p-3 continue_login_btn " + cop_btn}>
+                    Register as a Coporate
+                  </button>
+                </div>
                 
+              </>
               ) : (
                 <button type="button" class="continue_login_btn">
                   Continue the Journey
                   <i class="fa-solid fa-arrow-right-long"></i>
                 </button>
-              )} */}
+              )}
             </div>
           </div>
         </div>
       </div>
     </Wrapper>
-    // </div>
   );
 };
 
@@ -101,7 +103,7 @@ const Wrapper = styled.div`
     }
   }
   button {
-    font-family: "Montserrat";
+ 
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
@@ -114,15 +116,20 @@ const Wrapper = styled.div`
     justify-content: center;
     display: flex;
     align-items: center;
-    padding-top: 80px;
+    padding-top: 30px;
     position: relative;
-
+    .spiral-content {
+      width: 373px;
+      height: 285px;
+      top: 100px;
+    }
     img {
-      position: absolute;
-      top: 200px;
+      
+      width: 100%;
+      height: 100%;
     }
     .continue_login_btn {
-      margin-top: 230px;
+      margin-top: 150px;
       background: #ffffff;
       border-radius: 10px;
       color: #111e6c;

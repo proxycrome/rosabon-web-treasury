@@ -33,28 +33,6 @@ function Signup() {
 
   const [formData, setformData] = useState(data);
 
-  // const isFormValid = () => {
-  //   console.log(formData)
-  //   const {
-  //     isAssited,
-  //     email,
-  //     isNewsLetters,
-  //     password,
-  //     source,
-  //     contactFirstName,
-  //     contactLastName,
-  //   } = formData;
-
-  //   return (
-  //     contactFirstName &&
-  //     contactLastName &&
-  //     isAssited &&
-  //     email &&
-  //     isNewsLetters &&
-  //     password &&
-  //     source
-  //   );
-  // };
 
   const togglePassword1 = () => {
     setPasswordShown1(!passwordShown1);
@@ -554,7 +532,7 @@ function Signup() {
                       <p className="text-center">
                         Already have an account?{" "}
                         <span className="">
-                          <Link to="/login">Sign in </Link>
+                          <Link to="/">Sign in </Link>
                         </span>
                       </p>
                     </div>
@@ -571,13 +549,6 @@ function Signup() {
 
 export default Signup;
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     signupUser: (credentials) => dispatch(register(credentials))
-//   };
-// };
-
-// export default connect(null, mapDispatchToProps)(Signup);
 
 const RightWrapper = styled.section`
   background: #ffffff;

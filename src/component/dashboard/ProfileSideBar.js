@@ -77,7 +77,15 @@ export const ProfileSideBarList = ({ profile }) => {
 };
 
 const WrappSideBarList = styled.div`
-  background: #ffffff;
+  @media (max-width: 900px) {
+      display: none;
+  }
+  @media (max-width: 1200px) {
+    .profile {
+      display: none;
+    }
+  }
+  /* background: #ffffff;
   .style-hamburga {
     display: none;
   }
@@ -96,7 +104,7 @@ const WrappSideBarList = styled.div`
       align-items: center;
       justify-content: space-between;
     }
-  }
+  } */
 
   span {
     padding-right: 20px;
@@ -140,7 +148,7 @@ export const ProfileSideBar = () => {
               alt="Discovery"
             />
           </div>
-          <div style={{ paddingTop: "50px" }}>
+          <div style={{ paddingTop: "10px" }}>
             <h3>Almost There!</h3>
             <p>
               We only need a few info to <br /> review before unlocking your{" "}

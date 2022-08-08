@@ -41,7 +41,7 @@ function ForgotPassword() {
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">
           <WrappCongrate>
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
                 <div className="col congrate_body">
                   <div className="text-center">
@@ -102,7 +102,8 @@ const WrapperContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
-  padding-top: 5%;
+  padding: 50px;
+  /* padding-top: 5%; */
 `;
 
 const WrappCongrate = styled.div`
@@ -124,6 +125,18 @@ const WrappCongrate = styled.div`
   display: flex;
   align-items: center;
   box-shadow: 0px 4px 40px rgba(225, 234, 254, 0.62);
+  @media (max-width: 810px) {
+    .congrate_body {
+      padding: 3rem;
+    }
+    h4 {
+    font-size: 20px;
+    p {
+      font-size: 12px;
+    }
+  }
+ 
+  }
   input {
     width: 479px;
     height: 54px;

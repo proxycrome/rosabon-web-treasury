@@ -13,7 +13,7 @@ const CompanyDoc = () => {
               <button>Edit</button>
             </div>
           </div>
-          <div className="content">
+          <div className="document-content">
             
             <div className="row pb-4">
               <div className="d-flex align-items-center justify-content-between w-100">
@@ -264,7 +264,7 @@ const WrapperBody = styled.div`
       }
     }
   }
-  .content {
+  .document-content {
     padding-top: 70px;
   }
   .file-image {

@@ -6,7 +6,7 @@ import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthUser } from "../../redux/actions/personalInfo/userProfile.actions";
 
-const ProfileUpdate = () => {
+const PersonalKYC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
@@ -14,14 +14,14 @@ const ProfileUpdate = () => {
 
 
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem("user-token");
-    if (tokenString) {
-      dispatch(getAuthUser());
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser());
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   return (
     <div>
@@ -102,9 +102,9 @@ const ProfileUpdate = () => {
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-8 ">
+                      <div class="col-md-6 col-lg-8 ">
                         <label>Bank verification number (BVN)</label>
-                        <div class="input-group mb-4">
+                        <div class="input-group">
                           <input
                             class="form-control"
                             placeholder="Bank verification number (BVN)"
@@ -112,8 +112,7 @@ const ProfileUpdate = () => {
                           />
                         </div>
                       </div>
-
-                      <div class="col-md-4 ">
+                      <div class="col-md-6 col-lg-4">
                         <button
                           type="button"
                           onClick={() => setShow(true)}
@@ -214,13 +213,31 @@ const ProfileUpdate = () => {
                 </div>
               </div>
             </WrapperBody>
+            <div>
+                    {/* hello */}
+                    {/* <Link to="/profile-details">
+                      <button className="">Save and Continue</button>
+                    </Link> */}
+                  </div>
+                  <div>
+                    {/* hello */}
+                    {/* <Link to="/profile-details">
+                      <button className="">Save and Invest Now</button>
+                    </Link> */}
+                  </div>
             <WrapperFooter>
-              <Link to="/profile-details">
-                <button className="">Save and Continue</button>
-              </Link>
-              <Link to="/profile-details">
-                <button className="">Save and Invest Now</button>
-              </Link>
+              <div className="d-flex align-items-center justify-content-between">
+                <div>
+                  <Link to="/profile-details">
+                    <button className="">Save and Invest Now</button>
+                  </Link>
+                </div>
+                <div>
+                  <Link to="/profile-details">
+                    <button className="">Save and Invest Now</button>
+                  </Link>
+                </div>
+              </div>
             </WrapperFooter>
           </div>
         </div>
@@ -229,25 +246,21 @@ const ProfileUpdate = () => {
   );
 };
 
-export default ProfileUpdate;
+export default PersonalKYC;
 
 const WrapperFooter = styled.div`
-  width: 100%;
-  height: 114px;
   background: #ffffff;
   box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 5rem;
-
+  padding: 40px 80px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
   button {
-    width: 228px;
-    height: 44px;
     background: #f2f2f2;
     border-radius: 10px;
     outline: none;
     border: none;
+    padding: 10px 10px;
   }
 `;
 const WrapperBody = styled.div`
