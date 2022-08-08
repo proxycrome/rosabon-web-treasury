@@ -5,22 +5,26 @@ import { ProfileSideBar } from "./ProfileSideBar";
 import { BVNConfirm } from "../Accessories/BVNConfirm";
 import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuthUser } from "../../redux/actions/personalInfo/userProfile.actions";
+import { getAuthUsers } from "../../redux/actions/personalInfo/userProfile.actions";
 
 const CompanyKYC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
+  const company_details = useSelector((state) => state.user_profile.users);
   const [show, setShow] = useState(false);
 
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("company-token");
-  //   if (tokenString) {
-  //     dispatch(getAuthUser());
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+
+  console.log(company_details)
+
+  useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("company-token"));
+    if (tokenString) {
+      dispatch(getAuthUsers(tokenString));
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <div>
@@ -30,7 +34,7 @@ const CompanyKYC = () => {
             <WrapperBody>
               <div>
                 <div>
-                  <h3>Hello Ekiyee,</h3>
+                  <h3>Hello {(company_details.company.name).toUpperCase()},</h3>
                   <p>
                     Kindly update your profile, it will only take a few minutes
                   </p>
@@ -42,7 +46,7 @@ const CompanyKYC = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder="Company Name"
+                            placeholder={company_details.company.name}
                             type="text"
                           />
                         </div>
@@ -133,7 +137,7 @@ const CompanyKYC = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder=""
+                            placeholder={company_details.email}
                             type="text"
                           />
                         </div>
@@ -143,7 +147,7 @@ const CompanyKYC = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder=""
+                            placeholder={company_details.phone}
                             type="text"
                           />
                         </div>
@@ -189,6 +193,7 @@ const WrapperFooter = styled.div`
     outline: none;
     border: none;
     padding: 10px 10px;
+    color: #111e6c;
   }
 `;
 const WrapperBody = styled.div`

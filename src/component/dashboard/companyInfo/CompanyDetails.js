@@ -15,7 +15,7 @@ const CompanyDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="body-content">
+            <div className="">
               <div class="row">
                 <div class="col-md-6">
                   <label>Company Name</label>

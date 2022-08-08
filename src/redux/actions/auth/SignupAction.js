@@ -26,7 +26,9 @@ export const registerUser = (dataObj) => async (dispatch) => {
 export const loginUser = (dataObj) => async (dispatch) => {
   try {
     const { formData } = await login_user(dataObj);
-    localStorage.setItem('token', JSON.stringify());
+    if(formData.role.name == 'COMPANY') {
+      localStorage.setItem('company-token', JSON.stringify(formData.token));
+    }
     dispatch({ type: types.LOGIN_USER, payload: formData });
     dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
   } catch (error) {}
