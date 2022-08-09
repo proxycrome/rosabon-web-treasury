@@ -78,8 +78,11 @@ const Wrapper = styled.div`
 `;
 
 const WrappCongrate = styled.div`
-  width: 712px;
-  height: 523px;
+  @media (max-width: 800px) {
+    width: 80%;
+  }
+  width: 60%;
+  height: 450px;
   background: #ffffff;
   justify-content: center;
   display: flex;
