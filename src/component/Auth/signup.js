@@ -81,6 +81,7 @@ function Signup() {
       refferedBy,
       usage: "TREASURY",
     };
+    console.log(data)
     dispatch(registerUser(data));
   };
 
@@ -117,7 +118,7 @@ function Signup() {
       usage: "TREASURY",
       refferedBy,
     };
-   
+    // console.log(data)
     dispatch(registerCompany(data))
     
   };
@@ -208,7 +209,8 @@ function Signup() {
                           onClick={togglePassword1}
                           class={
                             passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
-                          }></i>
+                          }
+                        ></i>
                       </div>
                     </div>
                     <div className="mb-4 input_password">
@@ -223,7 +225,8 @@ function Signup() {
                           onClick={togglePassword2}
                           class={
                             passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
-                          }></i>
+                          }
+                        ></i>
                       </div>
                     </div>
                     <div className="mb-4">
@@ -233,8 +236,12 @@ function Signup() {
                           class="form-select form-select-lg mb-3"
                           aria-label=".form-select-lg"
                           onChange={handleChange}
-                          name="source">
-                          <option value="ROSABON_SALES" selected>
+                          name="source"
+                        >
+                          <option value="" selected>
+                            Please choose an option
+                          </option>
+                          <option value="ROSABON_SALES">
                             Rosabon sales executive
                           </option>
                           <option value="ANOTHER_USER">Another user</option>
@@ -250,7 +257,7 @@ function Signup() {
                             className="form-control"
                             placeholder="Source Name"
                             onChange={handleChange}
-                            name="password"
+                            name="sourceOthers"
                             value={formData.sourceOthers}
                           />
                         ) : formData.source == "ANOTHER_USER" ? (
@@ -259,7 +266,7 @@ function Signup() {
                             className="form-control"
                             placeholder="Input referral code"
                             onChange={handleChange}
-                            name="password"
+                            name="refferedBy"
                             value={formData.refferedBy}
                           />
                         ) : formData.source == "ROSABON_SALES" ? (
@@ -268,7 +275,7 @@ function Signup() {
                             className="form-control"
                             placeholder="Input referral code"
                             onChange={handleChange}
-                            name="password"
+                            name="refferedBy"
                             value={formData.refferedBy}
                           />
                         ) : (
@@ -277,7 +284,7 @@ function Signup() {
                             className="form-control"
                             placeholder="Input referral code"
                             onChange={handleChange}
-                            name="password"
+                            name="refferedBy"
                             value={formData.refferedBy}
                           />
                         )}
@@ -295,7 +302,8 @@ function Signup() {
                         />
                         <label
                           className="form-check-label"
-                          for="flexCheckChecked">
+                          for="flexCheckChecked"
+                        >
                           Yes, i want to recieve newsletters of Promos and
                           Offers
                         </label>
@@ -309,7 +317,8 @@ function Signup() {
                         />
                         <label
                           className="form-check-label"
-                          for="flexCheckChecked">
+                          for="flexCheckChecked"
+                        >
                           I agree to the Terms and Privacy Policy
                         </label>
                       </div>
@@ -419,7 +428,8 @@ function Signup() {
                           onClick={togglePassword1}
                           class={
                             passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
-                          }></i>
+                          }
+                        ></i>
                       </div>
                     </div>
                     <div className="mb-4 input_password">
@@ -434,7 +444,8 @@ function Signup() {
                           onClick={togglePassword2}
                           class={
                             passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
-                          }></i>
+                          }
+                        ></i>
                       </div>
                     </div>
                     <div className="mb-4">
@@ -444,8 +455,12 @@ function Signup() {
                           class="form-select form-select-lg mb-3"
                           aria-label=".form-select-lg"
                           onChange={handleChange}
-                          name="source">
-                          <option value="ROSABON_SALES" selected>
+                          name="source"
+                        >
+                          <option value="" selected>
+                            Please choose an option
+                          </option>
+                          <option value="ROSABON_SALES">
                             Rosabon sales executive
                           </option>
                           <option value="ANOTHER_USER">Another user</option>
@@ -506,7 +521,8 @@ function Signup() {
                         />
                         <label
                           className="form-check-label"
-                          for="flexCheckChecked">
+                          for="flexCheckChecked"
+                        >
                           Yes, i want to recieve newsletters of Promos and
                           Offers
                         </label>
@@ -520,7 +536,8 @@ function Signup() {
                         />
                         <label
                           className="form-check-label"
-                          for="flexCheckChecked">
+                          for="flexCheckChecked"
+                        >
                           I agree to the Terms and Privacy Policy
                         </label>
                       </div>

@@ -12,7 +12,7 @@ const PlanHome = () => {
         <ProfileSideBarList profile="profile" />
       </div>
       <div className="main-body">
-        <HistoryTable />
+        <PlanPayment />
       </div>
     </Wrapper>
   );

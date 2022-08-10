@@ -48,7 +48,6 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    
     if (success) {
       if(user_login.role.name == 'COMPANY') {
         console.log(user_login.role.name)

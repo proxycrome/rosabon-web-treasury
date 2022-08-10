@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Verve from "../../asset/master-card-logo.png";
 import MOneyTransfer from "../../asset/money-transfer.png";
-import { AvailableBalance } from "./Accesssories";
+import { RolloverSummary } from "./Accesssories";
 
 const PlanPayment = () => {
   return (
@@ -80,7 +80,7 @@ const PlanPayment = () => {
       <RightView>
         <div className="bank-details">
           <div className="bank-detail-content">
-            <AvailableBalance />
+            <RolloverSummary />
           </div>
         </div>
       </RightView>

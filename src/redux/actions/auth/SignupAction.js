@@ -44,9 +44,10 @@ export const resetPassword = (dataObj) => async (dispatch) => {
 
 export const forgotPassword = (dataObj) => async (dispatch) => {
   try {
+    // console.log(dataObj)
     const { formData } = await forgot_password(dataObj);
-    dispatch({ type: types.FORGOT_PASSWORD, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+    // dispatch({ type: types.FORGOT_PASSWORD, payload: formData });
+    // dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
   } catch (error) {}
 };
 
