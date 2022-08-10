@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import ChoosePlanHolder from "../../asset/chooseplaneHolder.png";
+import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 
 export const PlanForm = () => {
   return (

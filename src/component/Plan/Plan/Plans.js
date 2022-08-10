@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Divider from "../../asset/divider.png";
 
 export const Plans = () => {
   return (

@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import halfEllipse from "../../asset/halfEllipse.png";
-import ChoosePlanHolder from "../../asset/chooseplaneHolder.png";
-import { ProfileNavBar } from '../dashboard/ProfileNavbar';
+import halfEllipse from "../../../asset/halfEllipse.png";
+import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
+import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { RightView } from './RightView';
 import { LeftView } from './LeftView';
 

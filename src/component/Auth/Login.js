@@ -38,8 +38,9 @@ const Login = () => {
     let data = {
       email,
       password,
-      platformType: "WEB"
+      platformType: "WEB",
     };
+
     dispatch(loginUser(data));
   };
 
@@ -49,10 +50,10 @@ const Login = () => {
 
   useEffect(() => {
     if (success) {
-      if(user_login.role.name == 'COMPANY') {
-        console.log(user_login.role.name)
+      if (user_login.role.name == "COMPANY") {
+        console.log(user_login.role.name);
         navigate("/company");
-      } 
+      }
     }
   }, [success]);
 
@@ -65,7 +66,7 @@ const Login = () => {
             <form autoComplete="off" onSubmit={handleUserSubmit}>
               <LoginInput>
                 <div className="mb-4">
-                  <label>Email Address</label>
+                  <label className="pb-2">Email Address</label>
                   <div className="input-group">
                     <input
                       type="email"
@@ -78,7 +79,7 @@ const Login = () => {
                   </div>
                 </div>
                 <div className="mb-4 input_password">
-                  <label>Password</label>
+                  <label className="pb-2">Password</label>
                   <div className="input-group">
                     <input
                       type={passwordShown ? "text" : "password"}
@@ -90,9 +91,8 @@ const Login = () => {
                     />
                     <i
                       onClick={togglePassword1}
-                      class={
-                        passwordShown ? "far fa-eye" : "far fa-eye-slash"
-                      }></i>
+                      class={passwordShown ? "far fa-eye" : "far fa-eye-slash"}
+                    ></i>
                   </div>
                 </div>
                 <div className="d-flex justify-content-between">
@@ -117,11 +117,12 @@ const Login = () => {
                   <button type="submit" className="verify_congrates_btn">
                     Login
                   </button>
-                  <Link to="/signup">
-                    <p className="text-center">
-                      Don’t have an account? <span className="">Sign up</span>
-                    </p>
-                  </Link>
+                  <p className="text-center">
+                    Don’t have an account?{" "}
+                    <span className="">
+                      <Link to="/signup">Sign up</Link>
+                    </span>
+                  </p>
                 </div>
               </LoginButton>
             </form>
@@ -190,7 +191,8 @@ const LoginInput = styled.div`
     letter-spacing: -0.04em;
     color: #828282;
   }
-  span {
+
+  p {
     padding-left: 200px;
   }
   .input_password {

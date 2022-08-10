@@ -10,9 +10,29 @@ export const register = async (obj) => {
 };
 
 export const login_user = async (obj) => {
-  const response = await axios.post(`${config.rosobon}login`, obj, headers);
-  const formData = await response.data;
-  return { formData };
+  try {
+    const response = await axios.post(`${config.rosobon}login`, obj, headers);
+    const formData = await response.data;
+    return { formData };
+  } catch (error) {
+    const message = error.response
+      ? error.response.data.message
+        ? error.response.data.message
+        : error.response.data.response_message
+        ? error.response.data.response_message
+        : "Invalid Credentials"
+      : "Network Error";
+    console.log(message)
+    // dispatch({
+    //   type: types.AUTHORIZE_FAIL,
+    //   payload: message,
+    // });
+    // toast.error(message, {
+    //   position: "top-right",
+    // });
+    // console.log(error)
+  }
+  
 };
 
 export const reset_password = async (token, obj) => {
