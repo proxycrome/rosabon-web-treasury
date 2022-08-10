@@ -94,7 +94,7 @@ const CompanyKYC = () => {
       status,
     };
     console.log(data);
-    // dispatch(updateUserCompanyKYC(data));
+    dispatch(updateUserCompanyKYC(data));
   };
 
   useEffect(() => {

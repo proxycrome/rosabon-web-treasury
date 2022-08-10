@@ -73,10 +73,12 @@ const LoginLeftView = ({ signup }) => {
                 
               </>
               ) : (
-                <button type="button" class="continue_login_btn">
-                  Continue the Journey
-                  <i class="fa-solid fa-arrow-right-long"></i>
-                </button>
+                  <>
+                  </>
+                // <button type="button" class="continue_login_btn">
+                //   Continue the Journey
+                //   <i class="fa-solid fa-arrow-right-long"></i>
+                // </button>
               )}
             </div>
           </div>
