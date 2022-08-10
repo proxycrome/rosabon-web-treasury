@@ -20,7 +20,7 @@ const MyDocu = () => {
             src={User}
             alt="User"
           />
-          <i class="camera-font-awe position-absolute fa-solid fa-camera"></i>
+          <i className="camera-font-awe position-absolute fa-solid fa-camera"></i>
         </div>
         <div className="image-holder">
           <div className="row">
@@ -41,12 +41,13 @@ const MyDocu = () => {
             </div>
           </div>
         </div>
-        <div class="row pt-5">
-          <div class="col-md-6 ">
-            <label>Gender</label>
+        <div className="row pt-5">
+          <div className="col-md-6 ">
+            <label>ID Type</label>
             <select
-              class="form-select form-select-lg mb-3"
-              aria-label=".form-select-lg">
+              className="form-select form-select-lg mb-3"
+              aria-label=".form-select-lg"
+              disabled={showEdit}>
               <option selected>National ID card</option>
               <option value="2">Driver’s License </option>
               <option value="2">International Passport</option>
@@ -55,9 +56,9 @@ const MyDocu = () => {
           </div>
           <div class="col-md-6 ">
             <label>ID Number</label>
-            <div class="input-group mb-4">
+            <div className="input-group mb-4">
               <input
-                class="form-control"
+                className="form-control"
                 placeholder="123-000-3456"
                 type="text"
               />
@@ -78,12 +79,12 @@ const MyDocu = () => {
                     <h5 className="position-relative">
                       Upload ID (front){" "}
                       <span className="">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark"></i>
                       </span>
                     </h5>
-                    <div class="progress" style={{ height: "3px" }}>
+                    <div className="progress" style={{ height: "3px" }}>
                       <div
-                        class="progress-bar"
+                        className="progress-bar"
                         role="progressbar"
                         style={{ width: "75%" }}
                         aria-valuenow="25"
@@ -94,7 +95,7 @@ const MyDocu = () => {
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i className="fa-solid fa-paperclip"></i>
                   </button>
                   <button className="normal-btn grey-button">
                     Choose file
@@ -115,12 +116,12 @@ const MyDocu = () => {
                     <h5 className="position-relative">
                       Upload ID (back){" "}
                       <span className="">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark"></i>
                       </span>
                     </h5>
-                    <div class="progress" style={{ height: "3px" }}>
+                    <div className="progress" style={{ height: "3px" }}>
                       <div
-                        class="progress-bar"
+                        className="progress-bar"
                         role="progressbar"
                         style={{ width: "75%" }}
                         aria-valuenow="25"
@@ -131,7 +132,7 @@ const MyDocu = () => {
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i className="fa-solid fa-paperclip"></i>
                   </button>
                   <button className="normal-btn grey-button">
                     Choose file
@@ -155,7 +156,7 @@ const MyDocu = () => {
                 </div>
                 <div className=" style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i className="fa-solid fa-paperclip"></i>
                   </button>
                   <button className="normal-btn grey-button">
                     Choose file

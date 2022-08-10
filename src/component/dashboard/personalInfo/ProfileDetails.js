@@ -50,43 +50,43 @@ export const ProfileEdit = () => {
             <div>
               <h4>Personal Details</h4>
               <div>
-                <div class="row">
-                  <div class="col-md-4 ">
+                <div className="row">
+                  <div className="col-md-4 ">
                     <label>First Name</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="First Name"
                         aria-label="First Name..."
                         type="text"
                       />
                     </div>
                   </div>
-                  <div class="col-md-4 ">
+                  <div className="col-md-4 ">
                     <label>Middle Name</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="Middle Name"
                         aria-label="First Name..."
                         type="text"
                       />
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div className="col-md-4">
                     <label>Last Name</label>
-                    <div class="input-group">
+                    <div className="input-group">
                       <input
                         type="text"
-                        class="form-control"
+                        className="form-control"
                         placeholder="Last Name"
                         aria-label="Last Name..."
                       />
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-4 ">
+                <div className="row">
+                  <div className="col-md-4 ">
                     <label>Gender</label>
                     <div class="input-group mb-4">
                       <input
