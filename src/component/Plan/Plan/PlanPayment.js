@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import Verve from "../../asset/master-card-logo.png";
-import MOneyTransfer from "../../asset/money-transfer.png";
-import { RolloverSummary } from "./Accesssories";
+import Verve from "../../../asset/master-card-logo.png";
+import MOneyTransfer from "../../../asset/money-transfer.png";
+import {
+  UserBankDetails,
+} from "../Accesssories";
 
 const PlanPayment = () => {
   return (
@@ -80,7 +82,7 @@ const PlanPayment = () => {
       <RightView>
         <div className="bank-details">
           <div className="bank-detail-content">
-            <RolloverSummary />
+            <UserBankDetails />
           </div>
         </div>
       </RightView>
