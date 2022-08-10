@@ -21,7 +21,7 @@ export const RightView = () => {
                             <p className='p-0 m-0'>₦</p>
                         </div>
                     </div>
-                    <h3 className='pt-1 pb-3'>₦ 1,500, 346.00</h3>
+                    <h3 className='pt-1 pb-3'>₦ 1,500,346.00</h3>
                     <div className='down-button pt-4'>
                         <div className='d-flex justify-content-between'>
                             <div className='d-flex  align-items-center justify-content-between active-box'>

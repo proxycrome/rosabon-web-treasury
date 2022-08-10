@@ -39,109 +39,112 @@ const PersonalInfo = () => {
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 col-lg-4">
+            <div className="row">
+              <div className="col-md-6 col-lg-4">
                 <label>First Name</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="First Name"
                     type="text"
                     disabled={showEditProf}
                   />
                 </div>
               </div>
-              <div class="col-md-6 col-lg-4">
+              <div className="col-md-6 col-lg-4">
                 <label>Middle Name</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="Middle Name"
                     type="text"
                     disabled={showEditProf}
                   />
                 </div>
               </div>
-              <div class="col-md-8 col-lg-4 pb-md-4">
+              <div className="col-md-8 col-lg-4 pb-md-4">
                 <label>Last Name</label>
-                <div class="input-group">
+                <div className="input-group mb-4">
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="Last Name"
                     disabled={showEditProf}
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 col-lg-4">
+            <div className="row">
+              <div className="col-md-6 col-lg-4">
                 <label>Gender</label>
                 <select
-                  class="form-select form-select-lg mb-3"
+                  className="form-select form-select-lg mb-4"
                   aria-label=".form-select-lg"
                   disabled={showEditProf}>
                   <option selected>Male</option>
                   <option value="2">Female</option>
                 </select>
               </div>
-              <div class="col-md-6 col-lg-4">
+              <div className="col-md-6 col-lg-4">
                 <label>Date of Birth</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="Date of Birth"
                     aria-label="First Name..."
-                    type="text"
+                    type="date"
                     disabled={showEditProf}
                   />
-                  <span className=" input-font-awe">
-                    <i class="fa-solid fa-calendar"></i>
-                  </span>
+                  {showEditProf && (
+                    <span className="input-font-awe">
+                      <i className="fa-solid fa-calendar"></i>
+                    </span>
+                  )}
+                  
                 </div>
               </div>
-              <div class="col-md-8 col-lg-4 pb-md-4">
+              <div className="col-md-8 col-lg-4 pb-md-4 mb-4">
                 <label>Primary phone number</label>
-                <div class="input-group">
+                <div className="input-group">
                   <input
                     type="tel"
-                    class="form-control"
+                    className="form-control"
                     placeholder="Primary phone number"
                     disabled={showEditProf}
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-8 ">
+            <div className="row">
+              <div className="col-md-8 ">
                 <label>Contact Person Email Address</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
-                    placeholder="Contact Person  Email Address"
+                    className="form-control"
+                    placeholder="Contact Person Email Address"
                     type="text"
                     disabled={showEditProf}
                   />
                 </div>
               </div>
-              <div class="col-md-4 ps-2">
+              <div className="col-md-4 ps-2 mb-4">
                 <label>BVN</label>
-                <div class="input-group">
+                <div className="input-group">
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="BVN"
                     disabled={showEditProf}
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-lg-4 ">
+            <div className="row">
+              <div className="col-lg-4 ">
                 <label>Customer ID Number</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="Customer ID Number"
                     type="text"
                     disabled={showEditProf}
@@ -166,50 +169,50 @@ const PersonalInfo = () => {
               </div>
             </div>
             <div>
-              <div class="row">
-                <div class="col-md-8 ">
+              <div className="row">
+                <div className="col-md-8 ">
                   <label>Secondary Phone Number</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder=""
                       type="text"
                       disabled={showEditCont}
                     />
                   </div>
                 </div>
-                <div class="col-md-4 ">
+                <div className="col-md-4 ">
                   <label>Country of Residence</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Middle Name"
                       aria-label="First Name..."
                       type="text"
                       disabled={showEditCont}
                     />
                     <span className=" input-font-awe">
-                      <i class="fa-solid fa-angle-down"></i>
+                      <i className="fa-solid fa-angle-down"></i>
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6 col-lg-4">
+              <div className="row">
+                <div className="col-md-6 col-lg-4">
                   <label>State</label>
                   <select
-                    class="form-select form-select-lg mb-3"
+                    className="form-select form-select-lg mb-4"
                     aria-label=".form-select-lg"
                     disabled={showEditCont}>
                     <option selected>Male</option>
                     <option value="2">Female</option>
                   </select>
                 </div>
-                <div class="col-md-6 col-lg-4 ">
+                <div className="col-md-6 col-lg-4 ">
                   <label>City</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="City"
                       aria-label="First Name..."
                       type="text"
@@ -217,27 +220,27 @@ const PersonalInfo = () => {
                     />
                   </div>
                 </div>
-                <div class="col-md-6 col-lg-6 pb-md-4">
+                <div className="col-md-6 col-lg-6 pb-md-4">
                   <label>Nationality</label>
-                  <div class="input-group">
+                  <div className="input-group mb-4">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Nationality"
                       disabled={showEditCont}
                     />
                     <span className=" input-font-awe">
-                      <i class="fa-solid fa-angle-down"></i>
+                      <i className="fa-solid fa-angle-down"></i>
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class=" ">
+              <div className="row">
+                <div className=" ">
                   <label>Address</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Address"
                       type="text"
                       disabled={showEditCont}
@@ -259,23 +262,23 @@ const PersonalInfo = () => {
                   )}
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-4 ">
+              <div className="row">
+                <div className="col-md-4 ">
                   <label>Occupation</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Occupation"
                       type="text"
                       disabled={showEditEmpoy}
                     />
                   </div>
                 </div>
-                <div class="col-md-4 ">
+                <div className="col-md-4 ">
                   <label>Employer’s name</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Employer’s name"
                       type="text"
                       disabled={showEditEmpoy}
@@ -283,12 +286,12 @@ const PersonalInfo = () => {
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class=" ">
+              <div className="row">
+                <div className=" ">
                   <label>Employers Address</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Employers Address"
                       type="text"
                       disabled={showEditEmpoy}
@@ -310,23 +313,23 @@ const PersonalInfo = () => {
                   )}
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-4 ">
+              <div className="row">
+                <div className="col-md-4 ">
                   <label>Next of Kin Name</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Next of Kin Name"
                       type="text"
                       disabled={showEditNOK}
                     />
                   </div>
                 </div>
-                <div class="col-md-8 ">
+                <div className="col-md-8 ">
                   <label>Next of Kin Email</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder=""
                       type="text"
                       disabled={showEditNOK}
@@ -334,12 +337,12 @@ const PersonalInfo = () => {
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class=" ">
+              <div className="row">
+                <div className=" ">
                   <label>Next of Kin Address</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder=""
                       type="text"
                       disabled={showEditNOK}
@@ -347,21 +350,21 @@ const PersonalInfo = () => {
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-8 ">
+              <div className="row">
+                <div className="col-md-8 ">
                   <label>next of kin phone number</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder=""
                       type="text"
                       disabled={showEditNOK}
                     />
-                    <span className="font-awe">
-                      <i class=" fa-solid fa-angle-down"></i>
+                    <span className="input-font-awe">
+                      {/* <i class=" fa-solid fa-angle-down"></i>
                       <i class="fa-solid fa-angle-down"></i>
-                      <i class="fa-solid fa-angle-down"></i>
-                      <i class="font-num fa-solid fa-angle-down"></i>
+                      <i class="fa-solid fa-angle-down"></i> */}
+                      <i className="font-num fa-solid fa-angle-down"></i>
                     </span>
                   </div>
                 </div>

@@ -41,12 +41,12 @@ const BankDetails = () => {
             </div>
           </div>
           <div>
-            <div class="row">
-              <div class="col-md-8 ">
+            <div className="row">
+              <div className="col-md-8 ">
                 <label>Select Bank</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                     disabled={showEdit}
@@ -56,21 +56,21 @@ const BankDetails = () => {
             </div>
           </div>
           <div>
-            <div class="row">
+            <div className="row">
               <div className="col-md-6">
                 <div className="row">
-                  <div class="col-6 ">
+                  <div className="col-6 ">
                     <label>Account Number</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEdit}
                       />
                     </div>
                   </div>
-                  <div class="col-6 ">
+                  <div className="col-6 ">
                     <button
                       type="button"
                       onClick={() => setShow(true)}
@@ -96,11 +96,11 @@ const BankDetails = () => {
                 </div>
               </div>
 
-              <div class="col-md-6 ">
+              <div className="col-md-6 ">
                 <label>Acount Name</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                     disabled={showEdit}

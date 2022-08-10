@@ -18,7 +18,7 @@ import PlanPayment from './component/Plan/PlanPayment';
 function App() {
   return (
     <div className="App">
-      <PlanHome />
+      <HomeView />
     </div>
   );
 }
