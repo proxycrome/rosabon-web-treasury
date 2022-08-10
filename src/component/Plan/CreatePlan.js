@@ -11,7 +11,7 @@ const CreatePlan = () => {
             <div>
                 <div className='d-flex align-items-center justify-content-between savins-drop' >
                     <h5>Fix Savings </h5>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <i className="fa-solid fa-chevron-down"></i>
                 </div>
                 <p className='para-header'>Choose from a fixed savings plan</p>
             </div>
@@ -100,7 +100,7 @@ const CreatePlan = () => {
             <div>
                 <div className='d-flex align-items-center justify-content-between savins-drop' >
                     <h5>Target Savings </h5>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <i className="fa-solid fa-chevron-down"></i>
                 </div>
                 <p className='para-header'>Choose from a Target savings plan</p>
             </div>
@@ -189,7 +189,7 @@ const CreatePlan = () => {
             <div>
                 <div className='d-flex align-items-center justify-content-between savins-drop' >
                     <h5>Target Income </h5>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <i className="fa-solid fa-chevron-down"></i>
                 </div>
                 <p className='para-header'>Choose from a Target Income plan</p>
             </div>
@@ -281,9 +281,12 @@ const CreatePlan = () => {
 export default CreatePlan
 
 const Wrapper = styled.div `
-    padding-left: 100px;
-    padding-right: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding-top: 60px;
+    width: 90%;
     @media (max-width: 1200px) {
         padding-left: 20px;
         padding-right: 20px;

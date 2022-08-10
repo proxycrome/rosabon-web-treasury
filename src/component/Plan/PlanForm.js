@@ -28,157 +28,163 @@ export const PlanForm = () => {
             <div className='row'>
                 <h4>Plan Details</h4>
             </div>
-            <div class="row">
-              <div class="col-md-6 ">
+            <div className="row">
+              <div className="col-md-6 ">
                 <label>Plan Name</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="Enter a plan name"
                     type="text"
                   />
                 </div>
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <label>Currency</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="Select investment currency"
                     type="text"
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 ">
+            <div className="row">
+              <div className="col-md-6 ">
                 <label>Exchange rate</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <label>Amount to be placed</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 ">
+            <div className="row">
+              <div className="col-md-6 ">
                 <label>Target amount</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <label>Tenor</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 ">
+            <div className="row">
+              <div className="col-md-6 ">
                 <label>Savings frequency</label>
                 <select
-                    class="form-select form-select-lg mb-3"
+                    className="form-select form-select-lg mb-3"
                     name="source">
                     <option value="" selected>Daily</option>
                     <option value="">Weekly</option>
                     <option value="">Monthly</option>
                 </select>
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <label>Interest Reciept Option</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 ">
+            <div className="row">
+              <div className="col-md-6 ">
                 <label>Contribution value</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <label>Direct Debit</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder=""
-                    type="text"
-                  />
+                <div className="input-group mb-4">
+                  <select
+                    className="form-select form-select-lg"
+                    placeholder="Setup Direct Debit"
+                  >
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 ">
+            <div className="row">
+              <div className="col-md-6 ">
                 <label>Calculate interest rate</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <label>Number of tickets</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder=""
                     type="text"
                   />
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 ">
+            <div className="row">
+              <div className="col-md-6 ">
                 <label>Auto renew</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
+                <div className="input-group mb-4">
+                <select
+                    className="form-select form-select-lg"
                     placeholder=""
-                    type="text"
-                  />
+                  >
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <label>Allow liquidation</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
+                <div className="input-group mb-4">
+                  <select
+                    className="form-select form-select-lg"
                     placeholder=""
-                    type="text"
-                  />
+                  >
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
                 </div>
               </div>
             </div>

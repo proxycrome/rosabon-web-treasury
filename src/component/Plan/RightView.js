@@ -136,8 +136,8 @@ export const RightView = () => {
 }
 
 const RightWrapper = styled.div `
-    @media (max-width: 900px) {
-        /* padding-left: 30px; */
+    @media (min-width: 900px) {
+         padding: 50px; 
     }
     @media (max-width: 900px) {
         width: 80% !important;

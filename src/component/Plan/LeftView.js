@@ -1,66 +1,71 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
+import { Collapse } from 'reactstrap';
 
 
 export const LeftView = () => {
+    const [open, setOpen] = useState(false);
     return (
         <LeftWrapper>
             <div className='calculatoe'>
                 <div className='interest'>
-                    <div className='d-flex align-items-center justify-content-between'>
+                    <div className='d-flex align-items-center justify-content-between' onClick={() => setOpen(!open)}>
                         <h5>Interest Calculator</h5>
-                        <i class="fa-solid fa-chevron-down"></i>
+                        {open ? <i class="fa-solid fa-chevron-up"></i> : <i class="fa-solid fa-chevron-down"></i>}
+                        
                     </div>
-                    <div class="row">
-                        <div class=" ">
-                            <label>Select Product</label>
-                            <div class="input-group mb-4">
-                            <input
-                                class="form-control"
-                                placeholder="Select Product"
-                                type="text"
-                            />
+                    <Collapse isOpen={open}>
+                        <div class="row">
+                            <div class=" ">
+                                <label>Select Product</label>
+                                <div class="input-group mb-4">
+                                <input
+                                    class="form-control"
+                                    placeholder="Select Product"
+                                    type="text"
+                                />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class=" ">
-                            <label>Enter Amount</label>
-                            <div class="input-group mb-4">
-                            <input
-                                class="form-control"
-                                placeholder="N  0.00"
-                                type="text"
-                            />
+                        <div class="row">
+                            <div class=" ">
+                                <label>Enter Amount</label>
+                                <div class="input-group mb-4">
+                                <input
+                                    class="form-control"
+                                    placeholder="N  0.00"
+                                    type="text"
+                                />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class=" ">
-                            <label>Tenor</label>
-                            <div class="input-group mb-4">
-                            <input
-                                class="form-control"
-                                placeholder="N  0.00"
-                                type="text"
-                            />
+                        <div class="row">
+                            <div class=" ">
+                                <label>Tenor</label>
+                                <div class="input-group mb-4">
+                                <input
+                                    class="form-control"
+                                    placeholder="N  0.00"
+                                    type="text"
+                                />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className='text-center calc-mty'>
-                        <button>Calculate Amount at maturity</button>
-                    </div>
-                    <div class="row pt-4">
-                        <div class=" ">
-                            <div class="input-group mb-4">
-                            <input
-                                class="form-control"
-                                placeholder="N  0.00"
-                                type="text"
-                            />
+                        <div className='text-center calc-mty'>
+                            <button>Calculate Amount at maturity</button>
+                        </div>
+                        <div class="row pt-4">
+                            <div class=" ">
+                                <div class="input-group mb-4">
+                                <input
+                                    class="form-control"
+                                    placeholder="N  0.00"
+                                    type="text"
+                                />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Collapse>
                 </div>
                 
             </div>
