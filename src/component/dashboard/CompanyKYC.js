@@ -97,14 +97,14 @@ const CompanyKYC = () => {
     dispatch(updateUserCompanyKYC(data));
   };
 
-  useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("company-token"));
-    if (tokenString) {
-      dispatch(getAuthUsers(tokenString));
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("company-token"));
+  //   if (tokenString) {
+  //     dispatch(getAuthUsers(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   useEffect(() => {
     console.log(company_details);

@@ -96,14 +96,14 @@ const PersonalKYC = () => {
     dispatch(updateUserCompanyKYC(data));
   };
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem("user-token");
-    if (tokenString) {
-      dispatch(getAuthUser(tokenString));
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   useEffect(() => {
     console.log(user_details);
