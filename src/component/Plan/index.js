@@ -8,6 +8,7 @@ import PlanProduct from "./createPlan";
 import ListPlans from "./Plan";
 import TopupPlan from "./Plan/TopupPlan";
 import { PlanForm } from "./createPlan/PlanForm";
+import { ProfileNavBar } from "../dashboard/ProfileNavbar";
 
 const PlanHome = ({ product, list, topup, payment, details }) => {
   return (

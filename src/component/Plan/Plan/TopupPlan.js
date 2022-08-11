@@ -6,7 +6,9 @@ import PlanPayment from './PlanPayment';
 const TopupPlan = () => {
   return (
     <div>
-          <ProfileNavBar />
+          <ProfileNavBar>
+            <h2>Plan</h2>
+          </ProfileNavBar>
           <PlanPayment />
     </div>
   )

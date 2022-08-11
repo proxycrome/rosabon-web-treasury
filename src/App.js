@@ -21,7 +21,7 @@ import PlanHome from './component/Plan';
 function App() {
   return (
     <div className="App">
-      <PlanForm />
+      <PageRoutes />
     </div>
   );
 }

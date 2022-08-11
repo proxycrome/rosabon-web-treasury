@@ -139,11 +139,14 @@ const RightWrapper = styled.div `
     @media (min-width: 900px) {
          padding: 50px; 
     }
-    @media (max-width: 900px) {
-        width: 80% !important;
+    @media (max-width: 899px) {
+        width: 90% !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         .naira-card {
-            /* width: 100% !important; */
-            
+            width: 100% !important;
+            margin: 0 auto;
         }
     }
     .naira-card-content {
@@ -151,7 +154,9 @@ const RightWrapper = styled.div `
     }
     .home-body {
         padding-top: 30px;
+        width: 100%
     }
+
     .naira-card {
         height: 212px;
         background: #FFFFFF;
@@ -216,7 +221,7 @@ const RightWrapper = styled.div `
     }
     .choose-plan {
         width: 90%;
-        height: 213px;
+        height: auto;
         background: #FFFFFF;
         box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
         border-radius: 8px;

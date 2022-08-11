@@ -27,7 +27,7 @@ const PlanPayment = () => {
                   <p className="p-0 m-0">24/06/2023</p>
                 </div>
                 <div>
-                  <h4>Start date</h4>
+                  <h4>End date</h4>
                   <p className="p-0 m-0">24/06/2023</p>
                 </div>
               </div>
@@ -97,17 +97,15 @@ const LeftView = styled.div`
   padding: 40px;
   .plan-content,
   .plan-payment {
-    width: 338px !important;
+    width: 373px !important;
   }
-  @media (max-width: 700px) {
+  @media (max-width: 850px) {
     width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  @media (max-width: 400px) {
-    .plan-content,
-    .plan-payment {
-      width: 100% !important;
-    }
-  }
+ 
   p {
     font-weight: 400;
     font-size: 14px;
@@ -119,12 +117,15 @@ const LeftView = styled.div`
 
 const RightView = styled.div`
   width: 50%;
-  @media (max-width: 700px) {
+  @media (max-width: 850px) {
     width: 100% !important;
   }
   .bank-details {
     padding: 40px;
+    margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
+    display: flex;
+    justify-content: center;
   }
   .bank-detail-content {
     background: #ffffff;
@@ -149,8 +150,10 @@ const RightView = styled.div`
 
 const Wrapper = styled.div`
   width: 100%;
-  @media (max-width: 800px) {
+  @media (max-width: 850px) {
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   /* padding: 40px; */
   display: flex;
