@@ -100,37 +100,42 @@ function Signup() {
 
   const handleUserSubmit = (e) => {
     e.preventDefault();
-    const {
-      email,
-      password,
-      source,
-      sourceOthers,
-      phone,
-      firstName,
-      lastName,
-      middleName,
-      refferedBy,
-    } = formData;
-    let individualUser = {
-      firstName,
-      lastName,
-      middleName,
-    };
-    let data = {
-      individualUser,
-      email,
-      isAssited: true,
-      isNewsLetters,
-      password,
-      phone,
-      role: "INDIVIDUAL_USER",
-      source,
-      sourceOthers,
-      refferedBy,
-      usage: "TREASURY",
-    };
-    console.log(data);
-    // dispatch(registerUser(data));
+    if (!emailError && passwordError && c_passwordError) {
+      const {
+        email,
+        password,
+        source,
+        sourceOthers,
+        phone,
+        firstName,
+        lastName,
+        middleName,
+        refferedBy,
+      } = formData;
+      let individualUser = {
+        firstName,
+        lastName,
+        middleName,
+      };
+      let data = {
+        individualUser,
+        email,
+        isAssited: true,
+        isNewsLetters,
+        password,
+        phone,
+        role: "INDIVIDUAL_USER",
+        source,
+        sourceOthers,
+        refferedBy,
+        usage: "TREASURY",
+      };
+      console.log(data);
+      dispatch(registerUser(data));
+    } else {
+      // toast.error(error);
+      // console.log(formData);
+    }
   };
 
   const handleCompanySubmit = async (e) => {
@@ -167,7 +172,7 @@ function Signup() {
         refferedBy,
       };
       // console.log(formData);
-      // dispatch(registerCompany(data));
+      dispatch(registerCompany(data));
     } else {
       // toast.error(error);
       // console.log(formData);

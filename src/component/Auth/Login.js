@@ -51,13 +51,18 @@ const Login = () => {
   const handleUserSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formData;
-    let data = {
-      email,
-      password,
-      platformType: "WEB",
-    };
+    if (!error) {
+      let data = {
+        email,
+        password,
+        platformType: "WEB",
+      };
 
-    dispatch(loginUser(data));
+      dispatch(loginUser(data));
+    } else {
+      
+    }
+    
   };
 
   useEffect(() => {
