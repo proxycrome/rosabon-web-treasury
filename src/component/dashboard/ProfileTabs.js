@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 export function ProfileTabs({ personal, handleChange }) {
+  const [activeBtn, setActiveBtn] = useState("profile");
+
   return (
     <WrappeSideBar>
       {personal ? (
@@ -16,8 +18,12 @@ export function ProfileTabs({ personal, handleChange }) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleChange("profile");
-                  }}>
-                  <li>Personal information</li>
+                    setActiveBtn("profile");
+                  }}
+                >
+                  <li className={activeBtn == "profile" ? "style-active" : ""}>
+                    Personal information
+                  </li>
                 </a>
                 <a
                   className="link_style"
@@ -25,8 +31,14 @@ export function ProfileTabs({ personal, handleChange }) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleChange("documents");
-                  }}>
-                  <li>My documents</li>
+                    setActiveBtn("documents");
+                  }}
+                >
+                  <li
+                    className={activeBtn == "documents" ? "style-active" : ""}
+                  >
+                    My documents
+                  </li>
                 </a>
                 <a
                   className="link_style"
@@ -34,17 +46,25 @@ export function ProfileTabs({ personal, handleChange }) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleChange("bank");
-                  }}>
-                  <li>My Bank Details</li>
+                    setActiveBtn("bank");
+                  }}
+                >
+                  <li className={activeBtn == "bank" ? "style-active" : ""}>
+                    My Bank Details
+                  </li>
                 </a>
                 <a
                   className="link_style"
                   href="#/"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleChange("edit");
-                  }}>
-                  <li>Change Password</li>
+                    handleChange("password");
+                    setActiveBtn("password");
+                  }}
+                >
+                  <li className={activeBtn == "password" ? "style-active" : ""}>
+                    Change Password
+                  </li>
                 </a>
               </ul>
             </div>
@@ -62,8 +82,12 @@ export function ProfileTabs({ personal, handleChange }) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleChange("company");
-                  }}>
-                  <li>Company information</li>
+                    setActiveBtn("company");
+                  }}
+                >
+                  <li className={activeBtn == "company" ? "style-active" : ""}>
+                    Company information
+                  </li>
                 </a>
                 <a
                   className="link_style"
@@ -71,8 +95,12 @@ export function ProfileTabs({ personal, handleChange }) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleChange("details");
-                  }}>
-                  <li>More Details</li>
+                    setActiveBtn("details");
+                  }}
+                >
+                  <li className={activeBtn == "details" ? "style-active" : ""}>
+                    More Details
+                  </li>
                 </a>
                 <a
                   className="link_style"
@@ -80,8 +108,14 @@ export function ProfileTabs({ personal, handleChange }) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleChange("documents");
-                  }}>
-                  <li>Company Documents</li>
+                    setActiveBtn("documents");
+                  }}
+                >
+                  <li
+                    className={activeBtn == "documents" ? "style-active" : ""}
+                  >
+                    Company Documents
+                  </li>
                 </a>
                 <a
                   className="link_style"
@@ -89,8 +123,12 @@ export function ProfileTabs({ personal, handleChange }) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleChange("password");
-                  }}>
-                  <li>Change Password</li>
+                    setActiveBtn("password");
+                  }}
+                >
+                  <li className={activeBtn == "password" ? "style-active" : ""}>
+                    Change Password
+                  </li>
                 </a>
               </ul>
             </div>
@@ -147,7 +185,11 @@ const WrappeSideBar = styled.div`
     cursor: pointer;
     padding: 15px 5px;
   }
-  li:hover {
+  /* li:hover {
+    background: rgba(28, 68, 141, 0.09);
+    border-radius: 5px;
+  } */
+  .style-active {
     background: rgba(28, 68, 141, 0.09);
     border-radius: 5px;
   }

@@ -5,36 +5,22 @@ import { BVNConfirm } from "../Accessories/BVNConfirm";
 import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  getAuthUser,
   updateUserCompanyKYC,
 } from "../../redux/actions/personalInfo/userProfile.actions";
+import { successMessage } from "../../redux/actions/auth/SignupAction";
 
 const PersonalKYC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
   const user_details = useSelector((state) => state.user_profile.users);
+  const success = useSelector((state) => state.auth.success);
   const [show, setShow] = useState(false);
 
   const data = {
-    email: user_details.company.email,
-    isAssited: true,
-    isNewsLetters: true,
-    phone: user_details.company.phone,
-    source: user_details.company.source,
-    sourceOthers: user_details.company.sourceOthers,
-    refferedBy: user_details.company.refferedBy,
-    firstName: user_details.company.firstName,
-    lastName: user_details.company.lastName,
-    middleName: user_details.company.middleName,
-    name: user_details.company.name,
     dateOfBirth: "",
     gender: "",
     bvn: "",
-    role: "INDIVIDUAL_USER",
-    usage: "TREASURY",
-    isKyc: true,
-    status: user_details.company.status,
   };
 
   const [formData, setformData] = useState(data);
@@ -49,48 +35,27 @@ const PersonalKYC = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      email,
-      isAssited,
-      isNewsLetters,
-      phone,
-      source,
-      sourceOthers,
-      firstName,
-      lastName,
-      middleName,
-      namename,
-      dateOfBirth,
-      gender,
-      bvn,
-      role,
-      usage,
-      statusstatus,
-      refferedBy,
-      isKyc,
-      status,
-    } = formData;
+    const { dateOfBirth, gender, bvn } = formData;
 
     let data = {
-      email,
-      isAssited,
-      isNewsLetters,
-      phone,
-      source,
-      sourceOthers,
-      firstName,
-      lastName,
-      middleName,
-      namename,
+      email: user_details.company.email,
+      isAssited: true,
+      isNewsLetters: true,
+      phone: user_details.company.phone,
+      source: user_details.company.source,
+      sourceOthers: user_details.company.sourceOthers,
+      refferedBy: user_details.company.refferedBy,
+      firstName: user_details.company.firstName,
+      lastName: user_details.company.lastName,
+      middleName: user_details.company.middleName,
+      name: user_details.company.name,
+      role: "INDIVIDUAL_USER",
+      usage: "TREASURY",
+      isKyc: true,
+      status: user_details.company.status,
       dateOfBirth,
       gender,
       bvn,
-      role,
-      usage,
-      statusstatus,
-      refferedBy,
-      isKyc,
-      status,
     };
     // console.log(data)
     dispatch(updateUserCompanyKYC(data));
@@ -104,6 +69,19 @@ const PersonalKYC = () => {
   //     navigate("/login");
   //   }
   // }, []);
+
+  useEffect(() => {
+    dispatch(successMessage(false));
+  }, []);
+
+  // useEffect(() => {
+  //   if (success) {
+  //     if (user_login.role.name == "COMPANY") {
+  //       console.log(user_login.role.name);
+  //       navigate("/company");
+  //     }
+  //   }
+  // }, [success]);
 
   useEffect(() => {
     console.log(user_details);
@@ -183,7 +161,7 @@ const PersonalKYC = () => {
                             <input
                               class="form-control"
                               placeholder="Date of Birth"
-                              type="text"
+                              type="date"
                               onChange={handleChange}
                               name="dateOfBirth"
                               value={formData.dateOfBirth}
@@ -343,14 +321,18 @@ const PersonalKYC = () => {
             <WrapperFooter>
               <div className="d-flex align-items-center justify-content-between">
                 <div>
-                  <Link to="/profile-details">
-                    <button className="">Save and Invest Now</button>
-                  </Link>
+                  {/* <Link to="/profile-details">
+                    
+                  </Link> */}
+                  <button className="">Save and Invest Now</button>
                 </div>
                 <div>
-                  <Link to="/profile-details">
+                  {formData.dateOfBirth && formData.gender && formData.bvn ? (
+                    <button className="blue-btn">Save and Invest Now</button>
+                  ) : (
                     <button className="">Save and Invest Now</button>
-                  </Link>
+                  )}
+                  {/* <Link to="/profile-details"></Link> */}
                 </div>
               </div>
             </WrapperFooter>
@@ -375,7 +357,11 @@ const WrapperFooter = styled.div`
     border-radius: 10px;
     outline: none;
     border: none;
-    padding: 10px 10px;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;
 const WrapperBody = styled.div`

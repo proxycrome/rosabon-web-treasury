@@ -12,7 +12,6 @@ import PlanHome from "./component/Plan";
 function PageRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Authentication />} />
       <Route path="/login" element={<Authentication />} />
       <Route path="/signup" element={<Authentication signup="signup" />} />
       <Route path="/company" element={<KYC company="company" />} />
@@ -30,7 +29,7 @@ function PageRoutes() {
         element={<PlanHome details="details" />}
       />
       <Route path="/plan-product" element={<PlanHome product="product" />} />
-      <Route path="/plan-home" element={<PlanHome />} />
+      <Route path="/" element={<PlanHome />} />
       <Route path="/plan-list" element={<PlanHome list="list" />} />
       <Route path="/plan-topup" element={<PlanHome topup="topup" />} />
       <Route path="/plan-payment" element={<PlanHome payment="payment" />} />

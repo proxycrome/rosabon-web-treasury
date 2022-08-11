@@ -1,168 +1,250 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import User from "../../../asset/user.png";
+import { uploadPersonalDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
+import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
 const MoreDetails = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+   const [show, setShow] = useState(false);
+   const [showEdit, setShowEdit] = useState(true);
+   const toggleEdit = () => {
+     setShowEdit(!showEdit);
+   };
+
+  const data = {
+    acc_name: "",
+    acc_no: "",
+    bankType: "",
+  };
+  const [formData, setformData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { acc_name, acc_no, bankType } = formData;
+    let data = { acc_name, acc_no, bankType };
+    console.log(data);
+    dispatch(uploadPersonalDocument(data));
+  };
+
+  useEffect(() => {
+    dispatch(successMessage(false));
+  }, []);
+
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
+
   return (
     <div>
       <WrapperBody>
         <div className="container-fluid">
-          <div className="row">
-            <div className="d-flex justify-content-between">
-              <h4>
-                Director 1{" "}
-                <span className="pl-5">
-                  <i class="fa-solid fa-angle-down"></i>
-                </span>
-              </h4>
-              <div>
-                <button className="cancel-button">Cancel</button>
-                <button>Edit</button>
-              </div>
-            </div>
-          </div>
-          <div className="details-content">
-            <div className="image-holder">
-              <div className="row">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div className="d-flex align-items-center justify-content-center">
-                    <img className="image-fluid" src={User} alt="User" />
-                    <div>
-                      <h5 className="">Upload ID (front)</h5>
-                      <p className="">jpg, png. 2 MB</p>
-                    </div>
-                  </div>
-                  <button>Choose file</button>
+          <form autoComplete="off" onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="d-flex justify-content-between">
+                <h4>
+                  Director 1{" "}
+                  <span className="pl-5">
+                    <i class="fa-solid fa-angle-down"></i>
+                  </span>
+                </h4>
+                <div>
+                  <button className="cancel-button">Cancel</button>
+                  <button>Edit</button>
                 </div>
               </div>
             </div>
-
-            <div class="row">
-              <div class="col-md-4 ">
-                <label>First Name</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder="First Name"
-                    aria-label="First Name..."
-                    type="text"
-                  />
-                </div>
-              </div>
-              <div class="col-md-4 ">
-                <label>Middle Name</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder="Middle Name"
-                    aria-label="First Name..."
-                    type="text"
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <label>Last Name</label>
-                <div class="input-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Last Name"
-                    aria-label="Last Name..."
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col ">
-                <label>Company Address</label>
-                <div class="input-group mb-4">
-                  <input class="form-control" placeholder="" type="text" />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-8 ">
-                <label>Email Address</label>
-                <div class="input-group mb-4">
-                  <input class="form-control" placeholder="" type="text" />
-                </div>
-              </div>
-              <div class="col-md-4 ">
-                <label>Phone Number</label>
-                <div class="input-group mb-4">
-                  <input class="form-control" placeholder="" type="text" />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div className="col-lg-8">
+            <div className="details-content">
+              <div className="image-holder">
                 <div className="row">
-                  <div class="col-8 ">
-                    <label>Bank verification number (BVN)</label>
-                    <div class="input-group mb-4">
-                      <input
-                        class="form-control"
-                        placeholder="Bank verification number (BVN)"
-                        aria-label="First Name..."
-                        type="text"
-                      />
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center justify-content-center">
+                      <img className="image-fluid" src={User} alt="User" />
+                      <div>
+                        <h5 className="">Upload ID (front)</h5>
+                        <p className="">jpg, png. 2 MB</p>
+                      </div>
                     </div>
+                    <div>
+                      {showEdit ? (
+                        <button
+                          className={showEdit ? " btn_bg_blue" : ""}
+                          onClick={toggleEdit}
+                        >
+                          Choose file
+                        </button>
+                      ) : (
+                        <button className="grey-button" onClick={toggleEdit}>
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                    {/* <button>Choose file</button> */}
                   </div>
+                </div>
+              </div>
 
-                  <div class="col-4 ">
-                    <button
-                      //   type="button"
-                      //   onClick={() => setShow(true)}
-                      className="profile_vify_btn">
-                      Verify
-                    </button>
+              <div class="row">
+                <div class="col-md-4 ">
+                  <label>First Name</label>
+                  <div class="input-group mb-4">
+                    <input
+                      class="form-control"
+                      placeholder="First Name"
+                      disabled={showEdit}
+                      type="text"
+                    />
                   </div>
-                  <div>
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "100px",
-                        right: "300px",
-                      }}>
-                      {/* <ModalComponent
+                </div>
+                <div class="col-md-4 ">
+                  <label>Middle Name</label>
+                  <div class="input-group mb-4">
+                    <input
+                      class="form-control"
+                      placeholder="Middle Name"
+                      disabled={showEdit}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label>Last Name</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Last Name"
+                      disabled={showEdit}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col ">
+                  <label>Company Address</label>
+                  <div class="input-group mb-4">
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEdit}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8 ">
+                  <label>Email Address</label>
+                  <div class="input-group mb-4">
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEdit}
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4 ">
+                  <label>Phone Number</label>
+                  <div class="input-group mb-4">
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEdit}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div className="col-lg-8">
+                  <div className="row">
+                    <div class="col-8 ">
+                      <label>Bank verification number (BVN)</label>
+                      <div class="input-group mb-4">
+                        <input
+                          class="form-control"
+                          placeholder="Bank verification number (BVN)"
+                          disabled={showEdit}
+                          type="text"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="col-4 ">
+                      <button
+                        //   type="button"
+                        //   onClick={() => setShow(true)}
+                        className="profile_vify_btn"
+                      >
+                        Verify
+                      </button>
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "100px",
+                          right: "300px",
+                        }}
+                      >
+                        {/* <ModalComponent
                             show={show}
                             size={"md"}
                             handleClose={() => setShow(false)}>
                             <BVNConfirm show={show} handleClose={() => setShow(false)}/>
                             </ModalComponent> */}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 ">
-                <label>ID Type</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="position-relative form-control"
-                    placeholder="First Name"
-                    aria-label="First Name..."
-                    type="text"
-                  />
-                  <span className=" input-font-awe">
-                    <i class="fa-solid fa-angle-down"></i>
-                  </span>
+              <div class="row">
+                <div class="col-md-6 ">
+                  <label>ID Type</label>
+                  <div class="input-group mb-4">
+                    <input
+                      class="position-relative form-control"
+                      placeholder="First Name"
+                      disabled={showEdit}
+                      type="text"
+                      
+                    />
+                    <span className=" input-font-awe">
+                      <i class="fa-solid fa-angle-down"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-6 ">
+                  <label>ID Number</label>
+                  <div class="input-group mb-4">
+                    <input
+                      class="form-control"
+                      placeholder="Middle Name"
+                      disabled={showEdit}
+                      type="text"
+                    />
+                  </div>
                 </div>
               </div>
-              <div class="col-md-6 ">
-                <label>ID Number</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder="Middle Name"
-                    aria-label="First Name..."
-                    type="text"
-                  />
-                </div>
-              </div>
             </div>
-          </div>
+          </form>
         </div>
       </WrapperBody>
     </div>
@@ -191,7 +273,10 @@ const WrapperBody = styled.div`
   .details-content {
     padding-top: 45px;
   }
-
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
+  }
   .image-holder {
     padding-bottom: 50px;
     /* padding-top: 50px; */

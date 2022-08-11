@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import LoginLeftView from "./loginLeftView";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { successMessage } from "../../redux/actions/auth/SignupAction";
 import { loginUser } from "../../redux/actions/auth/SignupAction";
+
+
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -61,6 +64,7 @@ const Login = () => {
     <div className="">
       <div className="">
         <RightWrapper>
+          <Toaster />
           <h4>Login</h4>
           <div className="container">
             <form autoComplete="off" onSubmit={handleUserSubmit}>

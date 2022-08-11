@@ -4,7 +4,6 @@ import axios from "axios";
 
 export const get_users = async (token) => {
   try {
-    console.log(token);
     const response = await axios.get(`${config.rosobon}auth/users`, {
       headers: authHeader(token),
     });

@@ -1,5 +1,6 @@
 {
   "name": "rosabon",
+  "homepage": "http://rosabon-treasury.optisoft.com.ng/"
   "version": "0.1.0",
   "private": true,
   "dependencies": {
