@@ -16,10 +16,15 @@ const Login = () => {
   const success = useSelector((state) => state.auth.success);
   const user_login = useSelector((state) => state.auth.login);
   const [passwordShown, setPasswordShown] = useState(false);
+  const [error, setError] = useState(null);
 
   const togglePassword1 = () => {
     setPasswordShown(!passwordShown);
   };
+
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
 
   const data = {
     email: "",
@@ -33,18 +38,31 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name == "email") {
+      if (!isValidEmail(e.target.value)) {
+        setError("Email is invalid");
+      } else {
+        setError(null);
+      }
+    }
   };
 
   const handleUserSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formData;
-    let data = {
-      email,
-      password,
-      platformType: "WEB",
-    };
+    if (!error) {
+      let data = {
+        email,
+        password,
+        platformType: "WEB",
+      };
 
-    dispatch(loginUser(data));
+      dispatch(loginUser(data));
+    } else {
+      
+    }
+    
   };
 
   useEffect(() => {
@@ -81,6 +99,12 @@ const Login = () => {
                       value={formData.email}
                     />
                   </div>
+                  {error && (
+                    <h3>
+                      Your account is pending verification. please check your
+                      email for the verification link
+                    </h3>
+                  )}
                 </div>
                 <div className="mb-4 input_password">
                   <label className="pb-2">Password</label>
@@ -99,7 +123,7 @@ const Login = () => {
                     ></i>
                   </div>
                 </div>
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-around">
                   <div className="form-check">
                     <input
                       className="form-check-input"
@@ -180,6 +204,18 @@ const RightWrapper = styled.section`
     line-height: 40px;
     color: #222222;
     padding-bottom: 60px;
+  }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.02em;
+    color: #e20d0d;
+    padding-top: 12px;
   }
   .login_input {
   }

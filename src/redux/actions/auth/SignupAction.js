@@ -39,7 +39,7 @@ export const loginUser = (dataObj) => async (dispatch) => {
     }
     dispatch({ type: types.LOGIN_USER, payload: formData });
     dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
-    toast.success("Successfully login");
+    toast.success("Login was successful");
   } else {
     dispatch({
       type: types.AUTHORIZE_FAIL,
