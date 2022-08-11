@@ -18,26 +18,10 @@ const CompanyKYC = () => {
   const [show, setShow] = useState(false);
 
   const data = {
-    email: company_details && company_details.company.email,
-    isAssited: true,
-    isNewsLetters: true,
-    phone: company_details && company_details.company.phone,
-    source: company_details && company_details.company.source,
-    sourceOthers: company_details && company_details.company.sourceOthers,
-    contactFirstName:
-      company_details && company_details.company.contactFirstName,
-    contactLastName: company_details && company_details.company.contactLastName,
-    contactMiddleName:
-      company_details && company_details.company.contactMiddleName,
-    name: company_details && company_details.company.name,
     rcNumber: "",
     natureOfBusiness: "",
     companyType: "",
     dateOfInco: "",
-    role: "COMPANY",
-    usage: "TREASURY",
-    isKyc: true,
-    status: company_details && company_details.company.status,
   };
 
   const [formData, setformData] = useState(data);
@@ -50,48 +34,34 @@ const CompanyKYC = () => {
     });
   };
 
+  console.log(formData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      email,
-      isAssited,
-      isNewsLetters,
-      phone,
-      source,
-      sourceOthers,
-      contactFirstName,
-      contactLastName,
-      contactMiddleName,
-      name,
-      rcNumber,
-      natureOfBusiness,
-      companyType,
-      dateOfInco,
-      role,
-      usage,
-      isKyc,
-      status,
-    } = formData;
+    const { rcNumber, natureOfBusiness, companyType, dateOfInco } = formData;
 
     let data = {
-      email,
-      isAssited,
-      isNewsLetters,
-      phone,
-      source,
-      sourceOthers,
-      contactFirstName,
-      contactLastName,
-      contactMiddleName,
-      name,
+      email: company_details && company_details.company.email,
+      isAssited: true,
+      isNewsLetters: true,
+      phone: company_details && company_details.company.phone,
+      source: company_details && company_details.company.source,
+      sourceOthers: company_details && company_details.company.sourceOthers,
+      contactFirstName:
+        company_details && company_details.company.contactFirstName,
+      contactLastName:
+        company_details && company_details.company.contactLastName,
+      contactMiddleName:
+        company_details && company_details.company.contactMiddleName,
+      name: company_details && company_details.company.name,
+      role: "COMPANY",
+      usage: "TREASURY",
+      isKyc: true,
+      status: company_details && company_details.company.status,
       rcNumber,
       natureOfBusiness,
       companyType,
       dateOfInco,
-      role,
-      usage,
-      isKyc,
-      status,
     };
     console.log(data);
     dispatch(updateUserCompanyKYC(data));
@@ -147,7 +117,7 @@ const CompanyKYC = () => {
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-6 col-lg-4 ">
+                        <div class="col-sm-6 col-lg-4 ">
                           <label>Company RC number</label>
                           <div class="input-group mb-4">
                             <input
@@ -160,13 +130,13 @@ const CompanyKYC = () => {
                             />
                           </div>
                         </div>
-                        <div class="col-md-6 col-lg-4 ">
+                        <div class="col-sm-6 col-lg-4 ">
                           <label>Company Registration Date</label>
                           <div class="input-group mb-4">
                             <input
                               class="form-control"
-                              placeholder="Company Registration Date"
-                              type="text"
+                              placeholder=""
+                              type="date"
                               onChange={handleChange}
                               name="dateOfInco"
                               value={formData.dateOfInco}
@@ -215,10 +185,10 @@ const CompanyKYC = () => {
                               Please choose an option
                             </option>
                             <option value="ROSABON_SALES">
-                              Rosabon sales executive
+                              Sole proprietorship
                             </option>
-                            <option value="ANOTHER_USER">Another user</option>
-                            <option value="OTHER">Others</option>
+                            <option value="ANOTHER_USER">Partnership</option>
+                            <option value="OTHER">Corporate Limited</option>
                           </select>
                         </div>
                       </div>
@@ -285,16 +255,27 @@ const CompanyKYC = () => {
                 </div>
               </WrapperBody>
               <WrapperFooter>
-                <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center justify-content-between btn-style">
                   <div>
                     <button type="submit" className="">
                       Save and Invest Now
                     </button>
                   </div>
                   <div>
-                    <button type="submit" className="">
-                      Save and Invest Now
-                    </button>
+                    {formData.rcNumber &&
+                    formData.natureOfBusiness &&
+                    formData.companyType &&
+                    formData.dateOfInco ? (
+                      <button type="submit" className="blue-btn">
+                        Save and Invest Now
+                      </button>
+                    ) : (
+                      <>
+                        <button type="submit" className="" disabled>
+                          Save and Invest Now
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </WrapperFooter>
@@ -311,21 +292,32 @@ export default CompanyKYC;
 const WrapperFooter = styled.div`
   background: #ffffff;
   box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
-  padding: 40px 30px;
+  padding: 40px 50px;
   @media (max-width: 600px) {
-    padding: 40px 20px;
+    padding: 40px 10px;
+    .btn-style {
+      padding: 10px 25px;
+      font-size: 12px;
+    }
   }
   button {
     background: #f2f2f2;
     border-radius: 10px;
     outline: none;
     border: none;
-    padding: 10px 10px;
+    padding: 10px 25px;
     color: #111e6c;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;
 const WrapperBody = styled.div`
   padding: 6rem 5rem;
+  @media (max-width: 600px) {
+    padding: 6rem 3rem;
+  }
   h4 {
     font-style: normal;
     font-weight: 600;
