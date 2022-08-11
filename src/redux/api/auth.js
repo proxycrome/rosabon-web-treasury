@@ -59,9 +59,9 @@ export const reset_password = async (token, obj) => {
 
 export const forgot_password = async (email) => {
   try {
+    const mail = email.trim()
     const response = await axios.post(
-      `${config.rosobon}
-  users​/${email}​/forgot-password`,
+      `${config.rosobon}users/${mail}​/forgot-password`,
       headers
     );
     const formData = await response.data;
