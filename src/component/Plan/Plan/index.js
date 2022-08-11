@@ -5,7 +5,9 @@ import { Plans } from './Plans';
 const ListPlans = () => {
   return (
     <div>
-      <ProfileNavBar />
+      <ProfileNavBar>
+        <h2>Choose Plan</h2>
+      </ProfileNavBar>
       <Plans />
     </div>
   );

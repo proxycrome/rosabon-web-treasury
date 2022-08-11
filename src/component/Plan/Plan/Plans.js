@@ -1,19 +1,20 @@
 import React from "react";
 import styled from "styled-components";
+import plus from "../../../asset/plus.svg";
 
 export const Plans = () => {
   return (
     <Wrapper>
       <div class="row">
-        <div class="col-6 ">
+        <div class="col-md-6 col-sm-12">
           <label>Choose Investment Category</label>
           <div class="input-group mb-4">
             <input class="form-control" placeholder="First Name" type="text" />
           </div>
         </div>
-        <div className="col-6">
+        <div className="col-md-6 col-sm-12">
           <div className="row">
-            <div class="col-md-6 ">
+            <div class="col-md-6 col-sm-12">
               <label>Middle Name</label>
               <div class="input-group mb-4">
                 <input
@@ -23,9 +24,9 @@ export const Plans = () => {
                 />
               </div>
             </div>
-            <div class="col-md-6 ">
+            <div class="col-md-6 col-sm-12">
               <label>Last Name</label>
-              <div class="input-group">
+              <div class="input-group mb-5">
                 <input
                   type="text"
                   class="form-control"
@@ -36,7 +37,15 @@ export const Plans = () => {
           </div>
         </div>
       </div>
-      <h4>Here are your investments at a glance</h4>
+      <div className="row">
+        <div className="d-flex justify-content-between mb-3">
+          <h4>Here are your investments at a glance</h4>
+          <div className="d-flex align-items-center">
+            <img src={plus} alt="plus" className="mx-2"/>
+            <span style={{color: '#111E6C'}}> Add More</span>
+          </div>
+        </div>  
+      </div>  
       <div className="plan-content">
         <div className="plan">
           <div className="plan-top h-50 p-4">

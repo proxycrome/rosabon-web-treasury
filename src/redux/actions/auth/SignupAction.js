@@ -34,7 +34,7 @@ export const registerUser = (dataObj) => async (dispatch) => {
 export const loginUser = (dataObj) => async (dispatch) => {
   const { formData, message } = await login_user(dataObj);
   if (formData) {
-    if (formData.role.name == "COMPANY") {
+    if (formData.role.name === "COMPANY") {
       localStorage.setItem("company-token", JSON.stringify(formData.token));
     }
     dispatch({ type: types.LOGIN_USER, payload: formData });

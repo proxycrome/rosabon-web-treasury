@@ -10,7 +10,12 @@ import { LeftView } from './LeftView';
 function HomeView() {
   return (
     <div>
-        <ProfileNavBar />
+        <ProfileNavBar>
+            <NavTitle>
+                <h2>Hello Ekiyee!</h2>
+                <span>Welcome back</span>
+            </NavTitle>
+        </ProfileNavBar> 
         <Wrapper>
             <div className='right-content'>
                 <RightView />
@@ -40,9 +45,11 @@ const Wrapper = styled.div `
         }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 899px) {
         flex-direction: column;
-       
+        align-items: center;
+        justify-content: center;
+
         .right-content {
             width: 100% !important;
             display: flex;
@@ -56,6 +63,17 @@ const Wrapper = styled.div `
     }
    
 `
-
+const NavTitle = styled.div`
+    display: flex;
+    flex-direction: column;
+    h2, span{
+        text-align: left;    
+    }
+    @media (max-width: 500px) {
+        h2, span {
+            display: none;
+        }  
+    }
+`
 
 

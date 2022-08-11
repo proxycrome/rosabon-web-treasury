@@ -4,17 +4,18 @@ import * as mdb from 'mdb-ui-kit';
 import { Link } from "react-router-dom";
 
 
-export function ProfileNavBar() {
+export function ProfileNavBar({children}) {
     return (
       <WrappeNavBar>
           <div className=''>
             <div className='profile_nav'>
+                <div className="page-title mx-3">{children}</div>
                 <ul className=''>
-                    <li className='profile_nav_bel'><i class="fas fa-bell"></i></li>
-                    <li><i class="fas fa-angle-down"></i></li>
+                    <li className='profile_nav_bel'><i className="fas fa-bell"></i></li>
+                    <li><i className="fas fa-angle-down"></i></li>
                     <li>ekiyee bilaowei</li>
                     <li>
-                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" style={{width: '50px'}} alt="Avatar" />
+                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" className="rounded-circle" style={{width: '50px'}} alt="Avatar" />
                     </li>
                 </ul>
             </div>
@@ -33,21 +34,27 @@ const WrappeNavBar = styled.div `
     padding-right: 4rem;
     margin-bottom: 20px;
 
+    @media (max-width: 650px) {
+        .page-title h2 {
+            font-size: 20px !important;
+        }
+    }
+
     .profile_nav {
         display: flex ;
-        justify-content: end;
+        justify-content: space-between;
         align-items: center;
         padding-top: 1.5rem;
     }
     .profile_nav_bel {
-        padding-right: 100px;
+        padding-right: 50px;
     }
     ul {
         list-style-type: none;
         margin: 0;
         padding: 0;
-        display: flex ;
-        justify-content: center;
+        display: flex;
+        justify-content: flex-end;
         align-items: center;
     }
    li{
