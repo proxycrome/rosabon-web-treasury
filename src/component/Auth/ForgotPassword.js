@@ -9,11 +9,17 @@ function ForgotPassword() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const success = useSelector((state) => state.auth.success);
+  const [error, setError] = useState(null);
 
   const data = {
     email: "",
   };
   const [formData, setformData] = useState(data);
+
+   function isValidEmail(email) {
+     return /\S+@\S+\.\S+/.test(email);
+   }
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +27,14 @@ function ForgotPassword() {
       ...formData,
       [name]: value,
     });
+
+     if (name == "email") {
+       if (!isValidEmail(e.target.value)) {
+         setError("Email is invalid");
+       } else {
+         setError(null);
+       }
+     }
   };
 
   const handleSubmit = async (e) => {
@@ -67,12 +81,16 @@ function ForgotPassword() {
                             value={formData.email}
                           />
                         </div>
+                        {error && (
+                          <h3>
+                            Your account is pending verification. please check
+                            your email for the verification link
+                          </h3>
+                        )}
                       </div>
                       <div className="text-center">
                         <div>
-                            <button className="verify_congrates_btn">
-                              Send
-                            </button>
+                          <button className="verify_congrates_btn">Send</button>
                           <p className="text-center">
                             Do you remember your password?
                             <span className="">
@@ -131,12 +149,11 @@ const WrappCongrate = styled.div`
       padding: 3rem;
     }
     h4 {
-    font-size: 20px;
-    p {
-      font-size: 12px;
+      font-size: 20px;
+      p {
+        font-size: 12px;
+      }
     }
-  }
- 
   }
   input {
     width: 479px;
@@ -161,6 +178,18 @@ const WrappCongrate = styled.div`
     text-transform: capitalize;
     color: #242424;
     padding-top: 9px;
+  }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.02em;
+    color: #e20d0d;
+    padding-top: 12px;
   }
   p {
     font-style: normal;

@@ -3,7 +3,11 @@ import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { registerCompany, registerUser } from "../../redux/actions/auth/SignupAction";
+import toast, { Toaster } from "react-hot-toast";
+import {
+  registerCompany,
+  registerUser,
+} from "../../redux/actions/auth/SignupAction";
 
 function Signup() {
   const dispatch = useDispatch();
@@ -12,11 +16,14 @@ function Signup() {
   const success = useSelector((state) => state.auth.success);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
+  const [isTerms, setisTerms] = useState(false);
+  const [isNewsLetters, setIsNewsLetters] = useState(false);
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [c_passwordError, setC_PasswordError] = useState(null);
 
   const data = {
     email: "",
-    isAssited: "",
-    isNewsLetters: "",
     password: "",
     phone: "",
     source: "",
@@ -29,10 +36,25 @@ function Signup() {
     lastName: "",
     middleName: "",
     refferedBy: "",
+    c_password: "",
+    terms: "",
   };
 
   const [formData, setformData] = useState(data);
 
+  function confirmPassword(c_password) {
+    return c_password == formData.password;
+  }
+
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
+  function validatePassword(password) {
+    var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+
+    return re.test(password);
+  }
 
   const togglePassword1 = () => {
     setPasswordShown1(!passwordShown1);
@@ -47,13 +69,39 @@ function Signup() {
       ...formData,
       [name]: value,
     });
+
+    if (name == "c_password") {
+      if (!confirmPassword(e.target.value)) {
+        setC_PasswordError("Password mismatch");
+      } else {
+        setC_PasswordError(null);
+      }
+    }
+
+    if (name == "email") {
+      if (!isValidEmail(e.target.value)) {
+        setEmailError("Email is invalid");
+      } else {
+        setEmailError(null);
+      }
+    }
+
+    if (name === "password") {
+      if (!validatePassword(e.target.value)) {
+        setPasswordError(
+          "Your password must contain at least one digit, 8 characters, one special character"
+        );
+      } else {
+        setPasswordError(null);
+      }
+      // validatePassword(e.target.value)
+    }
   };
 
   const handleUserSubmit = (e) => {
     e.preventDefault();
     const {
       email,
-      isNewsLetters,
       password,
       source,
       sourceOthers,
@@ -72,7 +120,7 @@ function Signup() {
       individualUser,
       email,
       isAssited: true,
-      isNewsLetters: isNewsLetters ? true : false,
+      isNewsLetters,
       password,
       phone,
       role: "INDIVIDUAL_USER",
@@ -81,57 +129,62 @@ function Signup() {
       refferedBy,
       usage: "TREASURY",
     };
-    console.log(data)
-    dispatch(registerUser(data));
+    console.log(data);
+    // dispatch(registerUser(data));
   };
 
   const handleCompanySubmit = async (e) => {
     e.preventDefault();
-    const {
-      email,
-      isNewsLetters,
-      password,
-      source,
-      contactFirstName,
-      contactLastName,
-      sourceOthers,
-      phone,
-      name,
-      refferedBy,
-    } = formData;
-    let company = {
-      contactFirstName,
-      contactLastName,
-      name,
-    };
+    if (!emailError && passwordError && c_passwordError) {
+      const {
+        email,
+        password,
+        source,
+        contactFirstName,
+        contactLastName,
+        sourceOthers,
+        phone,
+        name,
+        refferedBy,
+      } = formData;
+      let company = {
+        contactFirstName,
+        contactLastName,
+        name,
+      };
 
-    let data = {
-      company,
-      email,
-      isAssited: true,
-      isNewsLetters: isNewsLetters ? true : false,
-      password,
-      phone,
-      role: "COMPANY",
-      source,
-      sourceOthers,
-      usage: "TREASURY",
-      refferedBy,
-    };
-    // console.log(data)
-    dispatch(registerCompany(data))
-    
+      let data = {
+        company,
+        email,
+        isAssited: true,
+        isNewsLetters,
+        password,
+        phone,
+        role: "COMPANY",
+        source,
+        sourceOthers,
+        usage: "TREASURY",
+        refferedBy,
+      };
+      // console.log(formData);
+      // dispatch(registerCompany(data));
+    } else {
+      // toast.error(error);
+      // console.log(formData);
+    }
   };
- 
 
   useEffect(() => {
-     if(success) {
-      navigate('/congrates', {state: 'success_signup'})
+    if (success) {
+      navigate("/congrates", { state: "success_signup" });
     }
   }, [success]);
 
   return (
     <div>
+      <div>
+        <Toaster position="bottom-center" />
+      </div>
       <div className="">
         {count ? (
           <div className="">
@@ -180,6 +233,12 @@ function Signup() {
                           value={formData.email}
                         />
                       </div>
+                      {emailError && (
+                        <h3>
+                          Your account is pending verification. please check
+                          your email for the verification link
+                        </h3>
+                      )}
                     </div>
                     <div className="mb-4">
                       <label>Mobile Number</label>
@@ -204,6 +263,7 @@ function Signup() {
                           onChange={handleChange}
                           name="password"
                           value={formData.password}
+                          // onBlur={(e) => validatePassword(e.target.value)}
                         />
                         <i
                           onClick={togglePassword1}
@@ -212,6 +272,12 @@ function Signup() {
                           }
                         ></i>
                       </div>
+                      {passwordError && (
+                        <h3>
+                          Your password must contain at least one digit, 8
+                          characters, one special character
+                        </h3>
+                      )}
                     </div>
                     <div className="mb-4 input_password">
                       <label>Confirm Password</label>
@@ -220,6 +286,9 @@ function Signup() {
                           type={passwordShown2 ? "text" : "password"}
                           className="form-control"
                           placeholder="Confirm Password"
+                          onChange={handleChange}
+                          name="c_password"
+                          value={formData.c_password}
                         />
                         <i
                           onClick={togglePassword2}
@@ -228,6 +297,7 @@ function Signup() {
                           }
                         ></i>
                       </div>
+                      {c_passwordError && <h3>password mismatch</h3>}
                     </div>
                     <div className="mb-4">
                       <div class="">
@@ -295,14 +365,12 @@ function Signup() {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          id="flexCheckChecked"
-                          onChange={handleChange}
-                          name="true"
-                          value={formData.isNewsLetters}
+                          id="checkNewsLetter"
+                          onChange={(e) => setIsNewsLetters(!isNewsLetters)}
                         />
                         <label
                           className="form-check-label"
-                          for="flexCheckChecked"
+                          for="checkNewsLetter"
                         >
                           Yes, i want to recieve newsletters of Promos and
                           Offers
@@ -312,13 +380,10 @@ function Signup() {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          value=""
-                          id="flexCheckChecked"
+                          id="checkTerms"
+                          onChange={(e) => setisTerms(!isTerms)}
                         />
-                        <label
-                          className="form-check-label"
-                          for="flexCheckChecked"
-                        >
+                        <label className="form-check-label" for="checkTerms">
                           I agree to the Terms and Privacy Policy
                         </label>
                       </div>
@@ -326,7 +391,20 @@ function Signup() {
                   </LoginInput>
                   <LoginButton>
                     <div className="">
-                      <button type="submit">Sign up</button>
+                      {formData.terms &&
+                      formData.isNewsLetters &&
+                      formData.c_password &&
+                      formData.phone &&
+                      formData.email &&
+                      formData.lastName &&
+                      formData.firstName &&
+                      (formData.refferedBy || formData.sourceOthers) &&
+                      formData.password ? (
+                        <button type="submit">Sign up</button>
+                      ) : (
+                        <button disabled>Sign up</button>
+                      )}
+
                       <p className="text-center">
                         Already have an account?{" "}
                         <span className="">
@@ -399,6 +477,12 @@ function Signup() {
                           value={formData.email}
                         />
                       </div>
+                      {emailError && (
+                        <h3>
+                          Your account is pending verification. please check
+                          your email for the verification link
+                        </h3>
+                      )}
                     </div>
                     <div className="mb-4">
                       <label>Contact Person Number</label>
@@ -431,6 +515,12 @@ function Signup() {
                           }
                         ></i>
                       </div>
+                      {passwordError && (
+                        <h3>
+                          Your password must contain at least one digit, 8
+                          characters, one special character
+                        </h3>
+                      )}
                     </div>
                     <div className="mb-4 input_password">
                       <label>Confirm Password</label>
@@ -439,6 +529,9 @@ function Signup() {
                           type={passwordShown2 ? "text" : "password"}
                           className="form-control"
                           placeholder="Confirm Password"
+                          onChange={handleChange}
+                          name="c_password"
+                          value={formData.c_password}
                         />
                         <i
                           onClick={togglePassword2}
@@ -447,6 +540,7 @@ function Signup() {
                           }
                         ></i>
                       </div>
+                      {c_passwordError && <h3>password mismatch</h3>}
                     </div>
                     <div className="mb-4">
                       <div class="">
@@ -514,14 +608,12 @@ function Signup() {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          id="flexCheckChecked"
-                          onChange={handleChange}
-                          name="isNewsLetters"
-                          value={formData.isNewsLetters}
+                          id="checkNewsLetter"
+                          onChange={(e) => setIsNewsLetters(!isNewsLetters)}
                         />
                         <label
                           className="form-check-label"
-                          for="flexCheckChecked"
+                          for="checkNewsLetter"
                         >
                           Yes, i want to recieve newsletters of Promos and
                           Offers
@@ -531,13 +623,10 @@ function Signup() {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          value=""
-                          id="flexCheckChecked"
+                          id="checkTerms"
+                          onChange={(e) => setisTerms(!isTerms)}
                         />
-                        <label
-                          className="form-check-label"
-                          for="flexCheckChecked"
-                        >
+                        <label className="form-check-label" for="checkTerms">
                           I agree to the Terms and Privacy Policy
                         </label>
                       </div>
@@ -545,11 +634,24 @@ function Signup() {
                   </LoginInput>
                   <LoginButton>
                     <div className="">
-                      <button type="submit">Sign up</button>
+                      {isTerms &&
+                      formData.c_password &&
+                      formData.phone &&
+                      formData.email &&
+                      formData.contactFirstName &&
+                      formData.contactLastName &&
+                      formData.name &&
+                      (formData.refferedBy || formData.sourceOthers) &&
+                      formData.password ? (
+                        <button type="submit">Sign up</button>
+                      ) : (
+                        <button disabled>Sign up</button>
+                      )}
+
                       <p className="text-center">
                         Already have an account?{" "}
                         <span className="">
-                          <Link to="/">Sign in </Link>
+                          <Link to="/login">Sign in </Link>
                         </span>
                       </p>
                     </div>
@@ -565,7 +667,6 @@ function Signup() {
 }
 
 export default Signup;
-
 
 const RightWrapper = styled.section`
   background: #ffffff;
@@ -629,6 +730,18 @@ const RightWrapper = styled.section`
     color: #828282;
     padding-bottom: 15px;
     padding-left: 10px;
+  }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.02em;
+    color: #e20d0d;
+    padding-top: 12px;
   }
 `;
 

@@ -255,7 +255,7 @@ const CompanyKYC = () => {
               <WrapperFooter>
                 <div className="d-flex align-items-center justify-content-between btn-style">
                   <div>
-                    <button type="submit" className="">
+                    <button type="submit" className="" disabled>
                       Save and Invest Now
                     </button>
                   </div>

@@ -321,18 +321,16 @@ const PersonalKYC = () => {
             <WrapperFooter>
               <div className="d-flex align-items-center justify-content-between">
                 <div>
-                  {/* <Link to="/profile-details">
-                    
-                  </Link> */}
                   <button className="">Save and Invest Now</button>
                 </div>
                 <div>
                   {formData.dateOfBirth && formData.gender && formData.bvn ? (
                     <button className="blue-btn">Save and Invest Now</button>
                   ) : (
-                    <button className="">Save and Invest Now</button>
+                    <button className="" disabled>
+                      Save and Invest Now
+                    </button>
                   )}
-                  {/* <Link to="/profile-details"></Link> */}
                 </div>
               </div>
             </WrapperFooter>
