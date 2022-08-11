@@ -1,149 +1,257 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { successMessage } from "../../../redux/actions/auth/SignupAction";
+import { updateCompanyDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
 
 const CompanyDetails = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+   const [showEditDetail, setShowEditDetail] = useState(true);
+   const [showEditCont, setShowEditCont] = useState(true);
+   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
+   const [showEditNOK, setShowEditNOK] = useState(true);
+
+   const toggleDetail = () => {
+     setShowEditDetail(!showEditDetail);
+   };
+   const toggleCont = () => {
+     setShowEditCont(!showEditCont);
+   };
+   const toggleEmploy = () => {
+     setShowEditEmpoy(!showEditEmpoy);
+   };
+   const toggleNOK = () => {
+     setShowEditNOK(!showEditNOK);
+   };
+
+  const data = {
+    acc_name: "",
+    acc_no: "",
+    bankType: "",
+  };
+  const [formData, setformData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { acc_name, acc_no, bankType } = formData;
+    let data = { acc_name, acc_no, bankType };
+    console.log(data);
+    dispatch(updateCompanyDetails(data));
+  };
+
+  useEffect(() => {
+    dispatch(successMessage(false));
+  }, []);
+
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
+
   return (
     <div>
       <WrapperBody>
         <div className="container-fluid">
           <div>
-            <div className="row">
-              <div className="d-flex justify-content-between">
-                <h4>Company Details</h4>
-                <div>
-                  <button>Edit</button>
-                </div>
-              </div>
-            </div>
-            <div className="">
-              <div class="row">
-                <div class="col-md-6">
-                  <label>Company Name</label>
-                  <div class="input-group mb-4">
-                    <input
-                      class="form-control"
-                      placeholder=""
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label>Company RC Number</label>
-                  <div class="input-group mb-4">
-                    <input
-                      class="form-control"
-                      placeholder=""
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-8 mb-4">
-                  <label>Company Registration Date</label>
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder=""
-                    />
-                    <span className=" input-font-awe">
-                      <i class="fa-solid fa-calendar"></i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col ">
-                  <label>Company Address</label>
-                  <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 col-lg-4 ">
-                  <label>Customer ID Number</label>
-                  <div class="input-group mb-4">
-                    <input
-                      class="form-control"
-                      placeholder=""
-                      type="text"
-                    />
-                    <span className=" input-font-awe">
-                      <i class="fa-solid fa-angle-down"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-4 ">
-                  <label>Nature of Business</label>
-                  <div class="input-group mb-4">
-                    <input
-                      class="form-control"
-                      placeholder=""
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-8 col-lg-4 mb-4">
-                  <label>Company Type</label>
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder=""
-                    />
-                    <span className=" input-font-awe">
-                      <i class="fa-solid fa-angle-down"></i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="body-content">
+            <form autoComplete="off" onSubmit={handleSubmit}>
               <div className="row">
                 <div className="d-flex justify-content-between">
-                  <h4>Contact Person Details</h4>
+                  <h4>Company Details</h4>
                   <div>
-                    <button>Edit</button>
+                    {showEditDetail ? (
+                      <button
+                        className={showEditDetail ? " btn_bg_blue" : ""}
+                        onClick={toggleDetail}
+                      >
+                        Edit
+                      </button>
+                    ) : (
+                      <button className="grey-button" onClick={toggleDetail}>
+                        Cancel
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <label>Contact Person First Name</label>
-                  <div class="input-group mb-4">
-                    <input
-                      class="form-control"
-                      placeholder=""
-                      type="text"
-                    />
+              <div className="">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Company Name</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditDetail}
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label>Company RC Number</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditDetail}
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-8 mb-4">
+                    <label>Company Registration Date</label>
+                    <div class="input-group">
+                      <input
+                        type="date"
+                        class="form-control"
+                        placeholder=""
+                        disabled={showEditDetail}
+                      />
+                      {/* <span className=" input-font-awe">
+                        <i class="fa-solid fa-calendar"></i>
+                      </span> */}
+                    </div>
                   </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                  <label>Contact Person Last Name</label>
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder=""
-                    />
+                <div class="row">
+                  <div class="col ">
+                    <label>Company Address</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditDetail}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 col-lg-4 ">
+                    <label>Customer ID Number</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditDetail}
+                      />
+                      <span className=" input-font-awe">
+                        <i class="fa-solid fa-angle-down"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-4 ">
+                    <label>Nature of Business</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditDetail}
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-lg-4 mb-4">
+                    <label>Company Type</label>
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        disabled={showEditDetail}
+                      />
+                      <span className=" input-font-awe">
+                        <i class="fa-solid fa-angle-down"></i>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-8 ">
-                  <label>Email Address</label>
-                  <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+              <div className="body-content">
+                <div className="row">
+                  <div className="d-flex justify-content-between">
+                    <h4>Contact Person Details</h4>
+                    <div>
+                      {showEditCont ? (
+                        <button
+                          className={showEditCont ? " btn_bg_blue" : ""}
+                          onClick={toggleCont}
+                        >
+                          Edit
+                        </button>
+                      ) : (
+                        <button className="grey-button" onClick={toggleCont}>
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div class="col-md-4 ">
-                  <label>Phone Number</label>
-                  <div class="input-group mb-4">
-                    <input class="form-control" placeholder="" type="text" />
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Contact Person First Name</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditCont}
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <label>Contact Person Last Name</label>
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        disabled={showEditCont}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-8 ">
+                    <label>Email Address</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditCont}
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4 ">
+                    <label>Phone Number</label>
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        type="text"
+                        disabled={showEditCont}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </WrapperBody>
@@ -160,6 +268,10 @@ const WrapperBody = styled.div`
   }
   .body-content {
     /* padding-top: 45px; */
+  }
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
   }
   button {
     background: #111e6c;

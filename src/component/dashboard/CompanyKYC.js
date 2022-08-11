@@ -6,7 +6,6 @@ import { BVNConfirm } from "../Accessories/BVNConfirm";
 import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  getAuthUsers,
   updateUserCompanyKYC,
 } from "../../redux/actions/personalInfo/userProfile.actions";
 
@@ -34,7 +33,6 @@ const CompanyKYC = () => {
     });
   };
 
-  console.log(formData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

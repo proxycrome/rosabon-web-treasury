@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { changeCompanyPassword } from "../../../redux/actions/updateProfile/changePassword.action";
+import { changePersonalPassword } from "../../../redux/actions/updateProfile/changePassword.action";
 import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
 const ChangePassword = () => {
@@ -34,7 +34,7 @@ const ChangePassword = () => {
     const { acc_name, acc_no, bankType } = formData;
     let data = { acc_name, acc_no, bankType };
     console.log(data);
-    dispatch(changeCompanyPassword(data));
+    dispatch(changePersonalPassword(data));
   };
 
   useEffect(() => {
@@ -58,20 +58,18 @@ const ChangePassword = () => {
             <div className="d-flex justify-content-between">
               <h4>Change Password</h4>
               <div>
-                <div>
-                  {showEdit ? (
-                    <button
-                      className={showEdit ? " btn_bg_blue" : ""}
-                      onClick={toggleEdit}
-                    >
-                      Edit
-                    </button>
-                  ) : (
-                    <button className="grey-button" onClick={toggleEdit}>
-                      Cancel
-                    </button>
-                  )}
-                </div>
+                {showEdit ? (
+                  <button
+                    className={showEdit ? " btn_bg_blue" : ""}
+                    onClick={toggleEdit}
+                  >
+                    Edit
+                  </button>
+                ) : (
+                  <button className="grey-button" onClick={toggleEdit}>
+                    Cancel
+                  </button>
+                )}
               </div>
             </div>
           </div>

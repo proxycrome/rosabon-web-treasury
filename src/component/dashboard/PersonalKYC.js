@@ -5,7 +5,6 @@ import { BVNConfirm } from "../Accessories/BVNConfirm";
 import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  getAuthUser,
   updateUserCompanyKYC,
 } from "../../redux/actions/personalInfo/userProfile.actions";
 import { successMessage } from "../../redux/actions/auth/SignupAction";

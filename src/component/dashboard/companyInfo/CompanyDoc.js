@@ -1,8 +1,56 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import FileDoc from "../../../asset/file.png";
+import { uploadCompanyDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
+import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
 const CompanyDoc = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [showEdit, setShowEdit] = useState(true);
+  const toggleEdit = () => {
+    setShowEdit(!showEdit);
+  };
+
+  const data = {
+    acc_name: "",
+    acc_no: "",
+    bankType: "",
+  };
+  const [formData, setformData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { acc_name, acc_no, bankType } = formData;
+    let data = { acc_name, acc_no, bankType };
+    console.log(data);
+    dispatch(uploadCompanyDocument(data));
+  };
+
+  useEffect(() => {
+    dispatch(successMessage(false));
+  }, []);
+
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
+
   return (
     <div>
       <WrapperBody>
@@ -10,11 +58,21 @@ const CompanyDoc = () => {
           <div className="row">
             <div className="d-flex justify-content-between">
               <h4>Company Document</h4>
-              <button>Edit</button>
+              {showEdit ? (
+                <button
+                  className={showEdit ? " btn_bg_blue" : ""}
+                  onClick={toggleEdit}
+                >
+                  Edit
+                </button>
+              ) : (
+                <button className="grey-button" onClick={toggleEdit}>
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
           <div className="document-content">
-            
             <div className="row pb-4">
               <div className="d-flex align-items-center justify-content-between w-100">
                 <div className="progress-bar-style d-flex align-items-center justify-content-start">
@@ -37,15 +95,19 @@ const CompanyDoc = () => {
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"></div>
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
                   </button>
-                  <button className="normal-btn grey-button">
+                  <button
+                    className="normal-btn grey-button"
+                    disabled={showEdit}
+                  >
                     Choose file
                   </button>
                 </div>
@@ -74,15 +136,19 @@ const CompanyDoc = () => {
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"></div>
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
                   </button>
-                  <button className="normal-btn grey-button">
+                  <button
+                    className="normal-btn grey-button"
+                    disabled={showEdit}
+                  >
                     Choose file
                   </button>
                 </div>
@@ -110,15 +176,19 @@ const CompanyDoc = () => {
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"></div>
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
                   </button>
-                  <button className="normal-btn grey-button">
+                  <button
+                    className="normal-btn grey-button"
+                    disabled={showEdit}
+                  >
                     Choose file
                   </button>
                 </div>
@@ -147,15 +217,19 @@ const CompanyDoc = () => {
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"></div>
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
                   </button>
-                  <button className="normal-btn grey-button">
+                  <button
+                    className="normal-btn grey-button"
+                    disabled={showEdit}
+                  >
                     Choose file
                   </button>
                 </div>
@@ -175,11 +249,14 @@ const CompanyDoc = () => {
                     <h5 className="">jpg, png. 2 MB</h5>
                   </div>
                 </div>
-                <div className=" style-attachment">
+                <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
                   </button>
-                  <button className="normal-btn grey-button">
+                  <button
+                    className="normal-btn grey-button"
+                    disabled={showEdit}
+                  >
                     Choose file
                   </button>
                 </div>
@@ -198,11 +275,14 @@ const CompanyDoc = () => {
                     <h5 className="">jpg, png. 2 MB</h5>
                   </div>
                 </div>
-                <div className=" style-attachment">
+                <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
                   </button>
-                  <button className="normal-btn grey-button">
+                  <button
+                    className="normal-btn grey-button"
+                    disabled={showEdit}
+                  >
                     Choose file
                   </button>
                 </div>
@@ -221,18 +301,19 @@ const CompanyDoc = () => {
                     <h5 className="">jpg, png. 2 MB</h5>
                   </div>
                 </div>
-                <div className=" style-attachment">
+                <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
                   </button>
-                  <button className="normal-btn grey-button">
+                  <button
+                    className="normal-btn grey-button"
+                    disabled={showEdit}
+                  >
                     Choose file
                   </button>
                 </div>
               </div>
             </div>
-
-            
           </div>
         </div>
       </WrapperBody>
@@ -263,6 +344,10 @@ const WrapperBody = styled.div`
         font-size: 20px;
       }
     }
+  }
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
   }
   .document-content {
     padding-top: 70px;

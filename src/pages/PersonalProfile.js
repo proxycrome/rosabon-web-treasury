@@ -5,6 +5,7 @@ import PersonalInfo from "../component/dashboard/personalInfo/PersonalInfo";
 import BankDetails from "../component/dashboard/personalInfo/BankDetails";
 import { ProfileTabs } from "../component/dashboard/ProfileTabs";
 import { ProfileNavBar } from "../component/dashboard/ProfileNavbar";
+import ChangePassword from "../component/dashboard/personalInfo/ChangePassword";
 import { Link, useNavigate } from "react-router-dom";
 
 const PersonalProfile = () => {
@@ -36,6 +37,8 @@ const PersonalProfile = () => {
               <BankDetails />
             ) : tabs === "documents" ? (
               <MyDocu />
+            ) : tabs === "password" ? (
+              <ChangePassword />
             ) : (
               <></>
             )}
