@@ -7,6 +7,7 @@ import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import {
   updateUserCompanyKYC,
+  getAuthUsers,
 } from "../../redux/actions/personalInfo/userProfile.actions";
 
 const CompanyKYC = () => {
@@ -65,14 +66,14 @@ const CompanyKYC = () => {
     dispatch(updateUserCompanyKYC(data));
   };
 
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("company-token"));
-  //   if (tokenString) {
-  //     dispatch(getAuthUsers(tokenString));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("company-token"));
+    if (tokenString) {
+      dispatch(getAuthUsers(tokenString));
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     console.log(company_details);
@@ -260,6 +261,9 @@ const CompanyKYC = () => {
                     </button>
                   </div>
                   <div>
+                    {/* <button className="blue-btn">
+                      <Link to="/company-profile">Save and Invest Now</Link>
+                    </button> */}
                     {formData.rcNumber &&
                     formData.natureOfBusiness &&
                     formData.companyType &&

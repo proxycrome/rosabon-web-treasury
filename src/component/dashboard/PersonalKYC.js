@@ -6,6 +6,7 @@ import ModalComponent from "../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import {
   updateUserCompanyKYC,
+  getAuthUsers,
 } from "../../redux/actions/personalInfo/userProfile.actions";
 import { successMessage } from "../../redux/actions/auth/SignupAction";
 
@@ -38,21 +39,20 @@ const PersonalKYC = () => {
     const { dateOfBirth, gender, bvn } = formData;
 
     let data = {
-      email: user_details.company.email,
+      email: user_details.email,
       isAssited: true,
       isNewsLetters: true,
-      phone: user_details.company.phone,
-      source: user_details.company.source,
-      sourceOthers: user_details.company.sourceOthers,
-      refferedBy: user_details.company.refferedBy,
-      firstName: user_details.company.firstName,
-      lastName: user_details.company.lastName,
-      middleName: user_details.company.middleName,
-      name: user_details.company.name,
+      phone: user_details.phone,
+      source: user_details.individualUser.source,
+      sourceOthers: user_details.individualUser.sourceOthers,
+      refferedBy: user_details.individualUser.refferedBy,
+      firstName: user_details.individualUser.firstName,
+      lastName: user_details.individualUser.lastName,
+      middleName: user_details.individualUser.middleName,
       role: "INDIVIDUAL_USER",
       usage: "TREASURY",
       isKyc: true,
-      status: user_details.company.status,
+      status: user_details.individualUser.status,
       dateOfBirth,
       gender,
       bvn,
@@ -61,30 +61,23 @@ const PersonalKYC = () => {
     dispatch(updateUserCompanyKYC(data));
   };
 
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("user-token");
-  //   if (tokenString) {
-  //     dispatch(getAuthUser(tokenString));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("user-token"));
+    if (tokenString) {
+      dispatch(getAuthUsers(tokenString));
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(successMessage(false));
   }, []);
 
-  // useEffect(() => {
-  //   if (success) {
-  //     if (user_login.role.name == "COMPANY") {
-  //       console.log(user_login.role.name);
-  //       navigate("/company");
-  //     }
-  //   }
-  // }, [success]);
+
 
   useEffect(() => {
-    console.log(user_details);
+    console.log(user_details.individualUser);
   }, [user_details]);
 
   return (
@@ -95,7 +88,10 @@ const PersonalKYC = () => {
             <WrapperBody>
               <div>
                 <div>
-                  <h3>Hello Ekiyee,</h3>
+                  <h3>
+                    Hello{" "}
+                    {user_details && user_details.individualUser.firstName},
+                  </h3>
                   <p>
                     Kindly update your profile, it will only take a few minutes
                   </p>
@@ -111,7 +107,8 @@ const PersonalKYC = () => {
                               class="form-control"
                               type="text"
                               placeholder={
-                                user_details && user_details.company.firstName
+                                user_details &&
+                                user_details.individualUser.firstName
                               }
                             />
                           </div>
@@ -123,7 +120,8 @@ const PersonalKYC = () => {
                               class="form-control"
                               type="text"
                               placeholder={
-                                user_details && user_details.company.middleName
+                                user_details &&
+                                user_details.individualUser.middleName
                               }
                             />
                           </div>
@@ -135,7 +133,8 @@ const PersonalKYC = () => {
                               type="text"
                               class="form-control"
                               placeholder={
-                                user_details && user_details.company.lastName
+                                user_details &&
+                                user_details.individualUser.lastName
                               }
                             />
                           </div>
@@ -174,9 +173,7 @@ const PersonalKYC = () => {
                             <input
                               class="form-control"
                               type="text"
-                              placeholder={
-                                user_details && user_details.company.phone
-                              }
+                              placeholder={user_details && user_details.phone}
                             />
                           </div>
                         </div>
@@ -236,9 +233,7 @@ const PersonalKYC = () => {
                             <input
                               class="form-control"
                               type="text"
-                              placeholder={
-                                user_details && user_details.company.email
-                              }
+                              placeholder={user_details && user_details.email}
                             />
                           </div>
                         </div>
@@ -247,7 +242,7 @@ const PersonalKYC = () => {
                           <div class="input-group mb-4">
                             <input
                               class="form-control"
-                              placeholder="Middle Name"
+                              placeholder="Country of Residence"
                               type="text"
                               onChange={handleChange}
                               name="coutryOfResidence"
@@ -324,6 +319,9 @@ const PersonalKYC = () => {
                   <button className="">Save and Invest Now</button>
                 </div>
                 <div>
+                  {/* <button className="blue-btn">
+                    <Link to="/personal-profile">Save and Invest Now</Link>
+                  </button> */}
                   {formData.dateOfBirth && formData.gender && formData.bvn ? (
                     <button className="blue-btn">Save and Invest Now</button>
                   ) : (

@@ -57,7 +57,7 @@ const Login = () => {
         password,
         platformType: "WEB",
       };
-
+      console.log(data)
       dispatch(loginUser(data));
     } else {
       
@@ -74,6 +74,9 @@ const Login = () => {
       if (user_login.role.name == "COMPANY") {
         console.log(user_login.role.name);
         navigate("/company");
+      } else if (user_login.role.name == "INDIVIDUAL_USER") {
+        console.log(user_login.role.name);
+        navigate("/person");
       }
     }
   }, [success]);

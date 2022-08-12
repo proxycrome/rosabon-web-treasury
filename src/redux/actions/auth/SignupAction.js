@@ -37,6 +37,9 @@ export const loginUser = (dataObj) => async (dispatch) => {
     if (formData.role.name === "COMPANY") {
       localStorage.setItem("company-token", JSON.stringify(formData.token));
     }
+    if (formData.role.name === "INDIVIDUAL_USER") {
+      localStorage.setItem("user-token", JSON.stringify(formData.token));
+    }
     dispatch({ type: types.LOGIN_USER, payload: formData });
     dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
     toast.success("Login was successful");
