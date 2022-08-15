@@ -8,10 +8,15 @@ const userProfileReducer = (state = {}, action) => {
         user: action.payload,
       };
     case types.GET_AUTH_USERS:
-      console.log(action.payload);
+      // console.log(action.payload);
       return {
         ...state,
         users: action.payload,
+      };
+    case types.CLEAR_USERS:
+      return {
+        ...state,
+        users: null,
       };
 
     default:
