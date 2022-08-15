@@ -45,11 +45,11 @@ function ForgotPassword() {
     dispatch(forgotPassword(email));
   };
 
-  useEffect(() => {
-    if (success) {
-      navigate("/reset-password");
-    }
-  }, [success]);
+  // useEffect(() => {
+  //   if (success) {
+  //     navigate("/reset-password");
+  //   }
+  // }, [success]);
 
   return (
     <WrapperContainer>

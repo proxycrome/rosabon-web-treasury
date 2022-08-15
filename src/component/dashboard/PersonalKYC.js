@@ -83,7 +83,10 @@ const PersonalKYC = () => {
 
   const getStates = async () => {
     try {
-      const response = await axios.post(`${config.rosobon}users`, headers);
+      const response = await axios.get(
+        `${config.rosobon}states?page=0&size=37`,
+        headers
+      );
       const stateData = await response.data;
       setListStates(stateData);
     } catch (error) {}
@@ -91,12 +94,13 @@ const PersonalKYC = () => {
 
   const getCountry = async () => {
     try {
-      const response = await axios.post(`${config.rosobon}users`, headers);
+      const response = await axios.get(`${config.rosobon}countries`, headers);
       const countryData = await response.data;
+      console.log(countryData)
       setListCountries(countryData);
     } catch (error) {}
   };
-
+  
   const verifyBVN = async () => {
     try {
       const response = await axios.post(`${config.rosobon}users`, headers);
@@ -123,11 +127,12 @@ const PersonalKYC = () => {
   }, [isLoggedIn, users]);
 
   useEffect(() => {
-    // dispatch(successMessage(false));
     getLGAs();
     getStates();
     getCountry();
   }, []);
+
+  console.log(listCountries);
 
   return (
     <div>
@@ -287,7 +292,22 @@ const PersonalKYC = () => {
                           </div>
                           <div class="col-md-4 ">
                             <label>Country of Residence</label>
-                            <div class="input-group mb-4">
+                            <label>How did you hear about us</label>
+                            <select
+                              className="form-select form-select-lg mb-3"
+                              aria-label=".form-select-lg"
+                              // onChange={handleValueChange}
+                              name="source"
+                            >
+
+                              <option value="">Please choose an option</option>
+                              <option value="ROSABON_SALES">
+                                Rosabon sales executive
+                              </option>
+                              <option value="ANOTHER_USER">Another user</option>
+                              <option value="OTHER">Others</option>
+                            </select>
+                            {/* <div class="input-group mb-4">
                               <input
                                 class="form-control"
                                 placeholder="Country of Residence"
@@ -296,7 +316,7 @@ const PersonalKYC = () => {
                                 name="coutryOfResidence"
                                 value={formData.coutryOfResidence}
                               />
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                         <div class="row">

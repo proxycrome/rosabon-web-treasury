@@ -8,18 +8,35 @@ import {
 } from "../../api/auth";
 
 export const registerCompany = (dataObj) => async (dispatch) => {
-  try {
-    const { formData } = await register(dataObj);
-    dispatch({ type: types.REGISTER_COMPANY, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
-  } catch (error) {}
+  const { formData, message } = await register(dataObj);
+  if (formData) {
+    dispatch({
+      type: types.REGISTER_COMPANY,
+      payload: formData,
+      success: true,
+    });
+    toast.success("Signup was successful");
+  } else {
+    dispatch({
+      type: types.AUTHORIZE_FAIL,
+      payload: message,
+    });
+    toast.error(message, {
+      position: "top-right",
+    });
+  }
+  
 };
 
 export const registerUser = (dataObj) => async (dispatch) => {
   const { formData, message } = await register(dataObj);
   if (formData) {
-    dispatch({ type: types.REGISTER_COMPANY, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+    dispatch({
+      type: types.REGISTER_COMPANY,
+      payload: formData,
+      success: true,
+    });
+    toast.success("Signup was successful");
   } else {
     dispatch({
       type: types.AUTHORIZE_FAIL,
@@ -34,12 +51,12 @@ export const registerUser = (dataObj) => async (dispatch) => {
 export const loginUser = (dataObj) => async (dispatch) => {
   const { formData, message } = await login_user(dataObj);
   if (formData) {
-    if (formData.role.name === "COMPANY") {
-      localStorage.setItem("company-token", JSON.stringify(formData.token));
-    }
-    if (formData.role.name === "INDIVIDUAL_USER") {
-      localStorage.setItem("user-token", JSON.stringify(formData.token));
-    }
+    // if (formData.role.name === "COMPANY") {
+    //   localStorage.setItem("token", JSON.stringify(formData.token));
+    // }
+    // if (formData.role.name === "INDIVIDUAL_USER") {
+    //   localStorage.setItem("token", JSON.stringify(formData.token));
+    // }
     localStorage.setItem("token", JSON.stringify(formData.token));
     dispatch({ type: types.LOGIN_USER, payload: formData, success: true });
     toast.success("Login was successful");

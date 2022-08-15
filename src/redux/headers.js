@@ -1,5 +1,6 @@
 const headers = {
 	"Content-Type": "application/json",
+	"Accept": "application/json"
 };
 
 const authHeader = (token) => ({
