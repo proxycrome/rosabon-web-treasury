@@ -16,7 +16,9 @@ function UserSignup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
-  const { isSignedup } = auth;
+  const { isSignedup, login, isLoggedIn } = auth;
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
   // const count = useSelector((state) => state.auth.signup_btn);
   // const success = useSelector((state) => state.auth.success);
   const [passwordShown1, setPasswordShown1] = useState(false);
@@ -39,11 +41,31 @@ function UserSignup() {
 
   // console.log(register, isSignedup);
 
-    useEffect(() => {
-      if (isSignedup) {
-        navigate("/congrates", { state: "success_signup" });
+  useEffect(() => {
+    if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (isLoggedIn || users) {
+      if (
+        (login && login.role && login.role.name === "COMPANY") ||
+        (users && users.role === "COMPANY")
+      ) {
+        navigate("/kyc/company");
+      } else if (
+        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
+        (users && users.role === "INDIVIDUAL_USER")
+      ) {
+        navigate("/kyc/person");
       }
-    }, [isSignedup]);
+    }
+  }, [isLoggedIn, users]);
+
+  useEffect(() => {
+    if (isSignedup) {
+      navigate("/congrates", { state: "success_signup" });
+    }
+  }, [isSignedup]);
 
   return (
     <div>

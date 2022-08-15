@@ -109,22 +109,22 @@ const PersonalKYC = () => {
   //   } catch (error) {}
   // };
 
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("user-token"));
-  //   if (tokenString) {
-  //     dispatch(getAuthUsers(tokenString));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+    if (tokenString) {
+      dispatch(getAuthUsers(tokenString));
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-  //     navigate("/personal-profile");
-  //   } else if (users && users.kyc && users.role === "COMPANY") {
-  //     navigate("/company-profile");
-  //   }
-  // }, [isLoggedIn, users]);
+  useEffect(() => {
+    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    }
+  }, [isLoggedIn, users]);
 
   // useEffect(() => {
   //   getLGAs();

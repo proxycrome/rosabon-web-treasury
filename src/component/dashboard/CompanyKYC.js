@@ -15,7 +15,11 @@ const CompanyKYC = () => {
   const navigate = useNavigate();
   const count = useSelector((state) => state.auth.signup_btn);
   const company_details = useSelector((state) => state.user_profile.users);
-  const [show, setShow] = useState(false);
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
+
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
 
   const data = {
     rcNumber: "",
@@ -33,7 +37,6 @@ const CompanyKYC = () => {
       [name]: value,
     });
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,13 +70,21 @@ const CompanyKYC = () => {
   };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("company-token"));
+    const tokenString = JSON.parse(localStorage.getItem("token"));
     if (tokenString) {
       dispatch(getAuthUsers(tokenString));
     } else {
       navigate("/login");
     }
   }, []);
+
+  useEffect(() => {
+    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    }
+  }, [isLoggedIn, users]);
 
   useEffect(() => {
     console.log(company_details);

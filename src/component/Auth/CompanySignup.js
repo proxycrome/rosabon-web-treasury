@@ -11,8 +11,11 @@ import { ValidateCompanyForm, validateInfo } from "./validateForm";
 function CompanySignup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const count = useSelector((state) => state.auth.signup_btn);
-  const success = useSelector((state) => state.auth.success);
+  const auth = useSelector((state) => state.auth);
+  const { isSignedup, login, isLoggedIn } = auth;
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
+
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false);
@@ -28,13 +31,31 @@ function CompanySignup() {
     setPasswordShown2(!passwordShown2);
   };
 
-  //  useEffect(() => {
-  //    if (success) {
-  //      navigate("/congrates", { state: "success_signup" });
-  //    }
-  //  }, [success]);
+  useEffect(() => {
+    if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (isLoggedIn || users) {
+      if (
+        (login && login.role && login.role.name === "COMPANY") ||
+        (users && users.role === "COMPANY")
+      ) {
+        navigate("/kyc/company");
+      } else if (
+        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
+        (users && users.role === "INDIVIDUAL_USER")
+      ) {
+        navigate("/kyc/person");
+      }
+    }
+  }, [isLoggedIn, users]);
 
-  // console.log(errorMessage);
+  useEffect(() => {
+    if (isSignedup) {
+      navigate("/congrates", { state: "success_signup" });
+    }
+  }, [isSignedup]);
 
   return (
     <div>

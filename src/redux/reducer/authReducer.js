@@ -12,6 +12,7 @@ const authReducer = (state = { login: {}, isLoggedIn: false, isSigned: false }, 
         ...state,
         register: action.payload,
         isSignedup: action.success,
+        
       };
     case types.LOGIN_USER:
       return {

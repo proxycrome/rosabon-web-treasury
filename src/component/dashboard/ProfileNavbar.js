@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import * as mdb from "mdb-ui-kit";
-import { Link } from "react-router-dom";
+import storage from "redux-persist/lib/storage";
+import { useNavigate } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import {
   updateUserCompanyKYC,
@@ -10,9 +10,13 @@ import {
 
 export function ProfileNavBar({ children }) {
   const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
-  const logout = () => {
+  const logout = (e) => {
+    e.preventDefault();
     localStorage.removeItem("token");
+    storage.removeItem("persist:root");
+    navigate("/login")
     //  setIsLoggedin(false);
   };
 
@@ -35,7 +39,7 @@ export function ProfileNavBar({ children }) {
             <Collapse isOpen={open}>
               <ul>
                 <li>
-                  <button onClickCapture={logout}>Logout</button>
+                  <button onClick={logout}>Logout</button>
                 </li>
               </ul>
             </Collapse>
