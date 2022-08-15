@@ -34,7 +34,7 @@ function PageRoutes() {
         <Route path="person" element={<PersonalKYC />} />
       </Route>
       <Route path="/login" element={<Authentication />} />
-      <Route path="/signup" element={<Authentication signup="signup" />} />
+      {/* <Route path="/signup" element={<Authentication signup="signup" />} /> */}
       <Route path="/register-user" element={<UserSignup signup="signup" />} />
       <Route path="/register-company" element={<CompanySignup signup="signup" />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

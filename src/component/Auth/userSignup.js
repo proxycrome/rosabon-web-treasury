@@ -15,8 +15,8 @@ import Footer from "../dashboard/ProfileFooter";
 function UserSignup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const count = useSelector((state) => state.auth.signup_btn);
-  const success = useSelector((state) => state.auth.success);
+  // const count = useSelector((state) => state.auth.signup_btn);
+  // const success = useSelector((state) => state.auth.success);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [isUserNewsLetters, setisUserNewsLetters] = useState(false);

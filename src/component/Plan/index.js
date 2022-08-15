@@ -10,7 +10,7 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
   const user = { name: false };
   const success = useSelector((state) => state.auth.success);
 
-  return user == false ? (
+  return (
     <Wrapper>
       <div className="side-bar">
         <ProfileSideBarList profile="profile" />
@@ -19,9 +19,20 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
         <Outlet />
       </div>
     </Wrapper>
-  ) : (
-    <Navigate to={"/login"} />
   );
+
+  // return user == false ? (
+  //   <Wrapper>
+  //     <div className="side-bar">
+  //       <ProfileSideBarList profile="profile" />
+  //     </div>
+  //     <div className="main-body">
+  //       <Outlet />
+  //     </div>
+  //   </Wrapper>
+  // ) : (
+  //   <Navigate to={"/login"} />
+  // );
 };
 
 export default PlanHome;
