@@ -15,6 +15,8 @@ import Footer from "../dashboard/ProfileFooter";
 function UserSignup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+  const { isSignedup } = auth;
   // const count = useSelector((state) => state.auth.signup_btn);
   // const success = useSelector((state) => state.auth.success);
   const [passwordShown1, setPasswordShown1] = useState(false);
@@ -35,11 +37,13 @@ function UserSignup() {
     setPasswordShown2(!passwordShown2);
   };
 
-//   useEffect(() => {
-//     if (success) {
-//       navigate("/congrates", { state: "success_signup" });
-//     }
-//   }, [success]);
+  // console.log(register, isSignedup);
+
+    useEffect(() => {
+      if (isSignedup) {
+        navigate("/congrates", { state: "success_signup" });
+      }
+    }, [isSignedup]);
 
   return (
     <div>

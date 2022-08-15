@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as mdb from "mdb-ui-kit";
 import { Link } from "react-router-dom";
+import { Collapse } from "reactstrap";
 import {
   updateUserCompanyKYC,
   getAuthUsers,
 } from "../../redux/actions/personalInfo/userProfile.actions";
 
 export function ProfileNavBar({ children }) {
+  const [open, setOpen] = useState(false);
 
-   const logout = () => {
-     localStorage.removeItem("token");
+  const logout = () => {
+    localStorage.removeItem("token");
     //  setIsLoggedin(false);
-   };
+  };
 
   return (
     <WrappeNavBar>
@@ -23,9 +25,20 @@ export function ProfileNavBar({ children }) {
             <li className="profile_nav_bel">
               <i className="fas fa-bell"></i>
             </li>
-            <li>
-              <i className="fas fa-angle-down"></i>
+            <li onClick={() => setOpen(!open)}>
+              {open ? (
+                <i class="fa-solid fa-chevron-up"></i>
+              ) : (
+                <i class="fa-solid fa-chevron-down"></i>
+              )}
             </li>
+            <Collapse isOpen={open}>
+              <ul>
+                <li>
+                  <button onClickCapture={logout}>Logout</button>
+                </li>
+              </ul>
+            </Collapse>
             <li>ekiyee bilaowei</li>
             <li>
               <img

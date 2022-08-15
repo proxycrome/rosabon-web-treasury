@@ -73,66 +73,66 @@ const PersonalKYC = () => {
     dispatch(updateUserCompanyKYC(data));
   };
 
-  const getLGAs = async () => {
-    try {
-      const response = await axios.post(`${config.rosobon}users`, headers);
-      const lgaData = await response.data;
-      setListLgas(lgaData);
-    } catch (error) {}
-  };
+  // const getLGAs = async () => {
+  //   try {
+  //     const response = await axios.post(`${config.rosobon}users`, headers);
+  //     const lgaData = await response.data;
+  //     setListLgas(lgaData);
+  //   } catch (error) {}
+  // };
 
-  const getStates = async () => {
-    try {
-      const response = await axios.get(
-        `${config.rosobon}states?page=0&size=37`,
-        headers
-      );
-      const stateData = await response.data;
-      setListStates(stateData);
-    } catch (error) {}
-  };
+  // const getStates = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${config.rosobon}states?page=0&size=37`,
+  //       headers
+  //     );
+  //     const stateData = await response.data;
+  //     setListStates(stateData);
+  //   } catch (error) {}
+  // };
 
-  const getCountry = async () => {
-    try {
-      const response = await axios.get(`${config.rosobon}countries`, headers);
-      const countryData = await response.data;
-      console.log(countryData)
-      setListCountries(countryData);
-    } catch (error) {}
-  };
+  // const getCountry = async () => {
+  //   try {
+  //     const response = await axios.get(`${config.rosobon}countries`, headers);
+  //     const countryData = await response.data;
+  //     console.log(countryData)
+  //     setListCountries(countryData);
+  //   } catch (error) {}
+  // };
   
-  const verifyBVN = async () => {
-    try {
-      const response = await axios.post(`${config.rosobon}users`, headers);
-      const countryData = await response.data;
-      setListCountries(countryData);
-    } catch (error) {}
-  };
+  // const verifyBVN = async () => {
+  //   try {
+  //     const response = await axios.post(`${config.rosobon}users`, headers);
+  //     const countryData = await response.data;
+  //     setListCountries(countryData);
+  //   } catch (error) {}
+  // };
 
-  useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("user-token"));
-    if (tokenString) {
-      dispatch(getAuthUsers(tokenString));
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("user-token"));
+  //   if (tokenString) {
+  //     dispatch(getAuthUsers(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    }
-  }, [isLoggedIn, users]);
+  // useEffect(() => {
+  //   if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+  //     navigate("/personal-profile");
+  //   } else if (users && users.kyc && users.role === "COMPANY") {
+  //     navigate("/company-profile");
+  //   }
+  // }, [isLoggedIn, users]);
 
-  useEffect(() => {
-    getLGAs();
-    getStates();
-    getCountry();
-  }, []);
+  // useEffect(() => {
+  //   getLGAs();
+  //   getStates();
+  //   getCountry();
+  // }, []);
 
-  console.log(listCountries);
+  // console.log(listCountries);
 
   return (
     <div>

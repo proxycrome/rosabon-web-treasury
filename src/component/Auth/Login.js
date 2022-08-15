@@ -16,8 +16,6 @@ const Login = () => {
   const user_profile = useSelector((state) => state.user_profile);
   const { users } = user_profile;
 
-  // console.log(login, isLoggedIn, users);
-
   const [passwordShown, setPasswordShown] = useState(false);
   const [error, setError] = useState(null);
 
@@ -60,26 +58,21 @@ const Login = () => {
         password,
         platformType: "WEB",
       };
-      console.log(data);
+      // console.log(data);
       dispatch(loginUser(data));
     } else {
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(successMessage(false));
-  // }, []);
-
+ 
   useEffect(() => {
-    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (users && users.kyc && users.role === "COMPANY") {
+    console.log(login, users.role);
+    if (users && users.kyc && users.role === "COMPANY") {
       navigate("/company-profile");
+    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
     } else if (isLoggedIn || users) {
-      if (
-        (login && login.role && login.role.name === "COMPANY") ||
-        (users && users.role === "COMPANY")
-      ) {
+      if (login && login.role && login.role.name === "COMPANY" || users && users.role === "COMPANY") {
         navigate("/kyc/company");
       } else if (
         (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
@@ -88,6 +81,7 @@ const Login = () => {
         navigate("/kyc/person");
       }
     }
+
   }, [isLoggedIn, users]);
 
   return (
