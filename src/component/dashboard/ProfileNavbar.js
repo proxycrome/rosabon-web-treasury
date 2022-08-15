@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import storage from "redux-persist/lib/storage";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import {
   updateUserCompanyKYC,
   getAuthUsers,
 } from "../../redux/actions/personalInfo/userProfile.actions";
+import { CLEAR_USERS } from "../../redux/constant/auth";
 
 export function ProfileNavBar({ children }) {
   const [open, setOpen] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const logout = (e) => {
-    e.preventDefault();
     localStorage.removeItem("token");
-    storage.removeItem("persist:root");
-    navigate("/login")
-    //  setIsLoggedin(false);
+    dispatch({type: CLEAR_USERS})
   };
 
   return (
