@@ -5,7 +5,9 @@ import LoginLeftView from "./loginLeftView";
 import Signup from "./signup";
 
 const Authentication = ({ signup }) => {
+  const user = null
   return (
+
     <div>
       <Wrapper>
         <div
@@ -41,19 +43,5 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr 1fr;
   }
 }
-  /* .content {
-    display: "grid",
-    grid-template-columns: "1fr 1fr",
-    height: "100vh",
-    overflow: "hidden",
-  }
-  @media (max-width: 900px) {
-    .login-left-view {
-      display: none;
-    }
-    .login-right-view {
-      display: "grid" !important;
-      grid-template-columns: auto;
-    }
-  } */
+ 
 `;

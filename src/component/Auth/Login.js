@@ -7,14 +7,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { successMessage } from "../../redux/actions/auth/SignupAction";
 import { loginUser } from "../../redux/actions/auth/SignupAction";
 
-
-
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const count = useSelector((state) => state.auth.signup_btn);
-  const success = useSelector((state) => state.auth.success);
-  const user_login = useSelector((state) => state.auth.login);
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
+
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
+
+  // console.log(login, isLoggedIn, users);
+
   const [passwordShown, setPasswordShown] = useState(false);
   const [error, setError] = useState(null);
 
@@ -57,29 +60,35 @@ const Login = () => {
         password,
         platformType: "WEB",
       };
-      console.log(data)
+      console.log(data);
       dispatch(loginUser(data));
     } else {
-      
     }
-    
   };
 
-  useEffect(() => {
-    dispatch(successMessage(false));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(successMessage(false));
+  // }, []);
 
   useEffect(() => {
-    if (success) {
-      if (user_login.role.name == "COMPANY") {
-        console.log(user_login.role.name);
-        navigate("/company");
-      } else if (user_login.role.name == "INDIVIDUAL_USER") {
-        console.log(user_login.role.name);
-        navigate("/person");
+    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    } else if (isLoggedIn || users) {
+      if (
+        (login && login.role && login.role.name === "COMPANY") ||
+        (users && users.role === "COMPANY")
+      ) {
+        navigate("/kyc/company");
+      } else if (
+        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
+        (users && users.role === "INDIVIDUAL_USER")
+      ) {
+        navigate("/kyc/person");
       }
     }
-  }, [success]);
+  }, [isLoggedIn, users]);
 
   return (
     <div className="">

@@ -27,11 +27,11 @@ function ResetPassword() {
     dispatch(resetPassword(newPassword));
   };
 
-  useEffect(() => {
-    if (success) {
-      navigate("/congrates");
-    }
-  }, [success]);
+  // useEffect(() => {
+  //   if (success) {
+  //     navigate("/congrates");
+  //   }
+  // }, [success]);
 
   return (
     <WrapperContainer>

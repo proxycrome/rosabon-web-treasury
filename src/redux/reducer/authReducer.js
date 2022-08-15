@@ -1,6 +1,6 @@
 import * as types from "../constant/auth";
 
-const authReducer = (state = {}, action) => {
+const authReducer = (state = { login: {}, isLoggedIn: false }, action) => {
   switch (action.type) {
     case types.SET_SIGNUPBTN:
       return {
@@ -8,19 +8,17 @@ const authReducer = (state = {}, action) => {
         signup_btn: action.payload,
       };
     case types.REGISTER_COMPANY:
-      console.log(action.payload);
       return {
         ...state,
         register: action.payload,
       };
     case types.LOGIN_USER:
-      console.log(action.payload);
       return {
         ...state,
         login: action.payload,
+        isLoggedIn: action.success,
       };
     case types.AUTHORIZE_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         success: action.payload,

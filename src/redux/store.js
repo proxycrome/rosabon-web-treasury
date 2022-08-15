@@ -9,10 +9,9 @@ import storage from "redux-persist/lib/storage";
 const logger = createLogger();
 
 const persistConfig = {
-	key: "root",
-	storage,
-	whitelist: [ ],
-	blacklist: ["auth"]
+  key: "root",
+  storage,
+  whitelist: ["user_profile", "auth"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -20,12 +19,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const middleware = [thunk];
 
 const configureStore = () => {
-	let store = createStore(
-		persistedReducer,
-		composeWithDevTools(applyMiddleware(...middleware, logger))
-	);
+  let store = createStore(
+    persistedReducer,
+    composeWithDevTools(applyMiddleware(...middleware, logger))
+  );
 
-	return store;
+  return store;
 };
 
 export default configureStore;

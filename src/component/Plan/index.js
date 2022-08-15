@@ -1,37 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ProfileSideBarList } from "../dashboard/ProfileSideBar";
-import HomeView from "./home/HomeView";
-import PlanPayment from "./Plan/PlanPayment";
-import { HistoryTable } from "./Accesssories";
-import PlanProduct from "./createPlan";
-import ListPlans from "./Plan";
-import TopupPlan from "./Plan/TopupPlan";
-import { PlanForm } from "./createPlan/PlanForm";
-import { ProfileNavBar } from "../dashboard/ProfileNavbar";
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector, useDispatch, connect } from "react-redux";
 
 const PlanHome = ({ product, list, topup, payment, details }) => {
-  return (
+  const [tabs, setTabs] = useState("profile");
+
+  const user = { name: false };
+  const success = useSelector((state) => state.auth.success);
+
+  return user == false ? (
     <Wrapper>
       <div className="side-bar">
         <ProfileSideBarList profile="profile" />
       </div>
       <div className="main-body">
-        {product ? (
-          <PlanProduct />
-        ) : list ? (
-          <ListPlans />
-        ) : topup ? (
-          <TopupPlan />
-        ) : payment ? (
-          <PlanPayment />
-        ) : details ? (
-          <PlanForm />
-        ) : (
-          <HomeView />
-        )}
+        <Outlet />
       </div>
     </Wrapper>
+  ) : (
+    <Navigate to={"/login"} />
   );
 };
 
@@ -56,8 +45,6 @@ const Wrapper = styled.div`
     }
   }
 `;
-
-
 
 // {
 //   "company": {

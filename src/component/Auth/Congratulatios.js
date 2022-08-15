@@ -3,16 +3,25 @@ import styled from "styled-components";
 import Confetti from "../../asset/confetti-cake.png";
 // import ConfettiLetter from "../../asset/confetti-letter.png";
 import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { successMessage } from "../../redux/actions/auth/SignupAction";
+import { getAuthUsers } from "../../redux/actions/personalInfo/userProfile.actions";
 
 function Congratulatios(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
+  const user_details = useSelector((state) => state.user_profile.users);
   console.log(location.state);
 
   useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+    if (tokenString) {
+      dispatch(getAuthUsers(tokenString));
+    } else {
+      navigate("/login");
+    }
     dispatch(successMessage(false));
   }, []);
 
@@ -48,9 +57,9 @@ function Congratulatios(props) {
                     <p className="">
                       your account was created successfully. Please take a
                       moment to verify your <br /> email address. We sent an
-                      email with a verification link to Info@optisoft.ng if{" "}
-                      <br /> you did not receive this in your inbox, please
-                      check your spam folder.
+                      email with a verification link to{" "}
+                      {user_details && user_details.email} if <br /> you did not
+                      receive this in your inbox, please check your spam folder.
                     </p>
                   </>
                 ) : (

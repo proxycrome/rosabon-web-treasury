@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -53,6 +54,7 @@ function ForgotPassword() {
   return (
     <WrapperContainer>
       <div className="view_content"></div>
+      <Toaster />
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">
           <WrappCongrate>

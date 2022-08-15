@@ -1,8 +1,10 @@
+import React, { useState } from "react";
 import styled from "styled-components";
+import { NavLink, Link } from "react-router-dom";
 import Discovery from "../../asset/Discovery.png";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 
-export const ProfileSideBarList = ({ profile }) => {
+export const ProfileSideBarList = ({ profile, handleChange }) => {
   const styleContent = profile == "profile" ? "profile" : "";
 
   return (
@@ -18,54 +20,49 @@ export const ProfileSideBarList = ({ profile }) => {
                     src={RFSLogoFullColour}
                     alt="RFSLogo"
                   />
-                  <i class="style-hamburga fa-solid fa-bars"></i>
+                  {/* <i class="style-hamburga fa-solid fa-bars"></i> */}
                 </div>
               </div>
             </div>
 
             <div className="content-list">
               <ul>
-                <li>
-                  <span className="">
+                <NavLink className="nav_link" to="/">
+                  <li>
                     <i className="fas fa-home"></i>
-                  </span>
-                  Home
-                </li>
-                <li>
-                  <span>
+                    <span>Home</span>
+                  </li>
+                </NavLink>
+
+                <NavLink className="nav_link" to="/plan-product">
+                  <li>
                     <i className="far fa-file-alt"></i>
-                  </span>
-                  Create
-                </li>
-                <li>
-                  <span>
+                    <span>Create</span>
+                  </li>
+                </NavLink>
+
+                <NavLink className="nav_link" to="/plan-list">
+                  <li>
                     <i className="fas fa-file-alt"></i>
-                  </span>
-                  Plan
+                    <span>Plan</span>
+                  </li>
+                </NavLink>
+
+                <li>
+                  <i className="fas fa-sticky-note"></i>
+                  <span>Wallet</span>
                 </li>
                 <li>
-                  <span>
-                    <i className="fas fa-sticky-note"></i>
-                  </span>
-                  Wallet
+                  <i className="fas fa-thumbs-up"></i>
+                  <span>Feedback</span>
                 </li>
                 <li>
-                  <span>
-                    <i className="fas fa-thumbs-up"></i>
-                  </span>
-                  Feedback
+                  <i className="fas fa-exclamation-circle"></i>
+                  <span>Help</span>
                 </li>
                 <li>
-                  <span>
-                    <i className="fas fa-exclamation-circle"></i>
-                  </span>
-                  Help
-                </li>
-                <li>
-                  <span>
-                    <i className="fas fa-cog"></i>
-                  </span>
-                  Settings
+                  <i className="fas fa-cog"></i>
+                  <span>Settings</span>
                 </li>
               </ul>
             </div>
@@ -78,34 +75,29 @@ export const ProfileSideBarList = ({ profile }) => {
 
 const WrappSideBarList = styled.div`
   @media (max-width: 900px) {
-      display: none;
+    display: none;
   }
   @media (max-width: 1200px) {
     .profile {
       display: none;
     }
   }
-  /* background: #ffffff;
-  .style-hamburga {
-    display: none;
+  .nav_link {
+    text-decoration: none;
   }
-  @media (max-width: 900px) {
-    padding: 0 10px;
-    .style-hamburga {
-      display: block;
-      font-size: 26px;
+  .active {
+    li {
+      background: linear-gradient(92.71deg, #111e6c -64.5%, #4b5dc6 151.56%);
+      border-radius: 5px;
+      border-radius: 5px;
+      color: #ffffff !important;
     }
-    .content-list {
-      display: none;
+  }
+  li {
+    i {
+      padding-right: 15px;
     }
-    .style-log {
-      
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-  } */
-
+  }
   span {
     padding-right: 20px;
   }
@@ -114,7 +106,7 @@ const WrappSideBarList = styled.div`
     margin: 0;
     padding: 0;
     padding-top: 6rem;
-    padding-left: 2rem;
+    padding-left: 1.5rem;
   }
   li {
     font-style: normal;
@@ -125,7 +117,8 @@ const WrappSideBarList = styled.div`
     text-align: left;
     color: #242424;
     cursor: pointer;
-    padding: 15px 5px;
+    padding: 15px 5px 15px 20px;
+    text-decoration: none;
   }
 `;
 

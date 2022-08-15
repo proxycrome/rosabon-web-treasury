@@ -254,30 +254,34 @@ const CompanyKYC = () => {
                 </div>
               </WrapperBody>
               <WrapperFooter>
-                <div className="d-flex align-items-center justify-content-between btn-style">
-                  <div>
-                    <button type="submit" className="" disabled>
-                      Save and Invest Now
-                    </button>
-                  </div>
-                  <div>
-                    {/* <button className="blue-btn">
-                      <Link to="/company-profile">Save and Invest Now</Link>
-                    </button> */}
-                    {formData.rcNumber &&
-                    formData.natureOfBusiness &&
-                    formData.companyType &&
-                    formData.dateOfInco ? (
-                      <button type="submit" className="blue-btn">
+                <div className="footer-body">
+                  <div className="d-flex align-items-center justify-content-between btn-style  footer-content">
+                    <div>
+                      <button type="submit" className="" disabled>
                         Save and Invest Now
                       </button>
-                    ) : (
-                      <>
-                        <button type="submit" className="" disabled>
-                          Save and Invest Now
-                        </button>
-                      </>
-                    )}
+                    </div>
+                    <div>
+                      {/* <button className="blue-btn">
+                      <Link to="/company-profile">Save and Invest Now</Link>
+                    </button> */}
+                      {formData.rcNumber &&
+                      formData.natureOfBusiness &&
+                      formData.companyType &&
+                      formData.dateOfInco ? (
+                        <Link to="/company-profile">
+                          <button type="submit" className="blue-btn">
+                            Save and Invest Now
+                          </button>
+                        </Link>
+                      ) : (
+                        <>
+                          <button type="submit" className="" disabled>
+                            Save and Invest Now
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </WrapperFooter>
