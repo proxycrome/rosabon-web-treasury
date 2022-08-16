@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Input } from 'reactstrap';
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -98,7 +99,7 @@ function UserSignup() {
                         <div className="col-md-6  mb-4">
                           <label>First Name</label>
                           <div className="input-group">
-                            <input
+                            <Input
                               className="form-control"
                               placeholder="First Name"
                               type="text"
@@ -112,7 +113,7 @@ function UserSignup() {
                         <div className="col-md-6 ps-2 mb-4">
                           <label>Last Name</label>
                           <div className="input-group">
-                            <input
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Last Name"
@@ -127,7 +128,7 @@ function UserSignup() {
                       <div className="mb-4">
                         <label>Email Address</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type="email"
                             className="form-control"
                             placeholder="Email Address"
@@ -141,7 +142,7 @@ function UserSignup() {
                       <div className="mb-4">
                         <label>Mobile Number</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type="text"
                             className="form-control"
                             placeholder="Mobile Number"
@@ -155,7 +156,7 @@ function UserSignup() {
                       <div className="mb-4 input_password">
                         <label>Password</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type={passwordShown1 ? "text" : "password"}
                             className="form-control"
                             placeholder="Password"
@@ -176,7 +177,7 @@ function UserSignup() {
                       <div className="mb-4 input_password">
                         <label>Confirm Password</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type={passwordShown2 ? "text" : "password"}
                             className="form-control"
                             placeholder="Confirm Password"
@@ -197,8 +198,8 @@ function UserSignup() {
                         <div className="">
                           <label>How did you hear about us</label>
                           <select
-                            className="form-select form-select-lg mb-3"
-                            aria-label=".form-select-lg"
+                            className="form-select form-select-md mb-3"
+                            aria-label=".form-select-md"
                             onChange={handleValueChange}
                             name="source"
                           >
@@ -214,8 +215,8 @@ function UserSignup() {
                       </div>
                       <div className="mb-4">
                         <div className="input-group">
-                          {values.source == "OTHER" ? (
-                            <input
+                          {values.source === "OTHER" ? (
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Source Name"
@@ -223,8 +224,8 @@ function UserSignup() {
                               name="sourceOthers"
                               value={values.sourceOthers}
                             />
-                          ) : values.source == "ANOTHER_USER" ? (
-                            <input
+                          ) : values.source === "ANOTHER_USER" ? (
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
@@ -232,8 +233,8 @@ function UserSignup() {
                               name="refferedBy"
                               value={values.refferedBy}
                             />
-                          ) : values.source == "ROSABON_SALES" ? (
-                            <input
+                          ) : values.source === "ROSABON_SALES" ? (
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
@@ -242,7 +243,7 @@ function UserSignup() {
                               value={values.refferedBy}
                             />
                           ) : (
-                            <input
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
@@ -256,7 +257,7 @@ function UserSignup() {
                       </div>
                       <div className="">
                         <div className="form-check">
-                          <input
+                          <Input
                             className="form-check-input"
                             type="checkbox"
                             id="checkNewsLetter"
@@ -273,7 +274,7 @@ function UserSignup() {
                           </label>
                         </div>
                         <div className="form-check">
-                          <input
+                          <Input
                             className="form-check-input"
                             type="checkbox"
                             id="checkTerms"
