@@ -14,16 +14,16 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
   const user = { name: false };
   const success = useSelector((state) => state.auth.success);
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem("token");
-    console.log(isLoggedIn)
-    if (!tokenString) {
-      navigate("/login");
-    }
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("token");
+  //   console.log(isLoggedIn)
+  //   if (!tokenString) {
+  //     navigate("/login");
+  //   }
+  //   if (!isLoggedIn) {
+  //     navigate("/login");
+  //   }
+  // }, [isLoggedIn]);
 
   return (
     <Wrapper>

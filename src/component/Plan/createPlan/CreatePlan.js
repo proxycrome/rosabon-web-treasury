@@ -1,284 +1,363 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
-
-
+import { Collapse } from "reactstrap";
 
 const CreatePlan = () => {
+    const [open, setOpen] = useState(false);
+    console.log(open)
   return (
     <Wrapper>
+      <div>
         <div>
+          <div className="d-flex align-items-center justify-content-between savins-drop">
+            <h5>Fix Savings </h5>
             <div>
-                <div className='d-flex align-items-center justify-content-between savins-drop' >
-                    <h5>Fix Savings </h5>
-                    <i className="fa-solid fa-chevron-down"></i>
-                </div>
-                <p className='para-header'>Choose from a fixed savings plan</p>
+              {open ? (
+                <i
+                  onClick={() => setOpen(!open)}
+                  class="fa-solid fa-chevron-up"
+                ></i>
+              ) : (
+                <i
+                  onClick={() => setOpen(!open)}
+                  class="fa-solid fa-chevron-down"
+                ></i>
+              )}
             </div>
-            <div className='plan-list'>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-       
-                
-            </div>
+          </div>
+          <p className="para-header">Choose from a fixed savings plan</p>
         </div>
-        <div className='pt-5'>
-            <div>
-                <div className='d-flex align-items-center justify-content-between savins-drop' >
-                    <h5>Target Savings </h5>
-                    <i className="fa-solid fa-chevron-down"></i>
+        <div className="plan-list">
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
                 </div>
-                <p className='para-header'>Choose from a Target savings plan</p>
+              </div>
             </div>
-            <div className='plan-list'>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
                 </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-       
-                
+              </div>
             </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
         </div>
-        <div className='pt-5'>
-            <div>
-                <div className='d-flex align-items-center justify-content-between savins-drop' >
-                    <h5>Target Income </h5>
-                    <i className="fa-solid fa-chevron-down"></i>
-                </div>
-                <p className='para-header'>Choose from a Target Income plan</p>
-            </div>
-            <div className='plan-list'>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-                <div className='choose-plan'>
-                    <div  className='d-flex align-items-center justify-content-around'>
-                        <img
-                            className="image-holder"
-                            src={ChoosePlanHolder}
-                            alt="ChoosePlanHolder"
-                        />
-                        <div>
-                            <h5>Product 1</h5>
-                            <div>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                                <p className='p-0 m-0 pb-2'> printing and typesetting industry.</p>
-                                <p className='p-0 m-0 pb-2'>Lorem Ipsum is simply dummy text of the </p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <button>Create Plan</button>
-                </div>
-       
-                
-            </div>
+      </div>
+      <div className="pt-5">
+        <div>
+          <div className="d-flex align-items-center justify-content-between savins-drop">
+            <h5>Target Savings </h5>
+            <i className="fa-solid fa-chevron-down"></i>
+          </div>
+          <p className="para-header">Choose from a Target savings plan</p>
         </div>
+        <div className="plan-list">
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+        </div>
+      </div>
+      <div className="pt-5">
+        <div>
+          <div className="d-flex align-items-center justify-content-between savins-drop">
+            <h5>Target Income </h5>
+            <i className="fa-solid fa-chevron-down"></i>
+          </div>
+          <p className="para-header">Choose from a Target Income plan</p>
+        </div>
+        <div className="plan-list">
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+          <div className="choose-plan">
+            <div className="d-flex align-items-center justify-content-around">
+              <img
+                className="image-holder"
+                src={ChoosePlanHolder}
+                alt="ChoosePlanHolder"
+              />
+              <div>
+                <h5>Product 1</h5>
+                <div>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    {" "}
+                    printing and typesetting industry.
+                  </p>
+                  <p className="p-0 m-0 pb-2">
+                    Lorem Ipsum is simply dummy text of the{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button>Create Plan</button>
+          </div>
+        </div>
+      </div>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default CreatePlan
+export default CreatePlan;
 
 const Wrapper = styled.div`
   display: flex;

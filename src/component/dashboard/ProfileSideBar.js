@@ -48,7 +48,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                   </li>
                 </NavLink>
 
-                <li>
+                {/* <li>
                   <i className="fas fa-sticky-note"></i>
                   <span>Wallet</span>
                 </li>
@@ -63,7 +63,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                 <li>
                   <i className="fas fa-cog"></i>
                   <span>Settings</span>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
