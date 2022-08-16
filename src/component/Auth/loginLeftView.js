@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import RFSLogo from "../../asset/RFS-Logo.png";
 import SpiralImage from "../../asset/spiral-arrow.png";
 import styled from "styled-components";
@@ -8,18 +9,9 @@ import { set_signup } from "../../redux/actions/auth/SignupAction";
 const LoginLeftView = ({ signup }) => {
   const count = useSelector((state) => state.auth.signup_btn);
   const dispatch = useDispatch();
-  let indiv_btn;
-  let cop_btn;
-  if (count) {
-    indiv_btn = "grey-button";
-    cop_btn = "blue_login_btn";
-  } else {
-    indiv_btn = "blue_login_btn";
-    cop_btn = "grey-button";
-  }
  
+
   return (
-    // <div className="">
     <Wrapper>
       <div className="wrapper_content">
         <img src={RFSLogo} alt="RFSLogo" />
@@ -44,43 +36,25 @@ const LoginLeftView = ({ signup }) => {
                 </p>
               </>
             )}
-
-            <img className="spiral" src={SpiralImage} alt="RFSLogo" />
-            <div className="d-flex">
+            <div className="spiral-content position-absolute">
+              <img className="spiral" src={SpiralImage} alt="RFSLogo" />
+            </div>
+            <div>
               <>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault(e);
-                    dispatch(set_signup(true));
-                  }}
-                  type="button"
-                  class={" continue_login_btn " + indiv_btn}>
-                  Register as an Invididual
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault(e);
-                    dispatch(set_signup(false));
-                  }}
-                  type="button"
-                  class={"mx-5 p-3 continue_login_btn " + cop_btn}>
-                  Register as a Coporate
-                </button>
+                <div className="continue_login_btn">
+                  <NavLink to="/register-user">
+                    <button class="">Register as an Invididual</button>
+                  </NavLink>
+                  <NavLink to="/register-company">
+                    <button class="">Register as a Coporate</button>
+                  </NavLink>
+                </div>
               </>
-              {/* {signup ? (
-                
-              ) : (
-                <button type="button" class="continue_login_btn">
-                  Continue the Journey
-                  <i class="fa-solid fa-arrow-right-long"></i>
-                </button>
-              )} */}
             </div>
           </div>
         </div>
       </div>
     </Wrapper>
-    // </div>
   );
 };
 
@@ -101,29 +75,35 @@ const Wrapper = styled.div`
     }
   }
   button {
-    font-family: "Montserrat";
     font-style: normal;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 13px;
     line-height: 22px;
     letter-spacing: -0.04em;
     padding: 10px 20px;
-    /* color: #f2f2f2; */
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    margin-right: 20px;
+    background: #111e6c;
+    color: #f2f2f2;
   }
   .login_banner_body {
     justify-content: center;
     display: flex;
     align-items: center;
-    padding-top: 80px;
+    padding-top: 30px;
     position: relative;
-
+    .spiral-content {
+      width: 373px;
+      height: 285px;
+      top: 100px;
+    }
     img {
-      position: absolute;
-      top: 200px;
+      width: 100%;
+      height: 100%;
     }
     .continue_login_btn {
-      margin-top: 230px;
-      background: #ffffff;
+      margin-top: 200px;
       border-radius: 10px;
       color: #111e6c;
       i {
@@ -138,6 +118,12 @@ const Wrapper = styled.div`
     .grey-button {
       background: #f2f2f2;
       color: #828282;
+    }
+    .active {
+      button {
+        background: #f2f2f2 !important;
+        color: #828282;
+      }
     }
   }
 `;

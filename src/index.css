@@ -2,6 +2,32 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+button {
+  outline: none;
+  border: none;
+}
+p,
+h4,
+h3,
+h5 {
   font-family: "Montserrat";
-  text-decoration: none;
- }
+  font-style: normal;
+}
+
+label {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #828282;
+}
+input {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: -0.01em;
+  color: #bdbdbd;
+}

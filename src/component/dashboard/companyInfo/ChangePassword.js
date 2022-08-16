@@ -1,7 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { changeCompanyPassword } from "../../../redux/actions/updateProfile/changePassword.action";
+import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
 const ChangePassword = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(true);
+  const toggleEdit = () => {
+    setShowEdit(!showEdit);
+  };
+
+  const data = {
+    acc_name: "",
+    acc_no: "",
+    bankType: "",
+  };
+  const [formData, setformData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { acc_name, acc_no, bankType } = formData;
+    let data = { acc_name, acc_no, bankType };
+    console.log(data);
+    dispatch(changeCompanyPassword(data));
+  };
+
+  useEffect(() => {
+    dispatch(successMessage(false));
+  }, []);
+
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
+
   return (
     <div>
       <WrapperBody>
@@ -10,7 +58,20 @@ const ChangePassword = () => {
             <div className="d-flex justify-content-between">
               <h4>Change Password</h4>
               <div>
-                <button>Edit</button>
+                <div>
+                  {showEdit ? (
+                    <button
+                      className={showEdit ? " btn_bg_blue" : ""}
+                      onClick={toggleEdit}
+                    >
+                      Edit
+                    </button>
+                  ) : (
+                    <button className="grey-button" onClick={toggleEdit}>
+                      Cancel
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -23,6 +84,7 @@ const ChangePassword = () => {
                   placeholder="First Name"
                   aria-label="First Name..."
                   type="password"
+                  disabled={showEdit}
                 />
                 <span className=" input-font-awe">
                   <i class="far fa-eye-slash"></i>
@@ -39,6 +101,7 @@ const ChangePassword = () => {
                   placeholder="First Name"
                   aria-label="First Name..."
                   type="password"
+                  disabled={showEdit}
                 />
                 <span className=" input-font-awe">
                   <i class="far fa-eye-slash"></i>
@@ -55,6 +118,7 @@ const ChangePassword = () => {
                   placeholder="First Name"
                   aria-label="First Name..."
                   type="password"
+                  disabled={showEdit}
                 />
                 <span className=" input-font-awe">
                   <i class="far fa-eye-slash"></i>
@@ -74,6 +138,10 @@ const WrapperBody = styled.div`
   padding: 0 4rem 7rem 1rem;
   .content {
     padding-top: 45px;
+  }
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
   }
   .cancel-button {
   }

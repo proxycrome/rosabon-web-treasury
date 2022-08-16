@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,11 +10,17 @@ function ForgotPassword() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const success = useSelector((state) => state.auth.success);
+  const [error, setError] = useState(null);
 
   const data = {
     email: "",
   };
   const [formData, setformData] = useState(data);
+
+   function isValidEmail(email) {
+     return /\S+@\S+\.\S+/.test(email);
+   }
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,27 +28,37 @@ function ForgotPassword() {
       ...formData,
       [name]: value,
     });
+
+     if (name == "email") {
+       if (!isValidEmail(e.target.value)) {
+         setError("Email is invalid");
+       } else {
+         setError(null);
+       }
+     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email } = formData;
+    // console.log(email)
     dispatch(forgotPassword(email));
   };
 
-  useEffect(() => {
-    if (success) {
-      navigate("/reset-password");
-    }
-  }, [success]);
+  // useEffect(() => {
+  //   if (success) {
+  //     navigate("/reset-password");
+  //   }
+  // }, [success]);
 
   return (
     <WrapperContainer>
       <div className="view_content"></div>
+      <Toaster />
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">
           <WrappCongrate>
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
                 <div className="col congrate_body">
                   <div className="text-center">
@@ -66,12 +83,16 @@ function ForgotPassword() {
                             value={formData.email}
                           />
                         </div>
+                        {error && (
+                          <h3>
+                            Your account is pending verification. please check
+                            your email for the verification link
+                          </h3>
+                        )}
                       </div>
                       <div className="text-center">
                         <div>
-                            <button className="verify_congrates_btn">
-                              Send
-                            </button>
+                          <button className="verify_congrates_btn">Send</button>
                           <p className="text-center">
                             Do you remember your password?
                             <span className="">
@@ -102,7 +123,8 @@ const WrapperContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
-  padding-top: 5%;
+  padding: 50px;
+  /* padding-top: 5%; */
 `;
 
 const WrappCongrate = styled.div`
@@ -124,6 +146,17 @@ const WrappCongrate = styled.div`
   display: flex;
   align-items: center;
   box-shadow: 0px 4px 40px rgba(225, 234, 254, 0.62);
+  @media (max-width: 810px) {
+    .congrate_body {
+      padding: 3rem;
+    }
+    h4 {
+      font-size: 20px;
+      p {
+        font-size: 12px;
+      }
+    }
+  }
   input {
     width: 479px;
     height: 54px;
@@ -147,6 +180,18 @@ const WrappCongrate = styled.div`
     text-transform: capitalize;
     color: #242424;
     padding-top: 9px;
+  }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.02em;
+    color: #e20d0d;
+    padding-top: 12px;
   }
   p {
     font-style: normal;

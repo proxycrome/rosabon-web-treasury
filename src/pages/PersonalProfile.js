@@ -5,18 +5,21 @@ import PersonalInfo from "../component/dashboard/personalInfo/PersonalInfo";
 import BankDetails from "../component/dashboard/personalInfo/BankDetails";
 import { ProfileTabs } from "../component/dashboard/ProfileTabs";
 import { ProfileNavBar } from "../component/dashboard/ProfileNavbar";
+import ChangePassword from "../component/dashboard/personalInfo/ChangePassword";
 import { Link, useNavigate } from "react-router-dom";
 
 const PersonalProfile = () => {
   const navigate = useNavigate();
   const [tabs, setTabs] = useState("profile");
 
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("user-token");
-  //   if (!tokenString) {
-  //     navigate("/login");
-  //   }
-  // }, []);
+
+
+  useEffect(() => {
+    const tokenString = localStorage.getItem("token");
+    if (!tokenString) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <WrapperBody>
@@ -25,10 +28,10 @@ const PersonalProfile = () => {
           <ProfileNavBar />
         </div>
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-md-3">
             <ProfileTabs personal="personal" handleChange={(e) => setTabs(e)} />
           </div>
-          <div className="horiz-line col-md-1"></div>
+          {/* <div className="horiz-line col-md-1"></div> */}
           <div className="col-md-9">
             {tabs === "profile" ? (
               <PersonalInfo />
@@ -36,6 +39,8 @@ const PersonalProfile = () => {
               <BankDetails />
             ) : tabs === "documents" ? (
               <MyDocu />
+            ) : tabs === "password" ? (
+              <ChangePassword />
             ) : (
               <></>
             )}

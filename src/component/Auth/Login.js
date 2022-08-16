@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import LoginLeftView from "./loginLeftView";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,14 +10,22 @@ import { loginUser } from "../../redux/actions/auth/SignupAction";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const count = useSelector((state) => state.auth.signup_btn);
-  const success = useSelector((state) => state.auth.success);
-  const user_login = useSelector((state) => state.auth.login);
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
+
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
+
   const [passwordShown, setPasswordShown] = useState(false);
+  const [error, setError] = useState(null);
 
   const togglePassword1 = () => {
     setPasswordShown(!passwordShown);
   };
+
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
 
   const data = {
     email: "",
@@ -30,47 +39,62 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === "email") {
+      if (!isValidEmail(e.target.value)) {
+        setError("Email is invalid");
+      } else {
+        setError(null);
+      }
+    }
   };
 
   const handleUserSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formData;
-    let data = {
-      email,
-      password,
-      platformType: "WEB"
-    };
-    dispatch(loginUser(data));
+    if (!error) {
+      let data = {
+        email,
+        password,
+        platformType: "WEB",
+      };
+      // console.log(data);
+      dispatch(loginUser(data));
+    } else {
+    }
   };
 
+ 
   useEffect(() => {
-    dispatch(successMessage(false));
-  }, []);
-
-  useEffect(() => {
-    
-    if (success) {
-      if(user_login.role.name == 'COMPANY') {
-        console.log(user_login.role.name)
-        navigate("/company");
-      } 
+    // console.log(login, users.role);
+    if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (isLoggedIn || users) {
+      if (login && login.role && login.role.name === "COMPANY" || users && users.role === "COMPANY") {
+        navigate("/kyc/company");
+      } else if (
+        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
+        (users && users.role === "INDIVIDUAL_USER")
+      ) {
+        navigate("/kyc/person");
+      }
     }
-  }, [success]);
+
+  }, [isLoggedIn, users]);
 
   return (
     <div className="">
       <div className="">
         <RightWrapper>
-          {/* <div className="d-flex top_login_btn justify-content-end">
-            <button class="btn bg-gradient-primary w-auto me-2">Login</button>
-            <button class="blue_login_btn">Get started</button>
-          </div> */}
+          <Toaster />
           <h4>Login</h4>
           <div className="container">
             <form autoComplete="off" onSubmit={handleUserSubmit}>
               <LoginInput>
                 <div className="mb-4">
-                  <label>Email Address</label>
+                  <label className="pb-2">Email Address</label>
                   <div className="input-group">
                     <input
                       type="email"
@@ -81,9 +105,15 @@ const Login = () => {
                       value={formData.email}
                     />
                   </div>
+                  {error && (
+                    <h3>
+                      Your account is pending verification. please check your
+                      email for the verification link
+                    </h3>
+                  )}
                 </div>
                 <div className="mb-4 input_password">
-                  <label>Password</label>
+                  <label className="pb-2">Password</label>
                   <div className="input-group">
                     <input
                       type={passwordShown ? "text" : "password"}
@@ -95,12 +125,11 @@ const Login = () => {
                     />
                     <i
                       onClick={togglePassword1}
-                      class={
-                        passwordShown ? "far fa-eye" : "far fa-eye-slash"
-                      }></i>
+                      class={passwordShown ? "far fa-eye" : "far fa-eye-slash"}
+                    ></i>
                   </div>
                 </div>
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-around">
                   <div className="form-check">
                     <input
                       className="form-check-input"
@@ -119,16 +148,15 @@ const Login = () => {
               </LoginInput>
               <LoginButton>
                 <div className="">
-                  {/* <Link to="/"> */}
                   <button type="submit" className="verify_congrates_btn">
                     Login
                   </button>
-                  {/* </Link> */}
-                  <Link to="/signup">
-                    <p className="text-center">
-                      Don’t have an account? <span className="">Sign up</span>
-                    </p>
-                  </Link>
+                  <p className="text-center">
+                    Don’t have an account?{" "}
+                    <span className="">
+                      <Link to="/register-company">Sign up</Link>
+                    </span>
+                  </p>
                 </div>
               </LoginButton>
             </form>
@@ -183,6 +211,18 @@ const RightWrapper = styled.section`
     color: #222222;
     padding-bottom: 60px;
   }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.02em;
+    color: #e20d0d;
+    padding-top: 12px;
+  }
   .login_input {
   }
 `;
@@ -197,7 +237,8 @@ const LoginInput = styled.div`
     letter-spacing: -0.04em;
     color: #828282;
   }
-  span {
+
+  p {
     padding-left: 200px;
   }
   .input_password {

@@ -1,114 +1,167 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ModalComponent from "../../ModalComponent";
 import { BVNConfirm } from "../../Accessories/BVNConfirm";
+import { personalBankDetails } from "../../../redux/actions/updateProfile/bankDetails.action";
+import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
 
 const BankDetails = () => {
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(true);
   const toggleEdit = () => {
     setShowEdit(!showEdit);
   };
 
+  const data = {
+    acc_name: "",
+    acc_no: "",
+    bankType: "",
+  };
 
+  const [formData, setformData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { acc_name, acc_no, bankType } = formData;
+    let data = { acc_name, acc_no, bankType };
+    console.log(data);
+    dispatch(personalBankDetails(data));
+  };
+
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    dispatch(successMessage(false));
+  }, []);
 
   return (
     <div>
       <WrapperBody>
         <div className="container-fluid">
-          <div>
-            <div className="row">
-              <div className="d-flex justify-content-between">
-                <h4 className="">My Bank Details</h4>
-                <div>
+          <form autoComplete="off" onSubmit={handleSubmit}>
+            <div>
+              <div className="row">
+                <div className="d-flex justify-content-between">
+                  <h4 className="">My Bank Details</h4>
                   <div>
-                    {showEdit ? (
-                      <button
-                        className={showEdit ? " btn_bg_blue" : ""}
-                        onClick={toggleEdit}>
-                        Choose file
-                      </button>
-                    ) : (
-                      <button className="grey-button" onClick={toggleEdit}>
-                        Cancel
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="row">
-              <div class="col-md-8 ">
-                <label>Select Bank</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder=""
-                    type="text"
-                    disabled={showEdit}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="row">
-              <div className="col-md-6">
-                <div className="row">
-                  <div class="col-6 ">
-                    <label>Account Number</label>
-                    <div class="input-group mb-4">
-                      <input
-                        class="form-control"
-                        placeholder=""
-                        type="text"
-                        disabled={showEdit}
-                      />
+                    <div>
+                      {showEdit ? (
+                        <button
+                          className={showEdit ? " btn_bg_blue" : ""}
+                          onClick={toggleEdit}
+                        >
+                          Edit
+                        </button>
+                      ) : (
+                        <button className="grey-button" onClick={toggleEdit}>
+                          Cancel
+                        </button>
+                      )}
                     </div>
                   </div>
-                  <div class="col-6 ">
-                    <button
-                      type="button"
-                      onClick={() => setShow(true)}
-                      disabled={showEdit}
-                      className={
-                        showEdit
-                          ? " btn_bg_grey profile_vify_btn"
-                          : "btn_bg_blue profile_vify_btn"
-                      }>
-                      Verify
-                    </button>
-                  </div>
-                  <ModalComponent
-                    show={show}
-                    size={"md"}
-                    handleClose={() => setShow(false)}>
-                    <BVNConfirm
-                      bank="bank"
-                      show={show}
-                      handleClose={() => setShow(false)}
-                    />
-                  </ModalComponent>
-                </div>
-              </div>
-
-              <div class="col-md-6 ">
-                <label>Acount Name</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder=""
-                    type="text"
-                    disabled={showEdit}
-                  />
                 </div>
               </div>
             </div>
-          </div>
+            <div>
+              <div className="row">
+                <div className="col-md-8 ">
+                  <label>Select Bank</label>
+                  <select
+                    class="form-select form-select-lg mb-3"
+                    aria-label=".form-select-lg"
+                    onChange={handleChange}
+                    name="bankType"
+                  >
+                    <option value="" selected>
+                      Please choose an option
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="row">
+                    <div className="col-6 ">
+                      <label>Account Number</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder=""
+                          type="text"
+                          disabled={showEdit}
+                          onChange={handleChange}
+                          name="acc_no"
+                          value={formData.acc_no}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-6 ">
+                      <button
+                        type="button"
+                        onClick={() => setShow(true)}
+                        disabled={showEdit}
+                        className={
+                          showEdit
+                            ? " btn_bg_grey profile_vify_btn"
+                            : "btn_bg_blue profile_vify_btn"
+                        }
+                      >
+                        Verify
+                      </button>
+                    </div>
+                    <ModalComponent
+                      show={show}
+                      size={"md"}
+                      handleClose={() => setShow(false)}
+                    >
+                      <BVNConfirm
+                        bank="bank"
+                        show={show}
+                        handleClose={() => setShow(false)}
+                      />
+                    </ModalComponent>
+                  </div>
+                </div>
+
+                <div className="col-md-6 ">
+                  <label>Acount Name</label>
+                  <div className="input-group mb-4">
+                    <input
+                      className="form-control"
+                      placeholder=""
+                      type="text"
+                      disabled={showEdit}
+                      onChange={handleChange}
+                      name="acc_name"
+                      value={formData.acc_name}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </WrapperBody>
     </div>

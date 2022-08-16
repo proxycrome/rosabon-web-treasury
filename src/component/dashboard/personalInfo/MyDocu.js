@@ -1,170 +1,177 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import ModalComponent from "../../ModalComponent";
 import { BVNConfirm } from "../../Accessories/BVNConfirm";
 import FileDoc from "../../../asset/file.png";
 import User from "../../../asset/user.png";
+import { uploadPersonalDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
+import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
 const MyDocu = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showEdit, setShowEdit] = useState(true);
   const toggleEdit = () => {
     setShowEdit(!showEdit);
   };
+  const data = {
+    acc_name: "",
+    acc_no: "",
+    bankType: "",
+  };
+  const [formData, setformData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { acc_name, acc_no, bankType } = formData;
+    let data = { acc_name, acc_no, bankType };
+    console.log(data);
+    dispatch(uploadPersonalDocument(data));
+  };
+
+  useEffect(() => {
+    dispatch(successMessage(false));
+  }, []);
+
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   return (
     <div>
       <WrapperBody>
-        <div className="banner position-relative">
-          <img
-            className="position-absolute user-image image-fluid"
-            src={User}
-            alt="User"
-          />
-          <i class="camera-font-awe position-absolute fa-solid fa-camera"></i>
-        </div>
-        <div className="image-holder">
-          <div className="row">
-            <div className="d-flex justify-content-between">
-              <div className="fileText pl-5">
-                <h5 className="">Upload ID (front)</h5>
-                <h5 className="">jpg, png. 2 MB</h5>
-              </div>
-              <div>
-                {showEdit ? (
-                  <button onClick={toggleEdit}>Choose file</button>
-                ) : (
-                  <button className="grey-button" onClick={toggleEdit}>
-                    Cancel
-                  </button>
-                )}
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <div className="banner position-relative">
+            <img
+              className="position-absolute user-image image-fluid"
+              src={User}
+              alt="User"
+            />
+            <i className="camera-font-awe position-absolute fa-solid fa-camera"></i>
+          </div>
+          <div className="image-holder">
+            <div className="row">
+              <div className="d-flex justify-content-between">
+                <div className="fileText pl-5">
+                  <h5 className="">Upload ID (front)</h5>
+                  <h5 className="">jpg, png. 2 MB</h5>
+                </div>
+                <div>
+                  {showEdit ? (
+                    <button onClick={toggleEdit}>Choose file</button>
+                  ) : (
+                    <button className="grey-button" onClick={toggleEdit}>
+                      Cancel
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row pt-5">
-          <div class="col-md-6 ">
-            <label>Gender</label>
-            <select
-              class="form-select form-select-lg mb-3"
-              aria-label=".form-select-lg">
-              <option selected>National ID card</option>
-              <option value="2">Driver’s License </option>
-              <option value="2">International Passport</option>
-              <option value="2">Voter’s Card </option>
-            </select>
-          </div>
-          <div class="col-md-6 ">
-            <label>ID Number</label>
-            <div class="input-group mb-4">
-              <input
-                class="form-control"
-                placeholder="123-000-3456"
-                type="text"
-              />
+          <div className="row pt-5">
+            <div className="col-md-6 ">
+              <label>ID Type</label>
+              <select
+                className="form-select form-select-lg mb-3"
+                aria-label=".form-select-lg"
+                disabled={showEdit}>
+                <option selected>National ID card</option>
+                <option value="2">Driver’s License </option>
+                <option value="2">International Passport</option>
+                <option value="2">Voter’s Card </option>
+              </select>
+            </div>
+            <div class="col-md-6 ">
+              <label>ID Number</label>
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="123-000-3456"
+                  type="text"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div className="content-detail">
-            <div className="row pb-4">
-              <div className="d-flex align-items-center justify-content-between w-100">
-                <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                  <img
-                    className="file-image image-fluid"
-                    src={FileDoc}
-                    alt="FileDoc"
-                  />
-                  <div className="progress-bar-style">
-                    <h5 className="position-relative">
-                      Upload ID (front){" "}
-                      <span className="">
-                        <i class="fa-solid fa-xmark"></i>
-                      </span>
-                    </h5>
-                    <div class="progress" style={{ height: "3px" }}>
-                      <div
-                        class="progress-bar"
-                        role="progressbar"
-                        style={{ width: "75%" }}
-                        aria-valuenow="25"
-                        aria-valuemin="0"
-                        aria-valuemax="100"></div>
+          <div>
+            <div>
+              <div className="row pb-4">
+                <div className="d-flex align-items-center justify-content-between w-100">
+                  <div className="progress-bar-style d-flex align-items-center justify-content-start">
+                    <img
+                      className="file-image image-fluid"
+                      src={FileDoc}
+                      alt="FileDoc"
+                    />
+                    <div className="progress-bar-style">
+                      <h5 className="position-relative">
+                        Upload ID (back){" "}
+                        <span className="">
+                          <i className="fa-solid fa-xmark"></i>
+                        </span>
+                      </h5>
+                      <div className="progress" style={{ height: "3px" }}>
+                        <div
+                          className="progress-bar"
+                          role="progressbar"
+                          style={{ width: "75%" }}
+                          aria-valuenow="25"
+                          aria-valuemin="0"
+                          aria-valuemax="100"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="w-30 style-attachment">
-                  <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
-                  </button>
-                  <button className="normal-btn grey-button">
-                    Choose file
-                  </button>
+                  <div className="w-30 style-attachment">
+                    <button className="font-awe-btn grey-button">
+                      <i className="fa-solid fa-paperclip"></i>
+                    </button>
+                    <button className="normal-btn grey-button">
+                      Choose file
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="row pb-4">
-              <div className="d-flex align-items-center justify-content-between w-100">
-                <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                  <img
-                    className="file-image image-fluid"
-                    src={FileDoc}
-                    alt="FileDoc"
-                  />
-                  <div className="progress-bar-style">
-                    <h5 className="position-relative">
-                      Upload ID (back){" "}
-                      <span className="">
-                        <i class="fa-solid fa-xmark"></i>
-                      </span>
-                    </h5>
-                    <div class="progress" style={{ height: "3px" }}>
-                      <div
-                        class="progress-bar"
-                        role="progressbar"
-                        style={{ width: "75%" }}
-                        aria-valuenow="25"
-                        aria-valuemin="0"
-                        aria-valuemax="100"></div>
+              <div className="row pb-4">
+                <div className="d-flex align-items-center justify-content-between">
+                  <div className="d-flex align-items-center justify-content-center">
+                    <img
+                      className="file-image image-fluid"
+                      src={FileDoc}
+                      alt="FileDoc"
+                    />
+                    <div>
+                      <h5 className="">Upload Utility Bill</h5>
+                      <h5 className="">jpg, png. 2 MB</h5>
                     </div>
                   </div>
-                </div>
-                <div className="w-30 style-attachment">
-                  <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
-                  </button>
-                  <button className="normal-btn grey-button">
-                    Choose file
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="row pb-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center justify-content-center">
-                  <img
-                    className="file-image image-fluid"
-                    src={FileDoc}
-                    alt="FileDoc"
-                  />
-                  <div>
-                    <h5 className="">Upload Utility Bill</h5>
-                    <h5 className="">jpg, png. 2 MB</h5>
+                  <div className=" style-attachment">
+                    <button className="font-awe-btn grey-button">
+                      <i className="fa-solid fa-paperclip"></i>
+                    </button>
+                    <button className="normal-btn grey-button">
+                      Choose file
+                    </button>
                   </div>
-                </div>
-                <div className=" style-attachment">
-                  <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip"></i>
-                  </button>
-                  <button className="normal-btn grey-button">
-                    Choose file
-                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </WrapperBody>
     </div>
   );
@@ -230,7 +237,7 @@ const WrapperBody = styled.div`
     color: #828282;
   }
 
-  .content-detail {
+  .content-doc {
     padding-top: 45px;
   }
   button {
@@ -324,3 +331,69 @@ const WrapperBody = styled.div`
     color: #ffffff;
   }
 `;
+
+// // <div>
+//         //   <div className="content-detail">
+//         //     <div className="row pb-4">
+//         //       <div className="d-flex align-items-center justify-content-between w-100">
+//         //         <div className="progress-bar-style d-flex align-items-center justify-content-start">
+//         //           <img
+//         //             className="file-image image-fluid"
+//         //             src={FileDoc}
+//         //             alt="FileDoc"
+//         //           />
+//         //           <div className="progress-bar-style">
+//         //             <h5 className="position-relative">
+//         //               Upload ID (front){" "}
+//         //               <span className="">
+//         //                 <i class="fa-solid fa-xmark"></i>
+//         //               </span>
+//         //             </h5>
+//         //             <div class="progress" style={{ height: "3px" }}>
+//         //               <div
+//         //                 class="progress-bar"
+//         //                 role="progressbar"
+//         //                 style={{ width: "75%" }}
+//         //                 aria-valuenow="25"
+//         //                 aria-valuemin="0"
+//         //                 aria-valuemax="100"></div>
+
+//         <div>
+//         <div className="content-doc">
+//           <div className="row pb-4">
+//             <div className="d-flex align-items-center justify-content-between w-100">
+//               <div className="progress-bar-style d-flex align-items-center justify-content-start">
+//                 <img
+//                   className="file-image image-fluid"
+//                   src={FileDoc}
+//                   alt="FileDoc"
+//                 />
+//                 <div className="progress-bar-style">
+//                   <h5 className="position-relative">
+//                     Upload ID (front){" "}
+//                     <span className="">
+//                       <i className="fa-solid fa-xmark"></i>
+//                     </span>
+//                   </h5>
+//                   <div className="progress" style={{ height: "3px" }}>
+//                     <div
+//                       className="progress-bar"
+//                       role="progressbar"
+//                       style={{ width: "75%" }}
+//                       aria-valuenow="25"
+//                       aria-valuemin="0"
+//                       aria-valuemax="100"
+//                     ></div>
+//                   </div>
+//                 </div>
+//               </div>
+//               <div className="w-30 style-attachment">
+//                 <button className="font-awe-btn grey-button">
+//                   <i className="fa-solid fa-paperclip"></i>
+//                 </button>
+//                 <button className="normal-btn grey-button">
+//                   Choose file
+//                 </button>
+//               </div>
+//             </div>
+//           </div>

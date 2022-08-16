@@ -12,22 +12,23 @@ const CompanyProfile = () => {
   const navigate = useNavigate();
   const [tabs, setTabs] = useState("company");
 
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("company-token");
-  //   if (!tokenString) {
-  //     navigate("/login");
-  //   }
-  // }, []);
+
+  useEffect(() => {
+    const tokenString = localStorage.getItem("token");
+    if (!tokenString) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <WrapperBody>
       <div className="container-fluid">
         <ProfileNavBar />
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-md-3">
             <ProfileTabs handleChange={(e) => setTabs(e)} />
           </div>
-          <div className="horiz-line col-md-1"></div>
+          {/* <div className="horiz-line col-md-1"></div> */}
           <div className="col-md-9">
             {tabs === "company" ? (
               <CompanyDetails />
