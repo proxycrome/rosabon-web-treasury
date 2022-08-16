@@ -3,7 +3,7 @@ import styled from "styled-components";
 import storage from "redux-persist/lib/storage";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Collapse } from "reactstrap";
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, } from "reactstrap";
 import {
   updateUserCompanyKYC,
   getAuthUsers,
@@ -11,9 +11,13 @@ import {
 import { CLEAR_USERS } from "../../redux/constant/auth";
 
 export function ProfileNavBar({ children }) {
-  const [open, setOpen] = useState(false);
+  const [menu, setMenu] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const toggle = () => {
+    setMenu(!menu)
+  }
 
   const logout = (e) => {
     localStorage.removeItem("token");
@@ -29,20 +33,31 @@ export function ProfileNavBar({ children }) {
             <li className="profile_nav_bel">
               <i className="fas fa-bell"></i>
             </li>
-            <li onClick={() => setOpen(!open)}>
-              {open ? (
-                <i class="fa-solid fa-chevron-up"></i>
-              ) : (
-                <i class="fa-solid fa-chevron-down"></i>
-              )}
+            <li>
+              <Dropdown
+                isOpen={menu}
+                toggle={toggle}
+                className="d-inline-block"
+              >
+                <DropdownToggle
+                  tag="button"
+                  outline
+                  className="btn header-item waves-effect"
+                  id="page-header-user-dropdown"
+                >
+                  {!menu ? <i class="fa-solid fa-chevron-down"></i> : <i class="fa-solid fa-chevron-up"></i>}  
+                </DropdownToggle>
+                <DropdownMenu left className="mt-1">
+                  <DropdownItem
+                    className="text-danger"
+                    onClick={logout}
+                  >
+                    <i className="fa fa-sign-out mr-5 text-danger"></i>{' '}
+                    Logout
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </li>
-            <Collapse isOpen={open}>
-              <ul>
-                <li>
-                  <button onClick={logout}>Logout</button>
-                </li>
-              </ul>
-            </Collapse>
             <li>ekiyee bilaowei</li>
             <li>
               <img
