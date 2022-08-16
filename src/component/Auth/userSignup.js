@@ -198,13 +198,13 @@ function UserSignup() {
                         <div className="">
                           <label>How did you hear about us</label>
                           <select
-<<<<<<< HEAD
+
                             className="form-select form-select-lg"
                             aria-label=".form-select-lg"
-=======
-                            className="form-select form-select-md mb-3"
-                            aria-label=".form-select-md"
->>>>>>> 56db7ca1b7e836116b5b48ecd2dcbbdbfad6ee6a
+
+                            // className="form-select form-select-md mb-3"
+                            // aria-label=".form-select-md"
+
                             onChange={handleValueChange}
                             name="source"
                           >
