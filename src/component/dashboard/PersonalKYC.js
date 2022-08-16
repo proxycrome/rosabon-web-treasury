@@ -290,8 +290,20 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-4 ">
+                          <div className="col-md-4">
                             <label>Country of Residence</label>
+                            <div class="input-group mb-4">
+                              <input
+                                class="form-control"
+                                placeholder="Country of Residence"
+                                type="text"
+                                onChange={handleChange}
+                                name="coutryOfResidence"
+                                value={formData.coutryOfResidence}
+                              />
+                            </div>
+                          </div>
+                          <div class="col-md-6 ">
                             <label>How did you hear about us</label>
                             <select
                               className="form-select form-select-lg mb-3"
@@ -307,16 +319,6 @@ const PersonalKYC = () => {
                               <option value="ANOTHER_USER">Another user</option>
                               <option value="OTHER">Others</option>
                             </select>
-                            {/* <div class="input-group mb-4">
-                              <input
-                                class="form-control"
-                                placeholder="Country of Residence"
-                                type="text"
-                                onChange={handleChange}
-                                name="coutryOfResidence"
-                                value={formData.coutryOfResidence}
-                              />
-                            </div> */}
                           </div>
                         </div>
                         <div class="row">

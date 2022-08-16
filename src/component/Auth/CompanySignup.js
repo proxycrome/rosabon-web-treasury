@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Input } from 'reactstrap';
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -84,7 +85,7 @@ function CompanySignup() {
                       <div className="mb-4">
                         <label>Company Name</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type="text"
                             className="form-control"
                           
@@ -99,7 +100,7 @@ function CompanySignup() {
                         <div className="col-md-6 mb-4">
                           <label>Contact Person First name</label>
                           <div className="input-group ">
-                            <input
+                            <Input
                               className="form-control"
                               // placeholder="First Name"
                               type="text"
@@ -115,7 +116,7 @@ function CompanySignup() {
                         <div className="col-md-6 ps-2 mb-4">
                           <label>Contact Person Last name</label>
                           <div className="input-group">
-                            <input
+                            <Input
                               type="text"
                               className="form-control"
                               // placeholder="Last Name"
@@ -132,7 +133,7 @@ function CompanySignup() {
                       <div className="mb-4">
                         <label>Contact Person Email Address</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type="email"
                             className="form-control"
                             // placeholder="Email Address"
@@ -146,7 +147,7 @@ function CompanySignup() {
                       <div className="mb-4">
                         <label>Contact Person Number</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type="text"
                             className="form-control"
                             // placeholder="Mobile Number"
@@ -160,7 +161,7 @@ function CompanySignup() {
                       <div className="mb-4 input_password">
                         <label>Password</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type={passwordShown1 ? "text" : "password"}
                             className="form-control"
                             // placeholder="Password"
@@ -180,7 +181,7 @@ function CompanySignup() {
                       <div className="mb-4 input_password">
                         <label>Confirm Password</label>
                         <div className="input-group">
-                          <input
+                          <Input
                             type={passwordShown2 ? "text" : "password"}
                             className="form-control"
                             // placeholder="Confirm Password"
@@ -201,8 +202,13 @@ function CompanySignup() {
                         <div className="">
                           <label>How did you hear about us</label>
                           <select
+<<<<<<< HEAD
                             className="form-select form-select-lg"
                             aria-label=".form-select-lg"
+=======
+                            className="form-select form-select-md mb-3"
+                            aria-label=".form-select-md"
+>>>>>>> 56db7ca1b7e836116b5b48ecd2dcbbdbfad6ee6a
                             onChange={handleValueChange}
                             name="source"
                           >
@@ -219,7 +225,7 @@ function CompanySignup() {
                       <div className="mb-4">
                         <div className="input-group">
                           {values.source == "OTHER" ? (
-                            <input
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Source Name"
@@ -228,7 +234,7 @@ function CompanySignup() {
                               value={values.sourceOthers}
                             />
                           ) : values.source == "ANOTHER_USER" ? (
-                            <input
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
@@ -237,7 +243,7 @@ function CompanySignup() {
                               value={values.refferedBy}
                             />
                           ) : values.source == "ROSABON_SALES" ? (
-                            <input
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
@@ -246,7 +252,7 @@ function CompanySignup() {
                               value={values.refferedBy}
                             />
                           ) : (
-                            <input
+                            <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
@@ -260,7 +266,7 @@ function CompanySignup() {
                       </div>
                       <div className="">
                         <div className="form-check">
-                          <input
+                          <Input
                             className="form-check-input"
                             type="checkbox"
                             id="checkNewsLetter"
@@ -278,7 +284,7 @@ function CompanySignup() {
                           </label>
                         </div>
                         <div className="form-check">
-                          <input
+                          <Input
                             className="form-check-input"
                             type="checkbox"
                             id="checkIsAssisted"
