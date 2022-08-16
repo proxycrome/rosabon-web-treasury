@@ -7,11 +7,12 @@ import Profile from './pages';
 import Authentication from './component/Auth';
 import CompanyDetails from './component/dashboard/CompanyUpdate';
 import ProfileView from './pages/ProfileView';
+import Test from './utils/Test';
 
 function App() {
   return (
     <div className="App">
-      <PageRoutes />
+      <Test />
     </div>
   );
 }

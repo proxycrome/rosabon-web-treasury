@@ -14,14 +14,14 @@ const ProfileUpdate = () => {
 
 
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem("user-token");
-    if (tokenString) {
-      dispatch(getAuthUser());
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = localStorage.getItem("user-token");
+  //   if (tokenString) {
+  //     dispatch(getAuthUser());
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   return (
     <div>

@@ -33,7 +33,7 @@ const CompanyUpdate = () => {
             <WrapperBody>
               <div>
                 <div>
-                  <h3>Hello {(company_details.company.name).toUpperCase()},</h3>
+                  <h3>Hello ,</h3>
                   <p>
                     Kindly update your profile, it will only take a few minutes
                   </p>
@@ -45,7 +45,7 @@ const CompanyUpdate = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder={company_details.company.name}
+                            placeholder="{company_details.company.name}"
                             type="text"
                           />
                         </div>
@@ -136,7 +136,7 @@ const CompanyUpdate = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder={company_details.email}
+                            placeholder="{company_details.email}"
                             type="text"
                           />
                         </div>
@@ -146,7 +146,7 @@ const CompanyUpdate = () => {
                         <div class="input-group mb-4">
                           <input
                             class="form-control"
-                            placeholder={company_details.phone}
+                            placeholder="{company_details.phone}"
                             type="text"
                           />
                         </div>
