@@ -25,4 +25,4 @@ jobs:
           server: https://optisoft.com.ng:2083/
           username: ${{ secrets.ftp_name }}
           password: ${{ secrets.ftp_password }}
-          server-dir: /public_html/rosabon-treasury
+          server-dir: /public_html/rosabon-treasury.com.ng/
