@@ -60,7 +60,7 @@ function UserSignup() {
         navigate("/kyc/person");
       }
     }
-  }, [isLoggedIn, users]);
+  }, [isLoggedIn, users, login, navigate]);
 
   useEffect(() => {
     if (isSignedup) {

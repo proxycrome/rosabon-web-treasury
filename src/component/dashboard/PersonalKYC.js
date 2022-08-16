@@ -306,7 +306,7 @@ const PersonalKYC = () => {
                           <div class="col-md-6 ">
                             <label>How did you hear about us</label>
                             <select
-                              className="form-select form-select-lg mb-3"
+                              className="form-select form-select-lg mb-4"
                               aria-label=".form-select-lg"
                               // onChange={handleValueChange}
                               name="source"
