@@ -17,6 +17,8 @@ import PersonalKYC from "./component/dashboard/PersonalKYC";
 import CompanyKYC from "./component/dashboard/CompanyKYC";
 import UserSignup from "./component/Auth/userSignup";
 import CompanySignup from "./component/Auth/CompanySignup";
+// import {PlanFrom} from "./component/Plan/createPlan/PlanForm"
+import PlanForm from "./component/Plan/createPlan/PlanForm";
 
 function PageRoutes() {
   return (
@@ -28,6 +30,7 @@ function PageRoutes() {
         <Route path="plan-list" element={<ListPlans />} />
         <Route path="plan-topup" element={<TopupPlan />} />
         <Route path="plan-payment" element={<PlanPayment />} />
+        <Route path="create-plan" element={<PlanForm />} />
       </Route>
       <Route path="/kyc" element={<KYC />}>
         <Route path="company" element={<CompanyKYC />} />
@@ -36,7 +39,10 @@ function PageRoutes() {
       <Route path="/login" element={<Authentication />} />
       {/* <Route path="/signup" element={<Authentication signup="signup" />} /> */}
       <Route path="/register-user" element={<UserSignup signup="signup" />} />
-      <Route path="/register-company" element={<CompanySignup signup="signup" />} />
+      <Route
+        path="/register-company"
+        element={<CompanySignup signup="signup" />}
+      />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/congrates" element={<Congratulatios />} />
       <Route path="/reset-password" element={<ResetPassword />} />

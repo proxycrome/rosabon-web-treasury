@@ -3,7 +3,12 @@ import styled from "styled-components";
 import storage from "redux-persist/lib/storage";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, } from "reactstrap";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 import {
   updateUserCompanyKYC,
   getAuthUsers,
@@ -16,12 +21,12 @@ export function ProfileNavBar({ children }) {
   const dispatch = useDispatch();
 
   const toggle = () => {
-    setMenu(!menu)
-  }
+    setMenu(!menu);
+  };
 
   const logout = (e) => {
     localStorage.removeItem("token");
-    dispatch({type: CLEAR_USERS})
+    dispatch({ type: CLEAR_USERS });
   };
 
   return (
@@ -31,7 +36,9 @@ export function ProfileNavBar({ children }) {
           <div className="page-title mx-3">{children}</div>
           <ul className="">
             <li className="profile_nav_bel">
-              <i className="fas fa-bell"></i>
+              <div className="nav-bell">
+                <i className="fas fa-bell"></i>
+              </div>
             </li>
             <li>
               <Dropdown
@@ -45,15 +52,15 @@ export function ProfileNavBar({ children }) {
                   className="btn header-item waves-effect"
                   id="page-header-user-dropdown"
                 >
-                  {!menu ? <i class="fa-solid fa-chevron-down"></i> : <i class="fa-solid fa-chevron-up"></i>}  
+                  {!menu ? (
+                    <i class="fa-solid fa-chevron-down"></i>
+                  ) : (
+                    <i class="fa-solid fa-chevron-up"></i>
+                  )}
                 </DropdownToggle>
                 <DropdownMenu left className="mt-1">
-                  <DropdownItem
-                    className="text-danger"
-                    onClick={logout}
-                  >
-                    <i className="fa fa-sign-out mr-5 text-danger"></i>{' '}
-                    Logout
+                  <DropdownItem className="text-danger" onClick={logout}>
+                    <i className="fa fa-sign-out mr-5 text-danger"></i> Logout
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -96,6 +103,14 @@ const WrappeNavBar = styled.div`
   }
   .profile_nav_bel {
     padding-right: 50px;
+  }
+  .nav-bell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2f2f2;
+    border-radius: 5px;
+    padding: 10px 15px;
   }
   ul {
     list-style-type: none;

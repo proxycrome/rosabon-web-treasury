@@ -6,6 +6,7 @@ import Verve from "../../asset/master-card-logo.png";
 import MOneyTransfer from "../../asset/money-transfer.png";
 import FileDoc from "../../asset/file.png";
 import { ProfileNavBar } from "../dashboard/ProfileNavbar";
+import { Link } from "react-router-dom";
 
 export const NairaCard = () => {
   return (
@@ -70,7 +71,9 @@ export const NairaCard = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -91,7 +94,9 @@ export const NairaCard = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div>
             <div className="d-flex align-items-center justify-content-between savins-drop">

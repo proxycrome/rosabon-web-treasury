@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { Collapse } from "reactstrap";
+import { Link, NavLink } from "react-router-dom";
 
 const CreatePlan = () => {
     const [open, setOpen] = useState(false);
@@ -52,7 +53,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -77,7 +80,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -102,7 +107,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -127,7 +134,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
         </div>
       </div>
@@ -163,7 +172,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -188,7 +199,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -213,7 +226,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -238,7 +253,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
         </div>
       </div>
@@ -274,7 +291,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -299,7 +318,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -324,7 +345,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
           <div className="choose-plan">
             <div className="d-flex align-items-center justify-content-around">
@@ -349,7 +372,9 @@ const CreatePlan = () => {
                 </div>
               </div>
             </div>
-            <button>Create Plan</button>
+            <Link to="/create-plan">
+              <button>Create Plan</button>
+            </Link>
           </div>
         </div>
       </div>

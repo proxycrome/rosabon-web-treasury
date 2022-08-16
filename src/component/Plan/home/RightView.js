@@ -4,6 +4,7 @@ import halfEllipse from "../../../asset/halfEllipse.png";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { Collapse } from "reactstrap";
+import { Link } from "react-router-dom";
 
 export const RightView = () => {
   const [openFixSavings, setFixSavingsOpen] = useState(false);
@@ -34,10 +35,12 @@ export const RightView = () => {
                 </div>
                 <p className="p-0 m-0">Active Plans</p>
               </div>
-              <div className="d-flex align-items-center justify-content-between blue-add-btn active-box">
-                <p className="p-0 m-0">+</p>
-                <p className="p-0 m-0">Add Plan</p>
-              </div>
+              <Link to="/create-plan">
+                <div className="d-flex align-items-center justify-content-between blue-add-btn active-box">
+                  <p className="p-0 m-0">+</p>
+                  <p className="p-0 m-0">Add Plan</p>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -87,7 +90,9 @@ export const RightView = () => {
               <div className="row">
                 <div className="d-none d-sm-block col-sm-3"></div>
                 <div className="col-sm-9">
-                  <button>Create Plan</button>
+                  <Link to="/create-plan">
+                    <button>Create Plan</button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -116,7 +121,9 @@ export const RightView = () => {
               </div>
               <div className="d-flex align-items-center justify-content-around">
                 <div></div>
-                <button>Create Plan</button>
+                <Link to="/create-plan">
+                  <button>Create Plan</button>
+                </Link>
               </div>
             </div>
           </Collapse>
@@ -162,7 +169,9 @@ export const RightView = () => {
                 <div className="row">
                   <div className="d-none d-sm-block col-sm-3"></div>
                   <div className="col-sm-9">
-                    <button>Create Plan</button>
+                    <Link to="/create-plan">
+                      <button>Create Plan</button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -191,7 +200,9 @@ export const RightView = () => {
                 </div>
                 <div className="d-flex align-items-center justify-content-around">
                   <div></div>
-                  <button>Create Plan</button>
+                  <Link to="/create-plan">
+                    <button>Create Plan</button>
+                  </Link>
                 </div>
               </div>
             </Collapse>
@@ -237,7 +248,9 @@ export const RightView = () => {
                 <div className="row">
                   <div className="d-none d-sm-block col-sm-3"></div>
                   <div className="col-sm-9">
-                    <button>Create Plan</button>
+                    <Link to="/create-plan">
+                      <button>Create Plan</button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -266,7 +279,9 @@ export const RightView = () => {
                 </div>
                 <div className="d-flex align-items-center justify-content-around">
                   <div></div>
-                  <button>Create Plan</button>
+                  <Link to="/create-plan">
+                    <button>Create Plan</button>
+                  </Link>
                 </div>
               </div>
             </Collapse>
