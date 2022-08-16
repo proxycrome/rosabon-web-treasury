@@ -74,6 +74,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
 };
 
 const WrappSideBarList = styled.div`
+  position: fixed;
   @media (max-width: 900px) {
     display: none;
   }
