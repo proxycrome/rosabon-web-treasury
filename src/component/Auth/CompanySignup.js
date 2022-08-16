@@ -87,7 +87,7 @@ function CompanySignup() {
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Company Name"
+                          
                             onChange={handleValueChange}
                             name="name"
                             value={values.name}
@@ -101,7 +101,7 @@ function CompanySignup() {
                           <div className="input-group ">
                             <input
                               className="form-control"
-                              placeholder="First Name"
+                              // placeholder="First Name"
                               type="text"
                               onChange={handleValueChange}
                               name="contactFirstName"
@@ -118,7 +118,7 @@ function CompanySignup() {
                             <input
                               type="text"
                               className="form-control"
-                              placeholder="Last Name"
+                              // placeholder="Last Name"
                               onChange={handleValueChange}
                               name="contactLastName"
                               value={values.contactLastName}
@@ -135,7 +135,7 @@ function CompanySignup() {
                           <input
                             type="email"
                             className="form-control"
-                            placeholder="Email Address"
+                            // placeholder="Email Address"
                             onChange={handleValueChange}
                             name="email"
                             value={values.email}
@@ -149,7 +149,7 @@ function CompanySignup() {
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Mobile Number"
+                            // placeholder="Mobile Number"
                             onChange={handleValueChange}
                             name="phone"
                             value={values.phone}
@@ -163,7 +163,7 @@ function CompanySignup() {
                           <input
                             type={passwordShown1 ? "text" : "password"}
                             className="form-control"
-                            placeholder="Password"
+                            // placeholder="Password"
                             onChange={handleValueChange}
                             name="password"
                             value={values.password}
@@ -183,7 +183,7 @@ function CompanySignup() {
                           <input
                             type={passwordShown2 ? "text" : "password"}
                             className="form-control"
-                            placeholder="Confirm Password"
+                            // placeholder="Confirm Password"
                             onChange={handleValueChange}
                             name="c_password"
                             value={values.c_password}
@@ -201,12 +201,12 @@ function CompanySignup() {
                         <div className="">
                           <label>How did you hear about us</label>
                           <select
-                            className="form-select form-select-lg mb-3"
+                            className="form-select form-select-lg"
                             aria-label=".form-select-lg"
                             onChange={handleValueChange}
                             name="source"
                           >
-                            <option value="">Please choose an option</option>
+                            <option value=""></option>
                             <option value="ROSABON_SALES">
                               Rosabon sales executive
                             </option>
@@ -273,8 +273,25 @@ function CompanySignup() {
                             className="form-check-label"
                             for="checkNewsLetter"
                           >
-                            Yes, i want to recieve newsletters of Promos and
+                            Yes, I want to recieve newsletters of Promos and
                             Offers
+                          </label>
+                        </div>
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id="checkIsAssisted"
+                            name="isCompanyNewsLetters"
+                            onChange={(e) =>
+                              setisCompanyNewsLetters(!isCompanyNewsLetters)
+                            }
+                          />
+                          <label
+                            className="form-check-label"
+                            for="checkIsAssisted"
+                          >
+                            Check the box if this registration is assisted
                           </label>
                         </div>
                         <div className="form-check">
@@ -380,6 +397,7 @@ const RightWrapper = styled.section`
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     padding-left: 20px;
+    font-weight: 300;
     position: relative;
   }
   label {
@@ -410,8 +428,8 @@ const LoginInput = styled.div`
   label,
   span {
     font-style: normal;
-    font-weight: 500;
-    font-size: 17px;
+    font-weight: 400;
+    font-size: 16px;
     line-height: 21px;
     letter-spacing: -0.04em;
     color: #828282;
@@ -431,6 +449,12 @@ const LoginInput = styled.div`
       top: 12px;
       cursor: pointer;
     }
+  }
+  .form-check-label {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: #6d6d6d;
   }
 `;
 const LoginButton = styled.div`

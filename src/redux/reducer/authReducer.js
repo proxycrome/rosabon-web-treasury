@@ -12,13 +12,18 @@ const authReducer = (state = { login: {}, isLoggedIn: false, isSigned: false }, 
         ...state,
         register: action.payload,
         isSignedup: action.success,
-        
       };
     case types.LOGIN_USER:
       return {
         ...state,
         login: action.payload,
         isLoggedIn: action.success,
+      };
+    case types.CLEAR_USERS:
+      return {
+        ...state,
+        login: null,
+        isLoggedIn: false,
       };
     case types.AUTHORIZE_SUCCESS:
       return {
