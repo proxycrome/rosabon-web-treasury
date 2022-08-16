@@ -40,7 +40,7 @@ const Login = () => {
       [name]: value,
     });
 
-    if (name == "email") {
+    if (name === "email") {
       if (!isValidEmail(e.target.value)) {
         setError("Email is invalid");
       } else {
