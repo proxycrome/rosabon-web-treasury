@@ -4,52 +4,23 @@ import { NavLink, useNavigate } from "react-router-dom";
 import RFSLogo from "../../asset/RFS-Logo.png";
 import SpiralImage from "../../asset/spiral-arrow.png";
 import styled from "styled-components";
-import { set_signup } from "../../redux/actions/auth/SignupAction";
 
-const LoginLeftView = ({ signup }) => {
-  const count = useSelector((state) => state.auth.signup_btn);
-  const dispatch = useDispatch();
- 
-
+export const LoginLeftView = ({ signup }) => {
   return (
     <Wrapper>
       <div className="wrapper_content">
         <img src={RFSLogo} alt="RFSLogo" />
         <div className="login_banner_body">
           <div>
-            {signup ? (
-              <>
-                <h1 className="text-white">
-                  All Investment <br /> instruments in <br /> one place!
-                </h1>
-                <p className="lead text-white">
-                  Lorem ipsum dolor sit amet, <br /> consectetur adipiscing elit
-                </p>
-              </>
-            ) : (
-              <>
-                <h1 className="text-white">
-                  Catch smart <br /> investments for <br /> start-ups
-                </h1>
-                <p className="lead text-white">
-                  Lorem ipsum dolor sit amet, <br /> consectetur adipiscing elit
-                </p>
-              </>
-            )}
+            <h1 className="text-white">
+              Catch smart <br /> investments for <br /> start-ups
+            </h1>
+            <p className="lead text-white">
+              Lorem ipsum dolor sit amet, <br /> consectetur adipiscing elit
+            </p>
+
             <div className="spiral-content position-absolute">
               <img className="spiral" src={SpiralImage} alt="RFSLogo" />
-            </div>
-            <div>
-              <>
-                <div className="continue_login_btn">
-                  <NavLink to="/register-user">
-                    <button class="">Register as an Invididual</button>
-                  </NavLink>
-                  <NavLink to="/register-company">
-                    <button class="">Register as a Coporate</button>
-                  </NavLink>
-                </div>
-              </>
             </div>
           </div>
         </div>
@@ -58,7 +29,39 @@ const LoginLeftView = ({ signup }) => {
   );
 };
 
-export default LoginLeftView;
+export const SignupLeftView = () => {
+  return (
+    <Wrapper>
+      <div className="wrapper_content">
+        <img src={RFSLogo} alt="RFSLogo" />
+        <div className="login_banner_body">
+          <div>
+            <h1 className="text-white">
+              All Investment <br /> instruments in <br /> one place!
+            </h1>
+            <p className="lead text-white">
+              Lorem ipsum dolor sit amet, <br /> consectetur adipiscing elit
+            </p>
+
+            <div className="spiral-content position-absolute">
+              <img className="spiral" src={SpiralImage} alt="RFSLogo" />
+            </div>
+            <div>
+              <div className="continue_login_btn">
+                <NavLink to="/register-user">
+                  <button class="">Register as an Invididual</button>
+                </NavLink>
+                <NavLink to="/register-company">
+                  <button class="">Register as a Coporate</button>
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   background: #111e6c;
@@ -66,6 +69,11 @@ const Wrapper = styled.div`
 
   @media (max-width: 900px) {
     display: none;
+  }
+  @media (max-width: 1200px) {
+    .spiral-content {
+      display: none;
+    }
   }
   .wrapper_content {
     padding: 2rem;
@@ -91,12 +99,12 @@ const Wrapper = styled.div`
     justify-content: center;
     display: flex;
     align-items: center;
-    padding-top: 30px;
+    padding-top: 70px;
     position: relative;
     .spiral-content {
       width: 373px;
       height: 285px;
-      top: 100px;
+      top: 130px;
     }
     img {
       width: 100%;

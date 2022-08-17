@@ -17,10 +17,9 @@ function ForgotPassword() {
   };
   const [formData, setformData] = useState(data);
 
-   function isValidEmail(email) {
-     return /\S+@\S+\.\S+/.test(email);
-   }
-
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,13 +28,13 @@ function ForgotPassword() {
       [name]: value,
     });
 
-     if (name == "email") {
-       if (!isValidEmail(e.target.value)) {
-         setError("Email is invalid");
-       } else {
-         setError(null);
-       }
-     }
+    if (name == "email") {
+      if (!isValidEmail(e.target.value)) {
+        setError("Email is invalid");
+      } else {
+        setError(null);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -116,6 +115,7 @@ function ForgotPassword() {
 export default ForgotPassword;
 
 const WrapperContainer = styled.div`
+  height: 100vh;
   .view_content {
     background: #111e6c;
     height: 65px;

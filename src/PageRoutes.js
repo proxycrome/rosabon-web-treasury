@@ -19,6 +19,9 @@ import UserSignup from "./component/Auth/userSignup";
 import CompanySignup from "./component/Auth/CompanySignup";
 // import {PlanFrom} from "./component/Plan/createPlan/PlanForm"
 import PlanForm from "./component/Plan/createPlan/PlanForm";
+import Login from "./component/Auth/Login";
+
+
 
 function PageRoutes() {
   return (
@@ -36,8 +39,8 @@ function PageRoutes() {
         <Route path="company" element={<CompanyKYC />} />
         <Route path="person" element={<PersonalKYC />} />
       </Route>
-      <Route path="/login" element={<Authentication />} />
-      {/* <Route path="/signup" element={<Authentication signup="signup" />} /> */}
+      <Route path="/login" element={<Login />} />
+     
       <Route path="/register-user" element={<UserSignup signup="signup" />} />
       <Route
         path="/register-company"
