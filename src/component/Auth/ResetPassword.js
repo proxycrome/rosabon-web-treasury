@@ -105,6 +105,7 @@ function ResetPassword() {
 export default ResetPassword;
 
 const WrapperContainer = styled.div`
+  height: 100vh;
   .view_content {
     background: #111e6c;
     height: 65px;

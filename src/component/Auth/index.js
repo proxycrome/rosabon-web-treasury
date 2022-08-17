@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Login from "./Login";
-import LoginLeftView from "./loginLeftView";
+import {LoginLeftView} from "./loginLeftView";
 import Signup from "./signup";
 
 const Authentication = ({ signup }) => {

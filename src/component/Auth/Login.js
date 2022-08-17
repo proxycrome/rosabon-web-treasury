@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-import LoginLeftView from "./loginLeftView";
+import { LoginLeftView } from "./loginLeftView";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -64,7 +64,6 @@ const Login = () => {
     }
   };
 
- 
   useEffect(() => {
     // console.log(login, users.role);
     if (users && users.kyc && users.role === "COMPANY") {
@@ -72,7 +71,10 @@ const Login = () => {
     } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
       navigate("/personal-profile");
     } else if (isLoggedIn || users) {
-      if (login && login.role && login.role.name === "COMPANY" || users && users.role === "COMPANY") {
+      if (
+        (login && login.role && login.role.name === "COMPANY") ||
+        (users && users.role === "COMPANY")
+      ) {
         navigate("/kyc/company");
       } else if (
         (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
@@ -81,11 +83,13 @@ const Login = () => {
         navigate("/kyc/person");
       }
     }
-
   }, [isLoggedIn, users]);
 
   return (
-    <div className="">
+    <WrapperContainer>
+      <div>
+        <LoginLeftView />
+      </div>
       <div className="">
         <RightWrapper>
           <Toaster />
@@ -125,8 +129,9 @@ const Login = () => {
                     />
                     <i
                       onClick={togglePassword1}
-                      class={passwordShown ? "far fa-eye" : "far fa-eye-slash"}
-                    ></i>
+                      class={
+                        passwordShown ? "far fa-eye" : "far fa-eye-slash"
+                      }></i>
                   </div>
                 </div>
                 <div className="d-flex justify-content-around">
@@ -163,11 +168,19 @@ const Login = () => {
           </div>
         </RightWrapper>
       </div>
-    </div>
+    </WrapperContainer>
   );
 };
 
 export default Login;
+
+const WrapperContainer = styled.div`
+  height: 100vh;
+  display: grid;
+  @media(min-width: 900px){
+    grid-template-columns: 1fr 1fr;
+  }
+`;
 
 const RightWrapper = styled.section`
   background: #ffffff;

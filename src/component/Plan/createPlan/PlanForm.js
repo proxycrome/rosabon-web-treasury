@@ -19,7 +19,7 @@ const PlanForm = () => {
 
   return (
     <>
-      <ProfileNavBar>
+      <ProfileNavBar >
         <h2>Choose Plan</h2>
       </ProfileNavBar>
       <Wrapper>

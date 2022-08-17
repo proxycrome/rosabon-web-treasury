@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import LoginLeftView from "./loginLeftView";
+import {SignupLeftView} from "./loginLeftView";
 import Footer from "../dashboard/ProfileFooter";
 import { ValidateCompanyForm, validateInfo } from "./validateForm";
 
@@ -69,7 +69,7 @@ function CompanySignup() {
           className="content"
         >
           <div className="login-left-view">
-            <LoginLeftView />
+            <SignupLeftView />
           </div>
           <div
             style={{ overflowY: "auto", gridTemplateColumns: "auto" }}

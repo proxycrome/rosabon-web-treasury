@@ -7,6 +7,8 @@ import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 export const ProfileSideBarList = ({ profile, handleChange }) => {
   const styleContent = profile == "profile" ? "profile" : "";
 
+  //setCreateActive="set-create-active"
+
   return (
     <WrappSideBarList>
       <div className={styleContent}>

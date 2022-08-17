@@ -9,7 +9,7 @@ import {
   registerCompany,
   registerUser,
 } from "../../redux/actions/auth/SignupAction";
-import LoginLeftView from "./loginLeftView";
+import {SignupLeftView} from "./loginLeftView";
 import { ValidateUserForm, validateUserInfo } from "./validateForm";
 import Footer from "../dashboard/ProfileFooter";
 
@@ -82,7 +82,7 @@ function UserSignup() {
           className="content"
         >
           <div className="login-left-view">
-            <LoginLeftView />
+            <SignupLeftView />
           </div>
 
           <div
