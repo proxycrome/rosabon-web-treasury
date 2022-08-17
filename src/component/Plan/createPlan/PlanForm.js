@@ -1,9 +1,22 @@
-import React from "react";
-import styled from "styled-components";
-import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
-import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png';
+import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
+import PlanPay from './PlanPay';
+import { useNavigate } from 'react-router-dom';
 
 const PlanForm = () => {
+  const [isClicked, setIsClicked] = useState(false);
+  const navigate = useNavigate();
+
+  if (isClicked) {
+    return <PlanPay goBack={() => setIsClicked(false)}/>;
+  }
+
+  const back = () => {
+    navigate("/plan-product");
+  }
+
   return (
     <>
       <ProfileNavBar>
@@ -21,14 +34,14 @@ const PlanForm = () => {
             <div>
               <div>
                 <p className="p-0 m-0 pb-2">
-                  Lorem Ipsum is simply dummy text of the{" "}
+                  Lorem Ipsum is simply dummy text of the{' '}
                 </p>
                 <p className="p-0 m-0 pb-2">
-                  {" "}
+                  {' '}
                   printing and typesetting industry.
                 </p>
                 <p className="p-0 m-0 pb-2">
-                  Lorem Ipsum is simply dummy text of the{" "}
+                  Lorem Ipsum is simply dummy text of the{' '}
                 </p>
               </div>
             </div>
@@ -163,6 +176,27 @@ const PlanForm = () => {
           </div>
         </div>
       </Wrapper>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-between footer-content">
+            <div>
+              <button style={{ color: '#111E6C', width: '300px' }} onClick={back}>Back</button>
+            </div>
+            <div>
+              <button
+                style={{
+                  backgroundColor: '#111E6C',
+                  color: '#FFFFFF',
+                  width: '300px',
+                }}
+                onClick={() => setIsClicked(true)}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </>
   );
 };
@@ -198,7 +232,7 @@ const Wrapper = styled.div`
       color: #4f4f4f;
     }
     button {
-      font-family: "Montserrat";
+      font-family: 'Montserrat';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -216,7 +250,7 @@ const Wrapper = styled.div`
     }
   }
   h4 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -242,5 +276,36 @@ const Wrapper = styled.div`
     color: #828282;
     padding-bottom: 15px;
     padding-left: 10px;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 80px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import halfEllipse from "../../asset/halfEllipse.png";
 import ChoosePlanHolder from "../../asset/chooseplaneHolder.png";
@@ -241,9 +241,35 @@ const RightWrapper = styled.div`
   }
 `;
 
-export const MakePayment = () => {
+export const MakePayment = ({setPaymentType}) => {
+  const [card, setCard] = useState('');
+  const [bank, setBank] = useState('');
+
+  const handleClick = (e) => {
+    if(e.target.value === "card") {
+      setCard('card');
+      setBank('');
+    }
+    if(e.target.value === "bank") {
+      setBank('bank');
+      setCard('');
+    }
+  }
+
+  useEffect(() => {
+    const values = {
+      bank,
+      card,
+    }
+    setPaymentType(values);
+  },[card, bank, setPaymentType])
+
+
+
+
+
   return (
-    <BankDetailsWrapper>
+    <PaymentTypeWrapper>
       <h4 className="pb-4">Choose Payment Type</h4>
       <div className="plan-payment">
         <div className="pb-3">
@@ -252,7 +278,7 @@ export const MakePayment = () => {
               <img className="verve-card" src={Verve} alt="Verve" />
               <p className="p-0 m-0">Debit Card</p>
             </div>
-            <input type="checkbox" id="scales" name="scales"></input>
+            <input type="radio" id="card" name="paymentType" value="card" onClick={handleClick}/>
           </div>
         </div>
         <div className="pb-5">
@@ -261,7 +287,7 @@ export const MakePayment = () => {
               <img className="verve-card" src={MOneyTransfer} alt="Verve" />
               <p className="p-0 m-0">Bank Transfer</p>
             </div>
-            <input type="checkbox" id="scales" name="scales"></input>
+            <input type="radio" id="bank" name="paymentType" value="bank" onClick={handleClick}/>
           </div>
         </div>
       </div>
@@ -269,11 +295,11 @@ export const MakePayment = () => {
         <input type="checkbox" id="scales" name="scales" />
         <label for="scales">I agree to the Terms and Condition</label>
       </div>
-    </BankDetailsWrapper>
+    </PaymentTypeWrapper>
   );
 };
 
-const BankDetailsWrapper = styled.div`
+const PaymentTypeWrapper = styled.div`
   padding: 30px;
   @media (max-width: 700px) {
     width: 100% !important;
@@ -332,6 +358,7 @@ export const UserBankDetails = () => {
 };
 
 const UserBankDetailsWrapper = styled.div``;
+
 
 export const InterestCalculator = () => {
   return (
@@ -536,7 +563,7 @@ export const RolloverSummary = () => {
               </div>
               <div className="py-5 check-box-bank">
                 <input type="checkbox" id="scales" name="scales" />
-                <label for="scales">I agree to the Terms and Condition</label>
+                <label htmlFor="scales">I agree to the Terms and Condition</label>
               </div>
             </div>
           </div>
@@ -567,6 +594,102 @@ const RolloverSummaryWrapper = styled.div`
       font-weight: 700;
       font-size: 13px;
       line-height: 18px;
+    }
+    .rollover-text-left {
+      text-align: right;
+    }
+    label {
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: -0.01em;
+      color: #6d6d6d;
+      padding-left: 10px;
+    }
+  }
+`;
+
+export const PlanSummary = ({planPay}) => {
+  return (
+    <div>
+      <PlanSummaryWrapper>
+        {planPay && <h4 className="">Plan Summary</h4> }
+        <div className="plan-content">
+          <div className="rollover">
+            <div className="plan-top h-50 p-4">
+              <h4>Plan 1</h4>
+              <div className="d-flex align-items-center justify-content-between pt-3">
+                <div>
+                  <p className="p-0 m-0">Start date </p>
+                  <h4>24/06/2023</h4>
+                </div>
+                <div className="rollover-text-left">
+                  <p className="p-0 m-0">End date </p>
+                  <h4>24/06/2023</h4>
+                </div>
+              </div>
+              <div className="d-flex align-items-center justify-content-between pt-4">
+                <div>
+                  <p className="p-0 m-0">Principal </p>
+                  <h4> ₦2,500,000</h4>
+                </div>
+                <div className="rollover-text-left">
+                  <p className="p-0 m-0">Interest Rate </p>
+                  <h4>20.00 %</h4>
+                </div>
+              </div>
+              <div className="d-flex align-items-center justify-content-between pt-4">
+                <div>
+                  <p className="p-0 m-0">
+                    Interest Payment <br /> frequency{" "}
+                  </p>
+                  <h4 className="">Daily</h4>
+                </div>
+                <div className="rollover-text-left">
+                  <p className="p-0 m-0">Calculated Interest </p>
+                  <h4>₦200,000</h4>
+                </div>
+              </div>
+              <div className="d-flex align-items-center justify-content-between pt-4">
+                <div>
+                  <p className="p-0 m-0">Withholding Tax</p>
+                  <h4 className="">₦2,000</h4>
+                </div>
+                <div className="rollover-text-left">
+                  <p className="p-0 m-0">Payment at Maturity</p>
+                  <h4>₦2,700,000</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </PlanSummaryWrapper>
+    </div>
+  );
+};
+
+const PlanSummaryWrapper = styled.div`
+  p {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+  h4 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #242424;
+  }
+  .rollover {
+    h4 {
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 18px;
+      margin-top: -30px;
     }
     .rollover-text-left {
       text-align: right;
