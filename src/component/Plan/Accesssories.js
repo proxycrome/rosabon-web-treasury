@@ -241,32 +241,28 @@ const RightWrapper = styled.div`
   }
 `;
 
-export const MakePayment = ({setPaymentType}) => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
+export const MakePayment = ({ setPaymentType }) => {
+  const [card, setCard] = useState("");
+  const [bank, setBank] = useState("");
 
   const handleClick = (e) => {
-    if(e.target.value === "card") {
-      setCard('card');
-      setBank('');
+    if (e.target.value === "card") {
+      setCard("card");
+      setBank("");
     }
-    if(e.target.value === "bank") {
-      setBank('bank');
-      setCard('');
+    if (e.target.value === "bank") {
+      setBank("bank");
+      setCard("");
     }
-  }
+  };
 
   useEffect(() => {
     const values = {
       bank,
       card,
-    }
+    };
     setPaymentType(values);
-  },[card, bank, setPaymentType])
-
-
-
-
+  }, [card, bank, setPaymentType]);
 
   return (
     <PaymentTypeWrapper>
@@ -278,7 +274,13 @@ export const MakePayment = ({setPaymentType}) => {
               <img className="verve-card" src={Verve} alt="Verve" />
               <p className="p-0 m-0">Debit Card</p>
             </div>
-            <input type="radio" id="card" name="paymentType" value="card" onClick={handleClick}/>
+            <input
+              type="radio"
+              id="card"
+              name="paymentType"
+              value="card"
+              onClick={handleClick}
+            />
           </div>
         </div>
         <div className="pb-5">
@@ -287,7 +289,13 @@ export const MakePayment = ({setPaymentType}) => {
               <img className="verve-card" src={MOneyTransfer} alt="Verve" />
               <p className="p-0 m-0">Bank Transfer</p>
             </div>
-            <input type="radio" id="bank" name="paymentType" value="bank" onClick={handleClick}/>
+            <input
+              type="radio"
+              id="bank"
+              name="paymentType"
+              value="bank"
+              onClick={handleClick}
+            />
           </div>
         </div>
       </div>
@@ -358,7 +366,6 @@ export const UserBankDetails = () => {
 };
 
 const UserBankDetailsWrapper = styled.div``;
-
 
 export const InterestCalculator = () => {
   return (
@@ -563,7 +570,9 @@ export const RolloverSummary = () => {
               </div>
               <div className="py-5 check-box-bank">
                 <input type="checkbox" id="scales" name="scales" />
-                <label htmlFor="scales">I agree to the Terms and Condition</label>
+                <label htmlFor="scales">
+                  I agree to the Terms and Condition
+                </label>
               </div>
             </div>
           </div>
@@ -609,11 +618,11 @@ const RolloverSummaryWrapper = styled.div`
   }
 `;
 
-export const PlanSummary = ({planPay}) => {
+export const PlanSummary = ({ planPay }) => {
   return (
     <div>
       <PlanSummaryWrapper>
-        {planPay && <h4 className="">Plan Summary</h4> }
+        {planPay && <h4 className="">Plan Summary</h4>}
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
@@ -858,7 +867,15 @@ const BeneficiaryWrapper = styled.div`
   }
 `;
 
-export const AvailableBalance = () => {
+export const AvailableBalance = ({ role }) => {
+  const [showTextArea, setShowTextArea] = useState(false);
+
+  const handleOnclick = (e) => {
+    if (e.target.value == "others") {
+      setShowTextArea(!showTextArea);
+    }
+  };
+
   return (
     <AvailableBalanceWapper>
       <div className="d-flex align-items-center justify-content-between">
@@ -889,40 +906,107 @@ export const AvailableBalance = () => {
           </div>
         </div>
       </div>
-      <div className="row pb-4">
-        <div className="d-flex align-items-center justify-content-between w-100">
-          <div className="progress-bar-style d-flex align-items-center justify-content-start">
-            <img
-              className="file-image image-fluid"
-              src={FileDoc}
-              alt="FileDoc"
-            />
-            <div className="progress-bar-style">
-              <h5 className="position-relative">
-                Upload withdrawal mandate <br /> instruction
-              </h5>
-              <p className="p-0 m-0">jpg, png. PDF 2 MB</p>
+      {role && role == "Company" ? (
+        <>
+          <div className="row pb-4">
+            <div className="d-flex align-items-center justify-content-between w-100">
+              <div className="progress-bar-style d-flex align-items-center justify-content-start">
+                <img
+                  className="file-image image-fluid"
+                  src={FileDoc}
+                  alt="FileDoc"
+                />
+                <div className="progress-bar-style">
+                  <h5 className="position-relative">
+                    Upload withdrawal mandate <br /> instruction
+                  </h5>
+                  <p className="p-0 m-0">jpg, png. PDF 2 MB</p>
+                </div>
+              </div>
+              <div className="w-30 style-attachment">
+                <button className="normal-btn grey-button">Choose file</button>
+              </div>
             </div>
           </div>
-          <div className="w-30 style-attachment">
-            <button className="normal-btn grey-button">Choose file</button>
-          </div>
-        </div>
-      </div>
-      <h5 className="py-3">
-        Letter must be on a company’s letter head and also carry bank account
-        details
-      </h5>
-      <div class="pt-1 pb-4">
+          <h5 className="py-3">
+            Letter must be on a company’s letter head and also carry bank
+            account details
+          </h5>
+        </>
+      ) : (
+        <></>
+      )}
+
+      <div class="pt-1">
         <div class=" ">
           <label>Reason for Withdrawal</label>
           <div class="input-group mb-4">
+            <select
+              class="form-select form-select-lg mb-3 select-field"
+              aria-label=".form-select-lg"
+              onClick={handleOnclick}
+              name="companyType">
+              <option value=""></option>
+              <option value="">I want to close the account</option>
+              <option value="others">Others</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      {showTextArea ? (
+        <>
+          <div class="pb-4">
+            <div class=" ">
+              <div class="input-group mb-4">
+                <textarea
+                  rows="5"
+                  cols="60"
+                  placeholder="Please provide reason for withdrawal"
+                  class="form-control select-field"
+                  name="description"></textarea>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+    </AvailableBalanceWapper>
+  );
+};
+
+export const TransferCard = () => {
+  return (
+    <AvailableBalanceWapper>
+      <div className="d-flex align-items-center justify-content-between">
+        <h4 className="pt-3">Available Balance</h4>
+        <h4 className="pt-3">₦ 1,500,000</h4>
+      </div>
+      <div class="pt-3">
+        <div class=" ">
+          <label>Transfer Amount</label>
+          <div class="input-group mb-4">
             <input
               class="form-control"
-              placeholder="Select reason for withdrawal"
+              placeholder="N  1,,500,000"
               type="text"
             />
           </div>
+        </div>
+      </div>
+      <div class="pt-1 pb-5">
+        <div class=" ">
+          <label>Beneficiary Account</label>
+          <select
+            class="form-select form-select-lg mb-3 select-field"
+            aria-label=".form-select-lg"
+            name="companyType">
+            <option value=""></option>
+            <option value="others">Plan 1</option>
+            <option value="others">Plan 2</option>
+            <option value="others">Plan 3</option>
+            <option value="others">Credit wallet</option>
+          </select>
         </div>
       </div>
     </AvailableBalanceWapper>
@@ -939,6 +1023,25 @@ const AvailableBalanceWapper = styled.div`
     letter-spacing: -0.01em;
     color: #bdbdbd;
     padding: 0.7rem;
+  }
+  textarea {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #bdbdbd;
+  }
+  .select-field {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
   }
   h5 {
     font-style: normal;
@@ -983,8 +1086,8 @@ export const HistoryTable = () => {
                     <div class="input-group mb-4">
                       <input
                         class="form-control"
-                        placeholder="Select withdrawal destination"
-                        type="text"
+                        placeholder="Start date"
+                        type="date"
                       />
                     </div>
                   </div>
@@ -994,8 +1097,8 @@ export const HistoryTable = () => {
                     <div class="input-group mb-4">
                       <input
                         class="form-control"
-                        placeholder="Select withdrawal destination"
-                        type="text"
+                        placeholder="End date"
+                        type="date"
                       />
                     </div>
                   </div>
@@ -1005,16 +1108,18 @@ export const HistoryTable = () => {
           </div>
         </div>
 
+        <h3>April 28 - May 13</h3>
+        <hr className="mb-5" />
+
         <div>
           <table
             id="dtBasicExample"
             class="table table-striped table-sm"
             cellspacing="0"
-            width="100%"
-          >
+            width="100%">
             <thead>
               <tr>
-                <th class="">ID</th>
+                <th class="">S/N</th>
                 <th class="">Date</th>
                 <th class="">Description</th>
                 <th class="">Type</th>
@@ -1091,21 +1196,760 @@ const HistoryTableWarapper = styled.div`
     background: #fbf8f8;
     border-radius: 5px;
   }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    color: #000000;
+    padding-top: 50px;
+  }
 `;
-
 
 export const ReferalTable = () => {
   return (
     <div>
+      <ProfileNavBar>
+        <h2>Wallet</h2>
+      </ProfileNavBar>
+      <ReferalTableWarapper>
+        <h3>My Referrals</h3>
+        <div className="d-flex justify-content-start align-items-center">
+          <div className="padd-referal">
+            <label>Referral Link</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" />
+              <div class="input-group-text">
+                <i class="fa-solid fa-key"></i>
+              </div>
+            </div>
+          </div>
+          <div className="">
+            <p className="p-0 m-0">Total Referrals</p>
+            <div className="box-image d-flex justify-content-center align-items-center">
+              <h3>12</h3>
+            </div>
+          </div>
+        </div>
 
+        <div>
+          <table
+            id="dtBasicExample"
+            class="table table-striped table-sm"
+            cellspacing="0"
+            width="100%">
+            <thead>
+              <tr>
+                <th class="">S/N</th>
+                <th class="">Date</th>
+                <th class="">Name</th>
+                <th class="">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Apr 28, 2022</td>
+                <td>Jane Doe</td>
+                <td>Active</td>
+                <td>
+                  <button className="active">Poke User</button>{" "}
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Apr 28, 2022</td>
+                <td>Jane Doe</td>
+                <td>Active</td>
+                <td>
+                  <button className="active">Poke User</button>{" "}
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Apr 28, 2022</td>
+                <td>Jane Doe</td>
+                <td>Active</td>
+                <td>
+                  <button className="active">Poke User</button>{" "}
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Apr 28, 2022</td>
+                <td>Jane Doe</td>
+                <td>Inactive</td>
+                <td>
+                  <button className="in-active">Poke User</button>{" "}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ReferalTableWarapper>
     </div>
-  )
-}
+  );
+};
 
-export const TicketTable = () => {
+const ReferalTableWarapper = styled.div`
+  padding: 30px;
+  padding-right: 30%;
+  .box-image {
+    width: 94px;
+    height: 48px;
+    background: #ffffff;
+    box-shadow: 0px 4px 10px rgba(148, 148, 148, 0.25);
+    border-radius: 10px;
+  }
+  p {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: #828282;
+  }
+  .padd-referal {
+    padding-right: 100px;
+  }
+  input {
+    /* border: 1px solid #e0e0e0 !important; */
+    border-radius: 8px;
+  }
+  .in-active {
+    background: #111e6c;
+
+    color: #ffffff;
+  }
+  button {
+    border-radius: 15px;
+    padding: 10px 15px;
+  }
+  .active {
+    background: rgba(17, 30, 108, 0.05);
+
+    color: #828282;
+  }
+  tr {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+  th {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #000000;
+  }
+  th,
+  td {
+    padding: 10px;
+  }
+  input {
+    background: #fbf8f8;
+    border-radius: 5px;
+  }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    color: #000000;
+  }
+`;
+
+export const ReferralBonus = () => {
   return (
     <div>
+      <ProfileNavBar>
+        <h2>Wallet</h2>
+      </ProfileNavBar>
+      <ReferalTableBonusWarapper>
+        <h3>My Referral Bonus</h3>
+        <div className="bonus-card d-flex justify-content-between aligin-items-center">
+          <div className="earn-bonus">
+            <div className="d-flex justify-content-between aligin-items-center">
+              <div>
+                <p className="m-0 p-0">Earned Referral Bonus</p>
+                <h4 className="py-4">₦ 0.00</h4>
+              </div>
+              <div>
+                <button>Redeem</button>
+              </div>
+            </div>
+            <div className="d-flex align-items-content justify-content-center">
+              <p className="m-0 p-0">0 out of ₦100,000 Earned</p>
+            </div>
+          </div>
+          <div className="total-bonus">
+            <p className="p-0 m-0">Total Redeemed Bonus :</p>
+            <h4 className="total-amount">₦ 0.00</h4>
+          </div>
+        </div>
 
+        <div>
+          <table
+            id="dtBasicExample"
+            class="table table-striped table-sm"
+            cellspacing="0"
+            width="100%">
+            <thead>
+              <tr>
+                <th class="">ID</th>
+                <th class="">Date</th>
+                <th class="">Description</th>
+                <th class="">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ReferalTableBonusWarapper>
     </div>
-  )
-}
+  );
+};
+
+const ReferalTableBonusWarapper = styled.div`
+  padding: 30px;
+  padding-right: 30%;
+  button {
+    background: #111e6c;
+    border-radius: 10px;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: right;
+    color: #ffffff;
+    padding: 7px 20px;
+  }
+  .bonus-card {
+    width: 100%;
+    padding: 50px 0;
+  }
+  .box-image {
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0px 4px 10px rgba(148, 148, 148, 0.25);
+    border-radius: 10px;
+  }
+  .earn-bonus {
+    background: #f2f2f2;
+    box-shadow: 0px 4px 33px rgba(196, 204, 221, 0.28);
+    border-radius: 8px;
+    width: 70%;
+    padding: 20px;
+  }
+  .total-bonus {
+    background: #ffffff;
+    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .total-amount {
+    padding-top: 50px;
+  }
+  tr {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+  th {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #000000;
+  }
+  th,
+  td {
+    padding: 20px;
+  }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #242424;
+  }
+  h4 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 21px;
+    letter-spacing: -0.04em;
+    color: #242424;
+  }
+  p {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: right;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+`;
+
+export const TransferDeposit = () => {
+  return (
+    <div>
+      <ProfileNavBar>
+        <h2>Wallet</h2>
+      </ProfileNavBar>
+      <HistoryTableWarapper>
+        <h3 className="pb-4">My Referral Bonus</h3>
+        <div className="d-flex align-items-content justify-content-around pb-5">
+          <h3>Bank Transfer Deposit</h3>
+          <h3>Credit Wallet Transfer Deposit</h3>
+          <h3>Plan Transfer Deposit</h3>
+        </div>
+
+        <div>
+          <table
+            id="dtBasicExample"
+            class="table table-striped table-sm"
+            cellspacing="0"
+            width="100%">
+            <thead>
+              <tr>
+                <th class="">S/N</th>
+                <th class="">Date</th>
+                <th class="">Description</th>
+                <th class="">Type</th>
+                <th class="">Amount</th>
+                <th class="">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </HistoryTableWarapper>
+    </div>
+  );
+};
+
+export const WithdrawalCard = () => {
+  return (
+    <Wrapper>
+      <div>
+        <h4> - ₦ 1,500,000</h4>
+        <p> Part withdrawal</p>
+      </div>
+      <div className="d-flex justify-content-between align-items-center">
+        <p>Transaction ID</p>
+        <p>NO_1947034</p>
+      </div>
+      <hr />
+      <div className="d-flex justify-content-between align-items-center">
+        <p>Transaction ID</p>
+        <p>NO_1947034</p>
+      </div>
+      <hr />
+      <div className="d-flex justify-content-between align-items-center">
+        <p>Transaction ID</p>
+        <p>NO_1947034</p>
+      </div>
+      <hr />
+      <div className="d-flex justify-content-between align-items-center">
+        <p>Transaction ID</p>
+        <p>NO_1947034</p>
+      </div>
+      <hr />
+      <button>Download PDF</button>
+    </Wrapper>
+  );
+};
+
+const Wrapper = styled.div``;
+
+export const SpecialEarnings = () => {
+  return (
+    <div>
+      <ProfileNavBar>
+        <h2>Wallet</h2>
+      </ProfileNavBar>
+      <SpecialEarningsWarapper>
+        <h3>My Referral Bonus</h3>
+        <div className="bonus-card d-flex justify-content-start aligin-items-center">
+          <div className="total-bonus">
+            <p className="p-0 m-0">Total Redeemed Bonus :</p>
+            <h4 className="total-amount">₦ 0.00</h4>
+          </div>
+          <div className="redeem-card">
+            <p className="p-0 m-0">Total Redeemed Bonus :</p>
+            <div className="d-flex total-amount justify-content-between aligin-items-center">
+              <h4 className="">₦ 0.00</h4>
+              <div>
+                <button>Redeem</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <table
+            id="dtBasicExample"
+            class="table table-striped table-sm"
+            cellspacing="0"
+            width="100%">
+            <thead>
+              <tr>
+                <th class="">S/N</th>
+                <th class="">Date</th>
+                <th class="">Description</th>
+                <th class="">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Apr 28, 2022</td>
+                <td>Referral Bonus for Jane Doe first activation</td>
+                <td>₦1,000,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </SpecialEarningsWarapper>
+    </div>
+  );
+};
+
+const SpecialEarningsWarapper = styled.div`
+  padding: 30px;
+  padding-right: 30%;
+  button {
+    border-radius: 15px;
+    /* padding: 10px 15px; */
+  }
+  .bonus-card {
+    width: 100%;
+    padding: 50px 0;
+  }
+  .redeem-card {
+    background: #ffffff;
+    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+    border-radius: 8px;
+    padding: 20px;
+    margin-left: 50px;
+    width: 337px;
+    button {
+      background: #111e6c;
+      border-radius: 10px;
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 16px;
+      text-align: right;
+      color: #ffffff;
+      padding: 7px 20px;
+    }
+  }
+  .earn-bonus {
+    background: #f2f2f2;
+    box-shadow: 0px 4px 33px rgba(196, 204, 221, 0.28);
+    border-radius: 8px;
+    width: 70%;
+    padding: 20px;
+  }
+  .total-bonus {
+    /* width: 337px;
+    height: 157px; */
+    background: #ffffff;
+    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .total-amount {
+    padding-top: 50px;
+  }
+  tr {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+  th {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #000000;
+  }
+  th,
+  td {
+    padding: 20px;
+  }
+  /* h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #242424;
+  } */
+  h4 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 21px;
+    letter-spacing: -0.04em;
+    color: #242424;
+  }
+  p {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: left;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+`;
+
+export const FeedbackTickets = () => {
+  return (
+    <div>
+      <ProfileNavBar />
+      <FeedbackticketWarapper>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-6">
+              <h4 className="">Filter by Transaction Date</h4>
+            </div>
+            <div className="col-md-6">
+              <div className="row">
+                <div class="col-sm-4 col-md-6">
+                  <div class=" ">
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder="Select withdrawal destination"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4 col-md-6">
+                  <div class=" ">
+                    <div class="input-group mb-4">
+                      <input
+                        class="form-control"
+                        placeholder="Select withdrawal destination"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>April 28 - May 13</h3>
+        <hr className="mb-5" />
+
+        <div>
+          <table
+            id="dtBasicExample"
+            class="table table-striped table-sm"
+            cellspacing="0"
+            width="100%">
+            <thead>
+              <tr>
+                <th class="">S/N</th>
+                <th class="">Date</th>
+                <th class="">Description</th>
+                <th class="">Type</th>
+                <th class="">Amount</th>
+                <th class="">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+              <tr>
+                <td>N0_1947034</td>
+                <td>Apr 28, 2022</td>
+                <td>Part withdrawal</td>
+                <td>Debit</td>
+                <td> - ₦1,500,000</td>
+                <td>₦1,000,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </FeedbackticketWarapper>
+    </div>
+  );
+};
+
+const FeedbackticketWarapper = styled.div`
+  padding: 30px;
+  tr {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+  th {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #000000;
+  }
+  th,
+  td {
+    padding: 20px;
+  }
+  input {
+    background: #fbf8f8;
+    border-radius: 5px;
+  }
+  h3 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    color: #000000;
+    padding-top: 50px;
+  }
+`;

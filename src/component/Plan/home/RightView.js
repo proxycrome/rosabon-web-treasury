@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import halfEllipse from "../../../asset/halfEllipse.png";
+import YelloBackgroud from "../../../asset/yello-backgroud.png";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { Collapse } from "reactstrap";
@@ -20,6 +21,11 @@ export const RightView = () => {
             src={halfEllipse}
             alt="halfEllipse"
           />
+          <img
+            className="position-absolute set-yellow-background eclips-image image-fluid"
+            src={YelloBackgroud}
+            alt="YelloBackgroud"
+          />
           <div className="d-flex align-center justify-content-between ">
             <p className="p-0 m-0">Total Networth</p>
             <div className="sqr-box">
@@ -38,12 +44,6 @@ export const RightView = () => {
               <Link to="/create-plan">
                 <button className="dashboard"><span className="pr-3">+</span>Add Plan</button>
               </Link>
-              {/* <Link to="/create-plan">
-                <div className="d-flex align-items-center justify-content-between blue-add-btn active-box">
-                  <p className="p-0 m-0">+</p>
-                  <p className="p-0 m-0">Add Plan</p>
-                </div>
-              </Link> */}
             </div>
           </div>
         </div>
@@ -300,6 +300,12 @@ const RightWrapper = styled.div`
     padding: 50px;
   }
 
+  .set-yellow-background {
+    top: 50px !important;
+    right: 40px !important;
+    z-index: -5;
+  }
+
   @media (max-width: 899px) {
     width: 90% !important;
     display: flex;
@@ -313,7 +319,7 @@ const RightWrapper = styled.div`
   .naira-card-content {
   }
   .home-body {
-    padding-top: 30px;
+    padding-top: 100px;
     width: 100%;
   }
   .blue-add-btn {
@@ -331,6 +337,7 @@ const RightWrapper = styled.div`
     border-radius: 20px;
     padding: 20px;
     margin-right: 4rem;
+
   }
   .eclips-image {
     top: 0;

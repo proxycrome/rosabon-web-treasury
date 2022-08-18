@@ -7,19 +7,25 @@ import { ProfileTabs } from "../component/dashboard/ProfileTabs";
 import { ProfileNavBar } from "../component/dashboard/ProfileNavbar";
 import ChangePassword from "../component/dashboard/personalInfo/ChangePassword";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const PersonalProfile = () => {
   const navigate = useNavigate();
   const [tabs, setTabs] = useState("profile");
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
 
 
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem("token");
-    if (!tokenString) {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("token"));
+  //   if (!tokenString) {
+  //     navigate("/login");
+  //   }
+  //   if (!isLoggedIn) {
+  //     navigate("/login");
+  //   }
+  // }, [isLoggedIn]);
 
   return (
     <WrapperBody>

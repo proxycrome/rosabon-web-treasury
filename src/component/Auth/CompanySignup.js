@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Input } from 'reactstrap';
+import { Input } from "reactstrap";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import {SignupLeftView} from "./loginLeftView";
+import { SignupLeftView } from "./loginLeftView";
 import Footer from "../dashboard/ProfileFooter";
 import { ValidateCompanyForm, validateInfo } from "./validateForm";
 
@@ -66,15 +66,13 @@ function CompanySignup() {
             height: "100vh",
             overflow: "hidden",
           }}
-          className="content"
-        >
+          className="content">
           <div className="login-left-view">
             <SignupLeftView />
           </div>
           <div
             style={{ overflowY: "auto", gridTemplateColumns: "auto" }}
-            className="login-right-view"
-          >
+            className="login-right-view">
             <div className="">
               <RightWrapper>
                 <h4>Sign up</h4>
@@ -88,7 +86,6 @@ function CompanySignup() {
                           <Input
                             type="text"
                             className="form-control"
-                          
                             onChange={handleValueChange}
                             name="name"
                             value={values.name}
@@ -173,8 +170,7 @@ function CompanySignup() {
                             onClick={togglePassword1}
                             className={
                               passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
-                            }
-                          ></i>
+                            }></i>
                         </div>
                         {errors.password && <h3>{errors.password}</h3>}
                       </div>
@@ -193,8 +189,7 @@ function CompanySignup() {
                             onClick={togglePassword2}
                             className={
                               passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
-                            }
-                          ></i>
+                            }></i>
                         </div>
                         {errors.c_password && <h3>{errors.c_password}</h3>}
                       </div>
@@ -202,16 +197,13 @@ function CompanySignup() {
                         <div className="">
                           <label>How did you hear about us</label>
                           <select
-
                             // className="form-select form-select-lg"
                             // aria-label=".form-select-lg"
 
-                            className="form-select form-select-md mb-3"
+                            className="form-select form-select-md mb-3 select-field"
                             aria-label=".form-select-md"
-
                             onChange={handleValueChange}
-                            name="source"
-                          >
+                            name="source">
                             <option value=""></option>
                             <option value="ROSABON_SALES">
                               Rosabon sales executive
@@ -277,8 +269,7 @@ function CompanySignup() {
                           />
                           <label
                             className="form-check-label"
-                            for="checkNewsLetter"
-                          >
+                            for="checkNewsLetter">
                             Yes, I want to recieve newsletters of Promos and
                             Offers
                           </label>
@@ -295,8 +286,7 @@ function CompanySignup() {
                           />
                           <label
                             className="form-check-label"
-                            for="checkIsAssisted"
-                          >
+                            for="checkIsAssisted">
                             Check the box if this registration is assisted
                           </label>
                         </div>
@@ -398,13 +388,22 @@ const RightWrapper = styled.section`
   input[type="text"],
   input[type="email"],
   input[type="password"] {
-    width: 239.5px;
-    height: 54px;
+    padding: 15px;
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     padding-left: 20px;
     font-weight: 300;
     position: relative;
+  }
+  .select-field {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
   }
   label {
     font-style: normal;
