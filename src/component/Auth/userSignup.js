@@ -14,14 +14,11 @@ import { ValidateUserForm, validateUserInfo } from "./validateForm";
 import Footer from "../dashboard/ProfileFooter";
 
 function UserSignup() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
   const { isSignedup, login, isLoggedIn } = auth;
   const user_profile = useSelector((state) => state.user_profile);
   const { users } = user_profile;
-  // const count = useSelector((state) => state.auth.signup_btn);
-  // const success = useSelector((state) => state.auth.success);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [isUserNewsLetters, setisUserNewsLetters] = useState(false);
@@ -39,8 +36,6 @@ function UserSignup() {
   const togglePassword2 = () => {
     setPasswordShown2(!passwordShown2);
   };
-
-  // console.log(register, isSignedup);
 
   useEffect(() => {
     if (users && users.kyc && users.role === "COMPANY") {

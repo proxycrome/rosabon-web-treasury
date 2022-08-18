@@ -148,7 +148,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw }) {
                     <>
                       <p className="py-5">Withdrawal Requested Successfully</p>
                       <div className=" ">
-                        <NavLink to="/user-wallet">
+                        <NavLink state={{ myState: false }} to="/user-wallet">
                           <button
                             onClick={handleClose}
                             type="button"
@@ -162,7 +162,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw }) {
                     <>
                       <p className="py-5">Your Transfer was successful</p>
                       <div className=" ">
-                        <NavLink to="/user-wallet">
+                        <NavLink state={{ myState: false }} to="/user-wallet">
                           <button
                             onClick={handleClose}
                             type="button"

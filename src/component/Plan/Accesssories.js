@@ -7,6 +7,7 @@ import MOneyTransfer from "../../asset/money-transfer.png";
 import FileDoc from "../../asset/file.png";
 import { ProfileNavBar } from "../dashboard/ProfileNavbar";
 import { Link } from "react-router-dom";
+import ModalComponent from "../ModalComponent";
 
 export const NairaCard = () => {
   return (
@@ -1070,6 +1071,8 @@ const AvailableBalanceWapper = styled.div`
 `;
 
 export const HistoryTable = () => {
+  const [show, setShow] = useState(false);
+
   return (
     <div>
       <ProfileNavBar />
@@ -1128,7 +1131,10 @@ export const HistoryTable = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1136,7 +1142,10 @@ export const HistoryTable = () => {
                 <td> - ₦1,500,000</td>
                 <td>₦1,000,000</td>
               </tr>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1144,7 +1153,10 @@ export const HistoryTable = () => {
                 <td> - ₦1,500,000</td>
                 <td>₦1,000,000</td>
               </tr>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1152,7 +1164,10 @@ export const HistoryTable = () => {
                 <td> - ₦1,500,000</td>
                 <td>₦1,000,000</td>
               </tr>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1161,6 +1176,15 @@ export const HistoryTable = () => {
                 <td>₦1,000,000</td>
               </tr>
             </tbody>
+
+            <ModalComponent
+              show={show}
+              size={"md"}
+              handleClose={() => {
+                setShow(false);
+              }}>
+              <WithdrawalCard show={show} handleClose={() => setShow(false)} />
+            </ModalComponent>
           </table>
         </div>
       </HistoryTableWarapper>
@@ -1178,6 +1202,7 @@ const HistoryTableWarapper = styled.div`
     line-height: 17px;
     letter-spacing: -0.01em;
     color: #242424;
+    cursor: pointer;
   }
   th {
     font-family: "Montserrat";
@@ -1614,29 +1639,31 @@ export const WithdrawalCard = () => {
     <Wrapper>
       <div>
         <h4> - ₦ 1,500,000</h4>
-        <p> Part withdrawal</p>
+        <p className="p-0 m-0"> Part withdrawal</p>
       </div>
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
+      <hr className="p-0 m-0" />
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
+      <hr className="p-0 m-0" />
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
+      <hr className="p-0 m-0" />
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
-      <button>Download PDF</button>
+      <hr className="p-0 m-0" />
+      <div className="text-center">
+        <button>Download PDF</button>
+      </div>
     </Wrapper>
   );
 };
