@@ -18,6 +18,11 @@ const userProfileReducer = (state = {}, action) => {
         ...state,
         users: null,
       };
+    case types.REMOVE_FOOTER:
+      return {
+        ...state,
+        modal: null,
+      };
 
     default:
       return state;

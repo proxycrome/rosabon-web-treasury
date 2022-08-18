@@ -28,7 +28,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
             </div>
 
             <div className="content-list">
-              <ul>
+              <ul className="pt-5">
                 <NavLink className="nav_link" to="/">
                   <li>
                     <i className="fas fa-home"></i>
@@ -50,15 +50,25 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                   </li>
                 </NavLink>
 
-                {/* <li>
-                  <i className="fas fa-sticky-note"></i>
-                  <span>Wallet</span>
-                </li>
-                <li>
-                  <i className="fas fa-thumbs-up"></i>
-                  <span>Feedback</span>
-                </li>
-                <li>
+                <NavLink className="nav_link" to="/user-wallet">
+                  <li>
+                    <i className="fas fa-sticky-note"></i>
+                    <span>Wallet</span>
+                  </li>
+                </NavLink>
+                <NavLink className="nav_link" to="/feedback">
+                  <li>
+                    <i className="fas fa-thumbs-up"></i>
+                    <span>Feedback</span>
+                  </li>
+                </NavLink>
+                <ul>
+                  
+                  <li>My Tickets</li>
+                  <li>My Open Tickets</li>
+                  <li>My Closed Tickets</li>
+                </ul>
+                {/*  <li>
                   <i className="fas fa-exclamation-circle"></i>
                   <span>Help</span>
                 </li>
@@ -108,7 +118,7 @@ const WrappSideBarList = styled.div`
     list-style-type: none;
     margin: 0;
     padding: 0;
-    padding-top: 6rem;
+    /* padding-top: 6rem; */
     padding-left: 1.5rem;
   }
   li {

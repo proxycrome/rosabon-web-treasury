@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ProfileSideBarList } from "../dashboard/ProfileSideBar";
 import { Navigate, Outlet } from "react-router-dom";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 const PlanHome = ({ product, list, topup, payment, details }) => {
@@ -11,19 +11,15 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
   const auth = useSelector((state) => state.auth);
   const { login, isLoggedIn } = auth;
 
-  const user = { name: false };
-  const success = useSelector((state) => state.auth.success);
-
-  useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
-    console.log(isLoggedIn)
-    if (!tokenString) {
-      navigate("/login");
-    }
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("token"));
+  //   if (!tokenString) {
+  //     navigate("/login");
+  //   }
+  //   if (!isLoggedIn) {
+  //     navigate("/login");
+  //   }
+  // }, [isLoggedIn]);
 
   return (
     <Wrapper>
@@ -35,19 +31,6 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
       </div>
     </Wrapper>
   );
-
-  // return user == false ? (
-  //   <Wrapper>
-  //     <div className="side-bar">
-  //       <ProfileSideBarList profile="profile" />
-  //     </div>
-  //     <div className="main-body">
-  //       <Outlet />
-  //     </div>
-  //   </Wrapper>
-  // ) : (
-  //   <Navigate to={"/login"} />
-  // );
 };
 
 export default PlanHome;

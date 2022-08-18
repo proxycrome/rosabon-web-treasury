@@ -199,7 +199,7 @@ function UserSignup() {
                           <label>How did you hear about us</label>
                           <select
 
-                            className="form-select form-select-lg"
+                            className="form-select form-select-lg select-field"
                             aria-label=".form-select-lg"
 
                             // className="form-select form-select-md mb-3"
@@ -390,16 +390,22 @@ const RightWrapper = styled.section`
   input[type="text"],
   input[type="email"],
   input[type="password"] {
-    width: 239.5px;
-    height: 54px;
+    padding: 15px;
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     padding-left: 20px;
     position: relative;
     font-weight: 400;
   }
-  select {
-    font-weight: 400;
+  .select-field {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
   }
   label {
     font-style: normal;

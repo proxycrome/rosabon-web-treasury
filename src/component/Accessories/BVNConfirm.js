@@ -5,7 +5,9 @@ import Checked from "../../asset/checked.png";
 import Caneled from "../../asset/cnaceled.png";
 import ModalComponent from "../ModalComponent";
 import OtpInput from "react-otp-input";
-
+import { Link, useNavigate, NavLink } from "react-router-dom";
+// import { useSelector, useDispatch, connect } from "react-redux";
+// import { REMOVE_FOOTER } from "../../redux/constant/auth";
 
 export function BVNConfirm({ bank, show, handleClose }) {
   const [complete, setComplete] = useState(false);
@@ -97,7 +99,13 @@ const ConfirmBVN = styled.div`
   }
 `;
 
-export function SuccessConfirm({ bank, handleClose }) {
+export function SuccessConfirm({ bank, handleClose, withdraw }) {
+
+  // const dispatch = useDispatch();
+  // const logout = (e) => {
+  //   dispatch({ type: REMOVE_FOOTER });
+  // };
+
   return (
     <div>
       <Wrapper>
@@ -107,7 +115,7 @@ export function SuccessConfirm({ bank, handleClose }) {
               <div className="row">
                 <div className="col text-center">
                   <div>
-                    {bank ? (
+                    {bank || withdraw ? (
                       <img
                         className="congrate_confet"
                         src={Checked}
@@ -134,6 +142,34 @@ export function SuccessConfirm({ bank, handleClose }) {
                           className="verify_congrates_btn">
                           ok
                         </button>
+                      </div>
+                    </>
+                  ) : withdraw == "withdraw" ? (
+                    <>
+                      <p className="py-5">Withdrawal Requested Successfully</p>
+                      <div className=" ">
+                        <NavLink to="/user-wallet">
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="verify_congrates_btn">
+                            Ok
+                          </button>
+                        </NavLink>
+                      </div>
+                    </>
+                  ) : withdraw == "transter" ? (
+                    <>
+                      <p className="py-5">Your Transfer was successful</p>
+                      <div className=" ">
+                        <NavLink to="/user-wallet">
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="verify_congrates_btn">
+                            Ok
+                          </button>
+                        </NavLink>
                       </div>
                     </>
                   ) : (
@@ -347,4 +383,3 @@ const WrappCongrate = styled.div`
     padding: 8px 80px;
   }
 `;
-

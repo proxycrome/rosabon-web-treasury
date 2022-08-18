@@ -20,8 +20,15 @@ import CompanySignup from "./component/Auth/CompanySignup";
 // import {PlanFrom} from "./component/Plan/createPlan/PlanForm"
 import PlanForm from "./component/Plan/createPlan/PlanForm";
 import Login from "./component/Auth/Login";
-
-
+import UserWallet from "./component/Plan/wallet/UserWallet";
+import Feedback from "./component/Plan/feedback/Feedback";
+import {
+  HistoryTable,
+  ReferalTable,
+  ReferralBonus,
+  TransferDeposit,
+  SpecialEarnings
+} from "./component/Plan/Accesssories";
 
 function PageRoutes() {
   return (
@@ -34,13 +41,20 @@ function PageRoutes() {
         <Route path="plan-topup" element={<TopupPlan />} />
         <Route path="plan-payment" element={<PlanPayment />} />
         <Route path="create-plan" element={<PlanForm />} />
+        <Route path="user-wallet" element={<UserWallet />} />
+        <Route path="waller-history" element={<HistoryTable />} />
+        <Route path="referral-table" element={<ReferalTable />} />
+        <Route path="referral-table/bonus" element={<ReferralBonus />} />
+        <Route path="deposit-table" element={<TransferDeposit />} />
+        <Route path="special-earnings" element={<SpecialEarnings />} />
+        <Route path="feedback" element={<Feedback />} />
       </Route>
       <Route path="/kyc" element={<KYC />}>
         <Route path="company" element={<CompanyKYC />} />
         <Route path="person" element={<PersonalKYC />} />
       </Route>
       <Route path="/login" element={<Login />} />
-     
+
       <Route path="/register-user" element={<UserSignup signup="signup" />} />
       <Route
         path="/register-company"

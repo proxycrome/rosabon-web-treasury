@@ -7,18 +7,24 @@ import MoreDetails from "../component/dashboard/companyInfo/MoreDetails";
 import { ProfileTabs } from "../component/dashboard/ProfileTabs";
 import { ProfileNavBar } from "../component/dashboard/ProfileNavbar";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const CompanyProfile = () => {
   const navigate = useNavigate();
   const [tabs, setTabs] = useState("company");
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
 
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem("token");
-    if (!tokenString) {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("token"));
+  //   if (!tokenString) {
+  //     navigate("/login");
+  //   }
+  //   if (!isLoggedIn) {
+  //     navigate("/login");
+  //   }
+  // }, [isLoggedIn]);
 
   return (
     <WrapperBody>
