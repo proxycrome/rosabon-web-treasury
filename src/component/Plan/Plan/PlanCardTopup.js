@@ -1,60 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import Verve from '../../../asset/master-card-logo.png';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-// import { UserBankDetails } from '../Accesssories';
-import PlanBankTopup from './PlanBankTopup';
-import PlanCardTopup from './PlanCardTopup';
+// import MOneyTransfer from '../../../asset/money-transfer.png';
+import { PlanSummary, UserBankDetails } from '../Accesssories';
 
-const PlanPayment = () => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
-  const [isClicked, setIsClicked] = useState(false);
-  const navigate = useNavigate();
-
-  const handleClick = (e) => {
-    if (e.target.value === 'card') {
-      setCard('card');
-      setBank('');
-    }
-    if (e.target.value === 'bank') {
-      setBank('bank');
-      setCard('');
-    }
-  };
-
-  if (bank && isClicked) {
-    return (
-      <PlanBankTopup
-        goBack={() => {
-          setBank('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
-
-  if (card && isClicked) {
-    return (
-      <PlanCardTopup
-        goBack={() => {
-          setCard('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
-
-  const back = () => {
-    navigate('/plan-list');
-  };
-
+const PlanCardTopup = ({ goBack }) => {
   return (
     <>
       <Wrapper>
         <LeftView>
-          <h4 className="pb-3">Top up</h4>
+          <h4 className="pb-5">Top up</h4>
           <div className="plan-content">
             <div className="plan">
               <div className="plan-top h-50 p-4">
@@ -85,67 +41,30 @@ const PlanPayment = () => {
               <div className="plan-top h-50 py-1 px-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h4>Plan 1</h4>
-                    <p className="p-0 m-0">Product 1</p>
+                    <h4>Balance</h4>
+                    <p className="p-0 m-0">2,000,000</p>
                   </div>
-                  <i class="fa-solid fa-ellipsis"></i>
+                  {/* <i class="fa-solid fa-ellipsis"></i> */}
                 </div>
-              </div>
-            </div>
-          </div>
-          <h4 className="pt-5">Choose Payment Type</h4>
-          <div className="plan-payment">
-            <div className="row">
-              <div class="col ">
-                <label>Input amout to Top-up</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder="N  0.00"
-                    type="text"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between py-4">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={Verve} alt="Verve" />
-                  <p className="p-0 m-0">Debit Card</p>
-                </div>
-                <input
-                  type="radio"
-                  id="card"
-                  name="paymentType"
-                  value="card"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                  <p className="p-0 m-0">Bank Transfer</p>
-                </div>
-                <input
-                  type="radio"
-                  id="bank"
-                  name="paymentType"
-                  value="bank"
-                  onClick={handleClick}
-                />
               </div>
             </div>
           </div>
         </LeftView>
-        {/* <RightView>
-        <div className="bank-details">
-          <div className="bank-detail-content">
-            <UserBankDetails />
+        <RightView>
+          <div className='card-details'>
+            <h6>Kindly confirm your transaction details below</h6>
+            <div className="choose-plan mt-5">
+              <div className="d-flex align-items-center justify-content-between">
+                <div>Payment Type:</div>
+                <div className="d-flex align-items-center">
+                  <img className="verve-card" src={Verve} alt="Verve" />
+                  <p className="p-0 m-0">Debit Card</p>
+                </div>
+              </div>
+            </div>
+            <PlanSummary />
           </div>
-        </div>
-      </RightView> */}
+        </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
@@ -153,7 +72,7 @@ const PlanPayment = () => {
             <div>
               <button
                 style={{ color: '#111E6C', width: '300px' }}
-                onClick={back}
+                onClick={goBack}
               >
                 Back
               </button>
@@ -165,9 +84,8 @@ const PlanPayment = () => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setIsClicked(true)}
               >
-                Submit
+                Pay
               </button>
             </div>
           </div>
@@ -177,7 +95,7 @@ const PlanPayment = () => {
   );
 };
 
-export default PlanPayment;
+export default PlanCardTopup;
 
 const LeftView = styled.div`
   width: 50%;
@@ -206,31 +124,63 @@ const RightView = styled.div`
   width: 50%;
   @media (max-width: 850px) {
     width: 100% !important;
+    padding: 20px !important;
+    .choose-plan {
+      width: 90% !important;
+    }
   }
-  .bank-details {
+.card-details {
     padding: 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
+    flex-direction: column;
     justify-content: center;
-  }
-  .bank-detail-content {
+}
+  .choose-plan {
+    width: 448px;
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;
-    padding: 20px;
-    width: 373px;
+    padding: 30px;
     p {
       font-style: normal;
       font-weight: 400;
       font-size: 13px;
-      line-height: 150%;
-      letter-spacing: -0.15px;
-      color: #242424;
+      line-height: 148.4%;
+      display: flex;
+      align-items: flex-end;
+      letter-spacing: -0.01em;
+      color: #4f4f4f;
     }
-    .bold-text {
-      font-weight: 600;
-    }
+  }
+  h4 {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 16px;
+    letter-spacing: -0.03em;
+    color: #242424;
+    padding-top: 60px;
+    padding-bottom: 20px;
+  }
+  input {
+    width: 239.5px;
+    height: 54px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding-left: 20px;
+  }
+  label {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 21px;
+    letter-spacing: -0.04em;
+    color: #828282;
+    padding-bottom: 15px;
+    padding-left: 10px;
   }
 `;
 

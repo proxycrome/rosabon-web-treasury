@@ -48,7 +48,7 @@ export function ProfileNavBar({ children }) {
               >
                 <DropdownToggle
                   tag="button"
-                  outline
+                  outlink
                   className="btn header-item waves-effect"
                   id="page-header-user-dropdown"
                 >

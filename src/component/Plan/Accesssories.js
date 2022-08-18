@@ -684,6 +684,10 @@ const PlanSummaryWrapper = styled.div`
     letter-spacing: -0.03em;
     color: #242424;
   }
+  .plan-content {
+    background-color: #FFFFFF;
+    margin-top: 40px;
+  }
   .rollover {
     h4 {
       font-weight: 700;
