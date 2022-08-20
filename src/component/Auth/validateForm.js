@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   registerCompany,
   registerUser,
+  resetPassword,
 } from "../../redux/actions/auth/SignupAction";
 
 export const ValidateCompanyForm = (
@@ -104,7 +105,8 @@ export function validateInfo(values, isCompanyTerms) {
 
   if (!values.password) {
     errors.password = "Password is required";
-  } else if (re.test(values.password)) {
+  }
+  if (!re.test(values.password)) {
     errors.password =
       "Your password must contain at least one digit, 8 characters, one special character";
   }
@@ -219,11 +221,10 @@ export function validateUserInfo(values, isUserTerms) {
   if (!values.password) {
     errors.password = "Password is required";
   }
-  // else if (re.test(values.password)) {
-  //   // console.log(re)
-  //   errors.password =
-  //     "Your password must contain at least one uppercase, one lowercase, a special character, and must be at least 8 characters";
-  // }
+  if (!re.test(values.password)) {
+    errors.password =
+      "Your password must contain at least one uppercase, one lowercase, a special character, and must be at least 8 characters";
+  }
   if (values.c_password !== values.password) {
     errors.c_password = "Password does not match";
   }
@@ -239,5 +240,57 @@ export function validateUserInfo(values, isUserTerms) {
   if (!isUserTerms) {
     errors.isUserTerms = "Please check the terms and condition";
   }
+  return errors;
+}
+
+export const ValidatePasswordForm = (validatePassword) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [values, setValues] = useState({
+    password: "",
+    c_password: "",
+  });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setisSubmitted] = useState(false);
+
+  const handleValueChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+   
+    setErrors(validatePassword(values));
+    setisSubmitted(true);
+  };
+
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmitted) {
+      const { password } = values;
+      dispatch(resetPassword(password));
+    }
+  }, [errors]);
+
+  return { handleValueChange, values, handleSubmit, errors };
+};
+
+export function validatePassword(values) {
+  let errors = {};
+  var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+
+  if (!values.password) {
+    errors.password = "Password is required";
+  } else if (!re.test(values.password)) {
+    errors.password =
+      "Your password must contain at least one uppercase, one lowercase, a special character, and must be at least 8 characters";
+  }
+  if (values.c_password !== values.password) {
+    errors.c_password = "Password does not match";
+  }
+
   return errors;
 }

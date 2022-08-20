@@ -12,7 +12,7 @@ import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import {
   registerCompany,
   registerUser,

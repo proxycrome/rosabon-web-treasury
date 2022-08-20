@@ -84,11 +84,6 @@ function ForgotPassword() {
     }
   }, [isLoggedIn, users]);
 
-  // useEffect(() => {
-  //   if (success) {
-  //     navigate("/reset-password");
-  //   }
-  // }, [success]);
 
   return (
     <WrapperContainer>
@@ -115,7 +110,6 @@ function ForgotPassword() {
                   {isSuccess ? (
                     <>
                       <div className="success-msg text-center">
-                        
                         Your account is pending verification. please check your
                         email for the verification link
                       </div>
@@ -141,25 +135,7 @@ function ForgotPassword() {
                         />
                         <FormFeedback>Valid Email is Required</FormFeedback>
                       </FormGroup>
-                      {/* <div className="mb-4 text-left ">
-                        <label className="pb-2">Email Address</label>
-                        <div className="input-group">
-                          <input
-                            type="email"
-                            className="form-control"
-                            placeholder="Email Address"
-                            onChange={handleChange}
-                            name="email"
-                            value={formData.email}
-                          />
-                        </div>
-                        {error && (
-                          <h3>
-                            Your account is pending verification. please check
-                            your email for the verification link
-                          </h3>
-                        )}
-                      </div> */}
+
                       <div className="text-center">
                         <div>
                           <button
