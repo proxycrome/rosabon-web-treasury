@@ -7,7 +7,6 @@ import { BVNConfirm } from "../../Accessories/BVNConfirm";
 import { personalBankDetails } from "../../../redux/actions/updateProfile/bankDetails.action";
 import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
-
 const BankDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,8 +67,7 @@ const BankDetails = () => {
                       {showEdit ? (
                         <button
                           className={showEdit ? " btn_bg_blue" : ""}
-                          onClick={toggleEdit}
-                        >
+                          onClick={toggleEdit}>
                           Edit
                         </button>
                       ) : (
@@ -87,11 +85,10 @@ const BankDetails = () => {
                 <div className="col-md-8 ">
                   <label>Select Bank</label>
                   <select
-                    class="form-select form-select-lg mb-3"
+                    className="form-select form-select-lg mb-3"
                     aria-label=".form-select-lg"
                     onChange={handleChange}
-                    name="bankType"
-                  >
+                    name="bankType">
                     <option value="" selected>
                       Please choose an option
                     </option>
@@ -126,16 +123,14 @@ const BankDetails = () => {
                           showEdit
                             ? " btn_bg_grey profile_vify_btn"
                             : "btn_bg_blue profile_vify_btn"
-                        }
-                      >
+                        }>
                         Verify
                       </button>
                     </div>
                     <ModalComponent
                       show={show}
                       size={"md"}
-                      handleClose={() => setShow(false)}
-                    >
+                      handleClose={() => setShow(false)}>
                       <BVNConfirm
                         bank="bank"
                         show={show}

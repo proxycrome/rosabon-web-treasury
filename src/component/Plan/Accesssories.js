@@ -49,7 +49,7 @@ export const NairaCard = () => {
           <div>
             <div className="d-flex align-items-center justify-content-between savins-drop">
               <h5>Fix Savings </h5>
-              <i class="fa-solid fa-chevron-down"></i>
+              <i className="fa-solid fa-chevron-down"></i>
             </div>
             <p className="para-header">Choose from a fixed savings plan</p>
           </div>
@@ -102,14 +102,14 @@ export const NairaCard = () => {
           <div>
             <div className="d-flex align-items-center justify-content-between savins-drop">
               <h5>Target Savings</h5>
-              <i class="fa-solid fa-chevron-down"></i>
+              <i className="fa-solid fa-chevron-down"></i>
             </div>
             <p className="para-header">Choose from a fixed savings plan</p>
           </div>
           <div>
             <div className="d-flex align-items-center justify-content-between savins-drop">
               <h5>Target Income</h5>
-              <i class="fa-solid fa-chevron-down"></i>
+              <i className="fa-solid fa-chevron-down"></i>
             </div>
             <p className="para-header">Choose from a fixed savings plan</p>
           </div>
@@ -302,7 +302,7 @@ export const MakePayment = ({ setPaymentType }) => {
       </div>
       <div className="py-5 check-box-bank">
         <input type="checkbox" id="scales" name="scales" />
-        <label for="scales">I agree to the Terms and Condition</label>
+        <label htmlFor="scales">I agree to the Terms and Condition</label>
       </div>
     </PaymentTypeWrapper>
   );
@@ -375,43 +375,55 @@ export const InterestCalculator = () => {
         <div className="interest">
           <div className="d-flex align-items-center justify-content-between">
             <h5>Interest Calculator</h5>
-            <i class="fa-solid fa-chevron-down"></i>
+            <i className="fa-solid fa-chevron-down"></i>
           </div>
-          <div class="row">
-            <div class="pt-3">
+          <div className="row">
+            <div className="pt-3">
               <label>Select Product</label>
-              <div class="input-group mb-4">
+              <div className="input-group mb-4">
                 <input
-                  class="form-control"
+                  className="form-control"
                   placeholder="Select Product"
                   type="text"
                 />
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class=" ">
+          <div className="row">
+            <div className=" ">
               <label>Enter Amount</label>
-              <div class="input-group mb-4">
-                <input class="form-control" placeholder="N  0.00" type="text" />
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="N  0.00"
+                  type="text"
+                />
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class=" ">
+          <div className="row">
+            <div className=" ">
               <label>Tenor</label>
-              <div class="input-group mb-4">
-                <input class="form-control" placeholder="N  0.00" type="text" />
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="N  0.00"
+                  type="text"
+                />
               </div>
             </div>
           </div>
           <div className="text-center calc-mty py-4">
             <button>Calculate Amount at maturity</button>
           </div>
-          <div class="row pt-4">
-            <div class=" ">
-              <div class="input-group mb-4">
-                <input class="form-control" placeholder="N  0.00" type="text" />
+          <div className="row pt-4">
+            <div className=" ">
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="N  0.00"
+                  type="text"
+                />
               </div>
             </div>
           </div>
@@ -720,31 +732,31 @@ export const WithdrawalBank = () => {
     <div>
       <WithdrawalBankWrapper>
         <h4 className="">Rollover Summary</h4>
-        <div class="pt-5">
-          <div class=" ">
+        <div className="pt-5">
+          <div className=" ">
             <label>Bank Name</label>
-            <div class="input-group mb-4">
+            <div className="input-group mb-4">
               <input
-                class="form-control"
+                className="form-control"
                 placeholder="Choose a product"
                 type="text"
               />
             </div>
           </div>
         </div>
-        <div class="pt-1">
-          <div class=" ">
+        <div className="pt-1">
+          <div className=" ">
             <label>Account Number</label>
-            <div class="input-group mb-4">
-              <input class="form-control" placeholder="" type="text" />
+            <div className="input-group mb-4">
+              <input className="form-control" placeholder="" type="text" />
             </div>
           </div>
         </div>
-        <div class="pt-1">
-          <div class=" ">
+        <div className="pt-1">
+          <div className=" ">
             <label>Account Name</label>
-            <div class="input-group mb-4">
-              <input class="form-control" placeholder="" type="text" />
+            <div className="input-group mb-4">
+              <input className="form-control" placeholder="" type="text" />
             </div>
           </div>
         </div>
@@ -771,11 +783,11 @@ export const Beneficiary = () => {
         <h4 className="pt-3">
           Kindly select beneficiary account to <br /> receive the withdrawal
         </h4>
-        <div class="py-5">
-          <div class=" ">
-            <div class="input-group mb-4">
+        <div className="py-5">
+          <div className=" ">
+            <div className="input-group mb-4">
               <input
-                class="form-control"
+                className="form-control"
                 placeholder="Select withdrawal destination"
                 type="text"
               />
@@ -883,24 +895,24 @@ export const AvailableBalance = ({ role }) => {
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">₦ 1,500,000</h4>
       </div>
-      <div class="pt-3">
-        <div class=" ">
+      <div className="pt-3">
+        <div className=" ">
           <label>Withdrawal Amount</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <input
-              class="form-control"
+              className="form-control"
               placeholder="N  1,,500,000"
               type="text"
             />
           </div>
         </div>
       </div>
-      <div class="pt-1">
-        <div class=" ">
+      <div className="pt-1">
+        <div className=" ">
           <label>Beneficiary Account</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <input
-              class="form-control"
+              className="form-control"
               placeholder="Zenith Bank - 2210347577"
               type="text"
             />
@@ -938,12 +950,12 @@ export const AvailableBalance = ({ role }) => {
         <></>
       )}
 
-      <div class="pt-1">
-        <div class=" ">
+      <div className="pt-1">
+        <div className=" ">
           <label>Reason for Withdrawal</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <select
-              class="form-select form-select-lg mb-3 select-field"
+              className="form-select form-select-lg mb-3 select-field"
               aria-label=".form-select-lg"
               onClick={handleOnclick}
               name="companyType">
@@ -956,14 +968,14 @@ export const AvailableBalance = ({ role }) => {
       </div>
       {showTextArea ? (
         <>
-          <div class="pb-4">
-            <div class=" ">
-              <div class="input-group mb-4">
+          <div className="pb-4">
+            <div className=" ">
+              <div className="input-group mb-4">
                 <textarea
                   rows="5"
                   cols="60"
                   placeholder="Please provide reason for withdrawal"
-                  class="form-control select-field"
+                  className="form-control select-field"
                   name="description"></textarea>
               </div>
             </div>
@@ -983,23 +995,23 @@ export const TransferCard = () => {
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">₦ 1,500,000</h4>
       </div>
-      <div class="pt-3">
-        <div class=" ">
+      <div className="pt-3">
+        <div className=" ">
           <label>Transfer Amount</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <input
-              class="form-control"
+              className="form-control"
               placeholder="N  1,,500,000"
               type="text"
             />
           </div>
         </div>
       </div>
-      <div class="pt-1 pb-5">
-        <div class=" ">
+      <div className="pt-1 pb-5">
+        <div className=" ">
           <label>Beneficiary Account</label>
           <select
-            class="form-select form-select-lg mb-3 select-field"
+            className="form-select form-select-lg mb-3 select-field"
             aria-label=".form-select-lg"
             name="companyType">
             <option value=""></option>
@@ -1084,22 +1096,22 @@ export const HistoryTable = () => {
             </div>
             <div className="col-md-6">
               <div className="row">
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
+                <div className="col-sm-4 col-md-6">
+                  <div className=" ">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="Start date"
                         type="date"
                       />
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
+                <div className="col-sm-4 col-md-6">
+                  <div className=" ">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="End date"
                         type="date"
                       />
@@ -1117,17 +1129,17 @@ export const HistoryTable = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
+            className="table table-striped table-sm"
             cellspacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Type</th>
-                <th class="">Amount</th>
-                <th class="">Balance</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Type</th>
+                <th className="">Amount</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -1244,10 +1256,10 @@ export const ReferalTable = () => {
         <div className="d-flex justify-content-start align-items-center">
           <div className="padd-referal">
             <label>Referral Link</label>
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" />
-              <div class="input-group-text">
-                <i class="fa-solid fa-key"></i>
+            <div className="input-group mb-3">
+              <input type="text" className="form-control" />
+              <div className="input-group-text">
+                <i className="fa-solid fa-key"></i>
               </div>
             </div>
           </div>
@@ -1262,15 +1274,15 @@ export const ReferalTable = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
+            className="table table-striped table-sm"
             cellspacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Name</th>
-                <th class="">Status</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Name</th>
+                <th className="">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -1426,15 +1438,15 @@ export const ReferralBonus = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
+            className="table table-striped table-sm"
             cellspacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">ID</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Balance</th>
+                <th className="">ID</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -1580,17 +1592,17 @@ export const TransferDeposit = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
+            className="table table-striped table-sm"
             cellspacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Type</th>
-                <th class="">Amount</th>
-                <th class="">Balance</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Type</th>
+                <th className="">Amount</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -1697,15 +1709,15 @@ export const SpecialEarnings = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
+            className="table table-striped table-sm"
             cellspacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Balance</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -1854,22 +1866,22 @@ export const FeedbackTickets = () => {
             </div>
             <div className="col-md-6">
               <div className="row">
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
+                <div className="col-sm-4 col-md-6">
+                  <div className=" ">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="Select withdrawal destination"
                         type="text"
                       />
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
+                <div className="col-sm-4 col-md-6">
+                  <div className=" ">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="Select withdrawal destination"
                         type="text"
                       />
@@ -1887,17 +1899,17 @@ export const FeedbackTickets = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
+            className="table table-striped table-sm"
             cellspacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Type</th>
-                <th class="">Amount</th>
-                <th class="">Balance</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Type</th>
+                <th className="">Amount</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>

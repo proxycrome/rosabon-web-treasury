@@ -209,9 +209,9 @@ export function OTPVerify({ handleClose }) {
                 <div className="col text-left">
                   <h4>OTP Verification</h4>
                   <p className="">Enter OTP sent to this Phone Number</p>
-                  <div class="otp_verify">
-                    <div class=" ">
-                      <div class="">
+                  <div className="otp_verify">
+                    <div className=" ">
+                      <div className="">
                         <OtpInput
                           value={otp}
                           onChange={(e) => setOtp(e)}

@@ -43,8 +43,6 @@
 //     terms: "",
 //   };
 
-  
-
 //   const [formData, setformData] = useState(data);
 
 //   console.log(formData, isCompanyTerms, isUserTerms);
@@ -69,7 +67,6 @@
 //   const togglePassword2 = () => {
 //     setPasswordShown2(!passwordShown2);
 //   };
-
 
 //   const handleChange = (e) => {
 //     const { name, value } = e.target;
@@ -305,7 +302,7 @@
 //                           />
 //                           <i
 //                             onClick={togglePassword2}
-//                             class={
+//                             className={
 //                               passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
 //                             }
 //                           ></i>
@@ -383,7 +380,7 @@
 //                           />
 //                           <label
 //                             className="form-check-label"
-//                             for="checkNewsLetter"
+//                             htmlFor="checkNewsLetter"
 //                           >
 //                             Yes, i want to recieve newsletters of Promos and
 //                             Offers
@@ -396,7 +393,7 @@
 //                             id="checkTerms"
 //                             onChange={(e) => setIsUserTerms(!isUserTerms)}
 //                           />
-//                           <label className="form-check-label" for="checkTerms">
+//                           <label className="form-check-label" htmlFor="checkTerms">
 //                             I agree to the Terms and Privacy Policy
 //                           </label>
 //                         </div>
@@ -623,7 +620,7 @@
 //                           />
 //                           <label
 //                             className="form-check-label"
-//                             for="checkNewsLetter"
+//                             htmlFor="checkNewsLetter"
 //                           >
 //                             Yes, i want to recieve newsletters of Promos and
 //                             Offers
@@ -636,7 +633,7 @@
 //                             id="checkTerms"
 //                             onChange={(e) => setIsCompanyTerms(!isCompanyTerms)}
 //                           />
-//                           <label className="form-check-label" for="checkTerms">
+//                           <label className="form-check-label" htmlFor="checkTerms">
 //                             I agree to the Terms and Privacy Policy
 //                           </label>
 //                         </div>
@@ -821,8 +818,6 @@
 //   }
 // `;
 
-
-
 //   const handleChange = (e) => {
 //     const { name, value } = e.target;
 //     setformData({
@@ -912,94 +907,89 @@
 //     // }
 //   };
 
+// const [numError, setNumErr?or] = useState(null);
+// const [numError, setNumError] = useState(null);
+// const [errorMessage, setErrorMessage] = useState({});
+// const [emailError, setEmailError] = useState(null);
 
-  // const [numError, setNumErr?or] = useState(null);
-  // const [numError, setNumError] = useState(null);
-  // const [errorMessage, setErrorMessage] = useState({});
-  // const [emailError, setEmailError] = useState(null);
+//  const [sourceError, setSourceError] = useState(false);
+//  const [companyNameError, setCompanyNameError] = useState(null);
+//  const [contactFNameError, setContactFNameError] = useState(null);
+//  const [contactLNameError, setContactLNameError] = useState(null);
+//  const [emailError, setEmailError] = useState(null);
+//  const [numError, setNumError] = useState(null);
+//  const [passwordError, setPasswordError] = useState(null);
+//  const [c_passwordError, setC_PasswordError] = useState(null);
 
-  //  const [sourceError, setSourceError] = useState(false);
-  //  const [companyNameError, setCompanyNameError] = useState(null);
-  //  const [contactFNameError, setContactFNameError] = useState(null);
-  //  const [contactLNameError, setContactLNameError] = useState(null);
-  //  const [emailError, setEmailError] = useState(null);
-  //  const [numError, setNumError] = useState(null);
-  //  const [passwordError, setPasswordError] = useState(null);
-  //  const [c_passwordError, setC_PasswordError] = useState(null);
+// const handleCompanySubmit = async (e) => {
+//   e.preventDefault();
 
-  
-  // const handleCompanySubmit = async (e) => {
-  //   e.preventDefault();
+//   let value = formData;
 
-  //   let value = formData;
+//   console.log(!companyTermsError);
 
-  //   console.log(!companyTermsError);
+//   const {
+//     email,
+//     password,
+//     source,
+//     contactFirstName,
+//     contactLastName,
+//     sourceOthers,
+//     phone,
+//     name,
+//     refferedBy,
+//   } = formData;
+//   let company = {
+//     contactFirstName,
+//     contactLastName,
+//     name,
+//   };
 
-  //   const {
-  //     email,
-  //     password,
-  //     source,
-  //     contactFirstName,
-  //     contactLastName,
-  //     sourceOthers,
-  //     phone,
-  //     name,
-  //     refferedBy,
-  //   } = formData;
-  //   let company = {
-  //     contactFirstName,
-  //     contactLastName,
-  //     name,
-  //   };
+//   let data = {
+//     company,
+//     email,
+//     isAssited: true,
+//     isNewsLetters: isCompanyNewsLetters,
+//     password,
+//     phone,
+//     role: "COMPANY",
+//     source,
+//     sourceOthers,
+//     usage: "TREASURY",
+//     refferedBy,
+//   };
+//   console.log(data);
+//   // dispatch(registerCompany(data));
+// };
 
-  //   let data = {
-  //     company,
-  //     email,
-  //     isAssited: true,
-  //     isNewsLetters: isCompanyNewsLetters,
-  //     password,
-  //     phone,
-  //     role: "COMPANY",
-  //     source,
-  //     sourceOthers,
-  //     usage: "TREASURY",
-  //     refferedBy,
-  //   };
-  //   console.log(data);
-  //   // dispatch(registerCompany(data));
-  // };
+// function confirmPassword(c_password) {
+//   return c_password == formData.password;
+// }
 
-    // function confirmPassword(c_password) {
-    //   return c_password == formData.password;
-    // }
+// function isValidEmail(email) {
+//   return /\S+@\S+\.\S+/.test(email);
+// }
 
-    // function isValidEmail(email) {
-    //   return /\S+@\S+\.\S+/.test(email);
-    // }
+// function validatePassword(password) {
+//   var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
-    // function validatePassword(password) {
-    //   var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+//   return re.test(password);
+// }
 
-    //   return re.test(password);
-    // }
+// const [formData, setformData] = useState(data);
 
+// console.log(errors);
 
-    
-  // const [formData, setformData] = useState(data);
-
-  // console.log(errors);
-
-
-  // const data = {
-  //   email: "",
-  //   password: "",
-  //   phone: "",
-  //   source: "",
-  //   sourceOthers: "",
-  //   contactFirstName: "",
-  //   contactLastName: "",
-  //   contactMiddleName: "",
-  //   refferedBy: "",
-  //   c_password: "",
-  //   name: "",
-  // };
+// const data = {
+//   email: "",
+//   password: "",
+//   phone: "",
+//   source: "",
+//   sourceOthers: "",
+//   contactFirstName: "",
+//   contactLastName: "",
+//   contactMiddleName: "",
+//   refferedBy: "",
+//   c_password: "",
+//   name: "",
+// };

@@ -22,7 +22,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     src={RFSLogoFullColour}
                     alt="RFSLogo"
                   />
-                  {/* <i class="style-hamburga fa-solid fa-bars"></i> */}
+                  {/* <i className="style-hamburga fa-solid fa-bars"></i> */}
                 </div>
               </div>
             </div>
@@ -63,7 +63,6 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                   </li>
                 </NavLink>
                 <ul>
-                  
                   <li>My Tickets</li>
                   <li>My Open Tickets</li>
                   <li>My Closed Tickets</li>

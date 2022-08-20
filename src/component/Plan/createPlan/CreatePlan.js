@@ -5,8 +5,8 @@ import { Collapse } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
 
 const CreatePlan = () => {
-    const [open, setOpen] = useState(false);
-    // console.log(open)
+  const [open, setOpen] = useState(false);
+  // console.log(open)
   return (
     <Wrapper>
       <div>
@@ -17,13 +17,11 @@ const CreatePlan = () => {
               {open ? (
                 <i
                   onClick={() => setOpen(!open)}
-                  class="fa-solid fa-chevron-up"
-                ></i>
+                  className="fa-solid fa-chevron-up"></i>
               ) : (
                 <i
                   onClick={() => setOpen(!open)}
-                  class="fa-solid fa-chevron-down"
-                ></i>
+                  className="fa-solid fa-chevron-down"></i>
               )}
             </div>
           </div>

@@ -83,23 +83,23 @@
 //                 />
 //               </ModalComponent>
 //             </div>
-//             <div class="row">
-//               <div class="col-md-6 ">
+//             <div className="row">
+//               <div className="col-md-6 ">
 //                 <label>Gender</label>
-//                 <div class="input-group mb-4">
+//                 <div className="input-group mb-4">
 //                   <input
-//                     class="form-control"
+//                     className="form-control"
 //                     placeholder="Gender"
 //                     aria-label="First Name..."
 //                     type="text"
 //                   />
 //                 </div>
 //               </div>
-//               <div class="col-md-6 ">
+//               <div className="col-md-6 ">
 //                 <label>Date of Birth</label>
-//                 <div class="input-group mb-4">
+//                 <div className="input-group mb-4">
 //                   <input
-//                     class="form-control"
+//                     className="form-control"
 //                     placeholder="Date of Birth"
 //                     aria-label="First Name..."
 //                     type="text"

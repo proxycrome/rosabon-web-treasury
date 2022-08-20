@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Input } from 'reactstrap';
+import {
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  FormFeedback,
+  InputGroup,
+  InputGroupText,
+} from "reactstrap";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -9,14 +17,14 @@ import {
   registerCompany,
   registerUser,
 } from "../../redux/actions/auth/SignupAction";
-import {SignupLeftView} from "./loginLeftView";
+import { SignupLeftView } from "./loginLeftView";
 import { ValidateUserForm, validateUserInfo } from "./validateForm";
 import Footer from "../dashboard/ProfileFooter";
 
 function UserSignup() {
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
-  const { isSignedup, login, isLoggedIn } = auth;
+  const { isSignedup, login, isLoggedIn, isLoading } = auth;
   const user_profile = useSelector((state) => state.user_profile);
   const { users } = user_profile;
   const [passwordShown1, setPasswordShown1] = useState(false);
@@ -66,7 +74,11 @@ function UserSignup() {
   return (
     <div>
       <div>
-        <Toaster position="bottom-center" />
+        <Toaster
+          toastOptions={{
+            className: "bg-danger text-white",
+          }}
+        />
       </div>
       <Wrapper>
         <div
@@ -74,16 +86,14 @@ function UserSignup() {
             height: "100vh",
             overflow: "hidden",
           }}
-          className="content"
-        >
+          className="content">
           <div className="login-left-view">
             <SignupLeftView />
           </div>
 
           <div
             style={{ overflowY: "auto", gridTemplateColumns: "auto" }}
-            className="login-right-view"
-          >
+            className="login-right-view">
             <div className="">
               <RightWrapper>
                 <h4>Sign up</h4>
@@ -95,9 +105,9 @@ function UserSignup() {
                           <label>First Name</label>
                           <div className="input-group">
                             <Input
-                              className="form-control"
-                              // placeholder="First Name"
                               type="text"
+                              className="w-100"
+                              bsSize="lg"
                               onChange={handleValueChange}
                               name="firstName"
                               value={values.firstName}
@@ -126,7 +136,6 @@ function UserSignup() {
                           <Input
                             type="email"
                             className="form-control"
-                            // placeholder="Email Address"
                             onChange={handleValueChange}
                             name="email"
                             value={values.email}
@@ -140,7 +149,6 @@ function UserSignup() {
                           <Input
                             type="text"
                             className="form-control"
-                            // placeholder="Mobile Number"
                             onChange={handleValueChange}
                             name="phone"
                             value={values.phone}
@@ -151,41 +159,50 @@ function UserSignup() {
                       <div className="mb-4 input_password">
                         <label>Password</label>
                         <div className="input-group">
-                          <Input
-                            type={passwordShown1 ? "text" : "password"}
-                            className="form-control"
-                            // placeholder="Password"
-                            onChange={handleValueChange}
-                            name="password"
-                            value={values.password}
-                            // onBlur={(e) => validatePassword(e.target.value)}
-                          />
-                          <i
-                            onClick={togglePassword1}
-                            className={
-                              passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
-                            }
-                          ></i>
+                          <InputGroup>
+                            <Input
+                              type={passwordShown1 ? "text" : "password"}
+                              bsSize="lg"
+                              onChange={handleValueChange}
+                              name="password"
+                              value={values.password}
+                            />
+                            <InputGroupText>
+                              <i
+                                onClick={togglePassword1}
+                                style={{ cursor: "pointer" }}
+                                className={
+                                  passwordShown1
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
+                                }></i>
+                            </InputGroupText>
+                          </InputGroup>
                         </div>
                         {errors.password && <h3>{errors.password}</h3>}
                       </div>
                       <div className="mb-4 input_password">
                         <label>Confirm Password</label>
                         <div className="input-group">
-                          <Input
-                            type={passwordShown2 ? "text" : "password"}
-                            className="form-control"
-                            // placeholder="Confirm Password"
-                            onChange={handleValueChange}
-                            name="c_password"
-                            value={values.c_password}
-                          />
-                          <i
-                            onClick={togglePassword2}
-                            class={
-                              passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
-                            }
-                          ></i>
+                          <InputGroup>
+                            <Input
+                              type={passwordShown2 ? "text" : "password"}
+                              bsSize="lg"
+                              onChange={handleValueChange}
+                              name="c_password"
+                              value={values.c_password}
+                            />
+                            <InputGroupText>
+                              <i
+                                onClick={togglePassword2}
+                                style={{ cursor: "pointer" }}
+                                className={
+                                  passwordShown2
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
+                                }></i>
+                            </InputGroupText>
+                          </InputGroup>
                         </div>
                         {errors.c_password && <h3>{errors.c_password}</h3>}
                       </div>
@@ -193,16 +210,10 @@ function UserSignup() {
                         <div className="">
                           <label>How did you hear about us</label>
                           <select
-
                             className="form-select form-select-lg select-field"
                             aria-label=".form-select-lg"
-
-                            // className="form-select form-select-md mb-3"
-                            // aria-label=".form-select-md"
-
                             onChange={handleValueChange}
-                            name="source"
-                          >
+                            name="source">
                             <option value=""></option>
                             <option value="ROSABON_SALES">
                               Rosabon sales executive
@@ -213,7 +224,7 @@ function UserSignup() {
                         </div>
                         {errors.source && <h3>{errors.source}</h3>}
                       </div>
-                      <div className="mb-4">
+                      <div className="referal-link pb-5">
                         <div className="input-group">
                           {values.source === "OTHER" ? (
                             <Input
@@ -267,8 +278,7 @@ function UserSignup() {
                           />
                           <label
                             className="form-check-label"
-                            for="checkNewsLetter"
-                          >
+                            htmlFor="checkNewsLetter">
                             Yes, I want to recieve newsletters of Promos and
                             Offers
                           </label>
@@ -279,14 +289,10 @@ function UserSignup() {
                             type="checkbox"
                             id="checkIsAssisted"
                             name="isCompanyNewsLetters"
-                            // onChange={(e) =>
-                            //   // setisCompanyNewsLetters(!isCompanyNewsLetters)
-                            // }
                           />
                           <label
                             className="form-check-label"
-                            for="checkIsAssisted"
-                          >
+                            htmlFor="checkIsAssisted">
                             Check the box if this registration is assisted
                           </label>
                         </div>
@@ -297,17 +303,39 @@ function UserSignup() {
                             id="checkTerms"
                             onChange={(e) => setIsUserTerms(!isUserTerms)}
                           />
-                          <label className="form-check-label" for="checkTerms">
-                            I agree to the Terms and Privacy Policy
+                          <label
+                            className="form-check-label"
+                            htmlFor="checkTerms">
+                            I agree to the{" "}
+                            <span
+                              style={{
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
+                              }}>
+                              Terms
+                            </span>{" "}
+                            and{" "}
+                            <span
+                              style={{
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
+                              }}>
+                              Privacy
+                            </span>{" "}
+                            Policy
                           </label>
                         </div>
                         {errors.isUserTerms && <h3>{errors.isUserTerms}</h3>}
                       </div>
                     </LoginInput>
                     <LoginButton>
-                      <div className="">
-                        <button type="submit">Sign up</button>
-
+                      <div className="text-center mt-5">
+                        <button
+                          type="submit"
+                          className="btn btn-primary px-5 mb-2"
+                          disabled={isLoading}>
+                          {isLoading ? "Signing up..." : "Sign up"}
+                        </button>
                         <p className="text-center">
                           Already have an account?{" "}
                           <span className="">
@@ -341,8 +369,8 @@ const Wrapper = styled.div`
 
 const RightWrapper = styled.section`
   background: #ffffff;
-  padding: 8rem 4rem 4rem 4rem;
-  @media (max-width: 900px) {
+  padding: 4rem;
+  @media (max-width: 1200px) {
     padding: 4rem 1rem;
   }
   Link {
@@ -350,27 +378,9 @@ const RightWrapper = styled.section`
   }
   .login-btn {
   }
-  .top_login_btn {
-    padding-bottom: 50px;
-    button {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 20px;
-      letter-spacing: -0.04em;
-      outline: none;
-      border: none;
-      background: #ffffff;
-    }
-    .blue_login_btn {
-      background: #111e6c;
-      border-radius: 10px;
-      padding: 10px 10px;
-      outline: none;
-      border: none;
-      color: #f2f2f2;
-      margin-left: 10px;
-    }
+
+  .referal-link {
+    padding-top: 70px;
   }
   h4 {
     font-style: normal;
@@ -378,7 +388,7 @@ const RightWrapper = styled.section`
     font-size: 33px;
     line-height: 40px;
     color: #222222;
-    padding-bottom: 60px;
+    padding-bottom: 40px;
   }
   .login_input {
   }
@@ -440,18 +450,7 @@ const LoginInput = styled.div`
     padding-bottom: 7px;
     padding-left: 8px;
   }
-  span {
-    padding-left: 200px;
-  }
-  .input_password {
-    position: relative;
-    i {
-      position: absolute;
-      right: 15px;
-      top: 12px;
-      cursor: pointer;
-    }
-  }
+
   .form-check-label {
     font-weight: 400;
     font-size: 16px;
@@ -463,17 +462,7 @@ const LoginButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  button {
-    background: #111e6c;
-    border-radius: 10px;
-    padding: 10px 120px;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 22px;
-    color: #ffffff;
-    margin-top: 80px;
-  }
+
   p {
     font-style: normal;
     font-weight: 400;

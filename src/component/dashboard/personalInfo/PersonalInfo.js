@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { successMessage } from "../../../redux/actions/auth/SignupAction";
 import { updatePersonalDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
 
-
 const PersonalInfo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -125,8 +124,7 @@ const PersonalInfo = () => {
                   <select
                     className="form-select form-select-lg mb-4"
                     aria-label=".form-select-lg"
-                    disabled={showEditProf}
-                  >
+                    disabled={showEditProf}>
                     <option selected>Male</option>
                     <option value="2">Female</option>
                   </select>
@@ -248,8 +246,7 @@ const PersonalInfo = () => {
                     <select
                       className="form-select form-select-lg mb-4"
                       aria-label=".form-select-lg"
-                      disabled={showEditCont}
-                    >
+                      disabled={showEditCont}>
                       <option selected>Male</option>
                       <option value="2">Female</option>
                     </select>
@@ -407,9 +404,9 @@ const PersonalInfo = () => {
                         disabled={showEditNOK}
                       />
                       <span className="input-font-awe">
-                        {/* <i class=" fa-solid fa-angle-down"></i>
-                      <i class="fa-solid fa-angle-down"></i>
-                      <i class="fa-solid fa-angle-down"></i> */}
+                        {/* <i className=" fa-solid fa-angle-down"></i>
+                      <i className="fa-solid fa-angle-down"></i>
+                      <i className="fa-solid fa-angle-down"></i> */}
                         <i className="font-num fa-solid fa-angle-down"></i>
                       </span>
                     </div>

@@ -12,10 +12,10 @@ const Footer = ({ position, active, single, double }) => {
           <>
             <div className="justify-content-around d-flex align-items-center footer-content">
               <NavLink to="/register-user">
-                <button class="">Register as an Invididual</button>
+                <button className="">Register as an Invididual</button>
               </NavLink>
               <NavLink to="/register-company">
-                <button class="">Register as a Coporate</button>
+                <button className="">Register as a Coporate</button>
               </NavLink>
             </div>
           </>
@@ -38,7 +38,7 @@ const WrapperFooter = styled.div`
     .footer-body {
       padding-left: 25%;
     }
-    button{
+    button {
       margin: 10px 0;
     }
   }

@@ -96,7 +96,7 @@ const MyDocu = () => {
                 <option value="2">Voter’s Card </option>
               </select>
             </div>
-            <div class="col-md-6 ">
+            <div className="col-md-6 ">
               <label>ID Number</label>
               <div className="input-group mb-4">
                 <input
@@ -346,12 +346,12 @@ const WrapperBody = styled.div`
 //         //             <h5 className="position-relative">
 //         //               Upload ID (front){" "}
 //         //               <span className="">
-//         //                 <i class="fa-solid fa-xmark"></i>
+//         //                 <i className="fa-solid fa-xmark"></i>
 //         //               </span>
 //         //             </h5>
-//         //             <div class="progress" style={{ height: "3px" }}>
+//         //             <div className="progress" style={{ height: "3px" }}>
 //         //               <div
-//         //                 class="progress-bar"
+//         //                 className="progress-bar"
 //         //                 role="progressbar"
 //         //                 style={{ width: "75%" }}
 //         //                 aria-valuenow="25"

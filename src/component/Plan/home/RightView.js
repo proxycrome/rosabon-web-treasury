@@ -42,7 +42,9 @@ export const RightView = () => {
                 <p className="p-0 m-0">Active Plans</p>
               </div>
               <Link to="/create-plan">
-                <button className="dashboard"><span className="pr-3">+</span>Add Plan</button>
+                <button className="dashboard">
+                  <span className="pr-3">+</span>Add Plan
+                </button>
               </Link>
             </div>
           </div>
@@ -56,9 +58,9 @@ export const RightView = () => {
               <h5>Fix Savings </h5>
               <div onClick={() => setFixSavingsOpen(!openFixSavings)}>
                 {openFixSavings ? (
-                  <i class="fa-solid fa-chevron-up"></i>
+                  <i className="fa-solid fa-chevron-up"></i>
                 ) : (
-                  <i class="fa-solid fa-chevron-down"></i>
+                  <i className="fa-solid fa-chevron-down"></i>
                 )}
               </div>
             </div>
@@ -136,9 +138,9 @@ export const RightView = () => {
               <h5>Target Savings</h5>
               <div onClick={() => setTargetSavingsOpen(!openTargetSavings)}>
                 {openTargetSavings ? (
-                  <i class="fa-solid fa-chevron-up"></i>
+                  <i className="fa-solid fa-chevron-up"></i>
                 ) : (
-                  <i class="fa-solid fa-chevron-down"></i>
+                  <i className="fa-solid fa-chevron-down"></i>
                 )}
               </div>
             </div>
@@ -215,9 +217,9 @@ export const RightView = () => {
               <h5>Target Income</h5>
               <div onClick={() => setTargetIncomeOpen(!openTargetIncome)}>
                 {openTargetIncome ? (
-                  <i class="fa-solid fa-chevron-up"></i>
+                  <i className="fa-solid fa-chevron-up"></i>
                 ) : (
-                  <i class="fa-solid fa-chevron-down"></i>
+                  <i className="fa-solid fa-chevron-down"></i>
                 )}
               </div>
             </div>
@@ -337,7 +339,6 @@ const RightWrapper = styled.div`
     border-radius: 20px;
     padding: 20px;
     margin-right: 4rem;
-
   }
   .eclips-image {
     top: 0;

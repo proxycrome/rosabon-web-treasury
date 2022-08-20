@@ -44,18 +44,16 @@ export function ProfileNavBar({ children }) {
               <Dropdown
                 isOpen={menu}
                 toggle={toggle}
-                className="d-inline-block"
-              >
+                className="d-inline-block">
                 <DropdownToggle
                   tag="button"
                   outline
                   className="btn header-item waves-effect"
-                  id="page-header-user-dropdown"
-                >
+                  id="page-header-user-dropdown">
                   {!menu ? (
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <i className="fa-solid fa-chevron-down"></i>
                   ) : (
-                    <i class="fa-solid fa-chevron-up"></i>
+                    <i className="fa-solid fa-chevron-up"></i>
                   )}
                 </DropdownToggle>
                 <DropdownMenu left className="mt-1">

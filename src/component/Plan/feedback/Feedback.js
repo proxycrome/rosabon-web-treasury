@@ -58,11 +58,11 @@ const Feedback = () => {
         <Wrapper>
           <h4>Select a feedback category to begin</h4>
 
-          <div class="mb-4">
-            <div class=" ">
-              <div class="input-group mb-4">
+          <div className="mb-4">
+            <div className=" ">
+              <div className="input-group mb-4">
                 <select
-                  class="form-select form-select-lg mb-3 select-field"
+                  className="form-select form-select-lg mb-3 select-field"
                   aria-label=".form-select-lg"
                   //   onClick={handleOnclick}
                   name="companyType">
@@ -80,15 +80,15 @@ const Feedback = () => {
             </div>
             {/* {errors.name && <h3>{errors.name}</h3>} */}
           </div>
-          <div class="pb-4">
-            <div class=" ">
+          <div className="pb-4">
+            <div className=" ">
               <label>Description </label>
-              <div class="input-group mb-4">
+              <div className="input-group mb-4">
                 <textarea
                   rows="5"
                   cols="60"
                   placeholder="Enter your message"
-                  class="form-control select-field"
+                  className="form-control select-field"
                   name="description"></textarea>
               </div>
             </div>

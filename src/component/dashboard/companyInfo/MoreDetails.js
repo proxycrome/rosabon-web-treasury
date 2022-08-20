@@ -9,11 +9,11 @@ import { successMessage } from "../../../redux/actions/auth/SignupAction";
 const MoreDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-   const [show, setShow] = useState(false);
-   const [showEdit, setShowEdit] = useState(true);
-   const toggleEdit = () => {
-     setShowEdit(!showEdit);
-   };
+  const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(true);
+  const toggleEdit = () => {
+    setShowEdit(!showEdit);
+  };
 
   const data = {
     acc_name: "",
@@ -61,7 +61,7 @@ const MoreDetails = () => {
                 <h4>
                   Director 1{" "}
                   <span className="pl-5">
-                    <i class="fa-solid fa-angle-down"></i>
+                    <i className="fa-solid fa-angle-down"></i>
                   </span>
                 </h4>
                 <div>
@@ -85,8 +85,7 @@ const MoreDetails = () => {
                       {showEdit ? (
                         <button
                           className={showEdit ? " btn_bg_blue" : ""}
-                          onClick={toggleEdit}
-                        >
+                          onClick={toggleEdit}>
                           Choose file
                         </button>
                       ) : (
@@ -100,47 +99,47 @@ const MoreDetails = () => {
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-md-4 ">
+              <div className="row">
+                <div className="col-md-4 ">
                   <label>First Name</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="First Name"
                       disabled={showEdit}
                       type="text"
                     />
                   </div>
                 </div>
-                <div class="col-md-4 ">
+                <div className="col-md-4 ">
                   <label>Middle Name</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Middle Name"
                       disabled={showEdit}
                       type="text"
                     />
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div className="col-md-4">
                   <label>Last Name</label>
-                  <div class="input-group">
+                  <div className="input-group">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Last Name"
                       disabled={showEdit}
                     />
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col ">
+              <div className="row">
+                <div className="col ">
                   <label>Company Address</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder=""
                       type="text"
                       disabled={showEdit}
@@ -148,23 +147,23 @@ const MoreDetails = () => {
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-8 ">
+              <div className="row">
+                <div className="col-md-8 ">
                   <label>Email Address</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder=""
                       type="text"
                       disabled={showEdit}
                     />
                   </div>
                 </div>
-                <div class="col-md-4 ">
+                <div className="col-md-4 ">
                   <label>Phone Number</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder=""
                       type="text"
                       disabled={showEdit}
@@ -172,14 +171,14 @@ const MoreDetails = () => {
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div className="row">
                 <div className="col-lg-8">
                   <div className="row">
-                    <div class="col-8 ">
+                    <div className="col-8 ">
                       <label>Bank verification number (BVN)</label>
-                      <div class="input-group mb-4">
+                      <div className="input-group mb-4">
                         <input
-                          class="form-control"
+                          className="form-control"
                           placeholder="Bank verification number (BVN)"
                           disabled={showEdit}
                           type="text"
@@ -187,12 +186,11 @@ const MoreDetails = () => {
                       </div>
                     </div>
 
-                    <div class="col-4 ">
+                    <div className="col-4 ">
                       <button
                         //   type="button"
                         //   onClick={() => setShow(true)}
-                        className="profile_vify_btn"
-                      >
+                        className="profile_vify_btn">
                         Verify
                       </button>
                     </div>
@@ -202,8 +200,7 @@ const MoreDetails = () => {
                           position: "absolute",
                           top: "100px",
                           right: "300px",
-                        }}
-                      >
+                        }}>
                         {/* <ModalComponent
                             show={show}
                             size={"md"}
@@ -215,27 +212,26 @@ const MoreDetails = () => {
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6 ">
+              <div className="row">
+                <div className="col-md-6 ">
                   <label>ID Type</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="position-relative form-control"
+                      className="position-relative form-control"
                       placeholder="First Name"
                       disabled={showEdit}
                       type="text"
-                      
                     />
                     <span className=" input-font-awe">
-                      <i class="fa-solid fa-angle-down"></i>
+                      <i className="fa-solid fa-angle-down"></i>
                     </span>
                   </div>
                 </div>
-                <div class="col-md-6 ">
+                <div className="col-md-6 ">
                   <label>ID Number</label>
-                  <div class="input-group mb-4">
+                  <div className="input-group mb-4">
                     <input
-                      class="form-control"
+                      className="form-control"
                       placeholder="Middle Name"
                       disabled={showEdit}
                       type="text"

@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Input } from "reactstrap";
+import {
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  FormFeedback,
+  InputGroup,
+  InputGroupText,
+} from "reactstrap";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -13,7 +21,7 @@ function CompanySignup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
-  const { isSignedup, login, isLoggedIn } = auth;
+  const { isSignedup, login, isLoggedIn, isLoading } = auth;
   const user_profile = useSelector((state) => state.user_profile);
   const { users } = user_profile;
 
@@ -76,7 +84,12 @@ function CompanySignup() {
             <div className="">
               <RightWrapper>
                 <h4>Sign up</h4>
-                <Toaster position="bottom-center" />
+                <Toaster
+                  toastOptions={{
+                    className: "bg-danger text-white",
+                  }}
+                  position="bottom-center"
+                />
                 <div className="container">
                   <form autoComplete="off" onSubmit={handleSubmit}>
                     <LoginInput>
@@ -99,7 +112,6 @@ function CompanySignup() {
                           <div className="input-group ">
                             <Input
                               className="form-control"
-                              // placeholder="First Name"
                               type="text"
                               onChange={handleValueChange}
                               name="contactFirstName"
@@ -116,7 +128,6 @@ function CompanySignup() {
                             <Input
                               type="text"
                               className="form-control"
-                              // placeholder="Last Name"
                               onChange={handleValueChange}
                               name="contactLastName"
                               value={values.contactLastName}
@@ -133,7 +144,6 @@ function CompanySignup() {
                           <Input
                             type="email"
                             className="form-control"
-                            // placeholder="Email Address"
                             onChange={handleValueChange}
                             name="email"
                             value={values.email}
@@ -147,7 +157,6 @@ function CompanySignup() {
                           <Input
                             type="text"
                             className="form-control"
-                            // placeholder="Mobile Number"
                             onChange={handleValueChange}
                             name="phone"
                             value={values.phone}
@@ -158,38 +167,50 @@ function CompanySignup() {
                       <div className="mb-4 input_password">
                         <label>Password</label>
                         <div className="input-group">
-                          <Input
-                            type={passwordShown1 ? "text" : "password"}
-                            className="form-control"
-                            // placeholder="Password"
-                            onChange={handleValueChange}
-                            name="password"
-                            value={values.password}
-                          />
-                          <i
-                            onClick={togglePassword1}
-                            className={
-                              passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
-                            }></i>
+                          <InputGroup>
+                            <Input
+                              type={passwordShown1 ? "text" : "password"}
+                              bsSize="lg"
+                              onChange={handleValueChange}
+                              name="password"
+                              value={values.password}
+                            />
+                            <InputGroupText>
+                              <i
+                                onClick={togglePassword1}
+                                style={{ cursor: "pointer" }}
+                                className={
+                                  passwordShown1
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
+                                }></i>
+                            </InputGroupText>
+                          </InputGroup>
                         </div>
                         {errors.password && <h3>{errors.password}</h3>}
                       </div>
                       <div className="mb-4 input_password">
                         <label>Confirm Password</label>
                         <div className="input-group">
-                          <Input
-                            type={passwordShown2 ? "text" : "password"}
-                            className="form-control"
-                            // placeholder="Confirm Password"
-                            onChange={handleValueChange}
-                            name="c_password"
-                            value={values.c_password}
-                          />
-                          <i
-                            onClick={togglePassword2}
-                            className={
-                              passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
-                            }></i>
+                          <InputGroup>
+                            <Input
+                              type={passwordShown2 ? "text" : "password"}
+                              bsSize="lg"
+                              onChange={handleValueChange}
+                              name="c_password"
+                              value={values.c_password}
+                            />
+                            <InputGroupText>
+                              <i
+                                onClick={togglePassword2}
+                                style={{ cursor: "pointer" }}
+                                className={
+                                  passwordShown2
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
+                                }></i>
+                            </InputGroupText>
+                          </InputGroup>
                         </div>
                         {errors.c_password && <h3>{errors.c_password}</h3>}
                       </div>
@@ -197,10 +218,7 @@ function CompanySignup() {
                         <div className="">
                           <label>How did you hear about us</label>
                           <select
-                            // className="form-select form-select-lg"
-                            // aria-label=".form-select-lg"
-
-                            className="form-select form-select-md mb-3 select-field"
+                            className="form-select form-select-lg select-field"
                             aria-label=".form-select-md"
                             onChange={handleValueChange}
                             name="source">
@@ -214,7 +232,7 @@ function CompanySignup() {
                         </div>
                         {errors.source && <h3>{errors.source}</h3>}
                       </div>
-                      <div className="mb-4">
+                      <div className="referal-link pb-5">
                         <div className="input-group">
                           {values.source == "OTHER" ? (
                             <Input
@@ -269,7 +287,7 @@ function CompanySignup() {
                           />
                           <label
                             className="form-check-label"
-                            for="checkNewsLetter">
+                            htmlFor="checkNewsLetter">
                             Yes, I want to recieve newsletters of Promos and
                             Offers
                           </label>
@@ -286,7 +304,7 @@ function CompanySignup() {
                           />
                           <label
                             className="form-check-label"
-                            for="checkIsAssisted">
+                            htmlFor="checkIsAssisted">
                             Check the box if this registration is assisted
                           </label>
                         </div>
@@ -298,8 +316,26 @@ function CompanySignup() {
                             name="isCompanyTerms"
                             onChange={(e) => setIsCompanyTerms(!isCompanyTerms)}
                           />
-                          <label className="form-check-label" for="checkTerms">
-                            I agree to the Terms and Privacy Policy
+                          <label
+                            className="form-check-label"
+                            htmlFor="checkTerms">
+                            I agree to the{" "}
+                            <span
+                              style={{
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
+                              }}>
+                              Terms
+                            </span>{" "}
+                            and{" "}
+                            <span
+                              style={{
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
+                              }}>
+                              Privacy
+                            </span>{" "}
+                            Policy
                           </label>
                         </div>
                         {errors.isCompanyTerms && (
@@ -308,9 +344,13 @@ function CompanySignup() {
                       </div>
                     </LoginInput>
                     <LoginButton>
-                      <div className="">
-                        <button type="submit">Sign up</button>
-
+                      <div className="text-center mt-5">
+                        <button
+                          type="submit"
+                          className="btn btn-primary px-5 mb-2"
+                          disabled={isLoading}>
+                          {isLoading ? "Signing up..." : "Sign up"}
+                        </button>
                         <p className="text-center">
                           Already have an account?{" "}
                           <span className="">
@@ -344,37 +384,17 @@ const Wrapper = styled.div`
 
 const RightWrapper = styled.section`
   background: #ffffff;
-  padding: 8rem 4rem 4rem 4rem;
-  @media (max-width: 900px) {
-    padding: 4rem 3rem;
+  padding: 4rem;
+  @media (max-width: 1200px) {
+    padding: 4rem 1rem;
   }
   Link {
     text-decoration: none;
   }
-  .login-btn {
+  .referal-link {
+    padding-top: 70px;
   }
-  .top_login_btn {
-    padding-bottom: 50px;
-    button {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 20px;
-      letter-spacing: -0.04em;
-      outline: none;
-      border: none;
-      background: #ffffff;
-    }
-    .blue_login_btn {
-      background: #111e6c;
-      border-radius: 10px;
-      padding: 10px 10px;
-      outline: none;
-      border: none;
-      color: #f2f2f2;
-      margin-left: 10px;
-    }
-  }
+
   h4 {
     font-style: normal;
     font-weight: 700;
@@ -443,18 +463,7 @@ const LoginInput = styled.div`
     padding-bottom: 7px;
     padding-left: 8px;
   }
-  span {
-    padding-left: 200px;
-  }
-  .input_password {
-    position: relative;
-    i {
-      position: absolute;
-      right: 15px;
-      top: 12px;
-      cursor: pointer;
-    }
-  }
+
   .form-check-label {
     font-weight: 400;
     font-size: 16px;
@@ -466,17 +475,7 @@ const LoginButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  button {
-    background: #111e6c;
-    border-radius: 10px;
-    padding: 10px 120px;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 22px;
-    color: #ffffff;
-    margin-top: 80px;
-  }
+
   p {
     font-style: normal;
     font-weight: 400;

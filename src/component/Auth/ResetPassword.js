@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
@@ -31,6 +32,11 @@ function ResetPassword() {
   return (
     <WrapperContainer>
       <div className="view_content"></div>
+      <Toaster
+          toastOptions={{
+            className: "bg-danger text-white",
+          }}
+        />
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">
           <WrappCongrate>
@@ -59,7 +65,7 @@ function ResetPassword() {
                             name="password"
                             value={formData.newPassword}
                           />
-                          <i class="far fa-eye-slash"></i>
+                          <i className="far fa-eye-slash"></i>
                         </div>
                       </div>
                       <div className="mb-4 text-left input_password">
@@ -73,7 +79,7 @@ function ResetPassword() {
                             name="password"
                             value={formData.c_password}
                           />
-                          <i class="far fa-eye-slash"></i>
+                          <i className="far fa-eye-slash"></i>
                         </div>
                       </div>
                       <div className="text-center">

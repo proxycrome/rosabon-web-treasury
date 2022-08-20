@@ -39,34 +39,34 @@ const CompanyUpdate = () => {
                   </p>
                   <h4>Company Details</h4>
                   <div>
-                    <div class="row">
-                      <div class="col-md-8">
+                    <div className="row">
+                      <div className="col-md-8">
                         <label>Company Name</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder="{company_details.company.name}"
                             type="text"
                           />
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-6 col-lg-4 ">
+                    <div className="row">
+                      <div className="col-md-6 col-lg-4 ">
                         <label>Company RC number</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder="Company RC number"
                             type="text"
                           />
                         </div>
                       </div>
-                      <div class="col-md-6 col-lg-4 ">
+                      <div className="col-md-6 col-lg-4 ">
                         <label>Company Registration Date</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder="Company Registration Date"
                             type="text"
                           />
@@ -74,33 +74,33 @@ const CompanyUpdate = () => {
                       </div>
                     </div>
                     <div className="row">
-                      <div class="mb-4">
+                      <div className="mb-4">
                         <label>Company Address</label>
-                        <div class="input-group">
+                        <div className="input-group">
                           <input
                             type="text"
-                            class="form-control"
+                            className="form-control"
                             placeholder="Company Address"
                             aria-label="Last Name..."
                           />
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-8 ">
+                    <div className="row">
+                      <div className="col-md-8 ">
                         <label>Nature of Business</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder="Nature of Business"
                             type="text"
                           />
                         </div>
                       </div>
-                      <div class="col-md-4 ">
+                      <div className="col-md-4 ">
                         <label>Company Type</label>
-                        <div class="input-group mb-4">
-                          <input class="form-control" type="text" />
+                        <div className="input-group mb-4">
+                          <input className="form-control" type="text" />
                         </div>
                       </div>
                     </div>
@@ -108,44 +108,44 @@ const CompanyUpdate = () => {
 
                   <h4 className="pt-5">Contact Person Details</h4>
                   <div>
-                    <div class="row">
-                      <div class="col-md-4 ">
+                    <div className="row">
+                      <div className="col-md-4 ">
                         <label>Contact Person First Name</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder=""
                             type="text"
                           />
                         </div>
                       </div>
-                      <div class="col-md-4 ">
+                      <div className="col-md-4 ">
                         <label>Contact Person Last Name</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder=""
                             type="text"
                           />
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-8 ">
+                    <div className="row">
+                      <div className="col-md-8 ">
                         <label>Contact Person Email Address</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder="{company_details.email}"
                             type="text"
                           />
                         </div>
                       </div>
-                      <div class="col-md-4 ">
+                      <div className="col-md-4 ">
                         <label>Contact person Number</label>
-                        <div class="input-group mb-4">
+                        <div className="input-group mb-4">
                           <input
-                            class="form-control"
+                            className="form-control"
                             placeholder="{company_details.phone}"
                             type="text"
                           />

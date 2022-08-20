@@ -2,9 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Verve from "../../../asset/master-card-logo.png";
 import MOneyTransfer from "../../../asset/money-transfer.png";
-import {
-  UserBankDetails,
-} from "../Accesssories";
+import { UserBankDetails } from "../Accesssories";
 
 const PlanPayment = () => {
   return (
@@ -44,7 +42,7 @@ const PlanPayment = () => {
                   <h4>Plan 1</h4>
                   <p className="p-0 m-0">Product 1</p>
                 </div>
-                <i class="fa-solid fa-ellipsis"></i>
+                <i className="fa-solid fa-ellipsis"></i>
               </div>
             </div>
           </div>
@@ -52,10 +50,14 @@ const PlanPayment = () => {
         <h4 className="pt-5">Choose Payment Type</h4>
         <div className="plan-payment">
           <div className="row">
-            <div class="col ">
+            <div className="col ">
               <label>Input amout to Top-up</label>
-              <div class="input-group mb-4">
-                <input class="form-control" placeholder="N  0.00" type="text" />
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="N  0.00"
+                  type="text"
+                />
               </div>
             </div>
           </div>
@@ -105,7 +107,7 @@ const LeftView = styled.div`
     flex-direction: column;
     align-items: center;
   }
- 
+
   p {
     font-weight: 400;
     font-size: 14px;
@@ -134,7 +136,6 @@ const RightView = styled.div`
     padding: 20px;
     width: 373px;
     p {
-     
       font-style: normal;
       font-weight: 400;
       font-size: 13px;
