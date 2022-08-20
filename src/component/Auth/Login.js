@@ -1,89 +1,87 @@
-import React, { useState, useEffect } from "react";
-import { Toaster } from "react-hot-toast";
-import { LoginLeftView } from "./loginLeftView";
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { successMessage } from "../../redux/actions/auth/SignupAction";
-import { loginUser } from "../../redux/actions/auth/SignupAction";
+import React, { useState, useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
+import { LoginLeftView } from './loginLeftView'
+import styled from 'styled-components'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { loginUser } from '../../redux/actions/auth/SignupAction'
+import {
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  FormFeedback,
+  InputGroup,
+  InputGroupText,
+} from 'reactstrap'
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const auth = useSelector((state) => state.auth)
+  const { login, isLoggedIn, isLoading } = auth
 
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
-
-  const [passwordShown, setPasswordShown] = useState(false);
-  const [error, setError] = useState(null);
+  const user_profile = useSelector((state) => state.user_profile)
+  const { users } = user_profile
+  const data = {
+    email: '',
+    password: '',
+  }
+  const [passwordShown, setPasswordShown] = useState(false)
+  const [emailError, setError] = useState(false)
+  const [formData, setformData] = useState(data)
 
   const togglePassword1 = () => {
-    setPasswordShown(!passwordShown);
-  };
-
-  function isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email);
+    setPasswordShown(!passwordShown)
   }
 
-  const data = {
-    email: "",
-    password: "",
-  };
-  const [formData, setformData] = useState(data);
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email)
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    setError(false)
+    const { name, value } = e.target
     setformData({
       ...formData,
       [name]: value,
-    });
-
-    if (name === "email") {
-      if (!isValidEmail(e.target.value)) {
-        setError("Email is invalid");
-      } else {
-        setError(null);
-      }
-    }
-  };
+    })
+  }
 
   const handleUserSubmit = (e) => {
-    e.preventDefault();
-    const { email, password } = formData;
-    if (!error) {
-      let data = {
-        email,
-        password,
-        platformType: "WEB",
-      };
-      // console.log(data);
-      dispatch(loginUser(data));
-    } else {
+    e.preventDefault()
+    setError(false)
+    const { email, password } = formData
+    if (!isValidEmail(email)) {
+      return setError(true)
     }
-  };
-
+    let data = {
+      email,
+      password,
+      platformType: 'WEB',
+    }
+    dispatch(loginUser(data))
+  }
   useEffect(() => {
-    // console.log(login, users.role);
-    if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
+    if (users && users.kyc && users.role === 'COMPANY') {
+      navigate('/company-profile')
+    } else if (users && users.kyc && users.role === 'INDIVIDUAL_USER') {
+      navigate('/personal-profile')
     } else if (isLoggedIn || users) {
       if (
-        (login && login.role && login.role.name === "COMPANY") ||
-        (users && users.role === "COMPANY")
+        (login && login.role && login.role.name === 'COMPANY') ||
+        (users && users.role === 'COMPANY')
       ) {
-        navigate("/kyc/company");
+        navigate('/kyc/company')
       } else if (
-        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
-        (users && users.role === "INDIVIDUAL_USER")
+        (login && login.role && login.role.name === 'INDIVIDUAL_USER') ||
+        (users && users.role === 'INDIVIDUAL_USER')
       ) {
-        navigate("/kyc/person");
+        navigate('/kyc/person')
       }
     }
-  }, [isLoggedIn, users]);
+  }, [isLoggedIn, users])
 
   return (
     <WrapperContainer>
@@ -92,95 +90,94 @@ const Login = () => {
       </div>
       <div className="">
         <RightWrapper>
-          <Toaster />
+          <Toaster
+            toastOptions={{
+              className: 'bg-danger text-white',
+            }}
+          />
           <h4>Login</h4>
           <div className="container">
-            <form autoComplete="off" onSubmit={handleUserSubmit}>
-              <LoginInput>
-                <div className="mb-4">
-                  <label className="pb-2">Email Address</label>
-                  <div className="input-group">
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Email Address"
-                      onChange={handleChange}
-                      name="email"
-                      value={formData.email}
-                    />
-                  </div>
-                  {error && (
-                    <h3>
-                      Your account is pending verification. please check your
-                      email for the verification link
-                    </h3>
-                  )}
-                </div>
-                <div className="mb-4 input_password">
-                  <label className="pb-2">Password</label>
-                  <div className="input-group">
-                    <input
-                      type={passwordShown ? "text" : "password"}
-                      className="form-control"
-                      placeholder="Password"
-                      onChange={handleChange}
-                      name="password"
-                      value={formData.password}
-                    />
+            <Form autoComplete="off" onSubmit={handleUserSubmit}>
+              <FormGroup className="w-100">
+                <Label htmlFor="email" className="card-title fw-bold fs-5 mb-2">
+                  Email Address
+                </Label>
+                <Input
+                  type="email"
+                  name="email"
+                  className="w-100"
+                  bsSize="lg"
+                  onChange={handleChange}
+                  invalid={emailError}
+                />
+                <FormFeedback>Valid Email is Required</FormFeedback>
+              </FormGroup>
+              <FormGroup className="w-100">
+                <Label htmlFor="email" className="card-title fw-bold fs-5 mb-2">
+                  Password
+                </Label>
+                <InputGroup>
+                  <Input
+                    type={passwordShown ? 'text' : 'password'}
+                    bsSize="lg"
+                    onChange={handleChange}
+                    name="password"
+                    value={formData.password}
+                  />
+                  <InputGroupText>
                     <i
                       onClick={togglePassword1}
-                      class={
-                        passwordShown ? "far fa-eye" : "far fa-eye-slash"
-                      }></i>
-                  </div>
-                </div>
-                <div className="d-flex justify-content-around">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label className="form-check-label" for="flexCheckChecked">
-                      Stay signed in
-                    </label>
-                  </div>
-                  <p className="">
-                    <Link to="/forgot-password">Forgot Password?</Link>
-                  </p>
-                </div>
-              </LoginInput>
-              <LoginButton>
-                <div className="">
-                  <button type="submit" className="verify_congrates_btn">
-                    Login
-                  </button>
-                  <p className="text-center">
-                    Don’t have an account?{" "}
-                    <span className="">
-                      <Link to="/register-company">Sign up</Link>
-                    </span>
-                  </p>
-                </div>
-              </LoginButton>
-            </form>
+                      style={{ cursor: 'pointer' }}
+                      className={
+                        passwordShown ? 'far fa-eye' : 'far fa-eye-slash'
+                      }
+                    ></i>
+                  </InputGroupText>
+                </InputGroup>
+                <FormFeedback>Password</FormFeedback>
+              </FormGroup>
+              <div className="d-flex justify-content-between align-items-center">
+                <FormGroup check>
+                  <Input type="checkbox" />
+                  <Label check>Stay signed in</Label>
+                </FormGroup>
+                <span className="card-title">
+                  <Link to="/forgot-password">Forgot Password?</Link>
+                </span>
+              </div>
+              <div className="text-center mt-5">
+                <button
+                  type="submit"
+                  className="btn btn-primary px-5 mb-2"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'LOADING...' : 'Login'}
+                </button>
+                <p>
+                  Don’t have an account?{' '}
+                  <span className="">
+                    <Link to="/register-company">Sign up</Link>
+                  </span>
+                </p>
+              </div>
+            </Form>
           </div>
+          <div className="container"></div>
         </RightWrapper>
       </div>
     </WrapperContainer>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
 
 const WrapperContainer = styled.div`
   height: 100vh;
   display: grid;
-  @media(min-width: 900px){
+  @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
   }
-`;
+`
 
 const RightWrapper = styled.section`
   background: #ffffff;
@@ -188,11 +185,10 @@ const RightWrapper = styled.section`
   @media (max-width: 900px) {
     padding: 4rem 3rem;
   }
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    width: 239.5px;
-    height: 54px;
+  input[type='text'],
+  input[type='email'],
+  input[type='password'] {
+    // width: 239.5px;
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     padding-left: 20px;
@@ -225,7 +221,7 @@ const RightWrapper = styled.section`
     padding-bottom: 60px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
@@ -238,57 +234,4 @@ const RightWrapper = styled.section`
   }
   .login_input {
   }
-`;
-
-const LoginInput = styled.div`
-  label,
-  span {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 17px;
-    line-height: 21px;
-    letter-spacing: -0.04em;
-    color: #828282;
-  }
-
-  p {
-    padding-left: 200px;
-  }
-  .input_password {
-    position: relative;
-    i {
-      position: absolute;
-      right: 15px;
-      top: 16px;
-      cursor: pointer;
-    }
-  }
-`;
-const LoginButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  button {
-    background: #111e6c;
-    border-radius: 10px;
-    padding: 10px 120px;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 22px;
-    color: #ffffff;
-    margin-top: 80px;
-  }
-  p {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 21px;
-    letter-spacing: -0.04em;
-    color: #333333;
-    margin-top: 15px;
-  }
-  span {
-    color: rgba(28, 68, 141, 1);
-  }
-`;
+`
