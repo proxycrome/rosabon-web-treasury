@@ -224,7 +224,7 @@ const UserWallet = () => {
                     show={show}
                     size={"md"}
                     handleClose={() => {setShow(false); setClosefooter(false)}}>
-                    <div>
+                    <div className="">
                       <div className="container">
                         <div className="row">
                           <div className="col text-center">
