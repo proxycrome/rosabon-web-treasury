@@ -1,26 +1,70 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Verve from '../../../asset/master-card-logo.png';
-// import MOneyTransfer from '../../../asset/money-transfer.png';
-import { PlanSummary } from '../Accesssories';
-import ModalComponent from '../../ModalComponent';
-import { SuccessConfirm } from '../../Accessories/BVNConfirm';
+import { FormGroup, Input } from 'reactstrap';
+import { useNavigate } from 'react-router-dom';
+import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
+import FullWithdrawal from './FullWithdrawal';
+import PartWithdrawal from './PartWithdrawal';
 
-const PlanCardTopup = ({ goBack }) => {
-    const [show, setShow] = useState(false);
+const Withdrawal = () => {
+  const [part, setPart] = useState('');
+  const [full, setFull] = useState('');
+  const [isClicked, setIsClicked] = useState(false);
+  const [reason, setReason] = useState("")
+  const [otherReasons, setOtherReasons] = useState("")
+  const navigate = useNavigate();
 
+  const handleClick = (e) => {
+    if (e.target.value === 'part') {
+      setPart('part');
+      setFull('');
+    }
+    if (e.target.value === 'full') {
+      setFull('full');
+      setPart('');
+    }
+  };
+
+  if (full && isClicked) {
+    return (
+      <FullWithdrawal
+        goBack={() => {
+          setFull('');
+          setIsClicked(false);
+        }}
+      />
+    );
+  }
+
+  if (part && isClicked) {
+    return (
+      <PartWithdrawal
+        goBack={() => {
+          setPart('');
+          setIsClicked(false);
+        }}
+      />
+    );
+  }
+
+  const back = () => {
+    navigate('/plan-list');
+  };
 
   return (
     <>
+      <ProfileNavBar>
+        <h2>Plan</h2>
+      </ProfileNavBar>
       <Wrapper>
         <LeftView>
-          <h4 className="pb-5">Top up</h4>
+          <h4 className="pb-3">Withdrawal</h4>
           <div className="plan-content">
             <div className="plan">
               <div className="plan-top h-50 p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h4>Plan 1</h4>
+                    <h4>Plan 3</h4>
                     <p className="p-0 m-0">Product 1</p>
                   </div>
                   <h4 className="Active">Active</h4>
@@ -53,22 +97,92 @@ const PlanCardTopup = ({ goBack }) => {
               </div>
             </div>
           </div>
-        </LeftView>
-        <RightView>
-          <div className='card-details'>
-            <h6>Kindly confirm your transaction details below</h6>
-            <div className="choose-plan mt-5">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>Payment Type:</div>
+          
+          <div className="plan-payment">
+            <div>
+              <div className="d-flex align-items-center justify-content-between my-5">
                 <div className="d-flex align-items-center">
-                  <img className="verve-card" src={Verve} alt="Verve" />
-                  <p className="p-0 m-0">Debit Card</p>
+                  <p className="p-0 m-0">Partial Withdrawal</p>
+                </div>
+                <input
+                  type="radio"
+                  id="part"
+                  name="rolloverType"
+                  value="part"
+                  onClick={handleClick}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <div className="d-flex align-items-center">
+                  <p className="p-0 m-0">Full Withdrawal</p>
+                </div>
+                <input
+                  type="radio"
+                  id="full"
+                  name="rolloverType"
+                  value="full"
+                  onClick={handleClick}
+                />
+              </div>
+            </div>
+            <div className="row my-4">
+              <div class="col ">
+                <label>Amount to Liquidate</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="₦ 0.00"
+                    type="text"
+                  />
+                </div>
+                <label>Balance is ₦2,500,000.00</label>
+              </div>
+            </div>
+            <div className="row my-4">
+              <div className="col ">
+                <label>Reason for Withdrawal</label>
+                <div className="input-group">
+                  <select
+                    className="form-select form-select-md"
+                    aria-label=".form-select-md"
+                    name="reason"
+                    onChange={(e) => setReason(e.target.value)} 
+                  >
+                    <option>Select Reason for Withdrawal</option>
+                    <option>Others</option>
+                  </select>
                 </div>
               </div>
             </div>
-            <PlanSummary />
+            {reason === "Others" ? (
+              <div className="row my-4">
+                <div className="col ">
+                  <FormGroup className="form-group-custom mb-4">
+                    <Input
+                      name="otherReasons"
+                      type="textarea"
+                      rows={5}
+                      value={otherReasons}
+                      className="form-control"
+                      onChange={(e) => setOtherReasons(e.target.value)}
+                      id="otherReasons"
+                      placeholder="Please provide reason for withdrawal"
+                    />
+                  </FormGroup>
+                </div>
+              </div>
+            ) : null} 
           </div>
-        </RightView>
+        </LeftView>
+        <RightView>
+        <div className="bank-details">
+          {/* <div className="bank-detail-content"> */}
+            {/* <UserBankDetails /> */}
+          {/* </div> */}
+        </div>
+      </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
@@ -76,7 +190,7 @@ const PlanCardTopup = ({ goBack }) => {
             <div>
               <button
                 style={{ color: '#111E6C', width: '300px' }}
-                onClick={goBack}
+                onClick={back}
               >
                 Back
               </button>
@@ -88,20 +202,10 @@ const PlanCardTopup = ({ goBack }) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setShow(true)}
+                onClick={() => setIsClicked(true)}
               >
-                Pay
+                Next
               </button>
-              <ModalComponent
-                show={show}
-                size={'md'}
-                handleClose={() => setShow(false)}
-              >
-                <SuccessConfirm 
-                  cardTopup="paid"
-                  handleClose={() => setShow(false)}
-                />
-              </ModalComponent>
             </div>
           </div>
         </div>
@@ -110,7 +214,7 @@ const PlanCardTopup = ({ goBack }) => {
   );
 };
 
-export default PlanCardTopup;
+export default Withdrawal;
 
 const LeftView = styled.div`
   width: 50%;
@@ -154,63 +258,32 @@ const RightView = styled.div`
   width: 50%;
   @media (max-width: 850px) {
     width: 100% !important;
-    padding: 20px !important;
-    .choose-plan {
-      width: 90% !important;
-    }
   }
-.card-details {
+  .bank-details {
+    height: 70vh;
     padding: 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
-    flex-direction: column;
     justify-content: center;
-}
-  .choose-plan {
-    width: 448px;
+  }
+  .bank-detail-content {
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;
-    padding: 30px;
+    padding: 20px;
+    width: 373px;
     p {
       font-style: normal;
       font-weight: 400;
       font-size: 13px;
-      line-height: 148.4%;
-      display: flex;
-      align-items: flex-end;
-      letter-spacing: -0.01em;
-      color: #4f4f4f;
+      line-height: 150%;
+      letter-spacing: -0.15px;
+      color: #242424;
     }
-  }
-  h4 {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 16px;
-    letter-spacing: -0.03em;
-    color: #242424;
-    padding-top: 60px;
-    padding-bottom: 20px;
-  }
-  input {
-    width: 239.5px;
-    height: 54px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 8px;
-    padding-left: 20px;
-  }
-  label {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 21px;
-    letter-spacing: -0.04em;
-    color: #828282;
-    padding-bottom: 15px;
-    padding-left: 10px;
+    .bold-text {
+      font-weight: 600;
+    }
   }
 `;
 

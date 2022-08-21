@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Confetti from "../../asset/confetti.png";
 import Checked from "../../asset/checked.png";
 import Caneled from "../../asset/cnaceled.png";
-import ModalComponent from "../ModalComponent";
 import OtpInput from "react-otp-input";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 // import { useSelector, useDispatch, connect } from "react-redux";
@@ -99,7 +98,7 @@ const ConfirmBVN = styled.div`
   }
 `;
 
-export function SuccessConfirm({ bank, handleClose, withdraw }) {
+export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createPlan, confirmNotice, transferNotice }) {
 
   // const dispatch = useDispatch();
   // const logout = (e) => {
@@ -114,8 +113,8 @@ export function SuccessConfirm({ bank, handleClose, withdraw }) {
             <div className="container">
               <div className="row">
                 <div className="col text-center">
-                  <div>
-                    {bank || withdraw ? (
+                  <div> 
+                    {bank || withdraw || cardTopup || createPlan || confirmNotice || transferNotice ? (
                       <img
                         className="congrate_confet"
                         src={Checked}
@@ -144,7 +143,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw }) {
                         </button>
                       </div>
                     </>
-                  ) : withdraw == "withdraw" ? (
+                  ) : withdraw === "withdraw" ? (
                     <>
                       <p className="py-5">Withdrawal Requested Successfully</p>
                       <div className=" ">
@@ -158,7 +157,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw }) {
                         </NavLink>
                       </div>
                     </>
-                  ) : withdraw == "transter" ? (
+                  ) : withdraw === "transter" ? (
                     <>
                       <p className="py-5">Your Transfer was successful</p>
                       <div className=" ">
@@ -170,6 +169,62 @@ export function SuccessConfirm({ bank, handleClose, withdraw }) {
                             Ok
                           </button>
                         </NavLink>
+                      </div>
+                    </>
+                  ) : confirmNotice === "rollover" || transferNotice === "transfer" || confirmNotice === "withdrawal" ? (
+                    <>
+                      {transferNotice === "transfer" ? (
+                        <p className="py-5">Your Transfer was Successful</p>
+                      ) : confirmNotice === "withdrawal" ? (
+                        <p className="py-5">Withdrawal Requested Successfully</p>
+                      ) : (
+                        <p className="py-5">Your Rollover was successful</p>
+                      )}
+                      <div className=" ">
+                        <NavLink to="/plan-list">
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="verify_congrates_btn">
+                            Go back to Plan
+                          </button>
+                        </NavLink>
+                      </div>
+                    </>
+                  ) : cardTopup === "paid" ? (
+                    <>
+                      <p className="py-5">Your Payment was successful</p>
+                      <div className="d-flex justify-content-between">
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="grey_btn">
+                            Check my investments
+                          </button>
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="blue_btn">
+                            Invest more
+                          </button>
+                      </div>
+                    </>
+                  ) : createPlan === "paid" ? (
+                    <>
+                      <p className="py-5">Plan Successfully Saved</p>
+                      <div className="d-flex justify-content-between">
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="grey_btn">
+                            Check my investments
+                          </button>
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="blue_btn">
+                            Invest more
+                          </button>
                       </div>
                     </>
                   ) : (
@@ -381,5 +436,138 @@ const WrappCongrate = styled.div`
     color: #f2f2f2;
     border-radius: 10px;
     padding: 8px 80px;
+  }
+
+  .grey_btn {
+    width: 180px;
+    height: 41px;
+    background: #F2F2F2;
+    border-radius: 10px;
+    color: #111E6C;
+    margin-right: 30px;
+  }
+
+  .blue_btn {
+    width: 180px;
+    height: 41px;
+    background: #111E6C;
+    border-radius: 10px;
+    color: #FFFFFF
+  }
+`;
+
+
+export function Notice({handleClose, handleShowModalTwo, transferNotice}){  
+
+  return (
+    <>
+      <Wrapper>
+        <div className="d-flex justify-content-center align-items-center">
+          <WrappCongrate>
+            <div className="container">
+              <div className="row">
+                <div className="col">
+                  <h5>Note</h5>
+                  {transferNotice === "transfer" ? (
+                    <p className="">You are about to transfer ₦1,000,000 from your Plan 1 plan into Plan 2 plan</p>
+                  ) : (
+                    <p className="">Your plan is about to be rolled over. kindly confirm action</p>
+                  )}
+                  <div className="d-flex justify-content-between">
+                    <button
+                      onClick={handleClose}
+                      type="button"
+                      className="grey_btn">
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleShowModalTwo} 
+                      type="button"
+                      className="blue_btn"
+                    >
+                      Proceed
+                    </button>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </WrappCongrate>
+        </div>
+      </Wrapper>
+    </>
+  )
+}
+
+export function TransactionPreview({handleClose}) {
+  return (
+    <div>
+      <Wrapper>
+        <div className="d-flex justify-content-center align-items-center">
+          <WrapDetails>
+            <div className="container">
+              <div className="row">
+                <div className="col">
+                  <div className="d-flex flex-column justify-content-center align-items-center pb-5">
+                    <h4>- ₦1,500,000</h4>
+                    <p>Part-withdrawal</p>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-start">
+                    <p>Transaction ID</p>
+                    <h6>NO_1947034</h6>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-start">
+                    <p>Transaction Date</p>
+                    <h6>April 28, 2022</h6>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-start">
+                    <p>Transaction Type</p>
+                    <h6>Debit</h6>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-start">
+                    <p>Balance</p>
+                    <h6>₦1,000,000</h6>
+                  </div>
+                  <div className="pt-5 d-flex justify-content-center">
+                    <button type="button" className="btn grey_btn" onClick={handleClose}>
+                      Download PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </WrapDetails>
+        </div>
+      </Wrapper>
+    </div>
+  );
+}
+
+const WrapDetails = styled.div`
+  width: 60%;
+  h4 {
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 22px;
+    color: #242424;
+  }
+  p {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 150%;
+    color: #242424;
+  }
+  h6 {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 16px;
+    color: #242424;
+  }
+  .grey_btn {
+    width: 180px;
+    height: 41px;
+    background: #F2F2F2;
+    border-radius: 10px;
+    color: #111E6C;
   }
 `;

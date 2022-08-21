@@ -49,6 +49,13 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     <span>Plan</span>
                   </li>
                 </NavLink>
+                <ul>
+                  <NavLink className="nav_link" to="/archives">
+                    <li>
+                      <span>Archives</span>
+                    </li>
+                  </NavLink>  
+                </ul>
 
                 <NavLink className="nav_link" to="/user-wallet">
                   <li>
@@ -130,7 +137,7 @@ const WrappSideBarList = styled.div`
     text-align: left;
     color: #242424;
     cursor: pointer;
-    padding: 15px 5px 15px 20px;
+    padding: 8px 5px 8px 20px;
     text-decoration: none;
   }
 `;

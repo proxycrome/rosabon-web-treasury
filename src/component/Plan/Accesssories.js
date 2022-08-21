@@ -583,6 +583,9 @@ export const RolloverSummary = () => {
 };
 
 const RolloverSummaryWrapper = styled.div`
+  box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+  padding: 40px;
+  background: #FFFFFF;
   p {
     font-weight: 400;
     font-size: 14px;
@@ -617,6 +620,122 @@ const RolloverSummaryWrapper = styled.div`
     }
   }
 `;
+
+export const RolloverWithdrawMethod = () => {
+  const [withdraw, setWithdraw] = useState("")
+  return (
+    <div>
+      <RolloverSummaryWrapper>
+        <h4 className="">Kindly select beneficiary account to receive the withdrawal</h4>
+        <div className="plan-content">
+          <div className="rollover">
+            <div className="plan-top h-50 p-4">  
+              <div className="row my-4">
+                <div className="col ">
+                  <div className="input-group">
+                    <select
+                      className="form-select form-select-md"
+                      aria-label=".form-select-md"
+                      name="withdraw"
+                      onChange={(e) => setWithdraw(e.target.value)} 
+                    >
+                      <option value="">Select withdrawal destination</option>
+                      <option value="bank">To Bank</option>
+                      <option value="wallet">My Wallet</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {withdraw === "bank" && (
+                <div className="mt-3">
+                  <div className="pt-4">
+                    <p className="p-0 m-0">Account Number</p>
+                    <h4>2210345678</h4>
+                  </div>
+                  <div className="pt-4">
+                    <p className="p-0 m-0">Account Name</p>
+                    <h4>Ekiyee Bllaowel</h4>
+                  </div>
+                  <div className="pt-4">
+                    <p className="p-0 m-0">Bank Name</p>
+                    <h4>Zenith Bank</h4>
+                  </div> 
+                </div>
+              )}  
+            </div>
+          </div>
+        </div>
+      </RolloverSummaryWrapper>
+    </div>
+  );
+};
+
+export const WithdrawalSummary = () => {
+  return (
+    <div>
+      <RolloverSummaryWrapper>
+        <h4 className="">Withdrawal Summary</h4>
+        <div className="plan-content">
+          <div className="rollover">
+            <div className="plan-top h-50 p-4">
+              <h4>Plan 1</h4>
+              <div className="d-flex align-items-center justify-content-between pt-4">
+                <div>
+                  <p className="p-0 m-0">Start date </p>
+                  <h4>24/06/2023</h4>
+                </div>
+                <div className="rollover-text-left">
+                  <p className="p-0 m-0">End date </p>
+                  <h4>24/06/2023</h4>
+                </div>
+              </div>
+              <div className="d-flex align-items-center justify-content-between pt-4">
+                <div>
+                  <p className="p-0 m-0">
+                    Balance before <br /> Liquidation{" "}
+                  </p>
+                  <h4> ₦2,000,000</h4>
+                </div>
+                <div className="rollover-text-left">
+                  <p className="p-0 m-0">Withdrawal Amount</p>
+                  <h4 className=""> ₦1,500,000</h4>
+                </div>
+              </div>
+              <div className="d-flex align-items-center justify-content-between pt-4">
+                <div>
+                  <p className="p-0 m-0">Penal Charges </p>
+                  <h4>₦40,000</h4>
+                </div>
+                <div className="rollover-text-left">
+                  <p className="p-0 m-0">
+                    Available Plan<br /> Balance{" "}
+                  </p>
+                  <h4 className="">₦460,000</h4>
+                </div>
+              </div>
+              <div className="mt-4">
+                <div>
+                  <p className="p-0 mb-3">Reason for withdrawal</p>
+                  <p>
+                    as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is 
+                    attributed to an unknown typesetter in the 15th century
+                  </p>
+                </div>
+              </div>
+              <div className="py-5 check-box-bank">
+                <input type="checkbox" id="scales" name="scales" />
+                <label htmlFor="scales">
+                  I agree to the Terms and Condition
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </RolloverSummaryWrapper>
+    </div>
+  );
+};
 
 export const PlanSummary = ({ planPay }) => {
   return (
@@ -875,7 +994,7 @@ export const AvailableBalance = ({ role }) => {
   const [showTextArea, setShowTextArea] = useState(false);
 
   const handleOnclick = (e) => {
-    if (e.target.value == "others") {
+    if (e.target.value === "others") {
       setShowTextArea(!showTextArea);
     }
   };
@@ -910,7 +1029,7 @@ export const AvailableBalance = ({ role }) => {
           </div>
         </div>
       </div>
-      {role && role == "Company" ? (
+      {role && role === "Company" ? (
         <>
           <div className="row pb-4">
             <div className="d-flex align-items-center justify-content-between w-100">
@@ -992,7 +1111,7 @@ export const TransferCard = () => {
           <div class="input-group mb-4">
             <input
               class="form-control"
-              placeholder="N  1,,500,000"
+              placeholder="N1,500,000"
               type="text"
             />
           </div>

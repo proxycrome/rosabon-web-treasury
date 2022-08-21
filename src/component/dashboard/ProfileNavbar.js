@@ -48,7 +48,8 @@ export function ProfileNavBar({ children }) {
               >
                 <DropdownToggle
                   tag="button"
-                  outlink
+                  outline
+                  size="sm"
                   className="btn header-item waves-effect"
                   id="page-header-user-dropdown"
                 >
@@ -60,7 +61,10 @@ export function ProfileNavBar({ children }) {
                 </DropdownToggle>
                 <DropdownMenu left className="mt-1">
                   <DropdownItem className="text-danger" onClick={logout}>
-                    <i className="fa fa-sign-out mr-5 text-danger"></i> Logout
+                   <div className="d-flex align-items-center justify-content-between">
+                    <i className="fa fa-sign-out mr-5 text-danger"></i>
+                    <span style={{marginLeft: "20px"}}>Logout</span>
+                   </div>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import MOneyTransfer from '../../../asset/money-transfer.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { PlanSummary, UserBankDetails } from '../Accesssories';
+import ModalComponent from '../../ModalComponent';
+import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 
 const PlanBankPayment = ({goBack}) => {
+  const [show, setShow] = useState(false);
+
 
   return (
     <>
@@ -46,9 +50,20 @@ const PlanBankPayment = ({goBack}) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
+                onClick={() => setShow(true)}
               >
                 Pay
               </button>
+              <ModalComponent
+                show={show}
+                size={'md'}
+                handleClose={() => setShow(false)}
+              >
+                <SuccessConfirm 
+                  createPlan="paid"
+                  handleClose={() => setShow(false)}
+                />
+              </ModalComponent>
             </div>
           </div>
         </div>

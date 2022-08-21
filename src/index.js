@@ -10,6 +10,7 @@ import configureStore from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import 'bootstrap/dist/css/bootstrap.css';
+// import 'mdbreact/dist/css/mdb.css';
 
 const store = configureStore();
 

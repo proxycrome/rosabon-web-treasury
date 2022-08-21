@@ -63,7 +63,7 @@ const PlanPayment = () => {
                     <h4>Plan 1</h4>
                     <p className="p-0 m-0">Product 1</p>
                   </div>
-                  <h4>Active</h4>
+                  <h4 className="Active">Active</h4>
                 </div>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
@@ -85,10 +85,10 @@ const PlanPayment = () => {
               <div className="plan-top h-50 py-1 px-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h4>Plan 1</h4>
-                    <p className="p-0 m-0">Product 1</p>
+                    <h4>Balance</h4>
+                    <p className="p-0 m-0">2,000,000</p>
                   </div>
-                  <i class="fa-solid fa-ellipsis"></i>
+                  {/* <i class="fa-solid fa-ellipsis"></i> */}
                 </div>
               </div>
             </div>
@@ -199,6 +199,21 @@ const LeftView = styled.div`
     line-height: 17px;
     letter-spacing: -0.01em;
     color: #242424;
+  }
+  .Active, .Pending, .Matured {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: -0.01em;
+  }
+  .Active {
+    color: #219653;
+  }
+  .Pending {
+    color: #F2994A;
+  }
+  .Matured {
+    color: #2D9CDB;
   }
 `;
 

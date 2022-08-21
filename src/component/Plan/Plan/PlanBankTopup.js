@@ -1,8 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
-// import Verve from '../../../asset/master-card-logo.png';
-// import MOneyTransfer from '../../../asset/money-transfer.png';
 import { UserBankDetails } from '../Accesssories';
 
 const PlanBankTopup = ({ goBack }) => {

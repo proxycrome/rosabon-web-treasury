@@ -8,6 +8,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import plus from "../../../asset/plus.svg";
+import Switch from "react-switch";
 
 export const Plans = () => {
   return (
@@ -389,6 +390,7 @@ const Wrapper = styled.div`
 
 export const DropDown = ({status}) => {
   const [menu, setMenu] = useState(false);
+  const [checkRollover, setCheckRollover] = useState(false);
 
   const toggle = () => {
     setMenu(!menu);
@@ -415,10 +417,23 @@ export const DropDown = ({status}) => {
         {status === "Active" ? (
           <>
             <DropdownItem tag={Link} to="/plan-topup">Topup</DropdownItem>
-            <DropdownItem>Transfer</DropdownItem>
-            <DropdownItem>Withdraw</DropdownItem>
-            <DropdownItem>Auto rollover</DropdownItem>
-            <DropdownItem>History</DropdownItem>
+            <DropdownItem tag={Link} to="/transfer">Transfer</DropdownItem>
+            <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
+            <DropdownItem>
+              <div className="d-flex align-items-center justify-content-between" style={{width: "150px"}}>
+                <div>Auto rollover</div>{" "}
+                <Switch
+                  className="mr-2 mt-1"
+                  onColor="#111E6C"
+                  onChange={() => setCheckRollover(!checkRollover)}
+                  checked={checkRollover}
+                  uncheckedIcon={false}
+                  width={35}
+                  height={18}
+                />
+              </div>
+            </DropdownItem>
+            <DropdownItem tag={Link} to="/history">History</DropdownItem>
           </>
         ) : status === "Pending" ? (
           <>
@@ -428,13 +443,13 @@ export const DropDown = ({status}) => {
           </>
         ) : status === "Matured" ? (
           <>
-            <DropdownItem>Rollover</DropdownItem>
-            <DropdownItem>Transfer</DropdownItem>
-            <DropdownItem>Withdraw</DropdownItem>
-            <DropdownItem>History</DropdownItem>
+            <DropdownItem tag={Link} to="/rollover">Rollover</DropdownItem>
+            <DropdownItem tag={Link} to="/transfer">Transfer</DropdownItem>
+            <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
+            <DropdownItem tag={Link} to="/history">History</DropdownItem>
           </>
         ) : status === "Closed" ? (
-          <DropdownItem>History</DropdownItem>
+          <DropdownItem tag={Link} to="/history">History</DropdownItem>
         ) : null}
       </DropdownMenu>
     </Dropdown>
