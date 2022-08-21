@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Collapse } from "reactstrap";
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { Collapse } from 'reactstrap'
 
 export const LeftView = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
     <LeftWrapper>
-      <div className="calculatoe">
-        <div className="interest">
+      <div className="calculatoe ">
+        <div className="interest shadow p-4">
           <div
             className="d-flex align-items-center justify-content-between"
-            onClick={() => setOpen(!open)}>
-            <h5>Interest Calculator</h5>
+            onClick={() => setOpen(!open)}
+          >
+            <h5 className="mb-0">Interest Calculator</h5>
             {open ? (
               <i className="fa-solid fa-chevron-up"></i>
             ) : (
@@ -20,9 +21,9 @@ export const LeftView = () => {
           </div>
           <Collapse isOpen={open}>
             <div className="row">
-              <div className=" ">
+              <div className="mt-2">
                 <label>Select Product</label>
-                <div className="input-group mb-4">
+                <div className="input-group mb-2">
                   <input
                     className="form-control"
                     placeholder="Select Product"
@@ -34,7 +35,7 @@ export const LeftView = () => {
             <div className="row">
               <div className=" ">
                 <label>Enter Amount</label>
-                <div className="input-group mb-4">
+                <div className="input-group mb-2">
                   <input
                     className="form-control"
                     placeholder="N  0.00"
@@ -80,8 +81,8 @@ export const LeftView = () => {
           </div>
         </div>
         <div>
-          <div className="d-flex align-items-center mt-5">
-            <div className="circle-notification">
+          <div className="d-flex align-items-center mt-3">
+            <div className="circle-notification p-2">
               <i className="fa-solid fa-key"></i>
             </div>
             <div>
@@ -91,8 +92,8 @@ export const LeftView = () => {
               <p className="p-0 m-0 para-text">July 23, 2021 at 9:15 AM</p>
             </div>
           </div>
-          <div className="d-flex align-items-center  mt-4">
-            <div className="circle-notification">
+          <div className="d-flex align-items-center  mt-3">
+            <div className="circle-notification p-2">
               <i className="fa-solid fa-key"></i>
             </div>
             <div>
@@ -103,15 +104,15 @@ export const LeftView = () => {
             </div>
           </div>
         </div>
-        <p className="py-5 ">View all Notifications</p>
+        <p className="py-2">View all Notifications</p>
         <div>
-          <div className="d-flex align-items-center justify-content-between">
+          <div className="d-flex align-items-center justify-content-between mt-5">
             <h4>My Referral Link</h4>
             <i className="fa-solid fa-key"></i>
           </div>
         </div>
         <div>
-          <label className="pt-3">Referral Link</label>
+          <label>Referral Link</label>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -138,8 +139,8 @@ export const LeftView = () => {
         </div>
       </div>
     </LeftWrapper>
-  );
-};
+  )
+}
 
 const LeftWrapper = styled.div`
   .left-content-notify {
@@ -163,12 +164,10 @@ const LeftWrapper = styled.div`
       background: #ffffff;
       box-shadow: 0px 4px 10px rgba(196, 204, 221, 0.18);
       border-radius: 8px;
-      padding: 2rem;
+      cursor: pointer;
     }
   }
   .circle-notification {
-    width: 41px;
-    height: 41px;
     background: rgba(17, 30, 108, 0.1);
     border-radius: 50%;
     display: flex;
@@ -177,7 +176,7 @@ const LeftWrapper = styled.div`
     margin-right: 20px;
   }
   .para-header {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -186,7 +185,7 @@ const LeftWrapper = styled.div`
     color: #000000;
   }
   .para-text {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 11px;
@@ -198,7 +197,7 @@ const LeftWrapper = styled.div`
     color: #4f4f4f;
   }
   h4 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
     font-size: 17px;
@@ -207,7 +206,7 @@ const LeftWrapper = styled.div`
     color: #242424;
   }
   label {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -216,10 +215,11 @@ const LeftWrapper = styled.div`
   }
   .calc-mty {
     button {
+      width: 100%;
       padding: 0.7rem;
       background: #f2f2f2;
       border-radius: 10px;
-      font-family: "Montserrat";
+      font-family: 'Montserrat';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -228,4 +228,4 @@ const LeftWrapper = styled.div`
       color: #111e6c;
     }
   }
-`;
+`
