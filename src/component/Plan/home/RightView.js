@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import halfEllipse from "../../../asset/halfEllipse.png";
-import YelloBackgroud from "../../../asset/yello-backgroud.png";
-import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
-import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
-import { Collapse } from "reactstrap";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import halfEllipse from '../../../asset/halfEllipse.png'
+import YelloBackgroud from '../../../asset/yello-backgroud.png'
+import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png'
+import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
+import { Collapse } from 'reactstrap'
+import { Link } from 'react-router-dom'
 
 export const RightView = () => {
-  const [openFixSavings, setFixSavingsOpen] = useState(false);
-  const [openTargetSavings, setTargetSavingsOpen] = useState(false);
-  const [openTargetIncome, setTargetIncomeOpen] = useState(false);
+  const [openFixSavings, setFixSavingsOpen] = useState(false)
+  const [openTargetSavings, setTargetSavingsOpen] = useState(false)
+  const [openTargetIncome, setTargetIncomeOpen] = useState(false)
 
   return (
     <RightWrapper>
@@ -52,11 +52,14 @@ export const RightView = () => {
       </div>
       <div className="home-body">
         <div className="">
-          <h4>Categories</h4>
-          <div>
-            <div className="d-flex align-items-center justify-content-between savins-drop">
-              <h5>Fix Savings </h5>
-              <div onClick={() => setFixSavingsOpen(!openFixSavings)}>
+          <h4 className="mb-2">Categories</h4>
+          <div className="shadow p-3 mb-2 rounded">
+            <div
+              className="d-flex align-items-center justify-content-between savins-drop "
+              onClick={() => setFixSavingsOpen(!openFixSavings)}
+            >
+              <h5 className="mb-1">Fix Savings </h5>
+              <div>
                 {openFixSavings ? (
                   <i className="fa-solid fa-chevron-up"></i>
                 ) : (
@@ -64,10 +67,10 @@ export const RightView = () => {
                 )}
               </div>
             </div>
-            <p className="para-header">Choose from a fixed savings plan</p>
+            <span className="text-muted">Choose from a fixed savings plan</span>
           </div>
-          <Collapse isOpen={openFixSavings}>
-            <div className="choose-plan">
+          <Collapse isOpen={openFixSavings} className="border rounded p-4 mb-2">
+            <div className="choose-plan shadow-sm mb-2">
               <div className="row">
                 <div className="d-none d-sm-block col-sm-3">
                   <img
@@ -80,14 +83,14 @@ export const RightView = () => {
                   <h5>Product 1</h5>
                   <div>
                     <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{" "}
+                      Lorem Ipsum is simply dummy text of the{' '}
                     </p>
                     <p className="p-0 m-0 pb-2">
-                      {" "}
+                      {' '}
                       printing and typesetting industry.
                     </p>
                     <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{" "}
+                      Lorem Ipsum is simply dummy text of the{' '}
                     </p>
                   </div>
                 </div>
@@ -101,7 +104,7 @@ export const RightView = () => {
                 </div>
               </div>
             </div>
-            <div className="choose-plan">
+            <div className="choose-plan shadow-sm mb-2">
               <div className="d-flex align-items-center justify-content-around">
                 <img
                   className=""
@@ -112,14 +115,14 @@ export const RightView = () => {
                   <h5>Product 1</h5>
                   <div>
                     <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{" "}
+                      Lorem Ipsum is simply dummy text of the{' '}
                     </p>
                     <p className="p-0 m-0 pb-2">
-                      {" "}
+                      {' '}
                       printing and typesetting industry.
                     </p>
                     <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{" "}
+                      Lorem Ipsum is simply dummy text of the{' '}
                     </p>
                   </div>
                 </div>
@@ -133,10 +136,13 @@ export const RightView = () => {
             </div>
           </Collapse>
 
-          <div>
-            <div className="d-flex align-items-center justify-content-between savins-drop">
-              <h5>Target Savings</h5>
-              <div onClick={() => setTargetSavingsOpen(!openTargetSavings)}>
+          <div className="shadow p-3 mb-2 rounded">
+            <div
+              className="d-flex align-items-center justify-content-between savins-drop"
+              onClick={() => setTargetSavingsOpen(!openTargetSavings)}
+            >
+              <h5 className="mb-1">Target Savings</h5>
+              <div>
                 {openTargetSavings ? (
                   <i className="fa-solid fa-chevron-up"></i>
                 ) : (
@@ -144,78 +150,84 @@ export const RightView = () => {
                 )}
               </div>
             </div>
-            <p className="para-header">Choose from a fixed savings plan</p>
-            <Collapse isOpen={openTargetSavings}>
-              <div className="choose-plan">
-                <div className="row">
-                  <div className="d-none d-sm-block col-sm-3">
-                    <img
-                      className=""
-                      src={ChoosePlanHolder}
-                      alt="ChoosePlanHolder"
-                    />
-                  </div>
-                  <div className="col-sm-9">
-                    <h5>Product 1</h5>
-                    <div>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        {" "}
-                        printing and typesetting industry.
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="d-none d-sm-block col-sm-3"></div>
-                  <div className="col-sm-9">
-                    <Link to="/create-plan">
-                      <button>Create Plan</button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="choose-plan">
-                <div className="d-flex align-items-center justify-content-around">
+            <span className="text-muted">Choose from a fixed savings plan</span>
+          </div>
+          <Collapse
+            isOpen={openTargetSavings}
+            className="border rounded p-4 mb-2"
+          >
+            <div className="choose-plan shadow-sm mb-2">
+              <div className="row">
+                <div className="d-none d-sm-block col-sm-3">
                   <img
                     className=""
                     src={ChoosePlanHolder}
                     alt="ChoosePlanHolder"
                   />
+                </div>
+                <div className="col-sm-9">
+                  <h5>Product 1</h5>
                   <div>
-                    <h5>Product 1</h5>
-                    <div>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        {" "}
-                        printing and typesetting industry.
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                    </div>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      {' '}
+                      printing and typesetting industry.
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
                   </div>
                 </div>
-                <div className="d-flex align-items-center justify-content-around">
-                  <div></div>
+              </div>
+              <div className="row">
+                <div className="d-none d-sm-block col-sm-3"></div>
+                <div className="col-sm-9">
                   <Link to="/create-plan">
                     <button>Create Plan</button>
                   </Link>
                 </div>
               </div>
-            </Collapse>
-          </div>
-          <div>
-            <div className="d-flex align-items-center justify-content-between savins-drop">
-              <h5>Target Income</h5>
-              <div onClick={() => setTargetIncomeOpen(!openTargetIncome)}>
+            </div>
+            <div className="choose-plan shadow-sm mb-2">
+              <div className="d-flex align-items-center justify-content-around">
+                <img
+                  className=""
+                  src={ChoosePlanHolder}
+                  alt="ChoosePlanHolder"
+                />
+                <div>
+                  <h5>Product 1</h5>
+                  <div>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      {' '}
+                      printing and typesetting industry.
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex align-items-center justify-content-around">
+                <div></div>
+                <Link to="/create-plan">
+                  <button>Create Plan</button>
+                </Link>
+              </div>
+            </div>
+          </Collapse>
+          <div className="shadow p-3 mb-2 rounded">
+            <div
+              className="d-flex align-items-center justify-content-between savins-drop"
+              onClick={() => setTargetIncomeOpen(!openTargetIncome)}
+            >
+              <h5 className="mb-1">Target Income</h5>
+              <div>
                 {openTargetIncome ? (
                   <i className="fa-solid fa-chevron-up"></i>
                 ) : (
@@ -223,79 +235,82 @@ export const RightView = () => {
                 )}
               </div>
             </div>
-            <p className="para-header">Choose from a fixed savings plan</p>
-            <Collapse isOpen={openTargetIncome}>
-              <div className="choose-plan">
-                <div className="row">
-                  <div className="d-none d-sm-block col-sm-3">
-                    <img
-                      className=""
-                      src={ChoosePlanHolder}
-                      alt="ChoosePlanHolder"
-                    />
-                  </div>
-                  <div className="col-sm-9">
-                    <h5>Product 1</h5>
-                    <div>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        {" "}
-                        printing and typesetting industry.
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="d-none d-sm-block col-sm-3"></div>
-                  <div className="col-sm-9">
-                    <Link to="/create-plan">
-                      <button>Create Plan</button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="choose-plan">
-                <div className="d-flex align-items-center justify-content-around">
+            <span className="text-muted">Choose from a fixed savings plan</span>
+          </div>
+          <Collapse
+            isOpen={openTargetIncome}
+            className="border rounded p-4 mb-2"
+          >
+            <div className="choose-plan shadow-sm mb-2">
+              <div className="row">
+                <div className="d-none d-sm-block col-sm-3">
                   <img
                     className=""
                     src={ChoosePlanHolder}
                     alt="ChoosePlanHolder"
                   />
+                </div>
+                <div className="col-sm-9">
+                  <h5>Product 1</h5>
                   <div>
-                    <h5>Product 1</h5>
-                    <div>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        {" "}
-                        printing and typesetting industry.
-                      </p>
-                      <p className="p-0 m-0 pb-2">
-                        Lorem Ipsum is simply dummy text of the{" "}
-                      </p>
-                    </div>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      {' '}
+                      printing and typesetting industry.
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
                   </div>
                 </div>
-                <div className="d-flex align-items-center justify-content-around">
-                  <div></div>
+              </div>
+              <div className="row">
+                <div className="d-none d-sm-block col-sm-3"></div>
+                <div className="col-sm-9">
                   <Link to="/create-plan">
                     <button>Create Plan</button>
                   </Link>
                 </div>
               </div>
-            </Collapse>
-          </div>
+            </div>
+            <div className="choose-plan shadow-sm mb-2">
+              <div className="d-flex align-items-center justify-content-around">
+                <img
+                  className=""
+                  src={ChoosePlanHolder}
+                  alt="ChoosePlanHolder"
+                />
+                <div>
+                  <h5>Product 1</h5>
+                  <div>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      {' '}
+                      printing and typesetting industry.
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{' '}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex align-items-center justify-content-around">
+                <div></div>
+                <Link to="/create-plan">
+                  <button>Create Plan</button>
+                </Link>
+              </div>
+            </div>
+          </Collapse>
         </div>
       </div>
     </RightWrapper>
-  );
-};
+  )
+}
 
 const RightWrapper = styled.div`
   @media (min-width: 900px) {
@@ -308,6 +323,9 @@ const RightWrapper = styled.div`
     z-index: -5;
   }
 
+  .para_header {
+    color: danger;
+  }
   @media (max-width: 899px) {
     width: 90% !important;
     display: flex;
@@ -376,10 +394,6 @@ const RightWrapper = styled.div`
     border-radius: 10px;
     color: #ffffff;
   }
-  .savins-drop {
-    padding-top: 40px;
-    padding-right: 4rem;
-  }
   .down-button {
     button {
       font-weight: 500;
@@ -399,8 +413,7 @@ const RightWrapper = styled.div`
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;
-    padding: 30px 10px;
-    margin-top: 30px;
+    padding: 20px 10px;
     p {
       font-style: normal;
       font-weight: 400;
@@ -412,7 +425,7 @@ const RightWrapper = styled.div`
       color: #4f4f4f;
     }
     button {
-      font-family: "Montserrat";
+      font-family: 'Montserrat';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -439,4 +452,4 @@ const RightWrapper = styled.div`
       font-size: 11px;
     }
   }
-`;
+`

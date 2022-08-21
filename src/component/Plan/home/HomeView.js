@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
-import { RightView } from "./RightView";
-import { LeftView } from "./LeftView";
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
+import { RightView } from './RightView'
+import { LeftView } from './LeftView'
 
 function HomeView() {
-
-
-    
   return (
     <div>
-      <ProfileNavBar>
+      <ProfileNavBar className="shadow-lg">
         <NavTitle>
-          <h2>Hello Ekiyee!</h2>
-          <span>Welcome back</span>
+          <span>
+            Welcome back <span className="fw-bold"> Ekiyee! </span>
+          </span>
         </NavTitle>
       </ProfileNavBar>
       <Wrapper>
@@ -25,9 +23,9 @@ function HomeView() {
         </div>
       </Wrapper>
     </div>
-  );
+  )
 }
-export default HomeView;
+export default HomeView
 
 const Wrapper = styled.div`
   display: flex;
@@ -59,7 +57,7 @@ const Wrapper = styled.div`
       width: 100% !important;
     }
   }
-`;
+`
 const NavTitle = styled.div`
   display: flex;
   flex-direction: column;
@@ -73,4 +71,4 @@ const NavTitle = styled.div`
       display: none;
     }
   }
-`;
+`
