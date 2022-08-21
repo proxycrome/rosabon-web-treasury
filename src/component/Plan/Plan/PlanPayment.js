@@ -7,6 +7,7 @@ import MOneyTransfer from '../../../asset/money-transfer.png';
 import PlanBankTopup from './PlanBankTopup';
 import PlanCardTopup from './PlanCardTopup';
 
+
 const PlanPayment = () => {
   const [card, setCard] = useState('');
   const [bank, setBank] = useState('');

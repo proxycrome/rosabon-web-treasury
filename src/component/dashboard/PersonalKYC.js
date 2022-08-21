@@ -121,12 +121,12 @@ const PersonalKYC = () => {
                     <form autoComplete="off" onSubmit={handleSubmit}>
                       <h4>Personal Details</h4>
                       <div>
-                        <div class="row">
-                          <div class="col-md-6 col-lg-4">
+                        <div className="row">
+                          <div className="col-md-6 col-lg-4">
                             <label>First Name</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 type="text"
                                 placeholder={
                                   user_details &&
@@ -135,11 +135,11 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-6 col-lg-4 ">
+                          <div className="col-md-6 col-lg-4 ">
                             <label>Middle Name</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 type="text"
                                 placeholder={
                                   user_details &&
@@ -148,12 +148,12 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-8 col-lg-4 pb-4">
+                          <div className="col-md-8 col-lg-4 pb-4">
                             <label>Last Name</label>
-                            <div class="input-group">
+                            <div className="input-group">
                               <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 placeholder={
                                   user_details &&
                                   user_details.individualUser.lastName
@@ -162,12 +162,12 @@ const PersonalKYC = () => {
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-md-6 col-lg-4 ">
+                        <div className="row">
+                          <div className="col-md-6 col-lg-4 ">
                             <label>Gender</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 placeholder="Gender"
                                 type="text"
                                 onChange={handleChange}
@@ -176,11 +176,11 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-6 col-lg-4 ">
+                          <div className="col-md-6 col-lg-4 ">
                             <label>Date of Birth</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 placeholder="Date of Birth"
                                 type="date"
                                 onChange={handleChange}
@@ -189,23 +189,23 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-6 col-lg-4 ">
+                          <div className="col-md-6 col-lg-4 ">
                             <label>Primary phone number</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 type="text"
                                 placeholder={user_details && user_details.phone}
                               />
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-md-6 col-lg-8 ">
+                        <div className="row">
+                          <div className="col-md-6 col-lg-8 ">
                             <label>Bank verification number (BVN)</label>
-                            <div class="input-group">
+                            <div className="input-group">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 placeholder="Bank verification number (BVN)"
                                 type="text"
                                 onChange={handleChange}
@@ -214,7 +214,7 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-6 col-lg-4">
+                          <div className="col-md-6 col-lg-4">
                             <button
                               type="button"
                               onClick={() => setShow(true)}
@@ -245,12 +245,12 @@ const PersonalKYC = () => {
 
                       <h4 className="pt-5">Contact Details</h4>
                       <div>
-                        <div class="row">
-                          <div class="col-md-8 ">
+                        <div className="row">
+                          <div className="col-md-8 ">
                             <label>Email</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 type="text"
                                 placeholder={user_details && user_details.email}
                               />
@@ -258,9 +258,9 @@ const PersonalKYC = () => {
                           </div>
                           <div className="col-md-4">
                             <label>Country of Residence</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 placeholder="Country of Residence"
                                 type="text"
                                 onChange={handleChange}
@@ -269,7 +269,7 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-6 ">
+                          <div className="col-md-6 ">
                             <label>How did you hear about us</label>
                             <select
                               className="form-select form-select-lg mb-4"
@@ -285,12 +285,12 @@ const PersonalKYC = () => {
                             </select>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class=" ">
+                        <div className="row">
+                          <div className=" ">
                             <label>Contact Address</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 placeholder="Contact Address"
                                 type="text"
                                 onChange={handleChange}
@@ -300,12 +300,12 @@ const PersonalKYC = () => {
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-md-4 ">
+                        <div className="row">
+                          <div className="col-md-4 ">
                             <label>State</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 placeholder="State"
                                 type="text"
                                 onChange={handleChange}
@@ -314,11 +314,11 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-4 ">
+                          <div className="col-md-4 ">
                             <label>City</label>
-                            <div class="input-group mb-4">
+                            <div className="input-group mb-4">
                               <input
-                                class="form-control"
+                                className="form-control"
                                 placeholder="City"
                                 type="text"
                                 onChange={handleChange}
@@ -327,12 +327,12 @@ const PersonalKYC = () => {
                               />
                             </div>
                           </div>
-                          <div class="col-md-4">
+                          <div className="col-md-4">
                             <label>Nationality</label>
-                            <div class="input-group">
+                            <div className="input-group">
                               <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 placeholder="Nationality"
                                 onChange={handleChange}
                                 name="country"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useNavigate, NavLink } from "react-router-dom";
+import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch, connect } from "react-redux";
 import {
   updateUserCompanyKYC,
@@ -15,10 +15,12 @@ import TransferImg from "../../../asset/transfer.png";
 import { AvailableBalance, TransferCard } from "../Accesssories";
 import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
+import Checked from "../../../asset/checked.png";
 
 const UserWallet = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -35,22 +37,23 @@ const UserWallet = () => {
       setIsWithDraw(true);
       setIsTransfer(false);
       setSidebar(true);
-      setClosefooter(true)
+      setClosefooter(true);
       setModalvalue(value);
     }
     if (value == "withdraw") {
       setIsWithDraw(false);
       setIsTransfer(true);
       setSidebar(true);
-      setClosefooter(true)
+      setClosefooter(true);
       setModalvalue(value);
     }
   };
 
   const togleSidebar = () => {
     setSidebar(false);
+    setClosefooter(false)
   };
-  console.log(closeFooter, modalValue)
+
   // console.log(show)
   // console.log(sidebar);
   // useEffect(() => {
@@ -100,7 +103,9 @@ const UserWallet = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <div className="text-center">
                   <div
-                    onClick={() => {handleClick("withdraw"); }}
+                    onClick={() => {
+                      handleClick("withdraw");
+                    }}
                     className="d-flex box-image justify-content-center align-items-center">
                     <img
                       // onClick={() => handleClick("withdraw")}
@@ -115,7 +120,10 @@ const UserWallet = () => {
                 <div>
                   <div
                     value="transter"
-                    onClick={() => {handleClick("transter"); setClosefooter(true)}}
+                    onClick={() => {
+                      handleClick("transter");
+                      setClosefooter(true);
+                    }}
                     className="d-flex box-image justify-content-center align-items-center">
                     <img
                       value="transter"
@@ -215,12 +223,48 @@ const UserWallet = () => {
                   <ModalComponent
                     show={show}
                     size={"md"}
-                    handleClose={() => setShow(false)}>
-                    <SuccessConfirm
-                      withdraw={modalValue}
-                      show={show}
-                      handleClose={() => setShow(false)}
-                    />
+                    handleClose={() => {setShow(false); setClosefooter(false)}}>
+                    <div className="">
+                      <div className="container">
+                        <div className="row">
+                          <div className="col text-center">
+                            <div>
+                              <img
+                                className="congrate_confet"
+                                src={Checked}
+                                alt="Checked"
+                              />
+                            </div>
+                            {modalValue == "transter" ? (
+                              <>
+                                <p className="pt-5">
+                                  Your Transfer was successful
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="pt-5">
+                                  Withdrawal Requested Successfully
+                                </p>
+                              </>
+                            )}
+
+                            <div className="pt-5 ">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setShow(false);
+                                  setClosefooter(false);
+                                }}
+                                style={{background: "#111e6c", color: "#f2f2f2", borderRadius: "10px", padding: "8px 80px"}}
+                                className="verify_congrates_btn">
+                                Continue
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </ModalComponent>
                 </div>
               </div>
@@ -409,6 +453,12 @@ const WrapperFooter = styled.div`
     color: #f2f2f2;
     background: #111e6c;
   }
+  .verify_congrates_btn {
+    background: #111e6c;
+    color: #f2f2f2;
+    border-radius: 10px;
+    padding: 8px 80px;
+  }
 `;
 
 const RightView = styled.div`
@@ -496,5 +546,46 @@ const Wrapper = styled.div`
     line-height: 20px;
     letter-spacing: -0.03em;
     color: #242424;
+  }
+`;
+
+const WrappCongrate = styled.div`
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: left;
+  input {
+    border: 1px solid #e0e0e0;
+    padding: 1rem 2rem;
+    border-radius: 3px;
+    margin-right: 10px;
+    outline: "none";
+    border: "none";
+  }
+
+  h4 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 150%;
+    letter-spacing: -0.15px;
+    text-transform: capitalize;
+    color: #242424;
+    padding-top: 9px;
+  }
+  p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: -0.15px;
+    color: #4f4f4f;
+    padding-top: 9px;
+    padding-bottom: 20px;
+  }
+  .verify_congrates_btn {
+    background: #111e6c;
+    color: #f2f2f2;
+    border-radius: 10px;
+    padding: 8px 80px;
   }
 `;

@@ -1,7 +1,19 @@
 import * as types from "../constant/auth";
+const initialState = {
+  login: {},
+  isLoggedIn: false,
+  isSigned: false,
+  isLoading: false,
+  isSuccess: false,
+};
 
-const authReducer = (state = { login: {}, isLoggedIn: false, isSigned: false }, action) => {
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.LOADING:
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
     case types.SET_SIGNUPBTN:
       return {
         ...state,
@@ -10,14 +22,30 @@ const authReducer = (state = { login: {}, isLoggedIn: false, isSigned: false }, 
     case types.REGISTER_COMPANY:
       return {
         ...state,
+        isLoading: false,
         register: action.payload,
         isSignedup: action.success,
       };
     case types.LOGIN_USER:
       return {
         ...state,
+        isLoading: false,
         login: action.payload,
         isLoggedIn: action.success,
+      };
+    case types.FORGOT_PASSWORD:
+      return {
+        ...state,
+        isLoading: false,
+        forgotpassword: action.payload,
+        isSuccess: action.success,
+      };
+    case types.RESET_PASSWORD:
+      return {
+        ...state,
+        isLoading: false,
+        resetpassword: action.payload,
+        isSuccess: action.success,
       };
     case types.CLEAR_USERS:
       return {
@@ -34,6 +62,14 @@ const authReducer = (state = { login: {}, isLoggedIn: false, isSigned: false }, 
       return {
         ...state,
         user: action.payload,
+      };
+    case types.AUTHORIZE_FAIL:
+      return {
+        ...state,
+        login: {},
+        isLoggedIn: false,
+        isSigned: false,
+        isLoading: false,
       };
     default:
       return state;

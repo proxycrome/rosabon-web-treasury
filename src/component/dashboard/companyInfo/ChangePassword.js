@@ -62,8 +62,7 @@ const ChangePassword = () => {
                   {showEdit ? (
                     <button
                       className={showEdit ? " btn_bg_blue" : ""}
-                      onClick={toggleEdit}
-                    >
+                      onClick={toggleEdit}>
                       Edit
                     </button>
                   ) : (
@@ -75,53 +74,53 @@ const ChangePassword = () => {
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="py-5 col-md-6 ">
+          <div className="row">
+            <div className="py-5 col-md-6 ">
               <label>Current Password</label>
-              <div class="input-group mb-4">
+              <div className="input-group mb-4">
                 <input
-                  class="position-relative form-control"
+                  className="position-relative form-control"
                   placeholder="First Name"
                   aria-label="First Name..."
                   type="password"
                   disabled={showEdit}
                 />
                 <span className=" input-font-awe">
-                  <i class="far fa-eye-slash"></i>
+                  <i className="far fa-eye-slash"></i>
                 </span>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6 ">
+          <div className="row">
+            <div className="col-md-6 ">
               <label>New Password</label>
-              <div class="input-group mb-4">
+              <div className="input-group mb-4">
                 <input
-                  class="position-relative form-control"
+                  className="position-relative form-control"
                   placeholder="First Name"
                   aria-label="First Name..."
                   type="password"
                   disabled={showEdit}
                 />
                 <span className=" input-font-awe">
-                  <i class="far fa-eye-slash"></i>
+                  <i className="far fa-eye-slash"></i>
                 </span>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6 ">
+          <div className="row">
+            <div className="col-md-6 ">
               <label>Confirm Password</label>
-              <div class="input-group mb-4">
+              <div className="input-group mb-4">
                 <input
-                  class="position-relative form-control"
+                  className="position-relative form-control"
                   placeholder="First Name"
                   aria-label="First Name..."
                   type="password"
                   disabled={showEdit}
                 />
                 <span className=" input-font-awe">
-                  <i class="far fa-eye-slash"></i>
+                  <i className="far fa-eye-slash"></i>
                 </span>
               </div>
             </div>

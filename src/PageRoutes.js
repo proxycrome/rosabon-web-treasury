@@ -27,12 +27,16 @@ import PlanForm from "./component/Plan/createPlan/PlanForm";
 import Login from "./component/Auth/Login";
 import UserWallet from "./component/Plan/wallet/UserWallet";
 import Feedback from "./component/Plan/feedback/Feedback";
+import AdminMessage from "./component/Plan/feedback/AdminMessage";
 import {
   HistoryTable,
   ReferalTable,
   ReferralBonus,
   TransferDeposit,
-  SpecialEarnings
+  SpecialEarnings,
+  FeedbackTickets,
+  FeedbackOpenTickets,
+  FeedbackCloseTickets
 } from "./component/Plan/Accesssories";
 
 function PageRoutes() {
@@ -58,6 +62,10 @@ function PageRoutes() {
         <Route path="deposit-table" element={<TransferDeposit />} />
         <Route path="special-earnings" element={<SpecialEarnings />} />
         <Route path="feedback" element={<Feedback />} />
+        <Route path="feedback-tickets" element={<FeedbackTickets />} />
+        <Route path="open-tickets" element={<FeedbackOpenTickets />} />
+        <Route path="close-tickets" element={<FeedbackCloseTickets />} />
+        <Route path="admin-message" element={<AdminMessage />} />
       </Route>
       <Route path="/kyc" element={<KYC />}>
         <Route path="company" element={<CompanyKYC />} />

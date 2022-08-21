@@ -13,31 +13,35 @@ import Switch from "react-switch";
 export const Plans = () => {
   return (
     <Wrapper>
-      <div class="row">
-        <div class="col-md-6 col-sm-12">
+      <div className="row">
+        <div className="col-md-6 col-sm-12">
           <label>Choose Investment Category</label>
-          <div class="input-group mb-4">
-            <input class="form-control" placeholder="First Name" type="text" />
+          <div className="input-group mb-4">
+            <input
+              className="form-control"
+              placeholder="First Name"
+              type="text"
+            />
           </div>
         </div>
         <div className="col-md-6 col-sm-12">
           <div className="row">
-            <div class="col-md-6 col-sm-12">
+            <div className="col-md-6 col-sm-12">
               <label>Middle Name</label>
-              <div class="input-group mb-4">
+              <div className="input-group mb-4">
                 <input
-                  class="form-control"
+                  className="form-control"
                   placeholder="Middle Name"
                   type="text"
                 />
               </div>
             </div>
-            <div class="col-md-6 col-sm-12">
+            <div className="col-md-6 col-sm-12">
               <label>Last Name</label>
-              <div class="input-group mb-5">
+              <div className="input-group mb-5">
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Last Name"
                 />
               </div>
@@ -52,8 +56,8 @@ export const Plans = () => {
             <img src={plus} alt="plus" className="mx-2"/>
             <span style={{color: '#111E6C', marginRight: '30px'}}> Add More</span>
           </div>
-        </div>  
-      </div>  
+        </div>
+      </div>
       <div className="plan-content">
         <div className="plan">
           <div className="plan-top h-50 p-4">
@@ -70,7 +74,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -107,7 +111,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -144,7 +148,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -180,7 +184,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -216,7 +220,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -252,7 +256,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>

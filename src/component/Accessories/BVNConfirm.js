@@ -147,7 +147,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                     <>
                       <p className="py-5">Withdrawal Requested Successfully</p>
                       <div className=" ">
-                        <NavLink to="/user-wallet">
+                        <NavLink state={{ myState: false }} to="/user-wallet">
                           <button
                             onClick={handleClose}
                             type="button"
@@ -161,7 +161,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                     <>
                       <p className="py-5">Your Transfer was successful</p>
                       <div className=" ">
-                        <NavLink to="/user-wallet">
+                        <NavLink state={{ myState: false }} to="/user-wallet">
                           <button
                             onClick={handleClose}
                             type="button"
@@ -264,9 +264,9 @@ export function OTPVerify({ handleClose }) {
                 <div className="col text-left">
                   <h4>OTP Verification</h4>
                   <p className="">Enter OTP sent to this Phone Number</p>
-                  <div class="otp_verify">
-                    <div class=" ">
-                      <div class="">
+                  <div className="otp_verify">
+                    <div className=" ">
+                      <div className="">
                         <OtpInput
                           value={otp}
                           onChange={(e) => setOtp(e)}

@@ -5,12 +5,26 @@ import { useDispatch, useSelector } from "react-redux";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 import { Link, useNavigate } from "react-router-dom";
 import { forgotPassword } from "../../redux/actions/auth/SignupAction";
+import {
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  FormFeedback,
+  InputGroup,
+  InputGroupText,
+} from "reactstrap";
 
 function ForgotPassword() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const success = useSelector((state) => state.auth.success);
-  const [error, setError] = useState(null);
+  const auth = useSelector((state) => state.auth);
+  const { isSuccess, forgotpassword, login, isLoggedIn, isLoading } = auth;
+
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
+
+  const [emailError, setError] = useState(false);
 
   const data = {
     email: "",
@@ -22,6 +36,7 @@ function ForgotPassword() {
   }
 
   const handleChange = (e) => {
+    setError(false);
     const { name, value } = e.target;
     setformData({
       ...formData,
@@ -37,23 +52,47 @@ function ForgotPassword() {
     }
   };
 
+  console.log(isSuccess);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(false);
     const { email } = formData;
-    // console.log(email)
+    if (!isValidEmail(email)) {
+      return setError(true);
+    }
     dispatch(forgotPassword(email));
   };
 
-  // useEffect(() => {
-  //   if (success) {
-  //     navigate("/reset-password");
-  //   }
-  // }, [success]);
+  useEffect(() => {
+    if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (isLoggedIn || users) {
+      if (
+        (login && login.role && login.role.name === "COMPANY") ||
+        (users && users.role === "COMPANY")
+      ) {
+        navigate("/kyc/company");
+      } else if (
+        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
+        (users && users.role === "INDIVIDUAL_USER")
+      ) {
+        navigate("/kyc/person");
+      }
+    }
+  }, [isLoggedIn, users]);
+
 
   return (
     <WrapperContainer>
       <div className="view_content"></div>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          className: "bg-danger text-white",
+        }}
+      />
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">
           <WrappCongrate>
@@ -68,30 +107,43 @@ function ForgotPassword() {
                     Please, enter your email address. You will receive a link{" "}
                     <br /> to create a new password via email.
                   </p>
+                  {isSuccess ? (
+                    <>
+                      <div className="success-msg text-center">
+                        Your account is pending verification. please check your
+                        email for the verification link
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                   <div>
                     <form autoComplete="off" onSubmit={handleSubmit}>
-                      <div className="mb-4 text-left ">
-                        <label className="pb-2">Email Address</label>
-                        <div className="input-group">
-                          <input
-                            type="email"
-                            className="form-control"
-                            placeholder="Email Address"
-                            onChange={handleChange}
-                            name="email"
-                            value={formData.email}
-                          />
-                        </div>
-                        {error && (
-                          <h3>
-                            Your account is pending verification. please check
-                            your email for the verification link
-                          </h3>
-                        )}
-                      </div>
+                      <FormGroup className="w-100">
+                        <Label
+                          htmlFor="email"
+                          className="card-title fw-bold fs-5 mb-2">
+                          Email Address
+                        </Label>
+                        <Input
+                          type="email"
+                          name="email"
+                          className="w-100"
+                          bsSize="lg"
+                          onChange={handleChange}
+                          invalid={emailError}
+                        />
+                        <FormFeedback>Valid Email is Required</FormFeedback>
+                      </FormGroup>
+
                       <div className="text-center">
                         <div>
-                          <button className="verify_congrates_btn">Send</button>
+                          <button
+                            type="submit"
+                            className="btn btn-primary px-5 mb-2"
+                            disabled={isLoading || isSuccess}>
+                            {isLoading ? "LOADING..." : "Send"}
+                          </button>
                           <p className="text-center">
                             Do you remember your password?
                             <span className="">
@@ -204,10 +256,14 @@ const WrappCongrate = styled.div`
     padding-top: 9px;
     padding-bottom: 20px;
   }
-  .verify_congrates_btn {
-    background: #111e6c;
-    color: #f2f2f2;
-    border-radius: 10px;
-    padding: 8px 80px;
+
+  .success-msg {
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 3px 3px 3px 3px;
+  }
+  .success-msg {
+    color: #270;
+    background-color: #dff2bf;
   }
 `;

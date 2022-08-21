@@ -1,28 +1,31 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { NavLink, Link } from "react-router-dom";
-import Discovery from "../../asset/Discovery.png";
-import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { NavLink, Link } from 'react-router-dom'
+import Discovery from '../../asset/Discovery.png'
+import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png'
 
 export const ProfileSideBarList = ({ profile, handleChange }) => {
-  const styleContent = profile == "profile" ? "profile" : "";
 
-  //setCreateActive="set-create-active"
+  const styleContent = profile === "profile" ? "profile" : "";
+  const [is_active, setIsActive] = useState(null);
+  const [isTicket, setTicket] = useState(false);
+  const [isOpenTicket, setIsOpenTicket] = useState(false);
+  const [isCloseTicket, setIsCloseTicket] = useState(false);
 
   return (
-    <WrappSideBarList>
-      <div className={styleContent}>
+    <WrappSideBarList classname="shadow">
+      <div className="`${styleContent}`">
         <div>
           <div className="text-center">
             <div>
-              <div className="pt-5">
+              <div className="pt-4">
                 <div className="style-log">
                   <img
-                    style={{ width: "70px", height: "30px" }}
+                    style={{ width: '70px', height: '30px' }}
                     src={RFSLogoFullColour}
                     alt="RFSLogo"
                   />
-                  {/* <i class="style-hamburga fa-solid fa-bars"></i> */}
+                  {/* <i className="style-hamburga fa-solid fa-bars"></i> */}
                 </div>
               </div>
             </div>
@@ -63,17 +66,51 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     <span>Wallet</span>
                   </li>
                 </NavLink>
-                <NavLink className="nav_link" to="/feedback">
+                <NavLink
+                  className={
+                    isTicket || isOpenTicket || isCloseTicket
+                      ? "nav_link active"
+                      : "nav_link"
+                  }
+                  to="/feedback">
                   <li>
                     <i className="fas fa-thumbs-up"></i>
                     <span>Feedback</span>
                   </li>
                 </NavLink>
                 <ul>
-                  
-                  <li>My Tickets</li>
-                  <li>My Open Tickets</li>
-                  <li>My Closed Tickets</li>
+                  <NavLink
+                    style={{ textDecoration: "none" }}
+                    className={({ isActive }) => {
+                      isActive ? setTicket(true) : setTicket(false);
+                    }}
+                    to="feedback-tickets">
+                    <li className={isTicket ? "active-bg" : ""}>
+                      <span>My Tickets</span>
+                    </li>
+                  </NavLink>
+                  <NavLink
+                    style={{ textDecoration: "none" }}
+                    className={({ isActive }) => {
+                      isActive ? setIsOpenTicket(true) : setIsOpenTicket(false);
+                    }}
+                    to="open-tickets">
+                    <li className={isOpenTicket ? " active-bg" : ""}>
+                      <span>My Open Tickets</span>
+                    </li>
+                  </NavLink>
+                  <NavLink
+                    style={{ textDecoration: "none" }}
+                    className={({ isActive }) => {
+                      isActive
+                        ? setIsCloseTicket(true)
+                        : setIsCloseTicket(false);
+                    }}
+                    to="close-tickets">
+                    <li className={isCloseTicket ? " active-bg" : ""}>
+                      <span>My Closed Tickets</span>
+                    </li>
+                  </NavLink>
                 </ul>
                 {/*  <li>
                   <i className="fas fa-exclamation-circle"></i>
@@ -89,8 +126,8 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
         </div>
       </div>
     </WrappSideBarList>
-  );
-};
+  )
+}
 
 const WrappSideBarList = styled.div`
   position: fixed;
@@ -113,6 +150,9 @@ const WrappSideBarList = styled.div`
       color: #ffffff !important;
     }
   }
+  .active-bg {
+    color: #111e6c;
+  }
   li {
     i {
       padding-right: 15px;
@@ -125,7 +165,6 @@ const WrappSideBarList = styled.div`
     list-style-type: none;
     margin: 0;
     padding: 0;
-    /* padding-top: 6rem; */
     padding-left: 1.5rem;
   }
   li {
@@ -140,7 +179,7 @@ const WrappSideBarList = styled.div`
     padding: 8px 5px 8px 20px;
     text-decoration: none;
   }
-`;
+`
 
 export const ProfileSideBar = () => {
   return (
@@ -149,30 +188,30 @@ export const ProfileSideBar = () => {
         <div className="text-center">
           <div className="pt-5">
             <img
-              style={{ width: "70px", height: "30px" }}
+              style={{ width: '70px', height: '30px' }}
               src={RFSLogoFullColour}
               alt="RFSLogo"
             />
           </div>
-          <div style={{ paddingTop: "100px" }}>
+          <div style={{ paddingTop: '100px' }}>
             <img
-              style={{ width: "191px", height: "255px" }}
+              style={{ width: '191px', height: '255px' }}
               src={Discovery}
               alt="Discovery"
             />
           </div>
-          <div style={{ paddingTop: "10px" }}>
+          <div style={{ paddingTop: '10px' }}>
             <h3>Almost There!</h3>
             <p>
-              We only need a few info to <br /> review before unlocking your{" "}
-              <br /> full access{" "}
+              We only need a few info to <br /> review before unlocking your{' '}
+              <br /> full access{' '}
             </p>
           </div>
         </div>
       </ProfileSideBarWrapper>
     </div>
-  );
-};
+  )
+}
 
 const ProfileSideBarWrapper = styled.div`
   background: #111e6c;
@@ -197,4 +236,4 @@ const ProfileSideBarWrapper = styled.div`
     letter-spacing: -0.15px;
     color: #bdbdbd;
   }
-`;
+`

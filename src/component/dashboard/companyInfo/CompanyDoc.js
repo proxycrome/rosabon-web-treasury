@@ -61,8 +61,7 @@ const CompanyDoc = () => {
               {showEdit ? (
                 <button
                   className={showEdit ? " btn_bg_blue" : ""}
-                  onClick={toggleEdit}
-                >
+                  onClick={toggleEdit}>
                   Edit
                 </button>
               ) : (
@@ -85,29 +84,29 @@ const CompanyDoc = () => {
                     <h5 className="position-relative">
                       Certificate of Incoporation{" "}
                       <span className="">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark"></i>
                       </span>
                     </h5>
-                    <div class="progress" style={{ height: "3px" }}>
+                    <div className="progress" style={{ height: "3px" }}>
                       <div
-                        class="progress-bar"
+                        className="progress-bar"
                         role="progressbar"
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
+                        aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
+                    <i
+                      className="fa-solid fa-paperclip"
+                      disabled={showEdit}></i>
                   </button>
                   <button
                     className="normal-btn grey-button"
-                    disabled={showEdit}
-                  >
+                    disabled={showEdit}>
                     Choose file
                   </button>
                 </div>
@@ -126,29 +125,29 @@ const CompanyDoc = () => {
                     <h5 className="position-relative">
                       Certificate of Incoporation{" "}
                       <span className="">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark"></i>
                       </span>
                     </h5>
-                    <div class="progress" style={{ height: "3px" }}>
+                    <div className="progress" style={{ height: "3px" }}>
                       <div
-                        class="progress-bar"
+                        className="progress-bar"
                         role="progressbar"
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
+                        aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
+                    <i
+                      className="fa-solid fa-paperclip"
+                      disabled={showEdit}></i>
                   </button>
                   <button
                     className="normal-btn grey-button"
-                    disabled={showEdit}
-                  >
+                    disabled={showEdit}>
                     Choose file
                   </button>
                 </div>
@@ -166,29 +165,29 @@ const CompanyDoc = () => {
                     <h5 className="position-relative">
                       Certificate of Incoporation{" "}
                       <span className="">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark"></i>
                       </span>
                     </h5>
-                    <div class="progress" style={{ height: "3px" }}>
+                    <div className="progress" style={{ height: "3px" }}>
                       <div
-                        class="progress-bar"
+                        className="progress-bar"
                         role="progressbar"
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
+                        aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
+                    <i
+                      className="fa-solid fa-paperclip"
+                      disabled={showEdit}></i>
                   </button>
                   <button
                     className="normal-btn grey-button"
-                    disabled={showEdit}
-                  >
+                    disabled={showEdit}>
                     Choose file
                   </button>
                 </div>
@@ -207,29 +206,29 @@ const CompanyDoc = () => {
                     <h5 className="position-relative">
                       Certificate of Incoporation{" "}
                       <span className="">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark"></i>
                       </span>
                     </h5>
-                    <div class="progress" style={{ height: "3px" }}>
+                    <div className="progress" style={{ height: "3px" }}>
                       <div
-                        class="progress-bar"
+                        className="progress-bar"
                         role="progressbar"
                         style={{ width: "75%" }}
                         aria-valuenow="25"
                         aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
+                        aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
+                    <i
+                      className="fa-solid fa-paperclip"
+                      disabled={showEdit}></i>
                   </button>
                   <button
                     className="normal-btn grey-button"
-                    disabled={showEdit}
-                  >
+                    disabled={showEdit}>
                     Choose file
                   </button>
                 </div>
@@ -251,12 +250,13 @@ const CompanyDoc = () => {
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
+                    <i
+                      className="fa-solid fa-paperclip"
+                      disabled={showEdit}></i>
                   </button>
                   <button
                     className="normal-btn grey-button"
-                    disabled={showEdit}
-                  >
+                    disabled={showEdit}>
                     Choose file
                   </button>
                 </div>
@@ -277,12 +277,13 @@ const CompanyDoc = () => {
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
+                    <i
+                      className="fa-solid fa-paperclip"
+                      disabled={showEdit}></i>
                   </button>
                   <button
                     className="normal-btn grey-button"
-                    disabled={showEdit}
-                  >
+                    disabled={showEdit}>
                     Choose file
                   </button>
                 </div>
@@ -303,12 +304,13 @@ const CompanyDoc = () => {
                 </div>
                 <div className="w-30 style-attachment">
                   <button className="font-awe-btn grey-button">
-                    <i class="fa-solid fa-paperclip" disabled={showEdit}></i>
+                    <i
+                      className="fa-solid fa-paperclip"
+                      disabled={showEdit}></i>
                   </button>
                   <button
                     className="normal-btn grey-button"
-                    disabled={showEdit}
-                  >
+                    disabled={showEdit}>
                     Choose file
                   </button>
                 </div>

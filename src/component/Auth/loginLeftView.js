@@ -49,10 +49,10 @@ export const SignupLeftView = () => {
             <div>
               <div className="continue_login_btn">
                 <NavLink to="/register-user">
-                  <button class="">Register as an Invididual</button>
+                  <button className="">Register as an Invididual</button>
                 </NavLink>
                 <NavLink to="/register-company">
-                  <button class="">Register as a Coporate</button>
+                  <button className="">Register as a Coporate</button>
                 </NavLink>
               </div>
             </div>
@@ -66,7 +66,6 @@ export const SignupLeftView = () => {
 const Wrapper = styled.div`
   background: #111e6c;
   height: 100vh;
-
   @media (max-width: 900px) {
     display: none;
   }

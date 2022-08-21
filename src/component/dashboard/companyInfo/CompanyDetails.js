@@ -9,23 +9,23 @@ const CompanyDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-   const [showEditDetail, setShowEditDetail] = useState(true);
-   const [showEditCont, setShowEditCont] = useState(true);
-   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
-   const [showEditNOK, setShowEditNOK] = useState(true);
+  const [showEditDetail, setShowEditDetail] = useState(true);
+  const [showEditCont, setShowEditCont] = useState(true);
+  const [showEditEmpoy, setShowEditEmpoy] = useState(true);
+  const [showEditNOK, setShowEditNOK] = useState(true);
 
-   const toggleDetail = () => {
-     setShowEditDetail(!showEditDetail);
-   };
-   const toggleCont = () => {
-     setShowEditCont(!showEditCont);
-   };
-   const toggleEmploy = () => {
-     setShowEditEmpoy(!showEditEmpoy);
-   };
-   const toggleNOK = () => {
-     setShowEditNOK(!showEditNOK);
-   };
+  const toggleDetail = () => {
+    setShowEditDetail(!showEditDetail);
+  };
+  const toggleCont = () => {
+    setShowEditCont(!showEditCont);
+  };
+  const toggleEmploy = () => {
+    setShowEditEmpoy(!showEditEmpoy);
+  };
+  const toggleNOK = () => {
+    setShowEditNOK(!showEditNOK);
+  };
 
   const data = {
     acc_name: "",
@@ -76,8 +76,7 @@ const CompanyDetails = () => {
                     {showEditDetail ? (
                       <button
                         className={showEditDetail ? " btn_bg_blue" : ""}
-                        onClick={toggleDetail}
-                      >
+                        onClick={toggleDetail}>
                         Edit
                       </button>
                     ) : (
@@ -89,50 +88,50 @@ const CompanyDetails = () => {
                 </div>
               </div>
               <div className="">
-                <div class="row">
-                  <div class="col-md-6">
+                <div className="row">
+                  <div className="col-md-6">
                     <label>Company Name</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditDetail}
                       />
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <div className="col-md-6">
                     <label>Company RC Number</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditDetail}
                       />
                     </div>
                   </div>
-                  <div class="col-md-8 mb-4">
+                  <div className="col-md-8 mb-4">
                     <label>Company Registration Date</label>
-                    <div class="input-group">
+                    <div className="input-group">
                       <input
                         type="date"
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         disabled={showEditDetail}
                       />
                       {/* <span className=" input-font-awe">
-                        <i class="fa-solid fa-calendar"></i>
+                        <i className="fa-solid fa-calendar"></i>
                       </span> */}
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col ">
+                <div className="row">
+                  <div className="col ">
                     <label>Company Address</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditDetail}
@@ -140,43 +139,43 @@ const CompanyDetails = () => {
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-6 col-lg-4 ">
+                <div className="row">
+                  <div className="col-md-6 col-lg-4 ">
                     <label>Customer ID Number</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditDetail}
                       />
                       <span className=" input-font-awe">
-                        <i class="fa-solid fa-angle-down"></i>
+                        <i className="fa-solid fa-angle-down"></i>
                       </span>
                     </div>
                   </div>
-                  <div class="col-md-6 col-lg-4 ">
+                  <div className="col-md-6 col-lg-4 ">
                     <label>Nature of Business</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditDetail}
                       />
                     </div>
                   </div>
-                  <div class="col-md-8 col-lg-4 mb-4">
+                  <div className="col-md-8 col-lg-4 mb-4">
                     <label>Company Type</label>
-                    <div class="input-group">
+                    <div className="input-group">
                       <input
                         type="text"
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         disabled={showEditDetail}
                       />
                       <span className=" input-font-awe">
-                        <i class="fa-solid fa-angle-down"></i>
+                        <i className="fa-solid fa-angle-down"></i>
                       </span>
                     </div>
                   </div>
@@ -190,8 +189,7 @@ const CompanyDetails = () => {
                       {showEditCont ? (
                         <button
                           className={showEditCont ? " btn_bg_blue" : ""}
-                          onClick={toggleCont}
-                        >
+                          onClick={toggleCont}>
                           Edit
                         </button>
                       ) : (
@@ -202,47 +200,47 @@ const CompanyDetails = () => {
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-6">
+                <div className="row">
+                  <div className="col-md-6">
                     <label>Contact Person First Name</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditCont}
                       />
                     </div>
                   </div>
-                  <div class="col-md-6 mb-4">
+                  <div className="col-md-6 mb-4">
                     <label>Contact Person Last Name</label>
-                    <div class="input-group">
+                    <div className="input-group">
                       <input
                         type="text"
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         disabled={showEditCont}
                       />
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-8 ">
+                <div className="row">
+                  <div className="col-md-8 ">
                     <label>Email Address</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditCont}
                       />
                     </div>
                   </div>
-                  <div class="col-md-4 ">
+                  <div className="col-md-4 ">
                     <label>Phone Number</label>
-                    <div class="input-group mb-4">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder=""
                         type="text"
                         disabled={showEditCont}

@@ -6,7 +6,7 @@
 // import styled from "styled-components";
 
 // export const ProfileDetail = ({ setTabs }) => {
-  
+
 //   return (
 //     <WrappProfile>
 //       <div className="content">
@@ -37,7 +37,7 @@
 //   .content {
 //     display: grid;
 //     grid-template-columns: 0.2fr 1fr;
-    
+
 //   }
 // `;
 
@@ -88,67 +88,67 @@
 //                 <div className="row">
 //                   <div className="col-md-4 ">
 //                     <label>Gender</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="Gender"
 //                         aria-label="First Name..."
 //                         type="text"
 //                       />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-4 ">
+//                   <div className="col-md-4 ">
 //                     <label>Date of Birth</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="Date of Birth"
 //                         aria-label="First Name..."
 //                         type="text"
 //                       />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-4 ps-2">
+//                   <div className="col-md-4 ps-2">
 //                     <label>Primary phone number</label>
-//                     <div class="input-group">
+//                     <div className="input-group">
 //                       <input
 //                         type="text"
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="Primary phone number"
 //                         aria-label="Last Name..."
 //                       />
 //                     </div>
 //                   </div>
 //                 </div>
-//                 <div class="row">
-//                   <div class="col-md-8 ">
+//                 <div className="row">
+//                   <div className="col-md-8 ">
 //                     <label>Contact Person Email Address</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="Contact Person  Email Address"
 //                         aria-label="First Name..."
 //                         type="text"
 //                       />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-4 ps-2">
+//                   <div className="col-md-4 ps-2">
 //                     <label>BVN</label>
-//                     <div class="input-group">
+//                     <div className="input-group">
 //                       <input
 //                         type="text"
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder=""
 //                         aria-label="Last Name..."
 //                       />
 //                     </div>
 //                   </div>
 //                 </div>
-//                 <div class="row">
-//                   <div class="col-md-3 ">
+//                 <div className="row">
+//                   <div className="col-md-3 ">
 //                     <label>Customer ID Number</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
 //                 </div>
@@ -156,18 +156,18 @@
 
 //               <h4 className="pt-5">Contact Details</h4>
 //               <div>
-//                 <div class="row">
-//                   <div class="col-md-8 ">
+//                 <div className="row">
+//                   <div className="col-md-8 ">
 //                     <label>Secondary Phone Number</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-4 ">
+//                   <div className="col-md-4 ">
 //                     <label>Country of Residence</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="Middle Name"
 //                         aria-label="First Name..."
 //                         type="text"
@@ -175,47 +175,47 @@
 //                     </div>
 //                   </div>
 //                 </div>
-//                 <div class="row">
-//                   <div class="col-md-4 ">
+//                 <div className="row">
+//                   <div className="col-md-4 ">
 //                     <label>State</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="State"
 //                         aria-label="State..."
 //                         type="text"
 //                       />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-4 ">
+//                   <div className="col-md-4 ">
 //                     <label>City</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="City"
 //                         aria-label="First Name..."
 //                         type="text"
 //                       />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-4">
+//                   <div className="col-md-4">
 //                     <label>City</label>
-//                     <div class="input-group">
+//                     <div className="input-group">
 //                       <input
 //                         type="text"
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder="City"
 //                         aria-label="City..."
 //                       />
 //                     </div>
 //                   </div>
 //                 </div>
-//                 <div class="row">
-//                   <div class=" ">
+//                 <div className="row">
+//                   <div className=" ">
 //                     <label>Address</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder=""
 //                         aria-label="First Name..."
 //                         type="text"
@@ -227,26 +227,26 @@
 
 //               <h4 className="pt-5">Employment Details</h4>
 //               <div>
-//                 <div class="row">
-//                   <div class="col-md-4 ">
+//                 <div className="row">
+//                   <div className="col-md-4 ">
 //                     <label>Occupation</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-4 ">
+//                   <div className="col-md-4 ">
 //                     <label>Employer’s name</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
 //                 </div>
-//                 <div class="row">
-//                   <div class=" ">
+//                 <div className="row">
+//                   <div className=" ">
 //                     <label>Employers Address</label>
-//                     <div class="input-group mb-4">
+//                     <div className="input-group mb-4">
 //                       <input
-//                         class="form-control"
+//                         className="form-control"
 //                         placeholder=""
 //                         aria-label="First Name..."
 //                         type="text"
@@ -258,33 +258,33 @@
 
 //               <h4 className="pt-5">Next Of kin details</h4>
 //               <div>
-//                 <div class="row">
-//                   <div class="col-md-4 ">
+//                 <div className="row">
+//                   <div className="col-md-4 ">
 //                     <label>Next of Kin Name</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
-//                   <div class="col-md-8 ">
+//                   <div className="col-md-8 ">
 //                     <label>Next of Kin Email</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
 //                 </div>
-//                 <div class="row">
-//                   <div class=" ">
+//                 <div className="row">
+//                   <div className=" ">
 //                     <label>Next of Kin Address</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
 //                 </div>
-//                 <div class="row">
-//                   <div class="col-md-8 ">
+//                 <div className="row">
+//                   <div className="col-md-8 ">
 //                     <label>next of kin phone number</label>
-//                     <div class="input-group mb-4">
-//                       <input class="form-control" placeholder="" type="text" />
+//                     <div className="input-group mb-4">
+//                       <input className="form-control" placeholder="" type="text" />
 //                     </div>
 //                   </div>
 //                 </div>

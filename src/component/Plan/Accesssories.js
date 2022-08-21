@@ -7,6 +7,8 @@ import MOneyTransfer from "../../asset/money-transfer.png";
 import FileDoc from "../../asset/file.png";
 import { ProfileNavBar } from "../dashboard/ProfileNavbar";
 import { Link } from "react-router-dom";
+import ModalComponent from "../ModalComponent";
+import { Table } from "reactstrap";
 
 export const NairaCard = () => {
   return (
@@ -48,7 +50,7 @@ export const NairaCard = () => {
           <div>
             <div className="d-flex align-items-center justify-content-between savins-drop">
               <h5>Fix Savings </h5>
-              <i class="fa-solid fa-chevron-down"></i>
+              <i className="fa-solid fa-chevron-down"></i>
             </div>
             <p className="para-header">Choose from a fixed savings plan</p>
           </div>
@@ -101,14 +103,14 @@ export const NairaCard = () => {
           <div>
             <div className="d-flex align-items-center justify-content-between savins-drop">
               <h5>Target Savings</h5>
-              <i class="fa-solid fa-chevron-down"></i>
+              <i className="fa-solid fa-chevron-down"></i>
             </div>
             <p className="para-header">Choose from a fixed savings plan</p>
           </div>
           <div>
             <div className="d-flex align-items-center justify-content-between savins-drop">
               <h5>Target Income</h5>
-              <i class="fa-solid fa-chevron-down"></i>
+              <i className="fa-solid fa-chevron-down"></i>
             </div>
             <p className="para-header">Choose from a fixed savings plan</p>
           </div>
@@ -301,7 +303,7 @@ export const MakePayment = ({ setPaymentType }) => {
       </div>
       <div className="py-5 check-box-bank">
         <input type="checkbox" id="scales" name="scales" />
-        <label for="scales">I agree to the Terms and Condition</label>
+        <label htmlFor="scales">I agree to the Terms and Condition</label>
       </div>
     </PaymentTypeWrapper>
   );
@@ -374,43 +376,55 @@ export const InterestCalculator = () => {
         <div className="interest">
           <div className="d-flex align-items-center justify-content-between">
             <h5>Interest Calculator</h5>
-            <i class="fa-solid fa-chevron-down"></i>
+            <i className="fa-solid fa-chevron-down"></i>
           </div>
-          <div class="row">
-            <div class="pt-3">
+          <div className="row">
+            <div className="pt-3">
               <label>Select Product</label>
-              <div class="input-group mb-4">
+              <div className="input-group mb-4">
                 <input
-                  class="form-control"
+                  className="form-control"
                   placeholder="Select Product"
                   type="text"
                 />
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class=" ">
+          <div className="row">
+            <div className=" ">
               <label>Enter Amount</label>
-              <div class="input-group mb-4">
-                <input class="form-control" placeholder="N  0.00" type="text" />
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="N  0.00"
+                  type="text"
+                />
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class=" ">
+          <div className="row">
+            <div className=" ">
               <label>Tenor</label>
-              <div class="input-group mb-4">
-                <input class="form-control" placeholder="N  0.00" type="text" />
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="N  0.00"
+                  type="text"
+                />
               </div>
             </div>
           </div>
           <div className="text-center calc-mty py-4">
             <button>Calculate Amount at maturity</button>
           </div>
-          <div class="row pt-4">
-            <div class=" ">
-              <div class="input-group mb-4">
-                <input class="form-control" placeholder="N  0.00" type="text" />
+          <div className="row pt-4">
+            <div className=" ">
+              <div className="input-group mb-4">
+                <input
+                  className="form-control"
+                  placeholder="N  0.00"
+                  type="text"
+                />
               </div>
             </div>
           </div>
@@ -842,31 +856,31 @@ export const WithdrawalBank = () => {
     <div>
       <WithdrawalBankWrapper>
         <h4 className="">Rollover Summary</h4>
-        <div class="pt-5">
-          <div class=" ">
+        <div className="pt-5">
+          <div className=" ">
             <label>Bank Name</label>
-            <div class="input-group mb-4">
+            <div className="input-group mb-4">
               <input
-                class="form-control"
+                className="form-control"
                 placeholder="Choose a product"
                 type="text"
               />
             </div>
           </div>
         </div>
-        <div class="pt-1">
-          <div class=" ">
+        <div className="pt-1">
+          <div className=" ">
             <label>Account Number</label>
-            <div class="input-group mb-4">
-              <input class="form-control" placeholder="" type="text" />
+            <div className="input-group mb-4">
+              <input className="form-control" placeholder="" type="text" />
             </div>
           </div>
         </div>
-        <div class="pt-1">
-          <div class=" ">
+        <div className="pt-1">
+          <div className=" ">
             <label>Account Name</label>
-            <div class="input-group mb-4">
-              <input class="form-control" placeholder="" type="text" />
+            <div className="input-group mb-4">
+              <input className="form-control" placeholder="" type="text" />
             </div>
           </div>
         </div>
@@ -893,11 +907,11 @@ export const Beneficiary = () => {
         <h4 className="pt-3">
           Kindly select beneficiary account to <br /> receive the withdrawal
         </h4>
-        <div class="py-5">
-          <div class=" ">
-            <div class="input-group mb-4">
+        <div className="py-5">
+          <div className=" ">
+            <div className="input-group mb-4">
               <input
-                class="form-control"
+                className="form-control"
                 placeholder="Select withdrawal destination"
                 type="text"
               />
@@ -1005,24 +1019,24 @@ export const AvailableBalance = ({ role }) => {
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">₦ 1,500,000</h4>
       </div>
-      <div class="pt-3">
-        <div class=" ">
+      <div className="pt-3">
+        <div className=" ">
           <label>Withdrawal Amount</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <input
-              class="form-control"
+              className="form-control"
               placeholder="N  1,,500,000"
               type="text"
             />
           </div>
         </div>
       </div>
-      <div class="pt-1">
-        <div class=" ">
+      <div className="pt-1">
+        <div className=" ">
           <label>Beneficiary Account</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <input
-              class="form-control"
+              className="form-control"
               placeholder="Zenith Bank - 2210347577"
               type="text"
             />
@@ -1060,12 +1074,12 @@ export const AvailableBalance = ({ role }) => {
         <></>
       )}
 
-      <div class="pt-1">
-        <div class=" ">
+      <div className="pt-1">
+        <div className=" ">
           <label>Reason for Withdrawal</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <select
-              class="form-select form-select-lg mb-3 select-field"
+              className="form-select form-select-lg mb-3 select-field"
               aria-label=".form-select-lg"
               onClick={handleOnclick}
               name="companyType">
@@ -1078,14 +1092,14 @@ export const AvailableBalance = ({ role }) => {
       </div>
       {showTextArea ? (
         <>
-          <div class="pb-4">
-            <div class=" ">
-              <div class="input-group mb-4">
+          <div className="pb-4">
+            <div className=" ">
+              <div className="input-group mb-4">
                 <textarea
                   rows="5"
                   cols="60"
                   placeholder="Please provide reason for withdrawal"
-                  class="form-control select-field"
+                  className="form-control select-field"
                   name="description"></textarea>
               </div>
             </div>
@@ -1105,23 +1119,23 @@ export const TransferCard = () => {
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">₦ 1,500,000</h4>
       </div>
-      <div class="pt-3">
-        <div class=" ">
+      <div className="pt-3">
+        <div className=" ">
           <label>Transfer Amount</label>
-          <div class="input-group mb-4">
+          <div className="input-group mb-4">
             <input
-              class="form-control"
+              className="form-control"
               placeholder="N1,500,000"
               type="text"
             />
           </div>
         </div>
       </div>
-      <div class="pt-1 pb-5">
-        <div class=" ">
+      <div className="pt-1 pb-5">
+        <div className=" ">
           <label>Beneficiary Account</label>
           <select
-            class="form-select form-select-lg mb-3 select-field"
+            className="form-select form-select-lg mb-3 select-field"
             aria-label=".form-select-lg"
             name="companyType">
             <option value=""></option>
@@ -1193,6 +1207,8 @@ const AvailableBalanceWapper = styled.div`
 `;
 
 export const HistoryTable = () => {
+  const [show, setShow] = useState(false);
+
   return (
     <div>
       <ProfileNavBar />
@@ -1204,22 +1220,22 @@ export const HistoryTable = () => {
             </div>
             <div className="col-md-6">
               <div className="row">
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
+                <div className="col-sm-4 col-md-6">
+                  <div className=" ">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="Start date"
                         type="date"
                       />
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
+                <div className="col-sm-4 col-md-6">
+                  <div className=" ">
+                    <div className="input-group mb-4">
                       <input
-                        class="form-control"
+                        className="form-control"
                         placeholder="End date"
                         type="date"
                       />
@@ -1237,21 +1253,24 @@ export const HistoryTable = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
-            cellspacing="0"
+            className="table table-striped table-sm"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Type</th>
-                <th class="">Amount</th>
-                <th class="">Balance</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Type</th>
+                <th className="">Amount</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1259,7 +1278,10 @@ export const HistoryTable = () => {
                 <td> - ₦1,500,000</td>
                 <td>₦1,000,000</td>
               </tr>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1267,7 +1289,10 @@ export const HistoryTable = () => {
                 <td> - ₦1,500,000</td>
                 <td>₦1,000,000</td>
               </tr>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1275,7 +1300,10 @@ export const HistoryTable = () => {
                 <td> - ₦1,500,000</td>
                 <td>₦1,000,000</td>
               </tr>
-              <tr>
+              <tr
+                onClick={() => {
+                  setShow(true);
+                }}>
                 <td>N0_1947034</td>
                 <td>Apr 28, 2022</td>
                 <td>Part withdrawal</td>
@@ -1284,6 +1312,15 @@ export const HistoryTable = () => {
                 <td>₦1,000,000</td>
               </tr>
             </tbody>
+
+            <ModalComponent
+              show={show}
+              size={"md"}
+              handleClose={() => {
+                setShow(false);
+              }}>
+              <WithdrawalCard show={show} handleClose={() => setShow(false)} />
+            </ModalComponent>
           </table>
         </div>
       </HistoryTableWarapper>
@@ -1301,6 +1338,7 @@ const HistoryTableWarapper = styled.div`
     line-height: 17px;
     letter-spacing: -0.01em;
     color: #242424;
+    cursor: pointer;
   }
   th {
     font-family: "Montserrat";
@@ -1342,10 +1380,10 @@ export const ReferalTable = () => {
         <div className="d-flex justify-content-start align-items-center">
           <div className="padd-referal">
             <label>Referral Link</label>
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" />
-              <div class="input-group-text">
-                <i class="fa-solid fa-key"></i>
+            <div className="input-group mb-3">
+              <input type="text" className="form-control" />
+              <div className="input-group-text">
+                <i className="fa-solid fa-key"></i>
               </div>
             </div>
           </div>
@@ -1360,15 +1398,15 @@ export const ReferalTable = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
-            cellspacing="0"
+            className="table table-striped table-sm"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Name</th>
-                <th class="">Status</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Name</th>
+                <th className="">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -1524,15 +1562,15 @@ export const ReferralBonus = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
-            cellspacing="0"
+            className="table table-striped table-sm"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">ID</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Balance</th>
+                <th className="">ID</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -1678,17 +1716,17 @@ export const TransferDeposit = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
-            cellspacing="0"
+            className="table table-striped table-sm"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Type</th>
-                <th class="">Amount</th>
-                <th class="">Balance</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Type</th>
+                <th className="">Amount</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -1737,29 +1775,31 @@ export const WithdrawalCard = () => {
     <Wrapper>
       <div>
         <h4> - ₦ 1,500,000</h4>
-        <p> Part withdrawal</p>
+        <p className="p-0 m-0"> Part withdrawal</p>
       </div>
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
+      <hr className="p-0 m-0" />
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
+      <hr className="p-0 m-0" />
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
+      <hr className="p-0 m-0" />
       <div className="d-flex justify-content-between align-items-center">
-        <p>Transaction ID</p>
-        <p>NO_1947034</p>
+        <p className="p-0 m-0">Transaction ID</p>
+        <p className="p-0 m-0">NO_1947034</p>
       </div>
-      <hr />
-      <button>Download PDF</button>
+      <hr className="p-0 m-0" />
+      <div className="text-center">
+        <button>Download PDF</button>
+      </div>
     </Wrapper>
   );
 };
@@ -1793,15 +1833,15 @@ export const SpecialEarnings = () => {
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
-            cellspacing="0"
+            className="table table-striped table-sm"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Balance</th>
+                <th className="">S/N</th>
+                <th className="">Date</th>
+                <th className="">Description</th>
+                <th className="">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -1943,91 +1983,139 @@ export const FeedbackTickets = () => {
     <div>
       <ProfileNavBar />
       <FeedbackticketWarapper>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-6">
-              <h4 className="">Filter by Transaction Date</h4>
-            </div>
-            <div className="col-md-6">
-              <div className="row">
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
-                      <input
-                        class="form-control"
-                        placeholder="Select withdrawal destination"
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-4 col-md-6">
-                  <div class=" ">
-                    <div class="input-group mb-4">
-                      <input
-                        class="form-control"
-                        placeholder="Select withdrawal destination"
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h3>April 28 - May 13</h3>
-        <hr className="mb-5" />
+        <h3>My Tickets</h3>
 
         <div>
           <table
             id="dtBasicExample"
-            class="table table-striped table-sm"
-            cellspacing="0"
+            className="table borderless table-sm"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
-                <th class="">S/N</th>
-                <th class="">Date</th>
-                <th class="">Description</th>
-                <th class="">Type</th>
-                <th class="">Amount</th>
-                <th class="">Balance</th>
+                <th className="">Tickets #</th>
+                <th className="">Topic</th>
+                <th className="">Request Status</th>
+                <th className="">Date Logged</th>
+                <th className="">Last Updated</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#6FCF97",
+                      borderRadius: "10px",
+                    }}>
+                    Need your reply
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#111E6C",
+                      padding: "6px 30px",
+                      fontWeight: "500",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    {" "}
+                    Resolved
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#111E6C",
+                      padding: "6px 30px",
+                      fontWeight: "500",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    {" "}
+                    Resolved
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -2037,8 +2125,16 @@ export const FeedbackTickets = () => {
   );
 };
 
+// width: 109px;
+// height: 39px;
+
 const FeedbackticketWarapper = styled.div`
   padding: 30px;
+  .borderless td,
+  .borderless th {
+    border: none !important;
+  }
+
   tr {
     font-family: "Montserrat";
     font-style: normal;
@@ -2073,6 +2169,268 @@ const FeedbackticketWarapper = styled.div`
     line-height: 20px;
     letter-spacing: -0.01em;
     color: #000000;
-    padding-top: 50px;
+    padding: 20px;
+  }
+  table {
+    border-collapse: separate;
+    border-spacing: 0 20px;
   }
 `;
+
+export const FeedbackOpenTickets = () => {
+  return (
+    <div>
+      <ProfileNavBar />
+      <FeedbackticketWarapper>
+        <h3>My Open Tickets</h3>
+
+        <div>
+          <table
+            id="dtBasicExample"
+            className="table borderless table-sm"
+            cellSpacing="0"
+            width="100%">
+            <thead>
+              <tr>
+                <th className="">Tickets #</th>
+                <th className="">Topic</th>
+                <th className="">Request Status</th>
+                <th className="">Date Logged</th>
+                <th className="">Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td className="ticket-row">N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td className="ticket-row">N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#111E6C",
+                      padding: "6px 30px",
+                      fontWeight: "500",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    {" "}
+                    Resolved
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </FeedbackticketWarapper>
+    </div>
+  );
+};
+
+export const FeedbackCloseTickets = () => {
+  return (
+    <div>
+      <ProfileNavBar />
+      <FeedbackticketWarapper>
+        <h3>My Closed Tickets</h3>
+
+        <div>
+          <Table borderless>
+            <thead>
+              <tr>
+                <th className="">Tickets #</th>
+                <th className="">Topic</th>
+                <th className="">Request Status</th>
+                <th className="">Date Logged</th>
+                <th className="">Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="separator"
+                style={{ background: "#F8F8F8", padding: "30px" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#333333",
+                      borderRadius: "10px",
+                    }}>
+                    Closed
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8", padding: "30px" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#333333",
+                      borderRadius: "10px",
+                    }}>
+                    Closed
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8", padding: "30px" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#333333",
+                      borderRadius: "10px",
+                    }}>
+                    Closed
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </FeedbackticketWarapper>
+    </div>
+  );
+};

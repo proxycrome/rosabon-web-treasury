@@ -25,10 +25,13 @@ export const registerCompany = (dataObj) => async (dispatch) => {
       position: "top-right",
     });
   }
-  
 };
 
 export const registerUser = (dataObj) => async (dispatch) => {
+  dispatch({
+    type: types.LOADING,
+    payload: true,
+  });
   const { formData, message } = await register(dataObj);
   if (formData) {
     dispatch({
@@ -49,14 +52,12 @@ export const registerUser = (dataObj) => async (dispatch) => {
 };
 
 export const loginUser = (dataObj) => async (dispatch) => {
+  dispatch({
+    type: types.LOADING,
+    payload: true,
+  });
   const { formData, message } = await login_user(dataObj);
   if (formData) {
-    // if (formData.role.name === "COMPANY") {
-    //   localStorage.setItem("token", JSON.stringify(formData.token));
-    // }
-    // if (formData.role.name === "INDIVIDUAL_USER") {
-    //   localStorage.setItem("token", JSON.stringify(formData.token));
-    // }
     localStorage.setItem("token", JSON.stringify(formData.token));
     dispatch({ type: types.LOGIN_USER, payload: formData, success: true });
     toast.success("Login was successful");
@@ -72,10 +73,14 @@ export const loginUser = (dataObj) => async (dispatch) => {
 };
 
 export const resetPassword = (dataObj) => async (dispatch) => {
+  dispatch({
+    type: types.LOADING,
+    payload: true,
+  });
   const { formData, message } = await reset_password(dataObj);
   if (formData) {
-    dispatch({ type: types.RESET_PASSWORD, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+    dispatch({ type: types.RESET_PASSWORD, payload: formData, success: true });
+    // dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
   } else {
     dispatch({
       type: types.AUTHORIZE_FAIL,
@@ -88,10 +93,14 @@ export const resetPassword = (dataObj) => async (dispatch) => {
 };
 
 export const forgotPassword = (dataObj) => async (dispatch) => {
+  dispatch({
+    type: types.LOADING,
+    payload: true,
+  });
   const { formData, message } = await forgot_password(dataObj);
   if (formData) {
-    dispatch({ type: types.FORGOT_PASSWORD, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+    dispatch({ type: types.FORGOT_PASSWORD, payload: formData, success: true });
+    // dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
   } else {
     dispatch({
       type: types.AUTHORIZE_FAIL,

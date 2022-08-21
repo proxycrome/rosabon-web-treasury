@@ -13,21 +13,21 @@ function Test() {
           <h4>Sign Up</h4>
         </div>
         <div className="input-content">
-          <label for="fname">Your Name</label>
+          <label htmlFor="fname">Your Name</label>
           <input
             type="text"
             id="fname"
             name="firstname"
             placeholder="Your name.."
           />
-          <label for="fname">Your email</label>
+          <label htmlFor="fname">Your email</label>
           <input
             type="text"
             id="fname"
             name="firstname"
             placeholder="Your name.."
           />
-          <label for="fname">Password</label>
+          <label htmlFor="fname">Password</label>
           <input
             type="text"
             id="fname"
@@ -39,7 +39,6 @@ function Test() {
           <button>Sign Up</button>
         </div>
       </div>
-
     </Wrapper>
   );
 }
