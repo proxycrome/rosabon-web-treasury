@@ -8,6 +8,7 @@ import FileDoc from "../../asset/file.png";
 import { ProfileNavBar } from "../dashboard/ProfileNavbar";
 import { Link } from "react-router-dom";
 import ModalComponent from "../ModalComponent";
+import { Table } from "reactstrap";
 
 export const NairaCard = () => {
   return (
@@ -1130,7 +1131,7 @@ export const HistoryTable = () => {
           <table
             id="dtBasicExample"
             className="table table-striped table-sm"
-            cellspacing="0"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
@@ -1275,7 +1276,7 @@ export const ReferalTable = () => {
           <table
             id="dtBasicExample"
             className="table table-striped table-sm"
-            cellspacing="0"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
@@ -1439,7 +1440,7 @@ export const ReferralBonus = () => {
           <table
             id="dtBasicExample"
             className="table table-striped table-sm"
-            cellspacing="0"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
@@ -1593,7 +1594,7 @@ export const TransferDeposit = () => {
           <table
             id="dtBasicExample"
             className="table table-striped table-sm"
-            cellspacing="0"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
@@ -1710,7 +1711,7 @@ export const SpecialEarnings = () => {
           <table
             id="dtBasicExample"
             className="table table-striped table-sm"
-            cellspacing="0"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
@@ -1859,91 +1860,139 @@ export const FeedbackTickets = () => {
     <div>
       <ProfileNavBar />
       <FeedbackticketWarapper>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-6">
-              <h4 className="">Filter by Transaction Date</h4>
-            </div>
-            <div className="col-md-6">
-              <div className="row">
-                <div className="col-sm-4 col-md-6">
-                  <div className=" ">
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder="Select withdrawal destination"
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4 col-md-6">
-                  <div className=" ">
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder="Select withdrawal destination"
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h3>April 28 - May 13</h3>
-        <hr className="mb-5" />
+        <h3>My Tickets</h3>
 
         <div>
           <table
             id="dtBasicExample"
-            className="table table-striped table-sm"
-            cellspacing="0"
+            className="table borderless table-sm"
+            cellSpacing="0"
             width="100%">
             <thead>
               <tr>
-                <th className="">S/N</th>
-                <th className="">Date</th>
-                <th className="">Description</th>
-                <th className="">Type</th>
-                <th className="">Amount</th>
-                <th className="">Balance</th>
+                <th className="">Tickets #</th>
+                <th className="">Topic</th>
+                <th className="">Request Status</th>
+                <th className="">Date Logged</th>
+                <th className="">Last Updated</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#6FCF97",
+                      borderRadius: "10px",
+                    }}>
+                    Need your reply
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#111E6C",
+                      padding: "6px 30px",
+                      fontWeight: "500",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    {" "}
+                    Resolved
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#111E6C",
+                      padding: "6px 30px",
+                      fontWeight: "500",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    {" "}
+                    Resolved
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -1953,8 +2002,16 @@ export const FeedbackTickets = () => {
   );
 };
 
+// width: 109px;
+// height: 39px;
+
 const FeedbackticketWarapper = styled.div`
   padding: 30px;
+  .borderless td,
+  .borderless th {
+    border: none !important;
+  }
+
   tr {
     font-family: "Montserrat";
     font-style: normal;
@@ -1989,6 +2046,268 @@ const FeedbackticketWarapper = styled.div`
     line-height: 20px;
     letter-spacing: -0.01em;
     color: #000000;
-    padding-top: 50px;
+    padding: 20px;
+  }
+  table {
+    border-collapse: separate;
+    border-spacing: 0 20px;
   }
 `;
+
+export const FeedbackOpenTickets = () => {
+  return (
+    <div>
+      <ProfileNavBar />
+      <FeedbackticketWarapper>
+        <h3>My Open Tickets</h3>
+
+        <div>
+          <table
+            id="dtBasicExample"
+            className="table borderless table-sm"
+            cellSpacing="0"
+            width="100%">
+            <thead>
+              <tr>
+                <th className="">Tickets #</th>
+                <th className="">Topic</th>
+                <th className="">Request Status</th>
+                <th className="">Date Logged</th>
+                <th className="">Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td className="ticket-row">N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td className="ticket-row">N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#828282",
+                      padding: "6px 30px",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    Pending
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#111E6C",
+                      padding: "6px 30px",
+                      fontWeight: "500",
+                      background: "#F2F2F2",
+                      borderRadius: "10px",
+                    }}>
+                    {" "}
+                    Resolved
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </FeedbackticketWarapper>
+    </div>
+  );
+};
+
+export const FeedbackCloseTickets = () => {
+  return (
+    <div>
+      <ProfileNavBar />
+      <FeedbackticketWarapper>
+        <h3>My Closed Tickets</h3>
+
+        <div>
+          <Table borderless>
+            <thead>
+              <tr>
+                <th className="">Tickets #</th>
+                <th className="">Topic</th>
+                <th className="">Request Status</th>
+                <th className="">Date Logged</th>
+                <th className="">Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="separator"
+                style={{ background: "#F8F8F8", padding: "30px" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#333333",
+                      borderRadius: "10px",
+                    }}>
+                    Closed
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8", padding: "30px" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#333333",
+                      borderRadius: "10px",
+                    }}>
+                    Closed
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+              <tr style={{ background: "#F8F8F8", padding: "30px" }}>
+                <td>N0_1947034</td>
+                <td>The passage is attributed to an..</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "6px 30px",
+                      background: "#333333",
+                      borderRadius: "10px",
+                    }}>
+                    Closed
+                  </button>
+                </td>
+                <td>02/06/2022</td>
+                <td>02/06/2022</td>
+                <td>
+                  <button
+                    style={{
+                      color: "#FFFFFF",
+                      padding: "10px 25px",
+                      background: "#111E6C",
+                      borderRadius: "5px",
+                    }}>
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </FeedbackticketWarapper>
+    </div>
+  );
+};

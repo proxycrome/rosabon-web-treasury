@@ -5,11 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 import { Link, useNavigate } from "react-router-dom";
 import { resetPassword } from "../../redux/actions/auth/SignupAction";
-import {
-  Input,
-  InputGroup,
-  InputGroupText,
-} from "reactstrap";
+import { Input, InputGroup, InputGroupText } from "reactstrap";
 import { ValidatePasswordForm, validatePassword } from "./validateForm";
 
 function ResetPassword() {
@@ -25,10 +21,9 @@ function ResetPassword() {
   };
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
- 
-  const { handleValueChange, values, handleSubmit, errors } = ValidatePasswordForm(
-    validatePassword,
-  );
+
+  const { handleValueChange, values, handleSubmit, errors } =
+    ValidatePasswordForm(validatePassword);
 
   const togglePassword1 = () => {
     setPasswordShown1(!passwordShown1);
@@ -36,7 +31,6 @@ function ResetPassword() {
   const togglePassword2 = () => {
     setPasswordShown2(!passwordShown2);
   };
- 
 
   useEffect(() => {
     if (users && users.kyc && users.role === "COMPANY") {
@@ -75,10 +69,10 @@ function ResetPassword() {
                   <div className="text-center">
                     <img src={RFSLogoFullColour} alt="RFSLogo" />
                   </div>
-                  <h4 className="pt-5">Reset Password</h4>
+                  <h4 className="pt-4">Reset Password</h4>
                   <p className="">
                     Your password should include at least 8 characters and
-                    should include a <br /> combination of Upper-case, Lowercase
+                    should include a combination of Upper-case, Lowercase
                     and special characters (@$#%)
                   </p>
                   <div>
@@ -133,7 +127,7 @@ function ResetPassword() {
                         </div>
                         {errors.c_password && <h3>{errors.c_password}</h3>}
                       </div>
-                     
+
                       <div className="text-center">
                         <div>
                           <button
@@ -142,7 +136,6 @@ function ResetPassword() {
                             disabled={isLoading}>
                             {isLoading ? "Loading..." : "Reset Password"}
                           </button>
-                         
                         </div>
                       </div>
                     </form>
@@ -173,7 +166,7 @@ const Wrapper = styled.div`
 
 const WrappCongrate = styled.div`
   .congrate_body {
-    padding: 0 5rem;
+    padding: 3rem 5rem;
   }
   label {
     font-style: normal;
@@ -183,9 +176,23 @@ const WrappCongrate = styled.div`
     letter-spacing: -0.04em;
     color: #828282;
   }
-
-  width: 712px;
-  height: 523px;
+  width: 50%;
+  @media (max-width: 1200px) {
+    p {
+      /* text-align: left !important; */
+    }
+  }
+  @media (max-width: 700px) {
+    width: 80%;
+    .congrate_body {
+      padding: 3rem 2rem;
+    }
+    h4{
+      font-size: 18px;
+    }
+  }
+  /* width: 712px;
+  height: 523px; */
   background: #ffffff;
   justify-content: center;
   display: flex;

@@ -7,13 +7,7 @@ import {
   getAuthUsers,
 } from "../../../redux/actions/personalInfo/userProfile.actions";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
-import halfEllipse from "../../../asset/halfEllipse.png";
-import YelloBackgroud from "../../../asset/yello-backgroud.png";
-import Telephone from "../../../asset/telephone.png";
-import HistoryImag from "../../../asset/history.png";
-import TransferImg from "../../../asset/transfer.png";
-import { AvailableBalance, TransferCard } from "../Accesssories";
-import { SuccessConfirm } from "../../Accessories/BVNConfirm";
+import Checked from "../../../asset/checked.png";
 import ModalComponent from "../../ModalComponent";
 import { Input } from "reactstrap";
 
@@ -94,6 +88,62 @@ const Feedback = () => {
             </div>
           </div>
         </Wrapper>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-between footer-content">
+              <div></div>
+              <div>
+                <button
+                  style={{
+                    backgroundColor: "#111E6C",
+                    color: "#FFFFFF",
+                    width: "300px",
+                  }}
+                  onClick={() => {
+                    setShow(true);
+                  }}>
+                  Submit
+                </button>
+                <ModalComponent show={show} size={"md"}>
+                  <div className="">
+                    <div className="container">
+                      <div className="row">
+                        <div className="col text-center">
+                          <div>
+                            <img
+                              className="congrate_confet"
+                              src={Checked}
+                              alt="Checked"
+                            />
+                          </div>
+                          <p className="pt-5">
+                            Your feedback has been received
+                          </p>
+                          <div className="pt-5 ">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShow(false);
+                              }}
+                              style={{
+                                background: "#111e6c",
+                                color: "#f2f2f2",
+                                borderRadius: "10px",
+                                padding: "8px 80px",
+                              }}
+                              className="verify_congrates_btn">
+                              Ok
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ModalComponent>
+              </div>
+            </div>
+          </div>
+        </WrapperFooter>
       </WrapperBody>
     </div>
   );
@@ -135,5 +185,42 @@ const Wrapper = styled.div`
     color: #242424;
     padding-top: 50px;
     padding-bottom: 20px;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 80px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
+  }
+  .verify_congrates_btn {
+    background: #111e6c;
+    color: #f2f2f2;
+    border-radius: 10px;
+    padding: 8px 80px;
   }
 `;
