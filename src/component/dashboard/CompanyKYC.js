@@ -13,7 +13,7 @@ import {
 const CompanyKYC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const count = useSelector((state) => state.auth.signup_btn);
+  
   const company_details = useSelector((state) => state.user_profile.users);
   const auth = useSelector((state) => state.auth);
   const { login, isLoggedIn } = auth;
@@ -78,16 +78,23 @@ const CompanyKYC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(users.role);
-    if (company_details && !users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/kyc/person");
-    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    }
-  }, [isLoggedIn, users, company_details]);
+  console.log(
+    formData.rcNumber,
+    formData.natureOfBusiness,
+    formData.companyType,
+    formData.dateOfInco
+  );
+
+  // useEffect(() => {
+  //   console.log(users.role);
+  //   if (company_details && !users.kyc && users.role === "INDIVIDUAL_USER") {
+  //     navigate("/kyc/person");
+  //   } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+  //     navigate("/personal-profile");
+  //   } else if (users && users.kyc && users.role === "COMPANY") {
+  //     navigate("/company-profile");
+  //   }
+  // }, [isLoggedIn, users, company_details]);
 
   // useEffect(() => {
   //   if (!company_details) {
@@ -97,7 +104,7 @@ const CompanyKYC = () => {
 
   return (
     <div>
-      {/* <div className="">
+      <div className="">
         <div>
           <form autoComplete="off" onSubmit={handleSubmit}>
             <div className="">
@@ -290,11 +297,9 @@ const CompanyKYC = () => {
                       formData.natureOfBusiness &&
                       formData.companyType &&
                       formData.dateOfInco ? (
-                        <Link to="/company-profile">
-                          <button type="submit" className="blue-btn">
-                            Save and Invest Now
-                          </button>
-                        </Link>
+                        <button type="submit" className="blue-btn">
+                          Save and Invest Now
+                        </button>
                       ) : (
                         <>
                           <button type="submit" className="" disabled>
@@ -309,7 +314,7 @@ const CompanyKYC = () => {
             </div>
           </form>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
@@ -350,6 +355,16 @@ const WrapperBody = styled.div`
   padding: 6rem 5rem;
   @media (max-width: 600px) {
     padding: 6rem 3rem;
+  }
+  .select-field {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
   }
   h4 {
     font-style: normal;

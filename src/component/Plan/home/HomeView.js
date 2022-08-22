@@ -1,16 +1,55 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
-import { RightView } from './RightView'
-import { LeftView } from './LeftView'
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+import { RightView } from "./RightView";
+import { LeftView } from "./LeftView";
+import { useSelector, useDispatch, connect } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  updateUserCompanyKYC,
+  getAuthUsers,
+} from "../../../redux/actions/personalInfo/userProfile.actions";
 
 function HomeView() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.user_profile);
+  const { users } = profile;
+
+  const user =
+    users && users.role == "COMPANY"
+      ? users.company.name
+      : users.role == "INDIVIDUAL_USER"
+      ? users.individualUser.firstName
+      : "";
+
+  useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+    if (tokenString) {
+      dispatch(getAuthUsers(tokenString));
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/kyc/person");
+    }
+    if (users && !users.kyc && users.role === "COMPANY") {
+      navigate("/kyc/company");
+    }
+  }, [users]);
+
   return (
     <div>
       <ProfileNavBar className="shadow-lg">
         <NavTitle>
           <span>
-            Welcome back <span className="fw-bold"> Ekiyee! </span>
+            Welcome back{" "}
+            <span className="fw-bold">
+              {user}
+            </span>
           </span>
         </NavTitle>
       </ProfileNavBar>
@@ -23,9 +62,9 @@ function HomeView() {
         </div>
       </Wrapper>
     </div>
-  )
+  );
 }
-export default HomeView
+export default HomeView;
 
 const Wrapper = styled.div`
   display: flex;
@@ -57,7 +96,7 @@ const Wrapper = styled.div`
       width: 100% !important;
     }
   }
-`
+`;
 const NavTitle = styled.div`
   display: flex;
   flex-direction: column;
@@ -71,4 +110,4 @@ const NavTitle = styled.div`
       display: none;
     }
   }
-`
+`;

@@ -111,7 +111,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     </li>
                   </NavLink>
                 </ul>
-                <NavLink to="help">
+                <NavLink style={{ textDecoration: "none" }} to="help">
                   <li>
                     <i className="fas fa-exclamation-circle"></i>
                     <span>Help</span>
@@ -133,6 +133,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
 
 const WrappSideBarList = styled.div`
   position: fixed;
+ 
   @media (max-width: 900px) {
     display: none;
   }

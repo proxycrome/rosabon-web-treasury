@@ -13,8 +13,10 @@ const Archives = () => {
   return (
     <>
       <ProfileNavBar>
-        <h2>Archives</h2>
-      </ProfileNavBar>
+          <NavTitle>
+            <span className="fw-bold">Plan</span>
+          </NavTitle>
+        </ProfileNavBar>
       <Wrapper>
         <div className="plan-content">
           <div className="plan">
@@ -385,3 +387,18 @@ export const DropDown = ({ status }) => {
     </Dropdown>
   );
 };
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
+  }
+`;

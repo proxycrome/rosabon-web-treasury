@@ -7,8 +7,10 @@ const Help = () => {
   return (
     <div>
       <WrapperBody>
-        <ProfileNavBar>
-          <h2>FAQ</h2>
+        <ProfileNavBar className="shadow-lg">
+          <NavTitle>
+            <span className="fw-bold">FAQ</span>
+          </NavTitle>
         </ProfileNavBar>
         <Wrapper>
           <div className="d-flex justify-content-between align-items-center">
@@ -54,7 +56,24 @@ const Help = () => {
 
 export default Help;
 
-const WrapperBody = styled.div``;
+const WrapperBody = styled.div`
+  height: 100vh;
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
+  }
+`;
 
 const Wrapper = styled.div`
   width: 80%;

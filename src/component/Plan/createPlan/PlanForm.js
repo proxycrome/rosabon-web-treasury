@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png';
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
-import PlanPay from './PlanPay';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import styled from "styled-components";
+import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
+import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+import PlanPay from "./PlanPay";
+import { useNavigate } from "react-router-dom";
 
 const PlanForm = () => {
   const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
 
   if (isClicked) {
-    return <PlanPay goBack={() => setIsClicked(false)}/>;
+    return <PlanPay goBack={() => setIsClicked(false)} />;
   }
 
   const back = () => {
     navigate("/plan-product");
-  }
+  };
 
   return (
     <>
-      <ProfileNavBar >
-        <h2>Choose Plan</h2>
+      <ProfileNavBar>
+        <NavTitle>
+          <span className="fw-bold">Choose Plan</span>
+        </NavTitle>
       </ProfileNavBar>
       <Wrapper>
         <div className="choose-plan">
@@ -34,14 +36,14 @@ const PlanForm = () => {
             <div>
               <div>
                 <p className="p-0 m-0 pb-2">
-                  Lorem Ipsum is simply dummy text of the{' '}
+                  Lorem Ipsum is simply dummy text of the{" "}
                 </p>
                 <p className="p-0 m-0 pb-2">
-                  {' '}
+                  {" "}
                   printing and typesetting industry.
                 </p>
                 <p className="p-0 m-0 pb-2">
-                  Lorem Ipsum is simply dummy text of the{' '}
+                  Lorem Ipsum is simply dummy text of the{" "}
                 </p>
               </div>
             </div>
@@ -132,8 +134,7 @@ const PlanForm = () => {
               <div className="input-group mb-4">
                 <select
                   className="form-select form-select-lg"
-                  placeholder="Setup Direct Debit"
-                >
+                  placeholder="Setup Direct Debit">
                   <option>Yes</option>
                   <option>No</option>
                 </select>
@@ -180,17 +181,20 @@ const PlanForm = () => {
         <div className="footer-body">
           <div className="d-flex align-items-center justify-content-between footer-content">
             <div>
-              <button style={{ color: '#111E6C', width: '300px' }} onClick={back}>Back</button>
+              <button
+                style={{ color: "#111E6C", width: "300px" }}
+                onClick={back}>
+                Back
+              </button>
             </div>
             <div>
               <button
                 style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
+                  backgroundColor: "#111E6C",
+                  color: "#FFFFFF",
+                  width: "300px",
                 }}
-                onClick={() => setIsClicked(true)}
-              >
+                onClick={() => setIsClicked(true)}>
                 Next
               </button>
             </div>
@@ -232,7 +236,7 @@ const Wrapper = styled.div`
       color: #4f4f4f;
     }
     button {
-      font-family: 'Montserrat';
+      font-family: "Montserrat";
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -250,7 +254,7 @@ const Wrapper = styled.div`
     }
   }
   h4 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -307,5 +311,20 @@ const WrapperFooter = styled.div`
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
+  }
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
   }
 `;

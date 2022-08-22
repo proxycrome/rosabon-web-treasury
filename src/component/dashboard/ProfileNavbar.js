@@ -1,35 +1,64 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import storage from 'redux-persist/lib/storage'
-import { useSelector, useDispatch, connect } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import storage from "redux-persist/lib/storage";
+import { useSelector, useDispatch, connect } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap'
+} from "reactstrap";
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from '../../redux/actions/personalInfo/userProfile.actions'
-import { CLEAR_USERS } from '../../redux/constant/auth'
+} from "../../redux/actions/personalInfo/userProfile.actions";
+import { CLEAR_USERS } from "../../redux/constant/auth";
 
 export function ProfileNavBar({ children }) {
-  const [menu, setMenu] = useState(false)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const [menu, setMenu] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const profile = useSelector((state) => state.user_profile);
+  const { users } = profile;
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
 
   const toggle = () => {
-    setMenu(!menu)
-  }
+    setMenu(!menu);
+  };
 
   const logout = (e) => {
-    localStorage.removeItem('token')
+    localStorage.removeItem("token");
+    navigate("/login", { replace: true });
+    dispatch({ type: CLEAR_USERS });
+  };
 
-    navigate('/login', { replace: true })
-    dispatch({ type: CLEAR_USERS })
-  }
+  useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+    if (tokenString) {
+      dispatch(getAuthUsers(tokenString));
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  const user =
+    users && users.role == "COMPANY"
+      ? users.company.name
+      : users.role == "INDIVIDUAL_USER"
+      ? users.individualUser.firstName
+      : "";
+
+  useEffect(() => {
+    if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/kyc/person");
+    }
+    if (users && !users.kyc && users.role === "COMPANY") {
+      navigate("/kyc/company");
+    }
+  }, [users]);
 
   return (
     <WrappeNavBar>
@@ -46,16 +75,14 @@ export function ProfileNavBar({ children }) {
               <Dropdown
                 isOpen={menu}
                 toggle={toggle}
-                className="d-inline-block user-dropdown"
-              >
+                className="d-inline-block user-dropdown">
                 <DropdownToggle
                   tag="button"
                   outline
                   className="btn header-item waves-effect border-0"
-                  id="page-header-user-dropdown"
-                >
+                  id="page-header-user-dropdown">
                   <span className="d-none d-xl-inline-block ml-1 text-transform me-2">
-                    ekiyee bilaowei
+                    {user}
                   </span>
                   <img
                     className="rounded-circle header-profile-user mr-3"
@@ -67,18 +94,32 @@ export function ProfileNavBar({ children }) {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem>
-                    <i className="ri-user-line align-middle mr-1"></i> Profile
+                    {users && users.role == "COMPANY" ? (
+                      <>
+                        <NavLink className="nav_link" to="/company-profile">
+                          <i className="ri-user-line align-middle mr-1"></i>{" "}
+                          Profile
+                        </NavLink>
+                      </>
+                    ) : users && users.role == "INDIVIDUAL_USER" ? (
+                      <>
+                        <NavLink className="nav_link" to="/personal-profile">
+                          <i className="ri-user-line align-middle mr-1"></i>{" "}
+                          Profile
+                        </NavLink>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </DropdownItem>
                   <DropdownItem className="d-block">Settings</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem className="text-danger" onClick={logout}>
-
-                   {/* <div className="d-flex align-items-center justify-content-between">
+                    {/* <div className="d-flex align-items-center justify-content-between">
                     <i className="fa fa-sign-out mr-5 text-danger"></i>
                     <span style={{marginLeft: "20px"}}>Logout</span>
                    </div> */}
-
-                    <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{' '}
+                    <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{" "}
                     Logout
                   </DropdownItem>
                 </DropdownMenu>
@@ -88,7 +129,7 @@ export function ProfileNavBar({ children }) {
         </div>
       </div>
     </WrappeNavBar>
-  )
+  );
 }
 
 const WrappeNavBar = styled.div`
@@ -97,13 +138,16 @@ const WrappeNavBar = styled.div`
   box-shadow: 0px 4px 4px rgba(98, 134, 154, 0.12);
   text-align: right;
   margin-bottom: 20px;
+ 
 
   @media (max-width: 650px) {
     .page-title h2 {
       font-size: 20px !important;
     }
   }
-
+  .nav_link {
+    text-decoration: none;
+  }
   .profile_nav {
     display: flex;
     justify-content: space-between;
@@ -129,4 +173,4 @@ const WrappeNavBar = styled.div`
   .fa-bell {
     font-size: 16px;
   }
-`
+`;

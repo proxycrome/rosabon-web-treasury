@@ -51,8 +51,10 @@ const Rollover = () => {
   return (
     <>
       <ProfileNavBar>
-        <h2>Plan</h2>
-      </ProfileNavBar>
+          <NavTitle>
+            <span className="fw-bold">Plan</span>
+          </NavTitle>
+        </ProfileNavBar>
       <Wrapper>
         <LeftView>
           <h4 className="pb-3">Rollover</h4>
@@ -361,5 +363,20 @@ const WrapperFooter = styled.div`
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
+  }
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
   }
 `;

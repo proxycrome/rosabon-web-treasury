@@ -51,7 +51,7 @@ const UserWallet = () => {
 
   const togleSidebar = () => {
     setSidebar(false);
-    setClosefooter(false)
+    setClosefooter(false);
   };
 
   // console.log(show)
@@ -69,7 +69,9 @@ const UserWallet = () => {
     <div>
       <WrapperBody>
         <ProfileNavBar>
-          <h2>Wallet</h2>
+          <NavTitle>
+            <span className="fw-bold">Wallet</span>
+          </NavTitle>
         </ProfileNavBar>
         <Wrapper>
           <LeftView>
@@ -223,7 +225,10 @@ const UserWallet = () => {
                   <ModalComponent
                     show={show}
                     size={"md"}
-                    handleClose={() => {setShow(false); setClosefooter(false)}}>
+                    handleClose={() => {
+                      setShow(false);
+                      setClosefooter(false);
+                    }}>
                     <div className="">
                       <div className="container">
                         <div className="row">
@@ -256,7 +261,12 @@ const UserWallet = () => {
                                   setShow(false);
                                   setClosefooter(false);
                                 }}
-                                style={{background: "#111e6c", color: "#f2f2f2", borderRadius: "10px", padding: "8px 80px"}}
+                                style={{
+                                  background: "#111e6c",
+                                  color: "#f2f2f2",
+                                  borderRadius: "10px",
+                                  padding: "8px 80px",
+                                }}
                                 className="verify_congrates_btn">
                                 Continue
                               </button>
@@ -279,6 +289,21 @@ const UserWallet = () => {
 };
 
 export default UserWallet;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
+  }
+`;
 
 const WrapperBody = styled.div``;
 
