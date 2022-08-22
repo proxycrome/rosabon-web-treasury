@@ -1244,6 +1244,10 @@ const HistoryTableWarapper = styled.div`
     color: #000000;
     padding-top: 50px;
   }
+  .grey-text {
+    color: #BDBDBD;
+    cursor: pointer;
+  }
 `;
 
 export const ReferalTable = () => {
@@ -1577,6 +1581,26 @@ const ReferalTableBonusWarapper = styled.div`
 `;
 
 export const TransferDeposit = () => {
+  const [bank, setBank] = useState(false);
+  const [credit, setCredit] = useState(false);
+  const [transfer, setTransfer] = useState(false);
+
+  const handleClick = (values) => {
+    if(values == "bank") {
+      setBank(true)
+      setCredit(false)
+      setTransfer(false)
+    } else if(values == "credit") {
+      setBank(false)
+      setCredit(true)
+      setTransfer(false)
+    }else if(values == "transfer") {
+      setBank(false)
+      setCredit(false)
+      setTransfer(true)
+    }
+  }
+
   return (
     <div>
       <ProfileNavBar>
@@ -1585,9 +1609,9 @@ export const TransferDeposit = () => {
       <HistoryTableWarapper>
         <h3 className="pb-4">My Referral Bonus</h3>
         <div className="d-flex align-items-content justify-content-around pb-5">
-          <h3>Bank Transfer Deposit</h3>
-          <h3>Credit Wallet Transfer Deposit</h3>
-          <h3>Plan Transfer Deposit</h3>
+          <h3 className={bank ? "" : "grey-text"} onClick={() => handleClick("bank")}>Bank Transfer Deposit</h3>
+          <h3 className={credit ? "" : "grey-text"} onClick={() => handleClick("credit")}>Credit Wallet Transfer Deposit</h3>
+          <h3 className={transfer ? "" : "grey-text"} onClick={() => handleClick("transfer")}>Plan Transfer Deposit</h3>
         </div>
 
         <div>

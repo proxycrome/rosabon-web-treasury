@@ -81,13 +81,15 @@ const PersonalKYC = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-  //     navigate("/personal-profile");
-  //   } else if (users && users.kyc && users.role === "COMPANY") {
-  //     navigate("/company-profile");
-  //   }
-  // }, [isLoggedIn, users]);
+  useEffect(() => {
+    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+      navigate("/personal-profile");
+    } else if (users && users.kyc && users.role === "COMPANY") {
+      navigate("/company-profile");
+    }else if (user_details && !users.kyc && users.role === "COMPANY") {
+      navigate("/kyc/person");
+    }
+  }, [isLoggedIn, users, user_details]);
 
   // useEffect(() => {
   //   getLGAs();
@@ -166,14 +168,16 @@ const PersonalKYC = () => {
                           <div className="col-md-6 col-lg-4 ">
                             <label>Gender</label>
                             <div className="input-group mb-4">
-                              <input
-                                className="form-control"
-                                placeholder="Gender"
-                                type="text"
+                              <select
+                                className="form-select form-select-lg mb-3 select-field"
+                                aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                name="gender"
                                 value={formData.gender}
-                              />
+                                name="gender">
+                                <option value=""></option>
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                              </select>
                             </div>
                           </div>
                           <div className="col-md-6 col-lg-4 ">
@@ -259,24 +263,26 @@ const PersonalKYC = () => {
                           <div className="col-md-4">
                             <label>Country of Residence</label>
                             <div className="input-group mb-4">
-                              <input
-                                className="form-control"
-                                placeholder="Country of Residence"
-                                type="text"
+                              <select
+                                className="form-select form-select-lg mb-3 select-field"
+                                aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                name="coutryOfResidence"
-                                value={formData.coutryOfResidence}
-                              />
+                                value={formData.name}
+                                name="name">
+                                <option value=""></option>
+                                <option value="Nigeria">Nigeria</option>
+                              </select>
                             </div>
                           </div>
                           <div className="col-md-6 ">
                             <label>How did you hear about us</label>
                             <select
-                              className="form-select form-select-lg mb-4"
+                              className="form-select form-select-lg mb-3 select-field"
                               aria-label=".form-select-lg"
-                              // onChange={handleValueChange}
+                              onChange={handleChange}
+                              value={formData.source}
                               name="source">
-                              <option value="">Please choose an option</option>
+                              <option value=""></option>
                               <option value="ROSABON_SALES">
                                 Rosabon sales executive
                               </option>
@@ -304,14 +310,15 @@ const PersonalKYC = () => {
                           <div className="col-md-4 ">
                             <label>State</label>
                             <div className="input-group mb-4">
-                              <input
-                                className="form-control"
-                                placeholder="State"
-                                type="text"
+                              <select
+                                className="form-select form-select-lg mb-3 select-field"
+                                aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                name="state"
                                 value={formData.state}
-                              />
+                                name="state">
+                                <option value=""></option>
+                                <option value="Bauchi">Bauchi</option>
+                              </select>
                             </div>
                           </div>
                           <div className="col-md-4 ">
@@ -330,14 +337,15 @@ const PersonalKYC = () => {
                           <div className="col-md-4">
                             <label>Nationality</label>
                             <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Nationality"
+                              <select
+                                className="form-select form-select-lg mb-3 select-field"
+                                aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                name="country"
                                 value={formData.country}
-                              />
+                                name="country">
+                                <option value=""></option>
+                                <option value="Nigeria">Nigeria</option>
+                              </select>
                             </div>
                           </div>
                         </div>
@@ -418,11 +426,21 @@ const WrapperBody = styled.div`
     padding: 10px;
     background: #111e6c;
     border-radius: 8px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
   padding: 6rem 5rem;
   @media (max-width: 600px) {
     padding: 6rem 3rem;
+  }
+  .select-field {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
   }
   h4 {
     font-style: normal;
