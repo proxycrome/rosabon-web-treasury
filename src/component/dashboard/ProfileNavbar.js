@@ -50,6 +50,7 @@ export function ProfileNavBar({ children }) {
               >
                 <DropdownToggle
                   tag="button"
+                  outline
                   className="btn header-item waves-effect border-0"
                   id="page-header-user-dropdown"
                 >
@@ -71,6 +72,12 @@ export function ProfileNavBar({ children }) {
                   <DropdownItem className="d-block">Settings</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem className="text-danger" onClick={logout}>
+
+                   {/* <div className="d-flex align-items-center justify-content-between">
+                    <i className="fa fa-sign-out mr-5 text-danger"></i>
+                    <span style={{marginLeft: "20px"}}>Logout</span>
+                   </div> */}
+
                     <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{' '}
                     Logout
                   </DropdownItem>

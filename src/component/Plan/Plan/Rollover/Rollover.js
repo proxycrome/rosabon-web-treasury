@@ -1,46 +1,43 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Verve from '../../../asset/master-card-logo.png';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-// import { UserBankDetails } from '../Accesssories';
-import PlanBankTopup from './PlanBankTopup';
-import PlanCardTopup from './PlanCardTopup';
+import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
+import FullRollover from './FullRollover';
+import PartRollover from './PartRollover';
 
-
-const PlanPayment = () => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
+const Rollover = () => {
+  const [part, setPart] = useState('');
+  const [full, setFull] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
 
   const handleClick = (e) => {
-    if (e.target.value === 'card') {
-      setCard('card');
-      setBank('');
+    if (e.target.value === 'part') {
+      setPart('part');
+      setFull('');
     }
-    if (e.target.value === 'bank') {
-      setBank('bank');
-      setCard('');
+    if (e.target.value === 'full') {
+      setFull('full');
+      setPart('');
     }
   };
 
-  if (bank && isClicked) {
+  if (full && isClicked) {
     return (
-      <PlanBankTopup
+      <FullRollover
         goBack={() => {
-          setBank('');
+          setFull('');
           setIsClicked(false);
         }}
       />
     );
   }
 
-  if (card && isClicked) {
+  if (part && isClicked) {
     return (
-      <PlanCardTopup
+      <PartRollover
         goBack={() => {
-          setCard('');
+          setPart('');
           setIsClicked(false);
         }}
       />
@@ -53,9 +50,12 @@ const PlanPayment = () => {
 
   return (
     <>
+      <ProfileNavBar>
+        <h2>Plan</h2>
+      </ProfileNavBar>
       <Wrapper>
         <LeftView>
-          <h4 className="pb-3">Top up</h4>
+          <h4 className="pb-3">Rollover</h4>
           <div className="plan-content">
             <div className="plan">
               <div className="plan-top h-50 p-4">
@@ -64,7 +64,7 @@ const PlanPayment = () => {
                     <h4>Plan 1</h4>
                     <p className="p-0 m-0">Product 1</p>
                   </div>
-                  <h4 className="Active">Active</h4>
+                  <h4 className="Matured">Matured</h4>
                 </div>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
@@ -94,59 +94,85 @@ const PlanPayment = () => {
               </div>
             </div>
           </div>
-          <h4 className="pt-5">Choose Payment Type</h4>
+          
           <div className="plan-payment">
-            <div className="row">
+            <div>
+              <div className="d-flex align-items-center justify-content-between my-5">
+                <div className="d-flex align-items-center">
+                  <p className="p-0 m-0">Partial Rollover</p>
+                </div>
+                <input
+                  type="radio"
+                  id="part"
+                  name="rolloverType"
+                  value="part"
+                  onClick={handleClick}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <div className="d-flex align-items-center">
+                  <p className="p-0 m-0">Full Rollover</p>
+                </div>
+                <input
+                  type="radio"
+                  id="full"
+                  name="rolloverType"
+                  value="full"
+                  onClick={handleClick}
+                />
+              </div>
+            </div>
+            <div className="row my-4">
               <div class="col ">
-                <label>Input amout to Top-up</label>
-                <div class="input-group mb-4">
+                <label>Input amount</label>
+                <div class="input-group">
                   <input
                     class="form-control"
-                    placeholder="N  0.00"
+                    placeholder="₦ 2,500,000"
+                    type="text"
+                  />
+                </div>
+                <label>Amount for withdrawal is ₦0.00</label>
+              </div>
+            </div>
+            <div className="row my-4">
+              <div className="col ">
+                <label>Select a new Tenor</label>
+                <div className="input-group">
+                  <select
+                    className="form-select form-select-md"
+                    aria-label=".form-select-md"
+                    name="Tenor" 
+                  >
+                    <option>6 months</option>
+                    <option>9 months</option>
+                    <option>12 months</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="row my-4">
+              <div class="col ">
+                <label>Calculate Interest Rate (%)</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
                     type="text"
                   />
                 </div>
               </div>
             </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between py-4">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={Verve} alt="Verve" />
-                  <p className="p-0 m-0">Debit Card</p>
-                </div>
-                <input
-                  type="radio"
-                  id="card"
-                  name="paymentType"
-                  value="card"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                  <p className="p-0 m-0">Bank Transfer</p>
-                </div>
-                <input
-                  type="radio"
-                  id="bank"
-                  name="paymentType"
-                  value="bank"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
           </div>
         </LeftView>
-        {/* <RightView>
+        <RightView>
         <div className="bank-details">
-          <div className="bank-detail-content">
-            <UserBankDetails />
-          </div>
+          {/* <div className="bank-detail-content"> */}
+            {/* <UserBankDetails /> */}
+          {/* </div> */}
         </div>
-      </RightView> */}
+      </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
@@ -168,7 +194,7 @@ const PlanPayment = () => {
                 }}
                 onClick={() => setIsClicked(true)}
               >
-                Submit
+                Next
               </button>
             </div>
           </div>
@@ -178,7 +204,7 @@ const PlanPayment = () => {
   );
 };
 
-export default PlanPayment;
+export default Rollover;
 
 const LeftView = styled.div`
   width: 50%;
@@ -224,6 +250,7 @@ const RightView = styled.div`
     width: 100% !important;
   }
   .bank-details {
+    height: 70vh;
     padding: 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);

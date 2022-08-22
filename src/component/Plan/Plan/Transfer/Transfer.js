@@ -1,51 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Verve from '../../../asset/master-card-logo.png';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-// import { UserBankDetails } from '../Accesssories';
-import PlanBankTopup from './PlanBankTopup';
-import PlanCardTopup from './PlanCardTopup';
+import { Notice, SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
+import ModalComponent from '../../../ModalComponent';
 
 
-const PlanPayment = () => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
-  const [isClicked, setIsClicked] = useState(false);
+const Transfer = () => {
+  const [modalState, setModalState] = useState("Close");
   const navigate = useNavigate();
 
-  const handleClick = (e) => {
-    if (e.target.value === 'card') {
-      setCard('card');
-      setBank('');
-    }
-    if (e.target.value === 'bank') {
-      setBank('bank');
-      setCard('');
-    }
-  };
-
-  if (bank && isClicked) {
-    return (
-      <PlanBankTopup
-        goBack={() => {
-          setBank('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
-
-  if (card && isClicked) {
-    return (
-      <PlanCardTopup
-        goBack={() => {
-          setCard('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
+  
 
   const back = () => {
     navigate('/plan-list');
@@ -53,15 +18,18 @@ const PlanPayment = () => {
 
   return (
     <>
+      <ProfileNavBar>
+        <h2>Plan</h2>
+      </ProfileNavBar>
       <Wrapper>
         <LeftView>
-          <h4 className="pb-3">Top up</h4>
+          <h4 className="pb-3">Transfer</h4>
           <div className="plan-content">
             <div className="plan">
               <div className="plan-top h-50 p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h4>Plan 1</h4>
+                    <h4>Plan 3</h4>
                     <p className="p-0 m-0">Product 1</p>
                   </div>
                   <h4 className="Active">Active</h4>
@@ -94,59 +62,46 @@ const PlanPayment = () => {
               </div>
             </div>
           </div>
-          <h4 className="pt-5">Choose Payment Type</h4>
+          
           <div className="plan-payment">
-            <div className="row">
+            <div className="row my-4 pt-4">
+              <div className="col ">
+                <label>Select an active plan to transfer into</label>
+                <div className="input-group">
+                  <select
+                    className="form-select form-select-md"
+                    aria-label=".form-select-md"
+                    name="Tenor" 
+                  >
+                    <option>Plan 1</option>
+                    <option>Plan 2</option>
+                    <option>Plan 4</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="row my-4">
               <div class="col ">
-                <label>Input amout to Top-up</label>
-                <div class="input-group mb-4">
+                <label>Amount to Send</label>
+                <div class="input-group">
                   <input
                     class="form-control"
-                    placeholder="N  0.00"
+                    placeholder="₦ 1,000,000"
                     type="text"
                   />
                 </div>
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between py-4">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={Verve} alt="Verve" />
-                  <p className="p-0 m-0">Debit Card</p>
-                </div>
-                <input
-                  type="radio"
-                  id="card"
-                  name="paymentType"
-                  value="card"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                  <p className="p-0 m-0">Bank Transfer</p>
-                </div>
-                <input
-                  type="radio"
-                  id="bank"
-                  name="paymentType"
-                  value="bank"
-                  onClick={handleClick}
-                />
+                <label>Balance is ₦1,000,000</label>
               </div>
             </div>
           </div>
         </LeftView>
-        {/* <RightView>
+        <RightView>
         <div className="bank-details">
-          <div className="bank-detail-content">
-            <UserBankDetails />
-          </div>
+          {/* <div className="bank-detail-content"> */}
+            {/* <UserBankDetails /> */}
+          {/* </div> */}
         </div>
-      </RightView> */}
+      </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
@@ -166,10 +121,32 @@ const PlanPayment = () => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setIsClicked(true)}
+                onClick={() => setModalState("modal-one")}
               >
                 Submit
               </button>
+              <ModalComponent
+                show={modalState === "modal-one"}
+                size={'md'}
+                handleClose={() => setModalState("close")}
+              >
+                <Notice 
+                  handleClose={() => setModalState("close")}
+                  handleShowModalTwo={() => setModalState("modal-two")}
+                  transferNotice="transfer"
+                />
+              </ModalComponent>
+
+              <ModalComponent
+                show={modalState === "modal-two"}
+                size={'md'}
+                handleClose={() => setModalState("close")}
+              >
+                <SuccessConfirm
+                  transferNotice="transfer"
+                  handleClose={() => setModalState("close")}
+                />
+              </ModalComponent>
             </div>
           </div>
         </div>
@@ -178,7 +155,7 @@ const PlanPayment = () => {
   );
 };
 
-export default PlanPayment;
+export default Transfer;
 
 const LeftView = styled.div`
   width: 50%;
@@ -224,6 +201,7 @@ const RightView = styled.div`
     width: 100% !important;
   }
   .bank-details {
+    height: 70vh;
     padding: 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);

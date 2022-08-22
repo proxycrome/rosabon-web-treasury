@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Verve from '../../../asset/master-card-logo.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { PlanSummary } from '../Accesssories';
+import ModalComponent from '../../ModalComponent';
+import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 
 const PlanCardPayment = ({goBack}) => {
-
+  const [show, setShow] = useState(false);
 
   return (
     <>
@@ -40,9 +42,20 @@ const PlanCardPayment = ({goBack}) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
+                onClick={() => setShow(true)}
               >
                 Pay
               </button>
+              <ModalComponent
+                show={show}
+                size={'md'}
+                handleClose={() => setShow(false)}
+              >
+                <SuccessConfirm 
+                  createPlan="paid"
+                  handleClose={() => setShow(false)}
+                />
+              </ModalComponent>
             </div>
           </div>
         </div>

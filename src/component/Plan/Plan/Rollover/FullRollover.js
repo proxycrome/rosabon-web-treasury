@@ -1,61 +1,21 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import Verve from '../../../asset/master-card-logo.png';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-// import { UserBankDetails } from '../Accesssories';
-import PlanBankTopup from './PlanBankTopup';
-import PlanCardTopup from './PlanCardTopup';
+import { Notice, SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
+import ModalComponent from '../../../ModalComponent';
+import { RolloverSummary } from '../../Accesssories';
 
-
-const PlanPayment = () => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
-  const [isClicked, setIsClicked] = useState(false);
-  const navigate = useNavigate();
-
-  const handleClick = (e) => {
-    if (e.target.value === 'card') {
-      setCard('card');
-      setBank('');
-    }
-    if (e.target.value === 'bank') {
-      setBank('bank');
-      setCard('');
-    }
-  };
-
-  if (bank && isClicked) {
-    return (
-      <PlanBankTopup
-        goBack={() => {
-          setBank('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
-
-  if (card && isClicked) {
-    return (
-      <PlanCardTopup
-        goBack={() => {
-          setCard('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
-
-  const back = () => {
-    navigate('/plan-list');
-  };
+const FullRollover = ({goBack}) => {
+  const [modalState, setModalState] = useState("Close");
 
   return (
     <>
+      <ProfileNavBar>
+        <h2>Plan</h2>
+      </ProfileNavBar>
       <Wrapper>
         <LeftView>
-          <h4 className="pb-3">Top up</h4>
+          <h4 className="pb-3">Rollover</h4>
           <div className="plan-content">
             <div className="plan">
               <div className="plan-top h-50 p-4">
@@ -64,7 +24,7 @@ const PlanPayment = () => {
                     <h4>Plan 1</h4>
                     <p className="p-0 m-0">Product 1</p>
                   </div>
-                  <h4 className="Active">Active</h4>
+                  <h4 className="Matured">Matured</h4>
                 </div>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
@@ -94,59 +54,14 @@ const PlanPayment = () => {
               </div>
             </div>
           </div>
-          <h4 className="pt-5">Choose Payment Type</h4>
-          <div className="plan-payment">
-            <div className="row">
-              <div class="col ">
-                <label>Input amout to Top-up</label>
-                <div class="input-group mb-4">
-                  <input
-                    class="form-control"
-                    placeholder="N  0.00"
-                    type="text"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between py-4">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={Verve} alt="Verve" />
-                  <p className="p-0 m-0">Debit Card</p>
-                </div>
-                <input
-                  type="radio"
-                  id="card"
-                  name="paymentType"
-                  value="card"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                  <p className="p-0 m-0">Bank Transfer</p>
-                </div>
-                <input
-                  type="radio"
-                  id="bank"
-                  name="paymentType"
-                  value="bank"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-          </div>
         </LeftView>
-        {/* <RightView>
+        <RightView>
         <div className="bank-details">
           <div className="bank-detail-content">
-            <UserBankDetails />
+            <RolloverSummary />
           </div>
         </div>
-      </RightView> */}
+      </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
@@ -154,7 +69,7 @@ const PlanPayment = () => {
             <div>
               <button
                 style={{ color: '#111E6C', width: '300px' }}
-                onClick={back}
+                onClick={goBack}
               >
                 Back
               </button>
@@ -166,10 +81,31 @@ const PlanPayment = () => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setIsClicked(true)}
+                onClick={() => setModalState("modal-one")}
               >
-                Submit
+                Proceed
               </button>
+              <ModalComponent
+                show={modalState === "modal-one"}
+                size={'md'}
+                handleClose={() => setModalState("close")}
+              >
+                <Notice 
+                  handleClose={() => setModalState("close")}
+                  handleShowModalTwo={() => setModalState("modal-two")}
+                />
+              </ModalComponent>
+
+              <ModalComponent
+                show={modalState === "modal-two"}
+                size={'md'}
+                handleClose={() => setModalState("close")}
+              >
+                <SuccessConfirm
+                  confirmNotice="rollover"
+                  handleClose={() => setModalState("close")}
+                />
+              </ModalComponent>
             </div>
           </div>
         </div>
@@ -178,7 +114,7 @@ const PlanPayment = () => {
   );
 };
 
-export default PlanPayment;
+export default FullRollover;
 
 const LeftView = styled.div`
   width: 50%;
@@ -224,18 +160,18 @@ const RightView = styled.div`
     width: 100% !important;
   }
   .bank-details {
-    padding: 40px;
+    height: auto;
+    padding: 40px 0;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
     justify-content: center;
   }
   .bank-detail-content {
+    height:auto
     background: #ffffff;
-    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;
-    padding: 20px;
-    width: 373px;
+    width: 450px;
     p {
       font-style: normal;
       font-weight: 400;

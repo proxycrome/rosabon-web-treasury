@@ -13,6 +13,11 @@ import ListPlans from "./component/Plan/Plan";
 import TopupPlan from "./component/Plan/Plan/TopupPlan";
 import PlanPayment from "./component/Plan/Plan/PlanPayment";
 import PlanProduct from "./component/Plan/createPlan";
+import PlanRollover from "./component/Plan/Plan/Rollover/Rollover";
+import Transfer from "./component/Plan/Plan/Transfer/Transfer"
+import Withdrawal from "./component/Plan/Plan/Withdrawal/Withdrawal";
+import Transactions from "./component/Plan/Plan/Transactions";
+import Archives from "./component/Plan/Plan/Archives";
 import PersonalKYC from "./component/dashboard/PersonalKYC";
 import CompanyKYC from "./component/dashboard/CompanyKYC";
 import UserSignup from "./component/Auth/userSignup";
@@ -46,6 +51,11 @@ function PageRoutes() {
         <Route path="plan-topup" element={<TopupPlan />} />
         <Route path="plan-payment" element={<PlanPayment />} />
         <Route path="create-plan" element={<PlanForm />} />
+        <Route path="rollover" element={<PlanRollover />} />
+        <Route path="transfer" element={<Transfer />} />
+        <Route path="withdrawal" element={<Withdrawal />} />
+        <Route path="history" element={<Transactions />} />
+        <Route path="archives" element={<Archives />} />
         <Route path="user-wallet" element={<UserWallet />} />
         <Route path="waller-history" element={<HistoryTable />} />
         <Route path="referral-table" element={<ReferalTable />} />

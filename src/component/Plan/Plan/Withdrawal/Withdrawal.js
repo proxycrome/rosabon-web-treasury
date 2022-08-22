@@ -1,46 +1,46 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { FormGroup, Input } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
-import Verve from '../../../asset/master-card-logo.png';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-// import { UserBankDetails } from '../Accesssories';
-import PlanBankTopup from './PlanBankTopup';
-import PlanCardTopup from './PlanCardTopup';
+import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
+import FullWithdrawal from './FullWithdrawal';
+import PartWithdrawal from './PartWithdrawal';
 
-
-const PlanPayment = () => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
+const Withdrawal = () => {
+  const [part, setPart] = useState('');
+  const [full, setFull] = useState('');
   const [isClicked, setIsClicked] = useState(false);
+  const [reason, setReason] = useState("")
+  const [otherReasons, setOtherReasons] = useState("")
   const navigate = useNavigate();
 
   const handleClick = (e) => {
-    if (e.target.value === 'card') {
-      setCard('card');
-      setBank('');
+    if (e.target.value === 'part') {
+      setPart('part');
+      setFull('');
     }
-    if (e.target.value === 'bank') {
-      setBank('bank');
-      setCard('');
+    if (e.target.value === 'full') {
+      setFull('full');
+      setPart('');
     }
   };
 
-  if (bank && isClicked) {
+  if (full && isClicked) {
     return (
-      <PlanBankTopup
+      <FullWithdrawal
         goBack={() => {
-          setBank('');
+          setFull('');
           setIsClicked(false);
         }}
       />
     );
   }
 
-  if (card && isClicked) {
+  if (part && isClicked) {
     return (
-      <PlanCardTopup
+      <PartWithdrawal
         goBack={() => {
-          setCard('');
+          setPart('');
           setIsClicked(false);
         }}
       />
@@ -53,15 +53,18 @@ const PlanPayment = () => {
 
   return (
     <>
+      <ProfileNavBar>
+        <h2>Plan</h2>
+      </ProfileNavBar>
       <Wrapper>
         <LeftView>
-          <h4 className="pb-3">Top up</h4>
+          <h4 className="pb-3">Withdrawal</h4>
           <div className="plan-content">
             <div className="plan">
               <div className="plan-top h-50 p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h4>Plan 1</h4>
+                    <h4>Plan 3</h4>
                     <p className="p-0 m-0">Product 1</p>
                   </div>
                   <h4 className="Active">Active</h4>
@@ -94,59 +97,92 @@ const PlanPayment = () => {
               </div>
             </div>
           </div>
-          <h4 className="pt-5">Choose Payment Type</h4>
+          
           <div className="plan-payment">
-            <div className="row">
+            <div>
+              <div className="d-flex align-items-center justify-content-between my-5">
+                <div className="d-flex align-items-center">
+                  <p className="p-0 m-0">Partial Withdrawal</p>
+                </div>
+                <input
+                  type="radio"
+                  id="part"
+                  name="rolloverType"
+                  value="part"
+                  onClick={handleClick}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <div className="d-flex align-items-center">
+                  <p className="p-0 m-0">Full Withdrawal</p>
+                </div>
+                <input
+                  type="radio"
+                  id="full"
+                  name="rolloverType"
+                  value="full"
+                  onClick={handleClick}
+                />
+              </div>
+            </div>
+            <div className="row my-4">
               <div class="col ">
-                <label>Input amout to Top-up</label>
-                <div class="input-group mb-4">
+                <label>Amount to Liquidate</label>
+                <div class="input-group">
                   <input
                     class="form-control"
-                    placeholder="N  0.00"
+                    placeholder="₦ 0.00"
                     type="text"
                   />
                 </div>
+                <label>Balance is ₦2,500,000.00</label>
               </div>
             </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between py-4">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={Verve} alt="Verve" />
-                  <p className="p-0 m-0">Debit Card</p>
+            <div className="row my-4">
+              <div className="col ">
+                <label>Reason for Withdrawal</label>
+                <div className="input-group">
+                  <select
+                    className="form-select form-select-md"
+                    aria-label=".form-select-md"
+                    name="reason"
+                    onChange={(e) => setReason(e.target.value)} 
+                  >
+                    <option>Select Reason for Withdrawal</option>
+                    <option>Others</option>
+                  </select>
                 </div>
-                <input
-                  type="radio"
-                  id="card"
-                  name="paymentType"
-                  value="card"
-                  onClick={handleClick}
-                />
               </div>
             </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                  <p className="p-0 m-0">Bank Transfer</p>
+            {reason === "Others" ? (
+              <div className="row my-4">
+                <div className="col ">
+                  <FormGroup className="form-group-custom mb-4">
+                    <Input
+                      name="otherReasons"
+                      type="textarea"
+                      rows={5}
+                      value={otherReasons}
+                      className="form-control"
+                      onChange={(e) => setOtherReasons(e.target.value)}
+                      id="otherReasons"
+                      placeholder="Please provide reason for withdrawal"
+                    />
+                  </FormGroup>
                 </div>
-                <input
-                  type="radio"
-                  id="bank"
-                  name="paymentType"
-                  value="bank"
-                  onClick={handleClick}
-                />
               </div>
-            </div>
+            ) : null} 
           </div>
         </LeftView>
-        {/* <RightView>
+        <RightView>
         <div className="bank-details">
-          <div className="bank-detail-content">
-            <UserBankDetails />
-          </div>
+          {/* <div className="bank-detail-content"> */}
+            {/* <UserBankDetails /> */}
+          {/* </div> */}
         </div>
-      </RightView> */}
+      </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
@@ -168,7 +204,7 @@ const PlanPayment = () => {
                 }}
                 onClick={() => setIsClicked(true)}
               >
-                Submit
+                Next
               </button>
             </div>
           </div>
@@ -178,7 +214,7 @@ const PlanPayment = () => {
   );
 };
 
-export default PlanPayment;
+export default Withdrawal;
 
 const LeftView = styled.div`
   width: 50%;
@@ -224,6 +260,7 @@ const RightView = styled.div`
     width: 100% !important;
   }
   .bank-details {
+    height: 70vh;
     padding: 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);

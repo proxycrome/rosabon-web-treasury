@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
+import { Link } from "react-router-dom";
 import plus from "../../../asset/plus.svg";
+import Switch from "react-switch";
 
 export const Plans = () => {
   return (
@@ -45,8 +53,8 @@ export const Plans = () => {
         <div className="d-flex justify-content-between mb-3">
           <h4>Here are your investments at a glance</h4>
           <div className="d-flex align-items-center">
-            <img src={plus} alt="plus" className="mx-2" />
-            <span style={{ color: "#111E6C" }}> Add More</span>
+            <img src={plus} alt="plus" className="mx-2"/>
+            <span style={{color: '#111E6C', marginRight: '30px'}}> Add More</span>
           </div>
         </div>
       </div>
@@ -58,7 +66,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <h4>Active</h4>
+              <h4 className="Active">Active</h4>
             </div>
             <div className="d-flex align-items-center justify-content-between pt-4">
               <div>
@@ -66,7 +74,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -83,7 +91,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <i className="fa-solid fa-ellipsis"></i>
+              <DropDown status="Active" />
             </div>
           </div>
         </div>
@@ -95,7 +103,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <h4>Active</h4>
+              <h4 className="Pending">Pending</h4>
             </div>
             <div className="d-flex align-items-center justify-content-between pt-4">
               <div>
@@ -103,7 +111,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -120,7 +128,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <i className="fa-solid fa-ellipsis"></i>
+              <DropDown status="Pending" />
             </div>
           </div>
         </div>
@@ -132,7 +140,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <h4>Active</h4>
+              <h4 className="Matured">Matured</h4>
             </div>
             <div className="d-flex align-items-center justify-content-between pt-4">
               <div>
@@ -140,7 +148,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -157,7 +165,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <i className="fa-solid fa-ellipsis"></i>
+              <DropDown status="Matured" />
             </div>
           </div>
         </div>
@@ -168,7 +176,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <h4>Active</h4>
+              <h4 className="Active">Active</h4>
             </div>
             <div className="d-flex align-items-center justify-content-between pt-4">
               <div>
@@ -176,7 +184,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -193,7 +201,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <i className="fa-solid fa-ellipsis"></i>
+              <DropDown status="Active" />
             </div>
           </div>
         </div>
@@ -204,7 +212,7 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <h4>Active</h4>
+              <h4 className="Active">Active</h4>
             </div>
             <div className="d-flex align-items-center justify-content-between pt-4">
               <div>
@@ -212,7 +220,7 @@ export const Plans = () => {
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
               <div>
-                <h4>Start date</h4>
+                <h4>End date</h4>
                 <p className="p-0 m-0">24/06/2023</p>
               </div>
             </div>
@@ -229,11 +237,52 @@ export const Plans = () => {
                 <h4>Plan 1</h4>
                 <p className="p-0 m-0">Product 1</p>
               </div>
-              <i className="fa-solid fa-ellipsis"></i>
+              <DropDown status="Active" />
+            </div>
+          </div>
+        </div>
+        <div className="plan">
+          <div className="plan-top h-50 p-4">
+            <div className="d-flex align-items-center justify-content-between">
+              <div>
+                <h4>Plan 1</h4>
+                <p className="p-0 m-0">Product 1</p>
+              </div>
+              <h4 className="Active">Active</h4>
+            </div>
+            <div className="d-flex align-items-center justify-content-between pt-4">
+              <div>
+                <h4>Start date</h4>
+                <p className="p-0 m-0">24/06/2023</p>
+              </div>
+              <div>
+                <h4>End date</h4>
+                <p className="p-0 m-0">24/06/2023</p>
+              </div>
+            </div>
+          </div>
+          <div className="d-flex position-relative horizontal-line">
+            <div className="position-absolute horizontal-circle-left"></div>
+            <hr className="dotted" />
+            <div className="position-absolute end-0 horizontal-circle-right"></div>
+          </div>
+
+          <div className="plan-top h-50 py-1 px-4">
+            <div className="d-flex align-items-center justify-content-between">
+              <div>
+                <h4>Plan 1</h4>
+                <p className="p-0 m-0">Product 1</p>
+              </div>
+              <DropDown status="Active" />
             </div>
           </div>
         </div>
       </div>
+      <div className="row">
+        <div className="d-flex justify-content-center my-5">
+          <button className="btn-view">View all</button>
+        </div>  
+      </div> 
     </Wrapper>
   );
 };
@@ -244,6 +293,7 @@ const Wrapper = styled.div`
     display: grid;
     gap: 30px;
     grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 30px
   }
   @media (max-width: 996px) {
     .plan-content {
@@ -302,6 +352,21 @@ const Wrapper = styled.div`
       font-size: 13px;
       line-height: 16px;
     }
+    .Active, .Pending, .Matured {
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 16px;
+      letter-spacing: -0.01em;
+    }
+    .Active {
+      color: #219653;
+    }
+    .Pending {
+      color: #F2994A;
+    }
+    .Matured {
+      color: #2D9CDB;
+    }
   }
   input {
     background: #fbf8f8;
@@ -315,4 +380,82 @@ const Wrapper = styled.div`
     letter-spacing: -0.03em;
     color: #242424;
   }
+  .btn-view {
+    width: 328px;
+    height: 54px;
+    background: #F2F2F2;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px
+    color: #111E6C;
+  }
 `;
+
+export const DropDown = ({status}) => {
+  const [menu, setMenu] = useState(false);
+  const [checkRollover, setCheckRollover] = useState(false);
+
+  const toggle = () => {
+    setMenu(!menu);
+  };
+
+
+  return (
+    <Dropdown
+      isOpen={menu}
+      toggle={toggle}
+      className="d-inline-block"
+    >
+      <DropdownToggle
+        tag="button"
+        outline
+        className="btn header-item waves-effect"
+        id="page-header-user-dropdown"
+      >
+        <div style={{width: "100%", height: "100%"}}>
+          <i class="fa-solid fa-ellipsis"></i>
+        </div>  
+      </DropdownToggle>
+      <DropdownMenu right className="mt-1">
+        {status === "Active" ? (
+          <>
+            <DropdownItem tag={Link} to="/plan-topup">Topup</DropdownItem>
+            <DropdownItem tag={Link} to="/transfer">Transfer</DropdownItem>
+            <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
+            <DropdownItem>
+              <div className="d-flex align-items-center justify-content-between" style={{width: "150px"}}>
+                <div>Auto rollover</div>{" "}
+                <Switch
+                  className="mr-2 mt-1"
+                  onColor="#111E6C"
+                  onChange={() => setCheckRollover(!checkRollover)}
+                  checked={checkRollover}
+                  uncheckedIcon={false}
+                  width={35}
+                  height={18}
+                />
+              </div>
+            </DropdownItem>
+            <DropdownItem tag={Link} to="/history">History</DropdownItem>
+          </>
+        ) : status === "Pending" ? (
+          <>
+            <DropdownItem>View account details</DropdownItem>
+            <DropdownItem>Pay with card</DropdownItem>
+            <DropdownItem>Remove</DropdownItem>
+          </>
+        ) : status === "Matured" ? (
+          <>
+            <DropdownItem tag={Link} to="/rollover">Rollover</DropdownItem>
+            <DropdownItem tag={Link} to="/transfer">Transfer</DropdownItem>
+            <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
+            <DropdownItem tag={Link} to="/history">History</DropdownItem>
+          </>
+        ) : status === "Closed" ? (
+          <DropdownItem tag={Link} to="/history">History</DropdownItem>
+        ) : null}
+      </DropdownMenu>
+    </Dropdown>
+  )
+}

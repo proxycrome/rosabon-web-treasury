@@ -1,61 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import Verve from '../../../asset/master-card-logo.png';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-// import { UserBankDetails } from '../Accesssories';
-import PlanBankTopup from './PlanBankTopup';
-import PlanCardTopup from './PlanCardTopup';
+import { UserBankDetails } from '../Accesssories';
 
-
-const PlanPayment = () => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
-  const [isClicked, setIsClicked] = useState(false);
-  const navigate = useNavigate();
-
-  const handleClick = (e) => {
-    if (e.target.value === 'card') {
-      setCard('card');
-      setBank('');
-    }
-    if (e.target.value === 'bank') {
-      setBank('bank');
-      setCard('');
-    }
-  };
-
-  if (bank && isClicked) {
-    return (
-      <PlanBankTopup
-        goBack={() => {
-          setBank('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
-
-  if (card && isClicked) {
-    return (
-      <PlanCardTopup
-        goBack={() => {
-          setCard('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  }
-
-  const back = () => {
-    navigate('/plan-list');
-  };
-
+const PlanBankTopup = ({ goBack }) => {
   return (
     <>
       <Wrapper>
         <LeftView>
-          <h4 className="pb-3">Top up</h4>
+          <h4 className="pb-5">Top up</h4>
           <div className="plan-content">
             <div className="plan">
               <div className="plan-top h-50 p-4">
@@ -64,7 +16,7 @@ const PlanPayment = () => {
                     <h4>Plan 1</h4>
                     <p className="p-0 m-0">Product 1</p>
                   </div>
-                  <h4 className="Active">Active</h4>
+                  <h4>Active</h4>
                 </div>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
@@ -94,7 +46,7 @@ const PlanPayment = () => {
               </div>
             </div>
           </div>
-          <h4 className="pt-5">Choose Payment Type</h4>
+          {/* <h4 className="pt-5">Choose Payment Type</h4>
           <div className="plan-payment">
             <div className="row">
               <div class="col ">
@@ -138,15 +90,15 @@ const PlanPayment = () => {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
         </LeftView>
-        {/* <RightView>
-        <div className="bank-details">
-          <div className="bank-detail-content">
-            <UserBankDetails />
+        <RightView>
+          <div className="bank-details">
+            <div className="bank-detail-content">
+              <UserBankDetails />
+            </div>
           </div>
-        </div>
-      </RightView> */}
+        </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
@@ -154,7 +106,7 @@ const PlanPayment = () => {
             <div>
               <button
                 style={{ color: '#111E6C', width: '300px' }}
-                onClick={back}
+                onClick={goBack}
               >
                 Back
               </button>
@@ -166,9 +118,8 @@ const PlanPayment = () => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setIsClicked(true)}
               >
-                Submit
+                Save
               </button>
             </div>
           </div>
@@ -178,7 +129,7 @@ const PlanPayment = () => {
   );
 };
 
-export default PlanPayment;
+export default PlanBankTopup;
 
 const LeftView = styled.div`
   width: 50%;
@@ -200,21 +151,6 @@ const LeftView = styled.div`
     line-height: 17px;
     letter-spacing: -0.01em;
     color: #242424;
-  }
-  .Active, .Pending, .Matured {
-    font-weight: 500;
-    font-size: 13px;
-    line-height: 16px;
-    letter-spacing: -0.01em;
-  }
-  .Active {
-    color: #219653;
-  }
-  .Pending {
-    color: #F2994A;
-  }
-  .Matured {
-    color: #2D9CDB;
   }
 `;
 
