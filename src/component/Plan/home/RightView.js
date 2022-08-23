@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import halfEllipse from '../../../asset/halfEllipse.png'
-import YelloBackgroud from '../../../asset/yello-backgroud.png'
-import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png'
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
-import { Collapse } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import styled from 'styled-components';
+import halfEllipse from '../../../asset/halfEllipse.png';
+import YelloBackgroud from '../../../asset/yello-backgroud.png';
+import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png';
+import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
+import { Collapse } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 export const RightView = () => {
   const [openFixSavings, setFixSavingsOpen] = useState(false)
@@ -21,11 +21,11 @@ export const RightView = () => {
             src={halfEllipse}
             alt="halfEllipse"
           />
-          <img
+          {/* <img
             className="position-absolute set-yellow-background eclips-image image-fluid"
             src={YelloBackgroud}
             alt="YelloBackgroud"
-          />
+          /> */}
           <div className="d-flex align-center justify-content-between ">
             <p className="p-0 m-0">Total Networth</p>
             <div className="sqr-box">
@@ -49,6 +49,8 @@ export const RightView = () => {
             </div>
           </div>
         </div>
+        <div className="grey-background"></div>
+        <div className="yellow-background"></div>
       </div>
       <div className="home-body">
         <div className="">
@@ -317,9 +319,27 @@ const RightWrapper = styled.div`
     padding: 50px;
   }
 
-  .set-yellow-background {
-    top: 50px !important;
-    right: 40px !important;
+  .grey-background {
+    position: absolute;
+    bottom: 14px;
+    right: 1.5%;
+    width: 97.3%;
+    height: 186px;
+    background: #F2F2F2;
+    box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
+    border-radius: 20px;
+    z-index: -2;
+  }
+
+  .yellow-background {
+    position: absolute;
+    right: 6.5%;
+    bottom: 0;
+    width: 88.7%;
+    height: 170px;
+    background: #F3A712;
+    box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
+    border-radius: 20px;
     z-index: -5;
   }
 
@@ -337,6 +357,14 @@ const RightWrapper = styled.div`
     }
   }
   .naira-card-content {
+    width: 100% !important;
+    height: 192px;
+    position: absolute;
+    top: 0;
+    background: #ffffff;
+    box-shadow: 0px 6px 18px rgba(196, 204, 221, 0.25);
+    border-radius: 20px;
+    padding: 20px;
   }
   .home-body {
     padding-top: 100px;
@@ -351,12 +379,9 @@ const RightWrapper = styled.div`
     }
   }
   .naira-card {
-    height: 212px;
-    background: #ffffff;
-    box-shadow: 0px 6px 18px rgba(196, 204, 221, 0.25);
-    border-radius: 20px;
-    padding: 20px;
-    margin-right: 4rem;
+    width: 513px;
+    height: 221px;
+    
   }
   .eclips-image {
     top: 0;
