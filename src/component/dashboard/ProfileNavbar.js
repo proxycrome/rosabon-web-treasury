@@ -1,68 +1,68 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import storage from "redux-persist/lib/storage";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import storage from 'redux-persist/lib/storage'
+import { useSelector, useDispatch, connect } from 'react-redux'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap";
+} from 'reactstrap'
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from "../../redux/actions/personalInfo/userProfile.actions";
-import { CLEAR_USERS } from "../../redux/constant/auth";
+} from '../../redux/actions/personalInfo/userProfile.actions'
+import { CLEAR_USERS } from '../../redux/constant/auth'
 
 export function ProfileNavBar({ children }) {
-  const [menu, setMenu] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [menu, setMenu] = useState(false)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const profile = useSelector((state) => state.user_profile);
-  const { users } = profile;
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
+  const profile = useSelector((state) => state.user_profile)
+  const { users } = profile
+  const auth = useSelector((state) => state.auth)
+  const { login, isLoggedIn } = auth
 
   const toggle = () => {
-    setMenu(!menu);
-  };
+    setMenu(!menu)
+  }
 
   const logout = (e) => {
-    localStorage.removeItem("token");
-    navigate("/login", { replace: true });
-    dispatch({ type: CLEAR_USERS });
-  };
+    localStorage.removeItem('token')
+    navigate('/login', { replace: true })
+    dispatch({ type: CLEAR_USERS })
+  }
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
+    const tokenString = JSON.parse(localStorage.getItem('token'))
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString));
+      dispatch(getAuthUsers(tokenString))
     } else {
-      navigate("/login");
+      navigate('/login')
     }
-  }, []);
+  }, [])
 
   const user =
-    users && users.role == "COMPANY"
+    users && users.role == 'COMPANY'
       ? users.company.name
-      : users.role == "INDIVIDUAL_USER"
+      : users.role == 'INDIVIDUAL_USER'
       ? users.individualUser.firstName
-      : "";
+      : ''
 
   useEffect(() => {
-    if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/kyc/person");
+    if (users && !users.kyc && users.role === 'INDIVIDUAL_USER') {
+      navigate('/kyc/person')
     }
-    if (users && !users.kyc && users.role === "COMPANY") {
-      navigate("/kyc/company");
+    if (users && !users.kyc && users.role === 'COMPANY') {
+      navigate('/kyc/company')
     }
-  }, [users]);
+  }, [users])
 
   return (
     <WrappeNavBar>
-      <div className="shadow pe-4">
+      <div className="shadow-sm pe-4">
         <div className="profile_nav py-2">
           <div className="page-title mx-3">{children}</div>
           <ul>
@@ -75,12 +75,14 @@ export function ProfileNavBar({ children }) {
               <Dropdown
                 isOpen={menu}
                 toggle={toggle}
-                className="d-inline-block user-dropdown">
+                className="d-inline-block user-dropdown"
+              >
                 <DropdownToggle
                   tag="button"
                   outline
                   className="btn header-item waves-effect border-0"
-                  id="page-header-user-dropdown">
+                  id="page-header-user-dropdown"
+                >
                   <span className="d-none d-xl-inline-block ml-1 text-transform me-2">
                     {user}
                   </span>
@@ -94,17 +96,17 @@ export function ProfileNavBar({ children }) {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem>
-                    {users && users.role == "COMPANY" ? (
+                    {users && users.role == 'COMPANY' ? (
                       <>
                         <NavLink className="nav_link" to="/company-profile">
-                          <i className="ri-user-line align-middle mr-1"></i>{" "}
+                          <i className="ri-user-line align-middle mr-1"></i>{' '}
                           Profile
                         </NavLink>
                       </>
-                    ) : users && users.role == "INDIVIDUAL_USER" ? (
+                    ) : users && users.role == 'INDIVIDUAL_USER' ? (
                       <>
                         <NavLink className="nav_link" to="/personal-profile">
-                          <i className="ri-user-line align-middle mr-1"></i>{" "}
+                          <i className="ri-user-line align-middle mr-1"></i>{' '}
                           Profile
                         </NavLink>
                       </>
@@ -119,7 +121,7 @@ export function ProfileNavBar({ children }) {
                     <i className="fa fa-sign-out mr-5 text-danger"></i>
                     <span style={{marginLeft: "20px"}}>Logout</span>
                    </div> */}
-                    <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{" "}
+                    <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{' '}
                     Logout
                   </DropdownItem>
                 </DropdownMenu>
@@ -129,7 +131,7 @@ export function ProfileNavBar({ children }) {
         </div>
       </div>
     </WrappeNavBar>
-  );
+  )
 }
 
 const WrappeNavBar = styled.div`
@@ -137,8 +139,6 @@ const WrappeNavBar = styled.div`
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(98, 134, 154, 0.12);
   text-align: right;
-  margin-bottom: 20px;
- 
 
   @media (max-width: 650px) {
     .page-title h2 {
@@ -173,4 +173,4 @@ const WrappeNavBar = styled.div`
   .fa-bell {
     font-size: 16px;
   }
-`;
+`

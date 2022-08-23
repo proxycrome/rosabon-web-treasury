@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components';
-import halfEllipse from '../../../asset/halfEllipse.png';
-import YelloBackgroud from '../../../asset/yello-backgroud.png';
-import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png';
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
-import { Collapse } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import styled from 'styled-components'
+import halfEllipse from '../../../asset/halfEllipse.png'
+import YelloBackgroud from '../../../asset/yello-backgroud.png'
+import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png'
+import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
+import { Collapse } from 'reactstrap'
+import { Link } from 'react-router-dom'
 
 export const RightView = () => {
   const [openFixSavings, setFixSavingsOpen] = useState(false)
@@ -13,7 +13,7 @@ export const RightView = () => {
   const [openTargetIncome, setTargetIncomeOpen] = useState(false)
 
   return (
-    <RightWrapper>
+    <RightWrapper className="border-end border-light">
       <div className="naira-card position-relative">
         <div className="naira-card-content">
           <img
@@ -54,13 +54,13 @@ export const RightView = () => {
       </div>
       <div className="home-body">
         <div className="">
-          <h4 className="mb-2">Categories</h4>
-          <div className="shadow p-3 mb-2 rounded">
+          <h5 className="mb-2 fw-bold">Categories</h5>
+          <div className="shadow-sm p-3 mb-2 rounded">
             <div
               className="d-flex align-items-center justify-content-between savins-drop "
               onClick={() => setFixSavingsOpen(!openFixSavings)}
             >
-              <h5 className="mb-1">Fix Savings </h5>
+              <h6 className="mb-1">Fix Savings </h6>
               <div>
                 {openFixSavings ? (
                   <i className="fa-solid fa-chevron-up"></i>
@@ -138,12 +138,12 @@ export const RightView = () => {
             </div>
           </Collapse>
 
-          <div className="shadow p-3 mb-2 rounded">
+          <div className="shadow-sm p-3 mb-2 rounded">
             <div
               className="d-flex align-items-center justify-content-between savins-drop"
               onClick={() => setTargetSavingsOpen(!openTargetSavings)}
             >
-              <h5 className="mb-1">Target Savings</h5>
+              <h6 className="mb-1">Target Savings</h6>
               <div>
                 {openTargetSavings ? (
                   <i className="fa-solid fa-chevron-up"></i>
@@ -223,12 +223,12 @@ export const RightView = () => {
               </div>
             </div>
           </Collapse>
-          <div className="shadow p-3 mb-2 rounded">
+          <div className="shadow-sm p-3 mb-2 rounded">
             <div
               className="d-flex align-items-center justify-content-between savins-drop"
               onClick={() => setTargetIncomeOpen(!openTargetIncome)}
             >
-              <h5 className="mb-1">Target Income</h5>
+              <h6 className="mb-1 card-title">Target Income</h6>
               <div>
                 {openTargetIncome ? (
                   <i className="fa-solid fa-chevron-up"></i>
@@ -325,7 +325,7 @@ const RightWrapper = styled.div`
     right: 1.5%;
     width: 97.3%;
     height: 186px;
-    background: #F2F2F2;
+    background: #f2f2f2;
     box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
     border-radius: 20px;
     z-index: -2;
@@ -337,7 +337,7 @@ const RightWrapper = styled.div`
     bottom: 0;
     width: 88.7%;
     height: 170px;
-    background: #F3A712;
+    background: #f3a712;
     box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
     border-radius: 20px;
     z-index: -5;
@@ -381,7 +381,6 @@ const RightWrapper = styled.div`
   .naira-card {
     width: 513px;
     height: 221px;
-    
   }
   .eclips-image {
     top: 0;
