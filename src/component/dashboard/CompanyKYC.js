@@ -13,7 +13,7 @@ import {
 const CompanyKYC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const count = useSelector((state) => state.auth.signup_btn);
+  
   const company_details = useSelector((state) => state.user_profile.users);
   const auth = useSelector((state) => state.auth);
   const { login, isLoggedIn } = auth;
@@ -78,17 +78,29 @@ const CompanyKYC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    }
-  }, [isLoggedIn, users]);
+  console.log(
+    formData.rcNumber,
+    formData.natureOfBusiness,
+    formData.companyType,
+    formData.dateOfInco
+  );
 
-  useEffect(() => {
-    console.log(company_details);
-  }, [company_details]);
+  // useEffect(() => {
+  //   console.log(users.role);
+  //   if (company_details && !users.kyc && users.role === "INDIVIDUAL_USER") {
+  //     navigate("/kyc/person");
+  //   } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+  //     navigate("/personal-profile");
+  //   } else if (users && users.kyc && users.role === "COMPANY") {
+  //     navigate("/company-profile");
+  //   }
+  // }, [isLoggedIn, users, company_details]);
+
+  // useEffect(() => {
+  //   if (!company_details) {
+  //     navigate("/login");
+  //   }
+  // }, [company_details]);
 
   return (
     <div>
@@ -192,18 +204,21 @@ const CompanyKYC = () => {
                         <div className="col-md-4 ">
                           <label>Company Type</label>
                           <select
-                            className="form-select form-select-lg mb-3"
+                            className="form-select form-select-lg mb-3 select-field"
                             aria-label=".form-select-lg"
                             onChange={handleChange}
+                            value={formData.companyType}
                             name="companyType">
-                            <option value="" selected>
-                              Please choose an option
-                            </option>
-                            <option value="ROSABON_SALES">
+                            <option value=""></option>
+                            <option value="Sole proprietorship">
                               Sole proprietorship
                             </option>
-                            <option value="ANOTHER_USER">Partnership</option>
-                            <option value="OTHER">Corporate Limited</option>
+                            <option value="Sole proprietorship">
+                              Partnership
+                            </option>
+                            <option value="Sole proprietorship">
+                              Corporate Limited
+                            </option>
                           </select>
                         </div>
                       </div>
@@ -278,18 +293,13 @@ const CompanyKYC = () => {
                       </button>
                     </div>
                     <div>
-                      {/* <button className="blue-btn">
-                      <Link to="/company-profile">Save and Invest Now</Link>
-                    </button> */}
                       {formData.rcNumber &&
                       formData.natureOfBusiness &&
                       formData.companyType &&
                       formData.dateOfInco ? (
-                        <Link to="/company-profile">
-                          <button type="submit" className="blue-btn">
-                            Save and Invest Now
-                          </button>
-                        </Link>
+                        <button type="submit" className="blue-btn">
+                          Save and Invest Now
+                        </button>
                       ) : (
                         <>
                           <button type="submit" className="" disabled>
@@ -345,6 +355,16 @@ const WrapperBody = styled.div`
   padding: 6rem 5rem;
   @media (max-width: 600px) {
     padding: 6rem 3rem;
+  }
+  .select-field {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
   }
   h4 {
     font-style: normal;

@@ -54,7 +54,9 @@ const Withdrawal = () => {
   return (
     <>
       <ProfileNavBar>
-        <h2>Plan</h2>
+        <NavTitle>
+          <span className="fw-bold">Plan</span>
+        </NavTitle>
       </ProfileNavBar>
       <Wrapper>
         <LeftView>
@@ -215,6 +217,21 @@ const Withdrawal = () => {
 };
 
 export default Withdrawal;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
+  }
+`;
 
 const LeftView = styled.div`
   width: 50%;

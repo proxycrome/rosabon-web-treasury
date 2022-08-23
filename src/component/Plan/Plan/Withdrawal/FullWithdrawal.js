@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
-import ModalComponent from '../../../ModalComponent';
-import { WithdrawalSummary } from '../../Accesssories';
+import ModalComponent from "../../../ModalComponent";
+import { WithdrawalSummary } from "../../Accesssories";
 
-const FullWithdrawal = ({goBack}) => {
+const FullWithdrawal = ({ goBack }) => {
   const [modalState, setModalState] = useState(false);
 
   return (
     <>
       <ProfileNavBar>
-        <h2>Plan</h2>
+        <NavTitle>
+          <span className="fw-bold">Plan</span>
+        </NavTitle>
       </ProfileNavBar>
       <Wrapper>
         <LeftView>
@@ -56,40 +58,37 @@ const FullWithdrawal = ({goBack}) => {
           </div>
         </LeftView>
         <RightView>
-        <div className="bank-details">
-          <div className="bank-detail-content">
-            <WithdrawalSummary />
+          <div className="bank-details">
+            <div className="bank-detail-content">
+              <WithdrawalSummary />
+            </div>
           </div>
-        </div>
-      </RightView>
+        </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
           <div className="d-flex align-items-center justify-content-between footer-content">
             <div>
               <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={goBack}
-              >
+                style={{ color: "#111E6C", width: "300px" }}
+                onClick={goBack}>
                 Back
               </button>
             </div>
             <div>
               <button
                 style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
+                  backgroundColor: "#111E6C",
+                  color: "#FFFFFF",
+                  width: "300px",
                 }}
-                onClick={() => setModalState(true)}
-              >
+                onClick={() => setModalState(true)}>
                 Proceed
               </button>
               <ModalComponent
                 show={modalState}
-                size={'md'}
-                handleClose={() => setModalState(false)}
-              >
+                size={"md"}
+                handleClose={() => setModalState(false)}>
                 <SuccessConfirm
                   confirmNotice="withdrawal"
                   handleClose={() => setModalState(false)}
@@ -126,7 +125,9 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active, .Pending, .Matured {
+  .Active,
+  .Pending,
+  .Matured {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
@@ -136,10 +137,10 @@ const LeftView = styled.div`
     color: #219653;
   }
   .Pending {
-    color: #F2994A;
+    color: #f2994a;
   }
   .Matured {
-    color: #2D9CDB;
+    color: #2d9cdb;
   }
 `;
 
@@ -259,5 +260,20 @@ const WrapperFooter = styled.div`
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
+  }
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
   }
 `;

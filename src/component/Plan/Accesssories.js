@@ -599,7 +599,7 @@ export const RolloverSummary = () => {
 const RolloverSummaryWrapper = styled.div`
   box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
   padding: 40px;
-  background: #FFFFFF;
+  background: #ffffff;
   p {
     font-weight: 400;
     font-size: 14px;
@@ -636,14 +636,16 @@ const RolloverSummaryWrapper = styled.div`
 `;
 
 export const RolloverWithdrawMethod = () => {
-  const [withdraw, setWithdraw] = useState("")
+  const [withdraw, setWithdraw] = useState("");
   return (
     <div>
       <RolloverSummaryWrapper>
-        <h4 className="">Kindly select beneficiary account to receive the withdrawal</h4>
+        <h4 className="">
+          Kindly select beneficiary account to receive the withdrawal
+        </h4>
         <div className="plan-content">
           <div className="rollover">
-            <div className="plan-top h-50 p-4">  
+            <div className="plan-top h-50 p-4">
               <div className="row my-4">
                 <div className="col ">
                   <div className="input-group">
@@ -651,8 +653,7 @@ export const RolloverWithdrawMethod = () => {
                       className="form-select form-select-md"
                       aria-label=".form-select-md"
                       name="withdraw"
-                      onChange={(e) => setWithdraw(e.target.value)} 
-                    >
+                      onChange={(e) => setWithdraw(e.target.value)}>
                       <option value="">Select withdrawal destination</option>
                       <option value="bank">To Bank</option>
                       <option value="wallet">My Wallet</option>
@@ -673,9 +674,9 @@ export const RolloverWithdrawMethod = () => {
                   <div className="pt-4">
                     <p className="p-0 m-0">Bank Name</p>
                     <h4>Zenith Bank</h4>
-                  </div> 
+                  </div>
                 </div>
-              )}  
+              )}
             </div>
           </div>
         </div>
@@ -722,7 +723,8 @@ export const WithdrawalSummary = () => {
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">
-                    Available Plan<br /> Balance{" "}
+                    Available Plan
+                    <br /> Balance{" "}
                   </p>
                   <h4 className="">₦460,000</h4>
                 </div>
@@ -731,9 +733,9 @@ export const WithdrawalSummary = () => {
                 <div>
                   <p className="p-0 mb-3">Reason for withdrawal</p>
                   <p>
-                    as it is sometimes known, is dummy text used in laying
-                    out print, graphic or web designs. The passage is 
-                    attributed to an unknown typesetter in the 15th century
+                    as it is sometimes known, is dummy text used in laying out
+                    print, graphic or web designs. The passage is attributed to
+                    an unknown typesetter in the 15th century
                   </p>
                 </div>
               </div>
@@ -827,7 +829,7 @@ const PlanSummaryWrapper = styled.div`
     color: #242424;
   }
   .plan-content {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     margin-top: 40px;
   }
   .rollover {
@@ -1211,7 +1213,11 @@ export const HistoryTable = () => {
 
   return (
     <div>
-      <ProfileNavBar />
+      <ProfileNavBar>
+        <NavTitle>
+          <span className="fw-bold">History</span>
+        </NavTitle>
+      </ProfileNavBar>
       <HistoryTableWarapper>
         <div className="container-fluid">
           <div className="row">
@@ -1367,13 +1373,19 @@ const HistoryTableWarapper = styled.div`
     color: #000000;
     padding-top: 50px;
   }
+  .grey-text {
+    color: #bdbdbd;
+    cursor: pointer;
+  }
 `;
 
 export const ReferalTable = () => {
   return (
     <div>
       <ProfileNavBar>
-        <h2>Wallet</h2>
+        <NavTitle>
+          <span className="fw-bold">Wallet</span>
+        </NavTitle>
       </ProfileNavBar>
       <ReferalTableWarapper>
         <h3>My Referrals</h3>
@@ -1534,7 +1546,9 @@ export const ReferralBonus = () => {
   return (
     <div>
       <ProfileNavBar>
-        <h2>Wallet</h2>
+        <NavTitle>
+          <span className="fw-bold">Wallet</span>
+        </NavTitle>
       </ProfileNavBar>
       <ReferalTableBonusWarapper>
         <h3>My Referral Bonus</h3>
@@ -1700,17 +1714,51 @@ const ReferalTableBonusWarapper = styled.div`
 `;
 
 export const TransferDeposit = () => {
+  const [bank, setBank] = useState(false);
+  const [credit, setCredit] = useState(false);
+  const [transfer, setTransfer] = useState(false);
+
+  const handleClick = (values) => {
+    if (values == "bank") {
+      setBank(true);
+      setCredit(false);
+      setTransfer(false);
+    } else if (values == "credit") {
+      setBank(false);
+      setCredit(true);
+      setTransfer(false);
+    } else if (values == "transfer") {
+      setBank(false);
+      setCredit(false);
+      setTransfer(true);
+    }
+  };
+
   return (
     <div>
       <ProfileNavBar>
-        <h2>Wallet</h2>
+        <NavTitle>
+          <span className="fw-bold">Wallet</span>
+        </NavTitle>
       </ProfileNavBar>
       <HistoryTableWarapper>
         <h3 className="pb-4">My Referral Bonus</h3>
         <div className="d-flex align-items-content justify-content-around pb-5">
-          <h3>Bank Transfer Deposit</h3>
-          <h3>Credit Wallet Transfer Deposit</h3>
-          <h3>Plan Transfer Deposit</h3>
+          <h3
+            className={bank ? "" : "grey-text"}
+            onClick={() => handleClick("bank")}>
+            Bank Transfer Deposit
+          </h3>
+          <h3
+            className={credit ? "" : "grey-text"}
+            onClick={() => handleClick("credit")}>
+            Credit Wallet Transfer Deposit
+          </h3>
+          <h3
+            className={transfer ? "" : "grey-text"}
+            onClick={() => handleClick("transfer")}>
+            Plan Transfer Deposit
+          </h3>
         </div>
 
         <div>
@@ -1810,7 +1858,9 @@ export const SpecialEarnings = () => {
   return (
     <div>
       <ProfileNavBar>
-        <h2>Wallet</h2>
+        <NavTitle>
+          <span className="fw-bold">Wallet</span>
+        </NavTitle>
       </ProfileNavBar>
       <SpecialEarningsWarapper>
         <h3>My Referral Bonus</h3>
@@ -1981,7 +2031,11 @@ const SpecialEarningsWarapper = styled.div`
 export const FeedbackTickets = () => {
   return (
     <div>
-      <ProfileNavBar />
+      <ProfileNavBar>
+        <NavTitle>
+          <span className="fw-bold">Wallet</span>
+        </NavTitle>
+      </ProfileNavBar>
       <FeedbackticketWarapper>
         <h3>My Tickets</h3>
 
@@ -2180,7 +2234,11 @@ const FeedbackticketWarapper = styled.div`
 export const FeedbackOpenTickets = () => {
   return (
     <div>
-      <ProfileNavBar />
+      <ProfileNavBar>
+        <NavTitle>
+          <span className="fw-bold">Wallet</span>
+        </NavTitle>
+      </ProfileNavBar>
       <FeedbackticketWarapper>
         <h3>My Open Tickets</h3>
 
@@ -2434,3 +2492,18 @@ export const FeedbackCloseTickets = () => {
     </div>
   );
 };
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
+  }
+`;

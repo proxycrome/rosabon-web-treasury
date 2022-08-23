@@ -13,8 +13,10 @@ const PlanBankPayment = ({goBack}) => {
   return (
     <>
       <ProfileNavBar>
-        <h2>Choose Plan</h2>
-      </ProfileNavBar>
+          <NavTitle>
+            <span className="fw-bold">Choose Plan</span>
+          </NavTitle>
+        </ProfileNavBar>
       <Wrapper>
         <LeftView>
           <h6>Kindly confirm your transaction details below</h6>
@@ -248,5 +250,20 @@ const Wrapper = styled.div`
     line-height: 20px;
     letter-spacing: -0.03em;
     color: #242424;
+  }
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
   }
 `;

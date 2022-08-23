@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { Notice, SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
-import ModalComponent from '../../../ModalComponent';
-
+import ModalComponent from "../../../ModalComponent";
 
 const Transfer = () => {
   const [modalState, setModalState] = useState("Close");
   const navigate = useNavigate();
 
-  
-
   const back = () => {
-    navigate('/plan-list');
+    navigate("/plan-list");
   };
 
   return (
     <>
       <ProfileNavBar>
-        <h2>Plan</h2>
+        <NavTitle>
+          <span className="fw-bold">Plan</span>
+        </NavTitle>
       </ProfileNavBar>
       <Wrapper>
         <LeftView>
@@ -62,7 +61,7 @@ const Transfer = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="plan-payment">
             <div className="row my-4 pt-4">
               <div className="col ">
@@ -71,8 +70,7 @@ const Transfer = () => {
                   <select
                     className="form-select form-select-md"
                     aria-label=".form-select-md"
-                    name="Tenor" 
-                  >
+                    name="Tenor">
                     <option>Plan 1</option>
                     <option>Plan 2</option>
                     <option>Plan 4</option>
@@ -96,41 +94,38 @@ const Transfer = () => {
           </div>
         </LeftView>
         <RightView>
-        <div className="bank-details">
-          {/* <div className="bank-detail-content"> */}
+          <div className="bank-details">
+            {/* <div className="bank-detail-content"> */}
             {/* <UserBankDetails /> */}
-          {/* </div> */}
-        </div>
-      </RightView>
+            {/* </div> */}
+          </div>
+        </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
           <div className="d-flex align-items-center justify-content-between footer-content">
             <div>
               <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={back}
-              >
+                style={{ color: "#111E6C", width: "300px" }}
+                onClick={back}>
                 Back
               </button>
             </div>
             <div>
               <button
                 style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
+                  backgroundColor: "#111E6C",
+                  color: "#FFFFFF",
+                  width: "300px",
                 }}
-                onClick={() => setModalState("modal-one")}
-              >
+                onClick={() => setModalState("modal-one")}>
                 Submit
               </button>
               <ModalComponent
                 show={modalState === "modal-one"}
-                size={'md'}
-                handleClose={() => setModalState("close")}
-              >
-                <Notice 
+                size={"md"}
+                handleClose={() => setModalState("close")}>
+                <Notice
                   handleClose={() => setModalState("close")}
                   handleShowModalTwo={() => setModalState("modal-two")}
                   transferNotice="transfer"
@@ -139,9 +134,8 @@ const Transfer = () => {
 
               <ModalComponent
                 show={modalState === "modal-two"}
-                size={'md'}
-                handleClose={() => setModalState("close")}
-              >
+                size={"md"}
+                handleClose={() => setModalState("close")}>
                 <SuccessConfirm
                   transferNotice="transfer"
                   handleClose={() => setModalState("close")}
@@ -178,7 +172,9 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active, .Pending, .Matured {
+  .Active,
+  .Pending,
+  .Matured {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
@@ -188,10 +184,10 @@ const LeftView = styled.div`
     color: #219653;
   }
   .Pending {
-    color: #F2994A;
+    color: #f2994a;
   }
   .Matured {
-    color: #2D9CDB;
+    color: #2d9cdb;
   }
 `;
 
@@ -312,5 +308,20 @@ const WrapperFooter = styled.div`
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
+  }
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
   }
 `;

@@ -63,6 +63,11 @@ const authReducer = (state = initialState, action) => {
         ...state,
         user: action.payload,
       };
+    case types.USERS_EMAIL:
+      return {
+        ...state,
+        email: action.payload,
+      };
     case types.AUTHORIZE_FAIL:
       return {
         ...state,

@@ -5,7 +5,7 @@ import Vector from "../asset/Vector.png";
 function Test() {
   return (
     <Wrapper>
-      <div>
+      <div className="body-content">
         <div className="top-image">
           <img src={Vector} alt="User" />
         </div>
@@ -46,6 +46,12 @@ function Test() {
 export default Test;
 
 const Wrapper = styled.div`
+.body-content {
+  max-width: 70%;
+  border: solid 3px green;
+}
+  border: solid 3px red;
+  width: 80%;
   .top-image {
     text-align: right;
   }
@@ -53,13 +59,13 @@ const Wrapper = styled.div`
     font-family: "Ubuntu";
     font-style: normal;
     font-weight: 500;
-    font-size: 44px;
+    /* font-size: 44rem; */
     line-height: 51px;
     text-align: center;
     text-transform: capitalize;
     color: #540d6e;
   }
-  padding: 30px 20px;
+  /* padding: 30px 20px; */
   input,
   select {
     width: 100%;
@@ -69,46 +75,27 @@ const Wrapper = styled.div`
     box-sizing: border-box;
   }
   label {
-    padding-top: 30px;
+    /* padding-top: 30px; */
   }
   .input-content {
-    padding: 0 350px;
+    /* padding: 0 350px; */
   }
   .sigup-button {
     text-align: center;
     padding-top: 30px;
   }
   button {
-    padding: 10px 70px;
+    padding: 1% 10%;
     background: #ee4266;
     border-radius: 8px;
     font-family: "Ubuntu";
     font-style: normal;
     font-weight: 400;
-    font-size: 22px;
+    font-size: 1.2rem;
     line-height: 37px;
     color: #ffffff;
     outline: none;
     border: none;
   }
-  /* input[type="submit"] {
-    width: 100%;
-    background-color: #4caf50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  input[type="submit"]:hover {
-    background-color: #45a049;
-  }
-
-  div {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-  } */
+ 
 `;

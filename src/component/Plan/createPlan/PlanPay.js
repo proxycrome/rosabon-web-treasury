@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
-import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png';
-import { MakePayment, PlanSummary } from '../Accesssories';
-import PlanBankPayment from './PlanBankPayment';
-import PlanCardPayment from './PlanCardPayment';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
+import { MakePayment, PlanSummary } from "../Accesssories";
+import PlanBankPayment from "./PlanBankPayment";
+import PlanCardPayment from "./PlanCardPayment";
 
 const PlanPay = ({ goBack }) => {
   const [isBank, setIsBank] = useState(false);
@@ -48,7 +48,9 @@ const PlanPay = ({ goBack }) => {
   return (
     <>
       <ProfileNavBar>
-        <h2>Choose Plan</h2>
+        <NavTitle>
+          <span className="fw-bold">Choose Plan</span>
+        </NavTitle>
       </ProfileNavBar>
       <Wrapper>
         <LeftView>
@@ -63,14 +65,14 @@ const PlanPay = ({ goBack }) => {
               <div>
                 <div>
                   <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{' '}
+                    Lorem Ipsum is simply dummy text of the{" "}
                   </p>
                   <p className="p-0 m-0 pb-2">
-                    {' '}
+                    {" "}
                     printing and typesetting industry.
                   </p>
                   <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{' '}
+                    Lorem Ipsum is simply dummy text of the{" "}
                   </p>
                 </div>
               </div>
@@ -91,21 +93,19 @@ const PlanPay = ({ goBack }) => {
           <div className="d-flex align-items-center justify-content-between footer-content">
             <div>
               <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={goBack}
-              >
+                style={{ color: "#111E6C", width: "300px" }}
+                onClick={goBack}>
                 Back
               </button>
             </div>
             <div>
               <button
                 style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
+                  backgroundColor: "#111E6C",
+                  color: "#FFFFFF",
+                  width: "300px",
                 }}
-                onClick={() => setIsClicked(true)}
-              >
+                onClick={() => setIsClicked(true)}>
                 Proceed
               </button>
             </div>
@@ -148,7 +148,7 @@ const LeftView = styled.div`
     }
   }
   h4 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -293,5 +293,20 @@ const Wrapper = styled.div`
     line-height: 20px;
     letter-spacing: -0.03em;
     color: #242424;
+  }
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
   }
 `;

@@ -47,7 +47,9 @@ const Feedback = () => {
     <div>
       <WrapperBody>
         <ProfileNavBar>
-          <h2>Feedback</h2>
+          <NavTitle>
+            <span className="fw-bold">Feedback</span>
+          </NavTitle>
         </ProfileNavBar>
         <Wrapper>
           <h4>Select a feedback category to begin</h4>
@@ -151,7 +153,24 @@ const Feedback = () => {
 
 export default Feedback;
 
-const WrapperBody = styled.div``;
+const WrapperBody = styled.div`
+  /* height: 100vh; */
+`;
+
+const NavTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2,
+  span {
+    text-align: left;
+  }
+  @media (max-width: 500px) {
+    h2,
+    span {
+      display: none;
+    }
+  }
+`;
 
 const Wrapper = styled.div`
   width: 80%;

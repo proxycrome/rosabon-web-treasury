@@ -28,6 +28,7 @@ import Login from "./component/Auth/Login";
 import UserWallet from "./component/Plan/wallet/UserWallet";
 import Feedback from "./component/Plan/feedback/Feedback";
 import AdminMessage from "./component/Plan/feedback/AdminMessage";
+import Help from "./component/Plan/help/Help";
 import {
   HistoryTable,
   ReferalTable,
@@ -36,7 +37,7 @@ import {
   SpecialEarnings,
   FeedbackTickets,
   FeedbackOpenTickets,
-  FeedbackCloseTickets
+  FeedbackCloseTickets,
 } from "./component/Plan/Accesssories";
 
 function PageRoutes() {
@@ -66,6 +67,7 @@ function PageRoutes() {
         <Route path="open-tickets" element={<FeedbackOpenTickets />} />
         <Route path="close-tickets" element={<FeedbackCloseTickets />} />
         <Route path="admin-message" element={<AdminMessage />} />
+        <Route path="help" element={<Help />} />
       </Route>
       <Route path="/kyc" element={<KYC />}>
         <Route path="company" element={<CompanyKYC />} />
