@@ -100,7 +100,7 @@ export const forgotPassword = (dataObj) => async (dispatch) => {
   const { formData, message } = await forgot_password(dataObj);
   if (formData) {
     dispatch({ type: types.FORGOT_PASSWORD, payload: formData, success: true });
-    // dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+    // toast.success("Login was successful");
   } else {
     dispatch({
       type: types.AUTHORIZE_FAIL,

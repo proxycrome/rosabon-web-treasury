@@ -12,18 +12,22 @@ function Congratulatios(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const user_details = useSelector((state) => state.user_profile.users);
-  console.log(location.state);
 
-  useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
-    if (tokenString) {
-      dispatch(getAuthUsers(tokenString));
-    } else {
-      navigate("/login");
-    }
-    dispatch(successMessage(false));
-  }, []);
+  const auth = useSelector((state) => state.auth);
+  const { email } = auth;
+  const user_details = useSelector((state) => state.user_profile.users);
+  console.log(auth);
+
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("token"));
+  //   console.log(tokenString)
+  //   if (tokenString) {
+  //     dispatch(getAuthUsers(tokenString));
+  //   } else {
+  //     navigate("/login");
+  //   }
+    
+  // }, []);
 
   return (
     <Wrapper>
@@ -62,11 +66,11 @@ function Congratulatios(props) {
                       receive this in your inbox, please check your spam folder.
                     </p>
                   </>
-                ) : (
+                ) : location.state == "forgotpassword" ?  (
                   <>
-                    <p>Your email has been verified successfully</p>
+                    <p>Password reset link has been sent to {email} </p>
                   </>
-                )}
+                ) : <></>}
 
                 <Link to="/login">
                   <button className="verify_congrates_btn">Ok</button>
