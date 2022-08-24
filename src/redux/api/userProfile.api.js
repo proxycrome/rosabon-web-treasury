@@ -29,13 +29,18 @@ export const get_user = async (token, email) => {
 };
 
 export const update_user_company_kyc = async (token, objData) => {
-  const response = await axios.put(`${config.rosobon}/auth/users`, objData, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const formData = await response.data;
-  return { formData };
+  try {
+    const response = await axios.put(`${config.rosobon}auth/users`, objData, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    const formData = await response.data;
+    return { formData };
+  } catch (error) {
+    
+  }
+  
 };

@@ -392,7 +392,7 @@ const RightWrapper = styled.section`
     text-decoration: none;
   }
   .referal-link {
-    padding-top: 70px;
+    padding-top: 20px;
   }
 
   h4 {
@@ -412,14 +412,17 @@ const RightWrapper = styled.section`
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     padding-left: 20px;
-    font-weight: 300;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
     position: relative;
+    color: #333333;
   }
   .select-field {
     font-family: "Montserrat";
     font-style: normal;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 17px;
     line-height: 15px;
     letter-spacing: -0.01em;
     color: #242424;
@@ -454,7 +457,7 @@ const LoginInput = styled.div`
   span {
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 17px;
     line-height: 21px;
     letter-spacing: -0.04em;
     color: #828282;

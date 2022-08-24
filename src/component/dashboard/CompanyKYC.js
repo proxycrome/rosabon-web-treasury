@@ -9,6 +9,7 @@ import {
   updateUserCompanyKYC,
   getAuthUsers,
 } from "../../redux/actions/personalInfo/userProfile.actions";
+import moment from "moment";
 
 const CompanyKYC = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const CompanyKYC = () => {
   const auth = useSelector((state) => state.auth);
   const { login, isLoggedIn } = auth;
 
+  console.log(company_details);
+
   const user_profile = useSelector((state) => state.user_profile);
   const { users } = user_profile;
 
@@ -26,6 +29,7 @@ const CompanyKYC = () => {
     natureOfBusiness: "",
     companyType: "",
     dateOfInco: "",
+    companyAddress: "",
   };
 
   const [formData, setformData] = useState(data);
@@ -40,33 +44,37 @@ const CompanyKYC = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { rcNumber, natureOfBusiness, companyType, dateOfInco } = formData;
+    const { rcNumber, natureOfBusiness, companyType, dateOfInco, companyAddress } = formData;
 
     let data = {
-      email: company_details && company_details.company.email,
+      email: company_details && company_details.email,
       isAssited: true,
       isNewsLetters: true,
-      phone: company_details && company_details.company.phone,
-      source: company_details && company_details.company.source,
-      sourceOthers: company_details && company_details.company.sourceOthers,
-      contactFirstName:
-        company_details && company_details.company.contactFirstName,
-      contactLastName:
-        company_details && company_details.company.contactLastName,
-      contactMiddleName:
-        company_details && company_details.company.contactMiddleName,
-      name: company_details && company_details.company.name,
+      phone: company_details && company_details.phone,
+      source: company_details && company_details.source,
+      sourceOthers: company_details && company_details.sourceOthers,
       role: "COMPANY",
       usage: "TREASURY",
       isKyc: true,
-      status: company_details && company_details.company.status,
-      rcNumber,
-      natureOfBusiness,
-      companyType,
-      dateOfInco,
+      status: company_details && company_details.status,
+      company: {
+        rcNumber,
+        natureOfBusiness,
+        companyType,
+        dateOfInco: String(moment(dateOfInco).format("DD-MM-YYYY")),
+        companyAddress,
+        contactFirstName: company_details && company_details.company.contactFirstName,
+        contactLastName: company_details && company_details.company.contactLastName,
+        contactMiddleName: company_details && company_details.company.contactMiddleName,
+        name: company_details && company_details.company.name,
+      }
+      
     };
     console.log(data);
-    dispatch(updateUserCompanyKYC(data));
+
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+
+    dispatch(updateUserCompanyKYC(tokenString, data));
   };
 
   useEffect(() => {
@@ -77,6 +85,8 @@ const CompanyKYC = () => {
       navigate("/login");
     }
   }, []);
+
+  
 
   console.log(
     formData.rcNumber,
@@ -136,7 +146,7 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder={
+                              value={
                                 company_details && company_details.company.name
                               }
                               type="text"
@@ -181,8 +191,8 @@ const CompanyKYC = () => {
                               className="form-control"
                               placeholder="Company Address"
                               onChange={handleChange}
-                              name="firstName"
-                              value={formData.firstName}
+                              name="companyAddress"
+                              value={formData.companyAddress}
                             />
                           </div>
                         </div>
@@ -232,9 +242,9 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder={
+                              value={
                                 company_details &&
-                                company_details.contactFirstName
+                                company_details.company.contactFirstName
                               }
                               type="text"
                             />
@@ -245,9 +255,9 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder={
+                              value={
                                 company_details &&
-                                company_details.contactLastName
+                                company_details.company.contactLastName
                               }
                               type="text"
                             />
@@ -260,7 +270,7 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder={
+                              value={
                                 company_details && company_details.email
                               }
                               type="text"
@@ -272,7 +282,7 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder={
+                              value={
                                 company_details && company_details.phone
                               }
                               type="text"
@@ -296,7 +306,8 @@ const CompanyKYC = () => {
                       {formData.rcNumber &&
                       formData.natureOfBusiness &&
                       formData.companyType &&
-                      formData.dateOfInco ? (
+                      formData.dateOfInco && 
+                      formData.companyAddress ? (
                         <button type="submit" className="blue-btn">
                           Save and Invest Now
                         </button>

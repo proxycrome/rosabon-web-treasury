@@ -75,18 +75,18 @@ const UserWallet = () => {
         </ProfileNavBar>
         <Wrapper>
           <LeftView>
-            <div className="naira-card ">
-              <div className="naira-card-content position-relative">
+            <div className="naira-card position-relative">
+              <div className="naira-card-content">
                 <img
                   className="position-absolute eclips-image image-fluid"
                   src={halfEllipse}
                   alt="halfEllipse"
                 />
-                <img
+                {/* <img
                   className="position-absolute set-yellow-background image-fluid"
                   src={YelloBackgroud}
                   alt="YelloBackgroud"
-                />
+                /> */}
                 <div className="d-flex align-center justify-content-between ">
                   <p className="p-0 m-0">Nuban Account Number</p>
                   <div className="sqr-box">
@@ -99,6 +99,8 @@ const UserWallet = () => {
                   <h5>₦ 1,500,000.00</h5>
                 </div>
               </div>
+              <div className="grey-background"></div>
+              <div className="yellow-background"></div>
             </div>
             {/* </div> */}
             <div className="py-5">
@@ -320,6 +322,42 @@ const LeftView = styled.div`
     border-radius: 10px;
     cursor: pointer;
   }
+
+  .grey-background {
+    position: absolute;
+    bottom: 14px;
+    right: 1.5%;
+    width: 97.3%;
+    height: 186px;
+    background: #F2F2F2;
+    box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
+    border-radius: 20px;
+    z-index: -2;
+  }
+
+  .naira-card-content {
+    width: 100% !important;
+    height: 192px;
+    position: absolute;
+    top: 0;
+    background: #ffffff;
+    box-shadow: 0px 6px 18px rgba(196, 204, 221, 0.25);
+    border-radius: 20px;
+    padding: 20px;
+  }
+
+  .yellow-background {
+    position: absolute;
+    right: 6.5%;
+    bottom: 0;
+    width: 88.7%;
+    height: 170px;
+    background: #F3A712;
+    box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
+    border-radius: 20px;
+    z-index: -5;
+  }
+
   .set-yellow-background {
     top: 20% !important;
     right: -5% !important;
@@ -403,14 +441,12 @@ const LeftView = styled.div`
       color: #ffffff !important;
     }
   }
+  
   .naira-card {
-    height: 212px;
-    background: #ffffff;
-    box-shadow: 0px 6px 18px rgba(196, 204, 221, 0.25);
-    border-radius: 20px;
-    padding: 20px;
-    margin-right: 4rem;
+    width: 513px;
+    height: 221px;  
   }
+
   .eclips-image {
     top: 0;
     right: 0;

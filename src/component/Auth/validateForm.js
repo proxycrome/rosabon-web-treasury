@@ -90,9 +90,9 @@ export function validateInfo(values, isCompanyTerms) {
   if (!values.name) {
     errors.name = "Name field is required";
   }
-  if (!values.refferedBy && !values.sourceOthers) {
-    errors.refferedBy = "This field is required";
-  }
+  // if (!values.refferedBy && !values.sourceOthers) {
+  //   errors.refferedBy = "This field is required";
+  // }
   if (!values.source) {
     errors.source = "Field cannot be empty";
   }

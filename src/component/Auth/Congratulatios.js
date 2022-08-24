@@ -5,6 +5,7 @@ import Confetti from "../../asset/confetti-cake.png";
 import { useLocation } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import * as types from "../../redux/constant/auth";
 import { successMessage } from "../../redux/actions/auth/SignupAction";
 import { getAuthUsers } from "../../redux/actions/personalInfo/userProfile.actions";
 
@@ -14,9 +15,11 @@ function Congratulatios(props) {
   const location = useLocation();
 
   const auth = useSelector((state) => state.auth);
-  const { email } = auth;
+  const { register, email } = auth;
   const user_details = useSelector((state) => state.user_profile.users);
-  console.log(auth);
+  console.log(register);
+
+
 
   // useEffect(() => {
   //   const tokenString = JSON.parse(localStorage.getItem("token"));
@@ -29,6 +32,18 @@ function Congratulatios(props) {
     
   // }, []);
 
+  useEffect(() => {
+    if (!register || !email) {
+      navigate("/login");
+    } 
+  }, []);
+
+  const handleClick = () => {
+    if(email){
+      dispatch({ type: types.USERS_EMAIL, payload: null });
+    }
+  } 
+
   return (
     <Wrapper>
       <div className="d-flex justify-content-center align-items-center">
@@ -37,7 +52,7 @@ function Congratulatios(props) {
             <div className="row">
               <div className="col congrate_body">
                 <div>
-                  {location.state == "success_signup" ? (
+                  {location.state === "success_signup" ? (
                     <>
                       <img
                         className="congrate_confet"
@@ -56,24 +71,24 @@ function Congratulatios(props) {
                   )}
                 </div>
                 <h4>Congratulations! </h4>
-                {location.state == "success_signup" ? (
+                {location.state === "success_signup" ? (
                   <>
                     <p className="">
-                      your account was created successfully. Please take a
+                      Your account was created successfully. Please take a
                       moment to verify your <br /> email address. We sent an
                       email with a verification link to{" "}
-                      {user_details && user_details.email} if <br /> you did not
+                      {register && register?.email} <br />if you did not
                       receive this in your inbox, please check your spam folder.
                     </p>
                   </>
-                ) : location.state == "forgotpassword" ?  (
+                ) : location.state === "forgotpassword" ?  (
                   <>
                     <p>Password reset link has been sent to {email} </p>
                   </>
                 ) : <></>}
 
                 <Link to="/login">
-                  <button className="verify_congrates_btn">Ok</button>
+                  <button className="verify_congrates_btn" onClick={handleClick}>Ok</button>
                 </Link>
               </div>
             </div>

@@ -101,33 +101,34 @@ function UserSignup() {
                   <form autoComplete="off" onSubmit={handleSubmit}>
                     <LoginInput>
                       <div className="row">
-                        <div className="col-md-6  mb-4">
-                          <label>First Name</label>
-                          <div className="input-group">
-                            <Input
-                              type="text"
-                              className="w-100"
-                              bsSize="lg"
-                              onChange={handleValueChange}
-                              name="firstName"
-                              value={values.firstName}
-                            />
+                        <div className="col-md-12 d-flex align-items-center">
+                          <div className="col-md-6  mb-4">
+                            <label>First Name</label>
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                className="form-control"
+                                onChange={handleValueChange}
+                                name="firstName"
+                                value={values.firstName}
+                              />
+                            </div>
+                            {errors.firstName && <h3>{errors.firstName}</h3>}
                           </div>
-                          {errors.firstName && <h3>{errors.firstName}</h3>}
-                        </div>
-                        <div className="col-md-6 ps-2 mb-4">
-                          <label>Last Name</label>
-                          <div className="input-group">
-                            <Input
-                              type="text"
-                              className="form-control"
-                              // placeholder="Last Name"
-                              onChange={handleValueChange}
-                              name="lastName"
-                              value={values.lastName}
-                            />
+                          <div className="col-md-6 ps-2 mb-4">
+                            <label>Last Name</label>
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                className="form-control"
+                                // placeholder="Last Name"
+                                onChange={handleValueChange}
+                                name="lastName"
+                                value={values.lastName}
+                              />
+                            </div>
+                            {errors.lastName && <h3>{errors.lastName}</h3>}
                           </div>
-                          {errors.lastName && <h3>{errors.lastName}</h3>}
                         </div>
                       </div>
                       <div className="mb-4">
@@ -380,7 +381,7 @@ const RightWrapper = styled.section`
   }
 
   .referal-link {
-    padding-top: 70px;
+    padding-top: 20px;
   }
   h4 {
     font-style: normal;
@@ -400,13 +401,17 @@ const RightWrapper = styled.section`
     border-radius: 8px;
     padding-left: 20px;
     position: relative;
-    font-weight: 400;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    position: relative;
+    color: #333333;
   }
   .select-field {
     font-family: "Montserrat";
     font-style: normal;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 17px;
     line-height: 15px;
     letter-spacing: -0.01em;
     color: #242424;
@@ -441,7 +446,7 @@ const LoginInput = styled.div`
   span {
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 17px;
     line-height: 21px;
     letter-spacing: -0.04em;
     color: #828282;

@@ -198,6 +198,11 @@ const RightWrapper = styled.section`
     border-radius: 8px;
     padding-left: 20px;
     position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px
+    letter-spacing: -0.04em;
+    color: #333333;
   }
 
   h4 {
@@ -221,5 +226,14 @@ const RightWrapper = styled.section`
     padding-top: 12px;
   }
   .login_input {
+  }
+
+  label {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px !important;
+    line-height: 21px;
+    
+    color: #828282;
   }
 `;

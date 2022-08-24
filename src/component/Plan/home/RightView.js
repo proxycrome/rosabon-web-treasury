@@ -356,6 +356,7 @@ const RightWrapper = styled.div`
       margin: 0 auto;
     }
   }
+  
   .naira-card-content {
     width: 100% !important;
     height: 192px;

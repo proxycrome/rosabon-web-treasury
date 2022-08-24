@@ -5,6 +5,8 @@ const initialState = {
   isSigned: false,
   isLoading: false,
   isSuccess: false,
+  register: {},
+  email: null,
 };
 
 const authReducer = (state = initialState, action) => {

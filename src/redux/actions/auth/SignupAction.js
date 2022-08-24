@@ -9,6 +9,7 @@ import {
 
 export const registerCompany = (dataObj) => async (dispatch) => {
   const { formData, message } = await register(dataObj);
+  console.log(formData);
   if (formData) {
     dispatch({
       type: types.REGISTER_COMPANY,
