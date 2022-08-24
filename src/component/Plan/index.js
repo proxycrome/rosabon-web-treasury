@@ -23,7 +23,7 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
 
   return (
     <Wrapper>
-      <div className="side-bar shadow style-log">
+      <div className="side-bar shadow-sm style-log">
         <ProfileSideBarList profile="profile" />
       </div>
       <div className="main-body">

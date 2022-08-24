@@ -5,9 +5,9 @@ import { Collapse } from 'reactstrap'
 export const LeftView = () => {
   const [open, setOpen] = useState(false)
   return (
-    <LeftWrapper>
-      <div className="calculatoe ">
-        <div className="interest shadow p-4">
+    <LeftWrapper className="ms-4">
+      <div className="calculatoe">
+        <div className="interest shadow p-4 my-2">
           <div
             className="d-flex align-items-center justify-content-between"
             onClick={() => setOpen(!open)}
@@ -76,7 +76,7 @@ export const LeftView = () => {
       <div className="left-content-notify">
         <div className="notification">
           <div className="d-flex align-items-center justify-content-between">
-            <h5>Notifications</h5>
+            <h5 className="mb-2 fw-bold">Categories</h5>
             <p className="p-0 m-0">Mark all as read</p>
           </div>
         </div>
