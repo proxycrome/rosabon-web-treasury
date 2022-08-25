@@ -135,14 +135,14 @@ const Wrapper = styled.div`
           background: #f2f2f2 !important;
           color: #111E6C;
           font-weight: 600;
-          font-size: 18px;
+          font-size: 16px;
           line-height: 22px;
           letter-spacing: -0.04em;
         }
       }
       button {
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
         line-height: 22px;
         letter-spacing: -0.04em;
         color: #F2F2F2;
