@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { NavLink, Link } from 'react-router-dom'
-import Discovery from '../../asset/Discovery.png'
-import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png'
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Collapse } from 'reactstrap';
+import { NavLink, Link } from 'react-router-dom';
+import Discovery from '../../asset/Discovery.png';
+import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png';
 
 export const ProfileSideBarList = ({ profile, handleChange }) => {
   const styleContent = profile === 'profile' ? 'profile' : ''
   const [is_active, setIsActive] = useState(null)
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [openPlan, setOpenPlan] = useState(false);
   const [isTicket, setTicket] = useState(false)
   const [isOpenTicket, setIsOpenTicket] = useState(false)
   const [isCloseTicket, setIsCloseTicket] = useState(false)
@@ -43,21 +46,24 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     <i className="far fa-file-alt"></i>
                     <span>Create</span>
                   </li>
-                </NavLink>
+                </NavLink> 
 
-                <NavLink className="nav_link" to="/plan-list">
+                <NavLink className="nav_link" to="/plan-list" onClick={() => setOpenPlan(!openPlan)} >
                   <li>
                     <i className="fas fa-file-alt"></i>
                     <span>Plan</span>
                   </li>
                 </NavLink>
-                <ul>
-                  <NavLink className="nav_link" to="/archives">
-                    <li>
-                      <span>Archives</span>
-                    </li>
-                  </NavLink>
-                </ul>
+                <Collapse isOpen={openPlan}>
+                  <ul>
+                    <NavLink className="nav_link" to="/archives">
+                      <li>
+                        <span>Archives</span>
+                      </li>
+                    </NavLink>
+                  </ul>
+                </Collapse>
+                
 
                 <NavLink className="nav_link" to="/user-wallet">
                   <li>
@@ -72,49 +78,52 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                       : 'nav_link'
                   }
                   to="/feedback"
+                  onClick={() => setOpenFeedback(!openFeedback)}
                 >
                   <li>
                     <i className="fas fa-thumbs-up"></i>
                     <span>Feedback</span>
                   </li>
                 </NavLink>
-                <ul>
-                  <NavLink
-                    style={{ textDecoration: 'none' }}
-                    className={({ isActive }) => {
-                      isActive ? setTicket(true) : setTicket(false)
-                    }}
-                    to="feedback-tickets"
-                  >
-                    <li className={isTicket ? 'active-bg' : ''}>
-                      <span>My Tickets</span>
-                    </li>
-                  </NavLink>
-                  <NavLink
-                    style={{ textDecoration: 'none' }}
-                    className={({ isActive }) => {
-                      isActive ? setIsOpenTicket(true) : setIsOpenTicket(false)
-                    }}
-                    to="open-tickets"
-                  >
-                    <li className={isOpenTicket ? ' active-bg' : ''}>
-                      <span>My Open Tickets</span>
-                    </li>
-                  </NavLink>
-                  <NavLink
-                    style={{ textDecoration: 'none' }}
-                    className={({ isActive }) => {
-                      isActive
-                        ? setIsCloseTicket(true)
-                        : setIsCloseTicket(false)
-                    }}
-                    to="close-tickets"
-                  >
-                    <li className={isCloseTicket ? ' active-bg' : ''}>
-                      <span>My Closed Tickets</span>
-                    </li>
-                  </NavLink>
-                </ul>
+                <Collapse isOpen={openFeedback}>
+                  <ul>
+                    <NavLink
+                      style={{ textDecoration: 'none' }}
+                      className={({ isActive }) => {
+                        isActive ? setTicket(true) : setTicket(false)
+                      }}
+                      to="feedback-tickets"
+                    >
+                      <li className={isTicket ? 'active-bg' : ''}>
+                        <span>My Tickets</span>
+                      </li>
+                    </NavLink>
+                    <NavLink
+                      style={{ textDecoration: 'none' }}
+                      className={({ isActive }) => {
+                        isActive ? setIsOpenTicket(true) : setIsOpenTicket(false)
+                      }}
+                      to="open-tickets"
+                    >
+                      <li className={isOpenTicket ? ' active-bg' : ''}>
+                        <span>My Open Tickets</span>
+                      </li>
+                    </NavLink>
+                    <NavLink
+                      style={{ textDecoration: 'none' }}
+                      className={({ isActive }) => {
+                        isActive
+                          ? setIsCloseTicket(true)
+                          : setIsCloseTicket(false)
+                      }}
+                      to="close-tickets"
+                    >
+                      <li className={isCloseTicket ? ' active-bg' : ''}>
+                        <span>My Closed Tickets</span>
+                      </li>
+                    </NavLink>
+                  </ul>
+                </Collapse>
                 <NavLink style={{ textDecoration: 'none' }} to="help">
                   <li>
                     <i className="fas fa-exclamation-circle"></i>
@@ -136,7 +145,9 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
 }
 
 const WrappSideBarList = styled.div`
-  position: fixed;
+  position: sticky;
+  top: 0;
+  overflow-y: inherit;
 
   @media (max-width: 900px) {
     display: none;

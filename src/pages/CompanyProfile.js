@@ -30,7 +30,7 @@ const CompanyProfile = () => {
     <WrapperBody>
       <div className="container-fluid">
         <ProfileNavBar />
-        <div className="row">
+        <div className="row pt-5">
           <div className="col-md-3">
             <ProfileTabs handleChange={(e) => setTabs(e)} />
           </div>

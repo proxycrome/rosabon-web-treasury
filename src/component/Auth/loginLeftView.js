@@ -126,10 +126,10 @@ const Wrapper = styled.div`
       height: 230px;
     }
     .continue_login_btn {
-      margin-top: 200px;
+      margin-top: 220px;
       border-radius: 10px;
       position: absolute;
-      top: 105%;
+      top: 100%;
       .active {
         button {
           background: #f2f2f2 !important;

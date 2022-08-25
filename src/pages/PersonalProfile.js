@@ -33,7 +33,7 @@ const PersonalProfile = () => {
         <div className="row">
           <ProfileNavBar />
         </div>
-        <div className="row">
+        <div className="row pt-5">
           <div className="col-md-3">
             <ProfileTabs personal="personal" handleChange={(e) => setTabs(e)} />
           </div>

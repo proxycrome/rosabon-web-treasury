@@ -16,12 +16,12 @@ function HomeView() {
   const profile = useSelector((state) => state.user_profile);
   const { users } = profile;
 
-  const user =
-    users && users.role == "COMPANY"
-      ? users.company.name
-      : users.role == "INDIVIDUAL_USER"
-      ? users.individualUser.firstName
-      : "";
+  // const user =
+  //   users && users.role == "COMPANY"
+  //     ? users.company.name
+  //     : users.role == "INDIVIDUAL_USER"
+  //     ? users.individualUser.firstName
+  //     : "";
 
   useEffect(() => {
     const tokenString = JSON.parse(localStorage.getItem("token"));
@@ -48,7 +48,12 @@ function HomeView() {
           <span>
             Welcome back{" "}
             <span className="fw-bold">
-              {user}
+              {users && users?.role == "COMPANY"
+                ? users?.company.name
+                : users?.role == "INDIVIDUAL_USER"
+                ? users?.individualUser.firstName
+                : ""
+              }
             </span>
           </span>
         </NavTitle>

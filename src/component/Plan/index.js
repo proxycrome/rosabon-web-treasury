@@ -11,15 +11,15 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
   const auth = useSelector((state) => state.auth)
   const { login, isLoggedIn } = auth
 
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("token"));
-  //   if (!tokenString) {
-  //     navigate("/login");
-  //   }
-  //   if (!isLoggedIn) {
-  //     navigate("/login");
-  //   }
-  // }, [isLoggedIn]);
+  useEffect(() => {
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+    if (!tokenString) {
+      navigate("/login");
+    }
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <Wrapper>

@@ -44,12 +44,12 @@ export function ProfileNavBar({ children }) {
     }
   }, [])
 
-  const user =
-    users && users.role == 'COMPANY'
-      ? users.company.name
-      : users.role == 'INDIVIDUAL_USER'
-      ? users.individualUser.firstName
-      : ''
+  // const user =
+  //   users && users.role == 'COMPANY'
+  //     ? users.company.name
+  //     : users.role == 'INDIVIDUAL_USER'
+  //     ? users.individualUser.firstName
+  //     : ''
 
   useEffect(() => {
     if (users && !users.kyc && users.role === 'INDIVIDUAL_USER') {
@@ -84,7 +84,12 @@ export function ProfileNavBar({ children }) {
                   id="page-header-user-dropdown"
                 >
                   <span className="d-none d-xl-inline-block ml-1 text-transform me-2">
-                    {user}
+                    {users && users.role === 'COMPANY'
+                      ? users.company.name
+                      : users && users.role === 'INDIVIDUAL_USER'
+                      ? users.individualUser.firstName
+                      : ''  
+                    }
                   </span>
                   <img
                     className="rounded-circle header-profile-user mr-3"

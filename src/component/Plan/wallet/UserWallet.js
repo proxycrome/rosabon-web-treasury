@@ -313,7 +313,7 @@ const LeftView = styled.div`
   .style-wallet-link {
     text-decoration: none;
   }
-  padding: 10px 60px 60px 60px;
+  padding: 40px 60px 60px 60px;
   width: 60%;
   .box-image {
     padding: 20px;
@@ -524,6 +524,7 @@ const WrapperFooter = styled.div`
 
 const RightView = styled.div`
   width: 40%;
+  margin-top: 20px;
   @media (max-width: 850px) {
     width: 100% !important;
   }

@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { config } from "../../redux/config";
-import { headers } from "../../redux/headers";
-import axios from "axios";
-import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { BVNConfirm } from "../Accessories/BVNConfirm";
-import ModalComponent from "../ModalComponent";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { config } from '../../redux/config';
+import { headers } from '../../redux/headers';
+import axios from 'axios';
+import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { BVNConfirm } from '../Accessories/BVNConfirm';
+import ModalComponent from '../ModalComponent';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from "../../redux/actions/personalInfo/userProfile.actions";
-import { successMessage } from "../../redux/actions/auth/SignupAction";
+} from '../../redux/actions/personalInfo/userProfile.actions';
+import { successMessage } from '../../redux/actions/auth/SignupAction';
+import moment from 'moment';
 
 const PersonalKYC = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const PersonalKYC = () => {
   const { login, isLoggedIn } = auth;
 
   const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const { users, user } = user_profile;
 
   console.log(user_details);
 
@@ -30,9 +31,16 @@ const PersonalKYC = () => {
   const [show, setShow] = useState(false);
 
   const data = {
-    dateOfBirth: "",
-    gender: "",
-    bvn: "",
+    dateOfBirth: '',
+    gender: '',
+    bvn: '',
+    middleName: '',
+    name: '',
+    source: '',
+    houseNoAddress: '',
+    state: '',
+    city: '',
+    country: '',
   };
 
   const [formData, setformData] = useState(data);
@@ -47,49 +55,75 @@ const PersonalKYC = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { dateOfBirth, gender, bvn } = formData;
 
-    let data = {
-      email: user_details.email,
-      isAssited: true,
-      isNewsLetters: true,
-      phone: user_details.phone,
-      source: user_details.individualUser.source,
-      sourceOthers: user_details.individualUser.sourceOthers,
-      refferedBy: user_details.individualUser.refferedBy,
-      firstName: user_details.individualUser.firstName,
-      lastName: user_details.individualUser.lastName,
-      middleName: user_details.individualUser.middleName,
-      role: "INDIVIDUAL_USER",
-      usage: "TREASURY",
-      isKyc: true,
-      status: user_details.individualUser.status,
+    const {
       dateOfBirth,
       gender,
       bvn,
+      middleName,
+      name,
+      source,
+      houseNoAddress,
+      state,
+      city,
+      country,
+    } = formData;
+
+    let data = {
+      isAssited: user_details && user_details.assited,
+      isNewsLetters: user_details && user_details.newsLetters,
+      isKyc: true,
+      phone: user_details && user_details?.phone,
+      role: 'INDIVIDUAL_USER',
+      source,
+      sourceOthers: user_details && user_details?.sourceOthers,
+      status: user_details && user_details?.status,
+      usage: 'TREASURY',
+      individualUser: {
+        bvn,
+        contactAddress: {
+          city,
+          country,
+          houseNoAddress,
+          state,
+        },
+        dateOfBirth: String(moment(dateOfBirth).format('DD-MM-YYYY')),
+        gender,
+        firstName: user_details?.individualUser?.firstName,
+        lastName: user_details?.individualUser?.lastName,
+        middleName,
+      },
     };
-    // console.log(data)
-    dispatch(updateUserCompanyKYC(data));
+
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+    console.log(data);
+    dispatch(updateUserCompanyKYC(tokenString, data));
   };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
+    const tokenString = JSON.parse(localStorage.getItem('token'));
     if (tokenString) {
       dispatch(getAuthUsers(tokenString));
     } else {
-      navigate("/login");
+      navigate('/login');
     }
   }, []);
 
-  useEffect(() => {
-    if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    }else if (user_details && !users.kyc && users.role === "COMPANY") {
-      navigate("/kyc/person");
-    }
-  }, [isLoggedIn, users, user_details]);
+  // useEffect(() => {
+  //   if (users && users.kyc && users.role === 'INDIVIDUAL_USER') {
+  //     navigate('/personal-profile');
+  //   } else if (users && users.kyc && users.role === 'COMPANY') {
+  //     navigate('/company-profile');
+  //   } else if (user_details && !users.kyc && users.role === 'INDIVIDUAL_USER') {
+  //     navigate('/kyc/person');
+  //   }
+  // }, [isLoggedIn, users, user_details, navigate]);
+
+  // useEffect(() => {
+  //   if(user && users.kyc){
+  //     navigate("/")
+  //   }
+  // }, [user, users, navigate])
 
   // useEffect(() => {
   //   getLGAs();
@@ -104,7 +138,7 @@ const PersonalKYC = () => {
       {user_details && user_details ? (
         <div className="">
           <div>
-            <div className="" style={{ overflowY: "auto" }}>
+            <div className="" style={{ overflowY: 'auto' }}>
               <WrapperBody>
                 <div>
                   <div>
@@ -120,7 +154,7 @@ const PersonalKYC = () => {
                       minutes
                     </p>
 
-                    <form autoComplete="off" onSubmit={handleSubmit}>
+                    <form autoComplete="off">
                       <h4>Personal Details</h4>
                       <div>
                         <div className="row">
@@ -130,7 +164,7 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                placeholder={
+                                value={
                                   user_details &&
                                   user_details.individualUser.firstName
                                 }
@@ -147,6 +181,9 @@ const PersonalKYC = () => {
                                   user_details &&
                                   user_details.individualUser.middleName
                                 }
+                                name="middleName"
+                                onChange={handleChange}
+                                value={formData.middleName}
                               />
                             </div>
                           </div>
@@ -156,7 +193,7 @@ const PersonalKYC = () => {
                               <input
                                 type="text"
                                 className="form-control"
-                                placeholder={
+                                value={
                                   user_details &&
                                   user_details.individualUser.lastName
                                 }
@@ -173,7 +210,8 @@ const PersonalKYC = () => {
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
                                 value={formData.gender}
-                                name="gender">
+                                name="gender"
+                              >
                                 <option value=""></option>
                                 <option value="MALE">Male</option>
                                 <option value="FEMALE">Female</option>
@@ -199,7 +237,7 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                placeholder={user_details && user_details.phone}
+                                value={user_details && user_details.phone}
                               />
                             </div>
                           </div>
@@ -222,21 +260,24 @@ const PersonalKYC = () => {
                             <button
                               type="button"
                               onClick={() => setShow(true)}
-                              className="profile_vify_btn">
+                              className="profile_vify_btn"
+                            >
                               Verify
                             </button>
                           </div>
                           <div>
                             <div
                               style={{
-                                position: "absolute",
-                                top: "100px",
-                                right: "300px",
-                              }}>
+                                position: 'absolute',
+                                top: '100px',
+                                right: '300px',
+                              }}
+                            >
                               <ModalComponent
                                 show={show}
-                                size={"md"}
-                                handleClose={() => setShow(false)}>
+                                size={'md'}
+                                handleClose={() => setShow(false)}
+                              >
                                 <BVNConfirm
                                   show={show}
                                   handleClose={() => setShow(false)}
@@ -256,7 +297,7 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                placeholder={user_details && user_details.email}
+                                value={user_details && user_details.email}
                               />
                             </div>
                           </div>
@@ -268,7 +309,8 @@ const PersonalKYC = () => {
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
                                 value={formData.name}
-                                name="name">
+                                name="name"
+                              >
                                 <option value=""></option>
                                 <option value="Nigeria">Nigeria</option>
                               </select>
@@ -281,7 +323,8 @@ const PersonalKYC = () => {
                               aria-label=".form-select-lg"
                               onChange={handleChange}
                               value={formData.source}
-                              name="source">
+                              name="source"
+                            >
                               <option value=""></option>
                               <option value="ROSABON_SALES">
                                 Rosabon sales executive
@@ -315,9 +358,10 @@ const PersonalKYC = () => {
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
                                 value={formData.state}
-                                name="state">
+                                name="state"
+                              >
                                 <option value=""></option>
-                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bauchi">Lagos</option>
                               </select>
                             </div>
                           </div>
@@ -342,7 +386,8 @@ const PersonalKYC = () => {
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
                                 value={formData.country}
-                                name="country">
+                                name="country"
+                              >
                                 <option value=""></option>
                                 <option value="Nigeria">Nigeria</option>
                               </select>
@@ -366,7 +411,7 @@ const PersonalKYC = () => {
                       formData.gender &&
                       formData.bvn ? (
                         <Link to="/personal-profile">
-                          <button className="blue-btn">
+                          <button className="blue-btn" onClick={handleSubmit}>
                             Save and Invest Now
                           </button>
                         </Link>
@@ -433,7 +478,7 @@ const WrapperBody = styled.div`
     padding: 6rem 3rem;
   }
   .select-field {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 14px;

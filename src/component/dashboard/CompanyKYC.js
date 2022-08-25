@@ -97,7 +97,7 @@ const CompanyKYC = () => {
 
   // useEffect(() => {
   //   console.log(users.role);
-  //   if (company_details && !users.kyc && users.role === "INDIVIDUAL_USER") {
+  //   if (company_details && !users.kyc && users.role === "COMPANY") {
   //     navigate("/kyc/person");
   //   } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
   //     navigate("/personal-profile");
