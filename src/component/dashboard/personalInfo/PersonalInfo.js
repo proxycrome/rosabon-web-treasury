@@ -407,7 +407,7 @@ const PersonalInfo = () => {
                         {/* <i className=" fa-solid fa-angle-down"></i>
                       <i className="fa-solid fa-angle-down"></i>
                       <i className="fa-solid fa-angle-down"></i> */}
-                        <i className="font-num fa-solid fa-angle-down"></i>
+                        {/* <i className="font-num fa-solid fa-angle-down"></i> */}
                       </span>
                     </div>
                   </div>
