@@ -1,50 +1,54 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { ProfileSideBar } from "./ProfileSideBar";
-import { BVNConfirm } from "../Accessories/BVNConfirm";
-import ModalComponent from "../ModalComponent";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import { ProfileSideBar } from '../ProfileSideBar'
+import { BVNConfirm } from '../../Accessories/BVNConfirm'
+import ModalComponent from '../../ModalComponent'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from "../../redux/actions/personalInfo/userProfile.actions";
-import moment from "moment";
+} from '../../../redux/actions/personalInfo/userProfile.actions'
+import moment from 'moment'
 
 const CompanyKYC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  
-  const company_details = useSelector((state) => state.user_profile.users);
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  console.log(company_details);
+  const company_details = useSelector((state) => state.user_profile.users)
+  const auth = useSelector((state) => state.auth)
+  const { login, isLoggedIn } = auth
 
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const user_profile = useSelector((state) => state.user_profile)
+  const { users } = user_profile
 
   const data = {
-    rcNumber: "",
-    natureOfBusiness: "",
-    companyType: "",
-    dateOfInco: "",
-    companyAddress: "",
-  };
+    rcNumber: '',
+    natureOfBusiness: '',
+    companyType: '',
+    dateOfInco: '',
+    companyAddress: '',
+  }
 
-  const [formData, setformData] = useState(data);
+  const [formData, setformData] = useState(data)
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setformData({
       ...formData,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { rcNumber, natureOfBusiness, companyType, dateOfInco, companyAddress } = formData;
+    e.preventDefault()
+    const {
+      rcNumber,
+      natureOfBusiness,
+      companyType,
+      dateOfInco,
+      companyAddress,
+    } = formData
 
     let data = {
       email: company_details && company_details.email,
@@ -53,64 +57,39 @@ const CompanyKYC = () => {
       phone: company_details && company_details.phone,
       source: company_details && company_details.source,
       sourceOthers: company_details && company_details.sourceOthers,
-      role: "COMPANY",
-      usage: "TREASURY",
+      role: 'COMPANY',
+      usage: 'TREASURY',
       isKyc: true,
       status: company_details && company_details.status,
       company: {
         rcNumber,
         natureOfBusiness,
         companyType,
-        dateOfInco: String(moment(dateOfInco).format("DD-MM-YYYY")),
+        dateOfInco: String(moment(dateOfInco).format('DD-MM-YYYY')),
         companyAddress,
-        contactFirstName: company_details && company_details.company.contactFirstName,
-        contactLastName: company_details && company_details.company.contactLastName,
-        contactMiddleName: company_details && company_details.company.contactMiddleName,
-        name: company_details && company_details.company.name,
-      }
-      
-    };
-    console.log(data);
+        contactFirstName:
+          company_details && company_details?.company?.contactFirstName,
+        contactLastName:
+          company_details && company_details.company.contactLastName,
+        contactMiddleName:
+          company_details && company_details.company.contactMiddleName,
+        name: company_details && company_details?.company?.name,
+      },
+    }
 
-    const tokenString = JSON.parse(localStorage.getItem("token"));
+    const tokenString = JSON.parse(localStorage.getItem('token'))
 
-    dispatch(updateUserCompanyKYC(tokenString, data));
-  };
+    dispatch(updateUserCompanyKYC(tokenString, data))
+  }
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
+    const tokenString = JSON.parse(localStorage.getItem('token'))
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString));
+      dispatch(getAuthUsers(tokenString))
     } else {
-      navigate("/login");
+      navigate('/login')
     }
-  }, []);
-
-  
-
-  console.log(
-    formData.rcNumber,
-    formData.natureOfBusiness,
-    formData.companyType,
-    formData.dateOfInco
-  );
-
-  // useEffect(() => {
-  //   console.log(users.role);
-  //   if (company_details && !users.kyc && users.role === "COMPANY") {
-  //     navigate("/kyc/person");
-  //   } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-  //     navigate("/personal-profile");
-  //   } else if (users && users.kyc && users.role === "COMPANY") {
-  //     navigate("/company-profile");
-  //   }
-  // }, [isLoggedIn, users, company_details]);
-
-  // useEffect(() => {
-  //   if (!company_details) {
-  //     navigate("/login");
-  //   }
-  // }, [company_details]);
+  }, [])
 
   return (
     <div>
@@ -123,9 +102,9 @@ const CompanyKYC = () => {
                   <div>
                     <div className="d-flex justify-content-between align-items-center">
                       <h3>
-                        Hello{" "}
+                        Hello{' '}
                         {company_details &&
-                          company_details.company.name.toUpperCase()}
+                          company_details?.company?.name.toUpperCase()}
                         ,
                       </h3>
                       <Link to="/">
@@ -147,7 +126,8 @@ const CompanyKYC = () => {
                             <input
                               className="form-control"
                               value={
-                                company_details && company_details.company.name
+                                company_details &&
+                                company_details?.company?.name
                               }
                               type="text"
                             />
@@ -218,7 +198,8 @@ const CompanyKYC = () => {
                             aria-label=".form-select-lg"
                             onChange={handleChange}
                             value={formData.companyType}
-                            name="companyType">
+                            name="companyType"
+                          >
                             <option value=""></option>
                             <option value="Sole proprietorship">
                               Sole proprietorship
@@ -244,7 +225,7 @@ const CompanyKYC = () => {
                               className="form-control"
                               value={
                                 company_details &&
-                                company_details.company.contactFirstName
+                                company_details?.company?.contactFirstName
                               }
                               type="text"
                             />
@@ -257,7 +238,7 @@ const CompanyKYC = () => {
                               className="form-control"
                               value={
                                 company_details &&
-                                company_details.company.contactLastName
+                                company_details?.company?.contactLastName
                               }
                               type="text"
                             />
@@ -270,9 +251,7 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              value={
-                                company_details && company_details.email
-                              }
+                              value={company_details && company_details?.email}
                               type="text"
                             />
                           </div>
@@ -282,9 +261,7 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              value={
-                                company_details && company_details.phone
-                              }
+                              value={company_details && company_details?.phone}
                               type="text"
                             />
                           </div>
@@ -306,7 +283,7 @@ const CompanyKYC = () => {
                       {formData.rcNumber &&
                       formData.natureOfBusiness &&
                       formData.companyType &&
-                      formData.dateOfInco && 
+                      formData.dateOfInco &&
                       formData.companyAddress ? (
                         <button type="submit" className="blue-btn">
                           Save and Invest Now
@@ -327,10 +304,10 @@ const CompanyKYC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CompanyKYC;
+export default CompanyKYC
 
 const WrapperFooter = styled.div`
   background: #ffffff;
@@ -355,7 +332,7 @@ const WrapperFooter = styled.div`
     color: #f2f2f2;
     background: #111e6c;
   }
-`;
+`
 const WrapperBody = styled.div`
   .dashboard {
     padding: 10px;
@@ -363,12 +340,12 @@ const WrapperBody = styled.div`
     border-radius: 8px;
     color: #ffffff;
   }
-  padding: 6rem 5rem;
+  padding: 4rem 5rem;
   @media (max-width: 600px) {
     padding: 6rem 3rem;
   }
   .select-field {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -384,7 +361,7 @@ const WrapperBody = styled.div`
     line-height: 24px;
     text-transform: capitalize;
     color: #222222;
-    padding-bottom: 45px;
+    padding-bottom: 15px;
   }
   h3 {
     font-style: normal;
@@ -392,8 +369,6 @@ const WrapperBody = styled.div`
     font-size: 33px;
     line-height: 40px;
     color: #222222;
-    padding-bottom: 15px;
-    /* padding-left: 10px; */
   }
   p {
     font-style: normal;
@@ -402,7 +377,7 @@ const WrapperBody = styled.div`
     line-height: 23px;
     letter-spacing: -0.02em;
     color: #333333;
-    padding-bottom: 65px;
+    padding-bottom: 25px;
   }
   input {
     width: 239.5px;
@@ -433,4 +408,4 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
   }
-`;
+`

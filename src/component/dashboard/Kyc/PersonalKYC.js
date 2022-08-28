@@ -1,34 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { config } from '../../redux/config';
-import { headers } from '../../redux/headers';
-import axios from 'axios';
-import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
-import { BVNConfirm } from '../Accessories/BVNConfirm';
-import ModalComponent from '../ModalComponent';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { config } from '../../../redux/config'
+import { headers } from '../../../redux/headers'
+import axios from 'axios'
+import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import { BVNConfirm } from '../../Accessories/BVNConfirm'
+import ModalComponent from '../../ModalComponent'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from '../../redux/actions/personalInfo/userProfile.actions';
-import { successMessage } from '../../redux/actions/auth/SignupAction';
-import moment from 'moment';
+} from '../../../redux/actions/personalInfo/userProfile.actions'
+import moment from 'moment'
 
 const PersonalKYC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user_details = useSelector((state) => state.user_profile.users);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user_details = useSelector((state) => state.user_profile.users)
 
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
+  const auth = useSelector((state) => state.auth)
+  const { login, isLoggedIn } = auth
 
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users, user } = user_profile;
+  const user_profile = useSelector((state) => state.user_profile)
+  const { users, user } = user_profile
 
-  console.log(user_details);
+  console.log(user_details)
 
   // const success = useSelector((state) => state.auth.success);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
 
   const data = {
     dateOfBirth: '',
@@ -41,20 +40,20 @@ const PersonalKYC = () => {
     state: '',
     city: '',
     country: '',
-  };
+  }
 
-  const [formData, setformData] = useState(data);
+  const [formData, setformData] = useState(data)
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setformData({
       ...formData,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     const {
       dateOfBirth,
@@ -67,7 +66,7 @@ const PersonalKYC = () => {
       state,
       city,
       country,
-    } = formData;
+    } = formData
 
     let data = {
       isAssited: user_details && user_details.assited,
@@ -93,45 +92,12 @@ const PersonalKYC = () => {
         lastName: user_details?.individualUser?.lastName,
         middleName,
       },
-    };
-
-    const tokenString = JSON.parse(localStorage.getItem("token"));
-    console.log(data);
-    dispatch(updateUserCompanyKYC(tokenString, data));
-  };
-
-  useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem('token'));
-    if (tokenString) {
-      dispatch(getAuthUsers(tokenString));
-    } else {
-      navigate('/login');
     }
-  }, []);
 
-  // useEffect(() => {
-  //   if (users && users.kyc && users.role === 'INDIVIDUAL_USER') {
-  //     navigate('/personal-profile');
-  //   } else if (users && users.kyc && users.role === 'COMPANY') {
-  //     navigate('/company-profile');
-  //   } else if (user_details && !users.kyc && users.role === 'INDIVIDUAL_USER') {
-  //     navigate('/kyc/person');
-  //   }
-  // }, [isLoggedIn, users, user_details, navigate]);
-
-  // useEffect(() => {
-  //   if(user && users.kyc){
-  //     navigate("/")
-  //   }
-  // }, [user, users, navigate])
-
-  // useEffect(() => {
-  //   getLGAs();
-  //   getStates();
-  //   getCountry();
-  // }, []);
-
-  // console.log(listCountries);
+    const tokenString = JSON.parse(localStorage.getItem('token'))
+    console.log(data)
+    dispatch(updateUserCompanyKYC(tokenString, data))
+  }
 
   return (
     <div>
@@ -352,7 +318,7 @@ const PersonalKYC = () => {
                         <div className="row">
                           <div className="col-md-4 ">
                             <label>State</label>
-                            <div className="input-group mb-4">
+                            <div className="input-group mb-2">
                               <select
                                 className="form-select form-select-lg mb-3 select-field"
                                 aria-label=".form-select-lg"
@@ -431,10 +397,10 @@ const PersonalKYC = () => {
         <p>Please Wait...</p>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PersonalKYC;
+export default PersonalKYC
 
 const WrapperFooter = styled.div`
   background: #ffffff;
@@ -465,7 +431,7 @@ const WrapperFooter = styled.div`
     color: #f2f2f2;
     background: #111e6c;
   }
-`;
+`
 const WrapperBody = styled.div`
   .dashboard {
     padding: 10px;
@@ -473,7 +439,7 @@ const WrapperBody = styled.div`
     border-radius: 8px;
     color: #ffffff;
   }
-  padding: 6rem 5rem;
+  padding: 4rem 5rem;
   @media (max-width: 600px) {
     padding: 6rem 3rem;
   }
@@ -494,7 +460,7 @@ const WrapperBody = styled.div`
     line-height: 24px;
     text-transform: capitalize;
     color: #222222;
-    padding-bottom: 45px;
+    padding-bottom: 15px;
   }
   h3 {
     font-style: normal;
@@ -502,8 +468,6 @@ const WrapperBody = styled.div`
     font-size: 33px;
     line-height: 40px;
     color: #222222;
-    padding-bottom: 15px;
-    padding-left: 10px;
   }
   p {
     font-style: normal;
@@ -512,7 +476,7 @@ const WrapperBody = styled.div`
     line-height: 23px;
     letter-spacing: -0.02em;
     color: #333333;
-    padding-bottom: 65px;
+    padding-bottom: 25px;
   }
   input {
     width: 239.5px;
@@ -543,4 +507,4 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
   }
-`;
+`

@@ -1,31 +1,22 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { BVNConfirm } from "../Accessories/BVNConfirm";
-import ModalComponent from "../ModalComponent";
-import { Link, useNavigate } from "react-router-dom";
-import { getAuthUser } from "../../redux/actions/personalInfo/userProfile.actions";
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import { BVNConfirm } from '../Accessories/BVNConfirm'
+import ModalComponent from '../ModalComponent'
+import { Link, useNavigate } from 'react-router-dom'
+import { getAuthUser } from '../../redux/actions/personalInfo/userProfile.actions'
 
 const ProfileUpdate = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const count = useSelector((state) => state.auth.signup_btn);
-  const [show, setShow] = useState(false);
-
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("user-token");
-  //   if (tokenString) {
-  //     dispatch(getAuthUser());
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const count = useSelector((state) => state.auth.signup_btn)
+  const [show, setShow] = useState(false)
 
   return (
     <div>
       <div className="">
         <div>
-          <div className="" style={{ overflowY: "auto" }}>
+          <div className="" style={{ overflowY: 'auto' }}>
             <WrapperBody>
               <div>
                 <div>
@@ -115,21 +106,24 @@ const ProfileUpdate = () => {
                         <button
                           type="button"
                           onClick={() => setShow(true)}
-                          className="profile_vify_btn">
+                          className="profile_vify_btn"
+                        >
                           Verify
                         </button>
                       </div>
                       <div>
                         <div
                           style={{
-                            position: "absolute",
-                            top: "100px",
-                            right: "300px",
-                          }}>
+                            position: 'absolute',
+                            top: '100px',
+                            right: '300px',
+                          }}
+                        >
                           <ModalComponent
                             show={show}
-                            size={"md"}
-                            handleClose={() => setShow(false)}>
+                            size={'md'}
+                            handleClose={() => setShow(false)}
+                          >
                             <BVNConfirm
                               show={show}
                               handleClose={() => setShow(false)}
@@ -224,10 +218,10 @@ const ProfileUpdate = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProfileUpdate;
+export default ProfileUpdate
 
 const WrapperFooter = styled.div`
   width: 100%;
@@ -247,7 +241,7 @@ const WrapperFooter = styled.div`
     outline: none;
     border: none;
   }
-`;
+`
 const WrapperBody = styled.div`
   padding: 6rem 5rem;
   h4 {
@@ -306,4 +300,4 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
   }
-`;
+`

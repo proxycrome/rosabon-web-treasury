@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 import {
   Form,
   FormGroup,
@@ -7,86 +7,72 @@ import {
   FormFeedback,
   InputGroup,
   InputGroupText,
-} from "reactstrap";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { SignupLeftView } from "./loginLeftView";
-import Footer from "../dashboard/ProfileFooter";
-import { ValidateCompanyForm, validateInfo } from "./validateForm";
+} from 'reactstrap'
+import { useSelector, useDispatch, connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast'
+import { SignupLeftView } from './loginLeftView'
+import Footer from '../dashboard/ProfileFooter'
+import { ValidateCompanyForm, validateInfo } from './validateForm'
 
 function CompanySignup() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth);
-  const { isSignedup, login, isLoggedIn, isLoading } = auth;
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const auth = useSelector((state) => state.auth)
+  const { isSignedup, login, isLoggedIn, isLoading } = auth
+  const user_profile = useSelector((state) => state.user_profile)
+  const { users } = user_profile
 
-  const [passwordShown1, setPasswordShown1] = useState(false);
-  const [passwordShown2, setPasswordShown2] = useState(false);
-  const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false);
-  const [isCompanyTerms, setIsCompanyTerms] = useState(false);
+  const [passwordShown1, setPasswordShown1] = useState(false)
+  const [passwordShown2, setPasswordShown2] = useState(false)
+  const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false)
+  const [isCompanyTerms, setIsCompanyTerms] = useState(false)
 
-  const { handleValueChange, values, handleSubmit, errors } =
-    ValidateCompanyForm(validateInfo, isCompanyNewsLetters, isCompanyTerms);
+  const {
+    handleValueChange,
+    values,
+    handleSubmit,
+    errors,
+  } = ValidateCompanyForm(validateInfo, isCompanyNewsLetters, isCompanyTerms)
 
   const togglePassword1 = () => {
-    setPasswordShown1(!passwordShown1);
-  };
+    setPasswordShown1(!passwordShown1)
+  }
   const togglePassword2 = () => {
-    setPasswordShown2(!passwordShown2);
-  };
-
-  useEffect(() => {
-    if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (isLoggedIn || users) {
-      if (
-        (login && login.role && login.role.name === "COMPANY") ||
-        (users && users.role === "COMPANY")
-      ) {
-        navigate("/kyc/company");
-      } else if (
-        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
-        (users && users.role === "INDIVIDUAL_USER")
-      ) {
-        navigate("/kyc/person");
-      }
-    }
-  }, [isLoggedIn, users]);
+    setPasswordShown2(!passwordShown2)
+  }
 
   useEffect(() => {
     if (isSignedup) {
-      navigate("/congrates", { state: "success_signup" });
+      navigate('/congrates', { state: 'success_signup' })
     }
-  }, [isSignedup]);
+  }, [isSignedup])
 
   return (
     <div>
       <Wrapper>
         <div
           style={{
-            height: "100vh",
-            overflow: "hidden",
+            height: '100vh',
+            overflow: 'hidden',
           }}
-          className="content">
+          className="content"
+        >
           <div className="login-left-view">
             <SignupLeftView />
           </div>
           <div
-            style={{ overflowY: "auto", gridTemplateColumns: "auto" }}
-            className="login-right-view">
+            style={{ overflowY: 'auto', gridTemplateColumns: 'auto' }}
+            className="login-right-view"
+          >
             <div className="">
               <RightWrapper>
                 <h4>Sign up</h4>
                 <Toaster
                   toastOptions={{
-                    className: "bg-danger text-white",
+                    className: 'bg-danger text-white',
                   }}
                   position="bottom-center"
                 />
@@ -169,7 +155,7 @@ function CompanySignup() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown1 ? "text" : "password"}
+                              type={passwordShown1 ? 'text' : 'password'}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="password"
@@ -178,12 +164,13 @@ function CompanySignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword1}
-                                style={{ cursor: "pointer" }}
+                                style={{ cursor: 'pointer' }}
                                 className={
                                   passwordShown1
-                                    ? "far fa-eye"
-                                    : "far fa-eye-slash"
-                                }></i>
+                                    ? 'far fa-eye'
+                                    : 'far fa-eye-slash'
+                                }
+                              ></i>
                             </InputGroupText>
                           </InputGroup>
                         </div>
@@ -194,7 +181,7 @@ function CompanySignup() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown2 ? "text" : "password"}
+                              type={passwordShown2 ? 'text' : 'password'}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="c_password"
@@ -203,12 +190,13 @@ function CompanySignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword2}
-                                style={{ cursor: "pointer" }}
+                                style={{ cursor: 'pointer' }}
                                 className={
                                   passwordShown2
-                                    ? "far fa-eye"
-                                    : "far fa-eye-slash"
-                                }></i>
+                                    ? 'far fa-eye'
+                                    : 'far fa-eye-slash'
+                                }
+                              ></i>
                             </InputGroupText>
                           </InputGroup>
                         </div>
@@ -221,7 +209,8 @@ function CompanySignup() {
                             className="form-select form-select-lg select-field"
                             aria-label=".form-select-md"
                             onChange={handleValueChange}
-                            name="source">
+                            name="source"
+                          >
                             <option value=""></option>
                             <option value="ROSABON_SALES">
                               Rosabon sales executive
@@ -234,7 +223,7 @@ function CompanySignup() {
                       </div>
                       <div className="referal-link pb-5">
                         <div className="input-group">
-                          {values.source == "OTHER" ? (
+                          {values.source == 'OTHER' ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -243,7 +232,7 @@ function CompanySignup() {
                               name="sourceOthers"
                               value={values.sourceOthers}
                             />
-                          ) : values.source == "ANOTHER_USER" ? (
+                          ) : values.source == 'ANOTHER_USER' ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -252,7 +241,7 @@ function CompanySignup() {
                               name="refferedBy"
                               value={values.refferedBy}
                             />
-                          ) : values.source == "ROSABON_SALES" ? (
+                          ) : values.source == 'ROSABON_SALES' ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -287,7 +276,8 @@ function CompanySignup() {
                           />
                           <label
                             className="form-check-label"
-                            htmlFor="checkNewsLetter">
+                            htmlFor="checkNewsLetter"
+                          >
                             Yes, I want to recieve newsletters of Promos and
                             Offers
                           </label>
@@ -304,7 +294,8 @@ function CompanySignup() {
                           />
                           <label
                             className="form-check-label"
-                            htmlFor="checkIsAssisted">
+                            htmlFor="checkIsAssisted"
+                          >
                             Check the box if this registration is assisted
                           </label>
                         </div>
@@ -318,23 +309,26 @@ function CompanySignup() {
                           />
                           <label
                             className="form-check-label"
-                            htmlFor="checkTerms">
-                            I agree to the{" "}
+                            htmlFor="checkTerms"
+                          >
+                            I agree to the{' '}
                             <span
                               style={{
-                                color: "rgba(17, 30, 108, 1)",
-                                fontWeight: "500",
-                              }}>
+                                color: 'rgba(17, 30, 108, 1)',
+                                fontWeight: '500',
+                              }}
+                            >
                               Terms
-                            </span>{" "}
-                            and{" "}
+                            </span>{' '}
+                            and{' '}
                             <span
                               style={{
-                                color: "rgba(17, 30, 108, 1)",
-                                fontWeight: "500",
-                              }}>
+                                color: 'rgba(17, 30, 108, 1)',
+                                fontWeight: '500',
+                              }}
+                            >
                               Privacy
-                            </span>{" "}
+                            </span>{' '}
                             Policy
                           </label>
                         </div>
@@ -348,11 +342,12 @@ function CompanySignup() {
                         <button
                           type="submit"
                           className="btn btn-primary px-5 mb-2"
-                          disabled={isLoading}>
-                          {isLoading ? "Signing up..." : "Sign up"}
+                          disabled={isLoading}
+                        >
+                          {isLoading ? 'Signing up...' : 'Sign up'}
                         </button>
                         <p className="text-center">
-                          Already have an account?{" "}
+                          Already have an account?{' '}
                           <span className="">
                             <Link to="/login">Sign in </Link>
                           </span>
@@ -368,10 +363,10 @@ function CompanySignup() {
       </Wrapper>
       <Footer />
     </div>
-  );
+  )
 }
 
-export default CompanySignup;
+export default CompanySignup
 
 const Wrapper = styled.div`
   .content {
@@ -380,7 +375,7 @@ const Wrapper = styled.div`
       grid-template-columns: 1fr 1fr;
     }
   }
-`;
+`
 
 const RightWrapper = styled.section`
   background: #ffffff;
@@ -405,9 +400,9 @@ const RightWrapper = styled.section`
   }
   .login_input {
   }
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'] {
     padding: 15px;
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
@@ -419,7 +414,7 @@ const RightWrapper = styled.section`
     color: #333333;
   }
   .select-field {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 17px;
@@ -439,7 +434,7 @@ const RightWrapper = styled.section`
     padding-left: 10px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
@@ -450,7 +445,7 @@ const RightWrapper = styled.section`
     color: #e20d0d;
     padding-top: 12px;
   }
-`;
+`
 
 const LoginInput = styled.div`
   label,
@@ -473,7 +468,7 @@ const LoginInput = styled.div`
     line-height: 20px;
     color: #6d6d6d;
   }
-`;
+`
 const LoginButton = styled.div`
   display: flex;
   align-items: center;
@@ -491,4 +486,4 @@ const LoginButton = styled.div`
   span {
     color: rgba(28, 68, 141, 1);
   }
-`;
+`
