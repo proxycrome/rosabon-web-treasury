@@ -1,127 +1,107 @@
-import React, { useEffect, useState } from "react";
-import { config } from "../../redux/config";
-import axios from "axios";
-import { authHeader, headers } from "../../redux/headers";
-import styled from "styled-components";
-import toast, { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { config } from '../../redux/config'
+import axios from 'axios'
+import { authHeader, headers } from '../../redux/headers'
+import styled from 'styled-components'
+import toast, { Toaster } from 'react-hot-toast'
+import { useDispatch, useSelector } from 'react-redux'
+import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   forgotPassword,
   successMessage,
-} from "../../redux/actions/auth/SignupAction";
-import * as types from "../../redux/constant/auth";
-import { Form, FormGroup, Input, Label, FormFeedback } from "reactstrap";
+} from '../../redux/actions/auth/SignupAction'
+import * as types from '../../redux/constant/auth'
+import { Form, FormGroup, Input, Label, FormFeedback } from 'reactstrap'
 
 function ForgotPassword() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth);
-  const { isLoggedIn, isLoading, login } = auth;
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const auth = useSelector((state) => state.auth)
+  const { isLoggedIn, isLoading, login } = auth
 
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const user_profile = useSelector((state) => state.user_profile)
+  const { users } = user_profile
 
-  const [emailError, setError] = useState(false);
+  const [emailError, setError] = useState(false)
 
   const data = {
-    email: "",
-  };
-  const [formData, setformData] = useState(data);
+    email: '',
+  }
+  const [formData, setformData] = useState(data)
 
   function isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email);
+    return /\S+@\S+\.\S+/.test(email)
   }
 
   const handleChange = (e) => {
-    setError(false);
-    const { name, value } = e.target;
+    setError(false)
+    const { name, value } = e.target
     setformData({
       ...formData,
       [name]: value,
-    });
+    })
 
-    if (name == "email") {
+    if (name == 'email') {
       if (!isValidEmail(e.target.value)) {
-        setError("Email is invalid");
+        setError('Email is invalid')
       } else {
-        setError(null);
+        setError(null)
       }
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(false);
-    const { email } = formData;
+    e.preventDefault()
+    setError(false)
+    const { email } = formData
     if (!isValidEmail(email)) {
-      return setError(true);
+      return setError(true)
     }
-    forgot_password(email);
-    dispatch({ type: types.USERS_EMAIL, payload: email });
-  };
+    forgot_password(email)
+    dispatch({ type: types.USERS_EMAIL, payload: email })
+  }
 
   const forgot_password = async (email) => {
     try {
-      const mail = email.trim();
+      const mail = email.trim()
       const response = await axios.post(
         `${config.rosobon}users/${mail}/forgot-password`,
-        headers
-      );
+        headers,
+      )
       dispatch({
         type: types.LOADING,
         payload: true,
-      });
-      const formData = await response.data;
-      navigate("/congrates", { state: "forgotpassword" });
-      dispatch({ type: types.USERS_EMAIL, payload: email });
+      })
+      const formData = await response.data
+      navigate('/congrates', { state: 'forgotpassword' })
+      dispatch({ type: types.USERS_EMAIL, payload: email })
       dispatch({
         type: types.LOADING,
         payload: false,
-      });
-      return { formData };
+      })
+      return { formData }
     } catch (error) {
       const message = error.response
         ? error.response.data.message
           ? error.response.data.message
           : error.response.data.response_message
           ? error.response.data.response_message
-          : "Invalid Credentials"
-        : "Network Error";
+          : 'Invalid Credentials'
+        : 'Network Error'
       toast.error(message, {
-        position: "top-right",
-      });
-      return { message };
+        position: 'top-right',
+      })
+      return { message }
     }
-  };
-
-  useEffect(() => {
-    if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (isLoggedIn || users) {
-      if (
-        (login && login.role && login.role.name === "COMPANY") ||
-        (users && users.role === "COMPANY")
-      ) {
-        navigate("/kyc/company");
-      } else if (
-        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
-        (users && users.role === "INDIVIDUAL_USER")
-      ) {
-        navigate("/kyc/person");
-      }
-    }
-  }, [isLoggedIn, users]);
+  }
 
   return (
     <WrapperContainer>
       <div className="view_content"></div>
       <Toaster
         toastOptions={{
-          className: "bg-danger text-white",
+          className: 'bg-danger text-white',
         }}
       />
       <Wrapper>
@@ -132,7 +112,7 @@ function ForgotPassword() {
                 <img src={RFSLogoFullColour} alt="RFSLogo" />
                 <h4 className="pt-2">Forgot Password </h4>
                 <p className="">
-                  Please, enter your email address. You will receive a link{" "}
+                  Please, enter your email address. You will receive a link{' '}
                   <br /> to create a new password via email.
                 </p>
               </div>
@@ -142,7 +122,8 @@ function ForgotPassword() {
                   <FormGroup className="w-100">
                     <Label
                       htmlFor="email"
-                      className="card-title fw-bold fs-5 mb-2">
+                      className="card-title fw-bold fs-5 mb-2"
+                    >
                       Email Address
                     </Label>
                     <Input
@@ -161,13 +142,14 @@ function ForgotPassword() {
                       <button
                         type="submit"
                         className="btn btn-primary px-5 mb-2"
-                        disabled={isLoading}>
-                        {isLoading ? "LOADING..." : "Send"}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? 'LOADING...' : 'Send'}
                       </button>
                       <p className="text-center">
                         Do you remember your password?
                         <span className="">
-                          <Link to="/login"> Try Signing in </Link>{" "}
+                          <Link to="/login"> Try Signing in </Link>{' '}
                         </span>
                       </p>
                     </div>
@@ -179,21 +161,21 @@ function ForgotPassword() {
         </div>
       </Wrapper>
     </WrapperContainer>
-  );
+  )
 }
 
-export default ForgotPassword;
+export default ForgotPassword
 
 const WrapperContainer = styled.div`
   .view_content {
     background: #111e6c;
     height: 65px;
   }
-`;
+`
 
 const Wrapper = styled.div`
   padding: 50px;
-`;
+`
 
 const WrappCongrate = styled.div`
   padding: 2rem;
@@ -255,7 +237,7 @@ const WrappCongrate = styled.div`
     padding-top: 9px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
@@ -277,4 +259,4 @@ const WrappCongrate = styled.div`
     padding-top: 9px;
     padding-bottom: 20px;
   }
-`;
+`

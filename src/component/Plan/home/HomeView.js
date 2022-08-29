@@ -26,7 +26,7 @@ function HomeView() {
   useEffect(() => {
     const tokenString = JSON.parse(localStorage.getItem("token"));
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString));
+      dispatch(getAuthUsers(tokenString.token));
     } else {
       navigate("/login");
     }

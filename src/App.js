@@ -1,15 +1,26 @@
-import logo from './logo.svg';
-import PageRoutes from './PageRoutes';
-
-import Test from './utils/Test';
-
+import React, { useState, useEffect } from 'react'
+import PageRoutes from './PageRoutes'
+import { useSelector, useDispatch } from 'react-redux'
+import { RefreshUser } from './redux/actions/auth/SignupAction'
+import Spinner from './component/common/loading'
 
 function App() {
+  const dispatch = useDispatch()
+  const { login, isAuth } = useSelector((state) => state.auth)
+  useEffect(() => {
+    dispatch(RefreshUser())
+  }, [RefreshUser])
   return (
     <div className="App">
-      <PageRoutes />
+      {isAuth !== null ? (
+        <PageRoutes login={login} isAuth={isAuth} />
+      ) : (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

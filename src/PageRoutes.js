@@ -1,34 +1,34 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
 // import ProfileUpdate from "./component/dashboard/ProfileUpdate";
-import ForgotPassword from "./component/Auth/ForgotPassword";
-import Congratulatios from "./component/Auth/Congratulatios";
-import ResetPassword from "./component/Auth/ResetPassword";
-import Authentication from "./component/Auth";
-import Profile from "./pages";
-import KYC from "./pages/KYC/KYC";
-import PlanHome from "./component/Plan";
-import HomeView from "./component/Plan/home/HomeView";
-import ListPlans from "./component/Plan/Plan";
-import TopupPlan from "./component/Plan/Plan/TopupPlan";
-import PlanPayment from "./component/Plan/Plan/PlanPayment";
-import PlanProduct from "./component/Plan/createPlan";
-import PlanRollover from "./component/Plan/Plan/Rollover/Rollover";
-import Transfer from "./component/Plan/Plan/Transfer/Transfer"
-import Withdrawal from "./component/Plan/Plan/Withdrawal/Withdrawal";
-import Transactions from "./component/Plan/Plan/Transactions";
-import Archives from "./component/Plan/Plan/Archives";
-import PersonalKYC from "./component/dashboard/PersonalKYC";
-import CompanyKYC from "./component/dashboard/CompanyKYC";
-import UserSignup from "./component/Auth/userSignup";
-import CompanySignup from "./component/Auth/CompanySignup";
+import ProtectedRoute, { NotProtectedRoute } from './ProtectecRoute'
+import ForgotPassword from './component/Auth/ForgotPassword'
+import Congratulatios from './component/Auth/Congratulatios'
+import ResetPassword from './component/Auth/ResetPassword'
+import Authentication from './component/Auth'
+import Profile from './pages'
+import KYC from './pages/KYC/KYC'
+import PlanHome from './component/Plan'
+import HomeView from './component/Plan/home/HomeView'
+import ListPlans from './component/Plan/Plan'
+import TopupPlan from './component/Plan/Plan/TopupPlan'
+import PlanPayment from './component/Plan/Plan/PlanPayment'
+import PlanProduct from './component/Plan/createPlan'
+import PlanRollover from './component/Plan/Plan/Rollover/Rollover'
+import Transfer from './component/Plan/Plan/Transfer/Transfer'
+import Withdrawal from './component/Plan/Plan/Withdrawal/Withdrawal'
+import Transactions from './component/Plan/Plan/Transactions'
+import Archives from './component/Plan/Plan/Archives'
+import GeneralKYC from './component/dashboard/Kyc/index'
+import UserSignup from './component/Auth/userSignup'
+import CompanySignup from './component/Auth/CompanySignup'
 // import {PlanFrom} from "./component/Plan/createPlan/PlanForm"
-import PlanForm from "./component/Plan/createPlan/PlanForm";
-import Login from "./component/Auth/Login";
-import UserWallet from "./component/Plan/wallet/UserWallet";
-import Feedback from "./component/Plan/feedback/Feedback";
-import AdminMessage from "./component/Plan/feedback/AdminMessage";
-import Help from "./component/Plan/help/Help";
+import PlanForm from './component/Plan/createPlan/PlanForm'
+import Login from './component/Auth/Login'
+import UserWallet from './component/Plan/wallet/UserWallet'
+import Feedback from './component/Plan/feedback/Feedback'
+import AdminMessage from './component/Plan/feedback/AdminMessage'
+import Help from './component/Plan/help/Help'
 import {
   HistoryTable,
   ReferalTable,
@@ -38,13 +38,21 @@ import {
   FeedbackTickets,
   FeedbackOpenTickets,
   FeedbackCloseTickets,
-} from "./component/Plan/Accesssories";
+} from './component/Plan/Accesssories'
 
-function PageRoutes() {
+function PageRoutes({ login, isAuth }) {
+  console.log(isAuth)
   return (
     <Routes>
       <Route path="*" element={<p>Error 404</p>} />
-      <Route path="/" element={<PlanHome />}>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute isAuth={isAuth}>
+            <PlanHome />
+          </ProtectedRoute>
+        }
+      >
         <Route path="" element={<HomeView />} />
         <Route path="plan-product" element={<PlanProduct />} />
         <Route path="plan-list" element={<ListPlans />} />
@@ -69,31 +77,78 @@ function PageRoutes() {
         <Route path="admin-message" element={<AdminMessage />} />
         <Route path="help" element={<Help />} />
       </Route>
-      <Route path="/kyc" element={<KYC />}>
-        <Route path="company" element={<CompanyKYC />} />
-        <Route path="person" element={<PersonalKYC />} />
-      </Route>
-      <Route path="/login" element={<Login />} />
-
-      <Route path="/register-user" element={<UserSignup signup="signup" />} />
       <Route
-        path="/register-company"
-        element={<CompanySignup signup="signup" />}
-      />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/congrates" element={<Congratulatios />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+        path="/kyc"
+        element={
+          <ProtectedRoute isAuth={isAuth}>
+            <KYC />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="" element={<GeneralKYC />} />
+      </Route>
+
       <Route
         path="/personal-profile"
-        element={<Profile user_profile="user_profile" />}
+        element={
+          <ProtectedRoute isAuth={isAuth}>
+            <Profile user_profile="user_profile" />
+          </ProtectedRoute>
+        }
       />
       <Route path="/company-profile" element={<Profile />} />
       <Route
         path="/plan-details-form"
-        element={<PlanHome details="details" />}
+        element={
+          <ProtectedRoute isAuth={isAuth}>
+            <PlanHome details="details" />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <NotProtectedRoute isAuth={isAuth}>
+            <Login />
+          </NotProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/register-user"
+        element={
+          <NotProtectedRoute isAuth={isAuth}>
+            <UserSignup signup="signup" />
+          </NotProtectedRoute>
+        }
+      />
+      <Route
+        path="/register-company"
+        element={
+          <NotProtectedRoute isAuth={isAuth}>
+            <CompanySignup signup="signup" />
+          </NotProtectedRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <NotProtectedRoute isAuth={isAuth}>
+            <ForgotPassword />
+          </NotProtectedRoute>
+        }
+      />
+      <Route path="/congrates" element={<Congratulatios />} />
+      <Route
+        path="/reset-password"
+        element={
+          <NotProtectedRoute isAuth={isAuth}>
+            <ResetPassword />
+          </NotProtectedRoute>
+        }
       />
     </Routes>
-  );
+  )
 }
 
-export default PageRoutes;
+export default PageRoutes

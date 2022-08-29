@@ -1,63 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
-import { Link, useNavigate } from "react-router-dom";
-import { resetPassword } from "../../redux/actions/auth/SignupAction";
-import { Input, InputGroup, InputGroupText } from "reactstrap";
-import { ValidatePasswordForm, validatePassword } from "./validateForm";
+import React, { useEffect, useState } from 'react'
+import { Toaster } from 'react-hot-toast'
+import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png'
+import { Link, useNavigate } from 'react-router-dom'
+import { resetPassword } from '../../redux/actions/auth/SignupAction'
+import { Input, InputGroup, InputGroupText } from 'reactstrap'
+import { ValidatePasswordForm, validatePassword } from './validateForm'
 
 function ResetPassword() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn, isLoading } = auth;
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const auth = useSelector((state) => state.auth)
+  const { login, isLoggedIn, isLoading } = auth
+  const user_profile = useSelector((state) => state.user_profile)
+  const { users } = user_profile
   const data = {
-    newPassword: "",
-    c_password: "",
-  };
-  const [passwordShown1, setPasswordShown1] = useState(false);
-  const [passwordShown2, setPasswordShown2] = useState(false);
+    newPassword: '',
+    c_password: '',
+  }
+  const [passwordShown1, setPasswordShown1] = useState(false)
+  const [passwordShown2, setPasswordShown2] = useState(false)
 
-  const { handleValueChange, values, handleSubmit, errors } =
-    ValidatePasswordForm(validatePassword);
+  const {
+    handleValueChange,
+    values,
+    handleSubmit,
+    errors,
+  } = ValidatePasswordForm(validatePassword)
 
   const togglePassword1 = () => {
-    setPasswordShown1(!passwordShown1);
-  };
+    setPasswordShown1(!passwordShown1)
+  }
   const togglePassword2 = () => {
-    setPasswordShown2(!passwordShown2);
-  };
-
-  useEffect(() => {
-    if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (isLoggedIn || users) {
-      if (
-        (login && login.role && login.role.name === "COMPANY") ||
-        (users && users.role === "COMPANY")
-      ) {
-        navigate("/kyc/company");
-      } else if (
-        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
-        (users && users.role === "INDIVIDUAL_USER")
-      ) {
-        navigate("/kyc/person");
-      }
-    }
-  }, [isLoggedIn, users, login, navigate]);
-
+    setPasswordShown2(!passwordShown2)
+  }
   return (
     <WrapperContainer>
       <div className="view_content"></div>
       <Toaster
         toastOptions={{
-          className: "bg-danger text-white",
+          className: 'bg-danger text-white',
         }}
       />
       <Wrapper>
@@ -72,8 +55,8 @@ function ResetPassword() {
                   <h4 className="pt-4">Reset Password</h4>
                   <p className="">
                     Your password should include at least 8 characters and
-                    should include a combination of Upper-case, Lowercase
-                    and special characters (@$#%)
+                    should include a combination of Upper-case, Lowercase and
+                    special characters (@$#%)
                   </p>
                   <div>
                     <form autoComplete="off" onSubmit={handleSubmit}>
@@ -82,7 +65,7 @@ function ResetPassword() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown1 ? "text" : "password"}
+                              type={passwordShown1 ? 'text' : 'password'}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="password"
@@ -91,12 +74,13 @@ function ResetPassword() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword1}
-                                style={{ cursor: "pointer" }}
+                                style={{ cursor: 'pointer' }}
                                 className={
                                   passwordShown1
-                                    ? "far fa-eye"
-                                    : "far fa-eye-slash"
-                                }></i>
+                                    ? 'far fa-eye'
+                                    : 'far fa-eye-slash'
+                                }
+                              ></i>
                             </InputGroupText>
                           </InputGroup>
                         </div>
@@ -107,7 +91,7 @@ function ResetPassword() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown2 ? "text" : "password"}
+                              type={passwordShown2 ? 'text' : 'password'}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="c_password"
@@ -116,12 +100,13 @@ function ResetPassword() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword2}
-                                style={{ cursor: "pointer" }}
+                                style={{ cursor: 'pointer' }}
                                 className={
                                   passwordShown2
-                                    ? "far fa-eye"
-                                    : "far fa-eye-slash"
-                                }></i>
+                                    ? 'far fa-eye'
+                                    : 'far fa-eye-slash'
+                                }
+                              ></i>
                             </InputGroupText>
                           </InputGroup>
                         </div>
@@ -133,8 +118,9 @@ function ResetPassword() {
                           <button
                             type="submit"
                             className="btn btn-primary px-5 mb-2"
-                            disabled={isLoading}>
-                            {isLoading ? "Loading..." : "Reset Password"}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? 'Loading...' : 'Reset Password'}
                           </button>
                         </div>
                       </div>
@@ -147,10 +133,10 @@ function ResetPassword() {
         </div>
       </Wrapper>
     </WrapperContainer>
-  );
+  )
 }
 
-export default ResetPassword;
+export default ResetPassword
 
 const WrapperContainer = styled.div`
   height: 100vh;
@@ -158,11 +144,11 @@ const WrapperContainer = styled.div`
     background: #111e6c;
     height: 65px;
   }
-`;
+`
 
 const Wrapper = styled.div`
   padding-top: 5%;
-`;
+`
 
 const WrappCongrate = styled.div`
   .congrate_body {
@@ -187,7 +173,7 @@ const WrappCongrate = styled.div`
     .congrate_body {
       padding: 3rem 2rem;
     }
-    h4{
+    h4 {
       font-size: 18px;
     }
   }
@@ -234,7 +220,7 @@ const WrappCongrate = styled.div`
     padding-bottom: 20px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
@@ -245,4 +231,4 @@ const WrappCongrate = styled.div`
     color: #e20d0d;
     padding-top: 12px;
   }
-`;
+`

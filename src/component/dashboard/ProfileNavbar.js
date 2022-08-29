@@ -13,6 +13,7 @@ import {
   updateUserCompanyKYC,
   getAuthUsers,
 } from '../../redux/actions/personalInfo/userProfile.actions'
+import { logOut } from '../../redux/actions/auth/SignupAction'
 import { CLEAR_USERS } from '../../redux/constant/auth'
 
 export function ProfileNavBar({ children }) {
@@ -30,15 +31,13 @@ export function ProfileNavBar({ children }) {
   }
 
   const logout = (e) => {
-    localStorage.removeItem('token')
-    navigate('/login', { replace: true })
-    dispatch({ type: CLEAR_USERS })
+    dispatch(logOut(navigate))
   }
 
   useEffect(() => {
     const tokenString = JSON.parse(localStorage.getItem('token'))
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString))
+      dispatch(getAuthUsers(tokenString.token))
     } else {
       navigate('/login')
     }
@@ -88,8 +87,7 @@ export function ProfileNavBar({ children }) {
                       ? users.company.name
                       : users && users.role === 'INDIVIDUAL_USER'
                       ? users.individualUser.firstName
-                      : ''  
-                    }
+                      : ''}
                   </span>
                   <img
                     className="rounded-circle header-profile-user mr-3"

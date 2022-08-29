@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Toaster } from "react-hot-toast";
-import { LoginLeftView } from "./loginLeftView";
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
+import { LoginLeftView } from './loginLeftView'
+import styled from 'styled-components'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { loginUser } from "../../redux/actions/auth/SignupAction";
+import { loginUser } from '../../redux/actions/auth/SignupAction'
 import {
   Form,
   FormGroup,
@@ -14,75 +14,74 @@ import {
   FormFeedback,
   InputGroup,
   InputGroupText,
-} from "reactstrap";
+} from 'reactstrap'
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn, isLoading } = auth;
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const auth = useSelector((state) => state.auth)
+  const { login, isLoggedIn, isLoading } = auth
 
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const user_profile = useSelector((state) => state.user_profile)
+  const { users } = user_profile
   const data = {
-    email: "",
-    password: "",
-  };
-  const [passwordShown, setPasswordShown] = useState(false);
-  const [emailError, setError] = useState(false);
-  const [formData, setformData] = useState(data);
+    email: '',
+    password: '',
+  }
+  const [passwordShown, setPasswordShown] = useState(false)
+  const [emailError, setError] = useState(false)
+  const [formData, setformData] = useState(data)
 
   const togglePassword1 = () => {
-    setPasswordShown(!passwordShown);
-  };
+    setPasswordShown(!passwordShown)
+  }
 
   function isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email);
+    return /\S+@\S+\.\S+/.test(email)
   }
 
   const handleChange = (e) => {
-    setError(false);
-    const { name, value } = e.target;
+    setError(false)
+    const { name, value } = e.target
     setformData({
       ...formData,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const handleUserSubmit = (e) => {
-    e.preventDefault();
-    setError(false);
-    const { email, password } = formData;
+    e.preventDefault()
+    setError(false)
+    const { email, password } = formData
     if (!isValidEmail(email)) {
-      return setError(true);
+      return setError(true)
     }
     let data = {
       email,
       password,
-      platformType: "WEB",
-    };
-    dispatch(loginUser(data));
-  };
-  
-  useEffect(() => {
-    if (users && users.kyc && users.role === "COMPANY") {
-      navigate("/company-profile");
-    } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/personal-profile");
-    } else if (isLoggedIn || users) {
-      if (
-        (login && login.role && login.role.name === "COMPANY") ||
-        (users && users.role === "COMPANY")
-      ) {
-        navigate("/kyc/company");
-      } else if (
-        (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
-        (users && users.role === "INDIVIDUAL_USER")
-      ) {
-        navigate("/kyc/person");
-      }
+      platformType: 'WEB',
     }
-  }, [isLoggedIn, users]);
+    dispatch(loginUser(data, navigate))
+  }
+  // useEffect(() => {
+  //   if (users && users.kyc && users.role === "COMPANY") {
+  //     navigate("/company-profile");
+  //   } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
+  //     navigate("/personal-profile");
+  //   } else if (isLoggedIn || users) {
+  //     if (
+  //       (login && login.role && login.role.name === "COMPANY") ||
+  //       (users && users.role === "COMPANY")
+  //     ) {
+  //       navigate("/kyc/company");
+  //     } else if (
+  //       (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
+  //       (users && users.role === "INDIVIDUAL_USER")
+  //     ) {
+  //       navigate("/kyc/person");
+  //     }
+  //   }
+  // }, [isLoggedIn, users]);
 
   return (
     <WrapperContainer>
@@ -93,16 +92,14 @@ const Login = () => {
         <RightWrapper>
           <Toaster
             toastOptions={{
-              className: "bg-danger text-white",
+              className: 'bg-danger text-white',
             }}
           />
           <h4>Login</h4>
           <div className="container">
             <Form autoComplete="off" onSubmit={handleUserSubmit}>
               <FormGroup className="w-100">
-                <Label
-                  htmlFor="email"
-                  className="card-title fw-bold fs-5 mb-2">
+                <Label htmlFor="email" className="card-title fw-bold fs-5 mb-2">
                   Email Address
                 </Label>
                 <Input
@@ -116,14 +113,12 @@ const Login = () => {
                 <FormFeedback>Valid Email is Required</FormFeedback>
               </FormGroup>
               <FormGroup className="w-100">
-                <Label
-                  htmlFor="email"
-                  className="card-title fw-bold fs-5 mb-2">
+                <Label htmlFor="email" className="card-title fw-bold fs-5 mb-2">
                   Password
                 </Label>
                 <InputGroup>
                   <Input
-                    type={passwordShown ? "text" : "password"}
+                    type={passwordShown ? 'text' : 'password'}
                     bsSize="lg"
                     onChange={handleChange}
                     name="password"
@@ -132,10 +127,11 @@ const Login = () => {
                   <InputGroupText>
                     <i
                       onClick={togglePassword1}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: 'pointer' }}
                       className={
-                        passwordShown ? "far fa-eye" : "far fa-eye-slash"
-                      }></i>
+                        passwordShown ? 'far fa-eye' : 'far fa-eye-slash'
+                      }
+                    ></i>
                   </InputGroupText>
                 </InputGroup>
                 <FormFeedback>Password</FormFeedback>
@@ -153,11 +149,12 @@ const Login = () => {
                 <button
                   type="submit"
                   className="btn btn-primary px-5 mb-2"
-                  disabled={isLoading}>
-                  {isLoading ? "LOADING..." : "Login"}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'LOADING...' : 'Login'}
                 </button>
                 <p>
-                  Don’t have an account?{" "}
+                  Don’t have an account?{' '}
                   <span className="">
                     <Link to="/register-company">Sign up</Link>
                   </span>
@@ -169,10 +166,10 @@ const Login = () => {
         </RightWrapper>
       </div>
     </WrapperContainer>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
 
 const WrapperContainer = styled.div`
   height: 100vh;
@@ -180,7 +177,7 @@ const WrapperContainer = styled.div`
   @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
   }
-`;
+`
 
 const RightWrapper = styled.section`
   background: #ffffff;
@@ -237,4 +234,4 @@ const RightWrapper = styled.section`
     
     color: #828282;
   }
-`;
+`
