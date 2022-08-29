@@ -319,6 +319,17 @@ const CompanyDoc = () => {
           </div>
         </div>
       </WrapperBody>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-end footer-content">
+            <div>
+              <button className="blue-btn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </div>
   );
 };
@@ -390,5 +401,37 @@ const WrapperBody = styled.div`
     line-height: 24px;
     letter-spacing: -0.04em;
     color: #333333;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 80px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    width: 300px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;

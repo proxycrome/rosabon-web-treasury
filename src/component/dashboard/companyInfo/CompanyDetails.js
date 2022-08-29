@@ -149,9 +149,9 @@ const CompanyDetails = () => {
                         type="text"
                         disabled={showEditDetail}
                       />
-                      <span className=" input-font-awe">
+                      {/* <span className=" input-font-awe">
                         <i className="fa-solid fa-angle-down"></i>
-                      </span>
+                      </span> */}
                     </div>
                   </div>
                   <div className="col-md-6 col-lg-4 ">
@@ -183,7 +183,7 @@ const CompanyDetails = () => {
               </div>
               <div className="body-content">
                 <div className="row">
-                  <div className="d-flex justify-content-between">
+                  <div className="d-flex justify-content-between mt-5">
                     <h4>Contact Person Details</h4>
                     <div>
                       {showEditCont ? (
@@ -253,6 +253,17 @@ const CompanyDetails = () => {
           </div>
         </div>
       </WrapperBody>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-end footer-content">
+            <div>
+              <button className="blue-btn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </div>
   );
 };
@@ -342,5 +353,37 @@ const WrapperBody = styled.div`
     line-height: 21px;
     text-align: right;
     color: #ffffff;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 80px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    width: 300px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;

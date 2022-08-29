@@ -124,7 +124,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     </NavLink>
                   </ul>
                 </Collapse>
-                <NavLink style={{ textDecoration: 'none' }} to="help">
+                <NavLink style={{ textDecoration: 'none' }} to="/help">
                   <li>
                     <i className="fas fa-exclamation-circle"></i>
                     <span>Help</span>

@@ -122,8 +122,8 @@ const PersonalInfo = () => {
                 <div className="col-md-6 col-lg-4">
                   <label>Gender</label>
                   <select
-                    className="form-select form-select-lg mb-4"
-                    aria-label=".form-select-lg"
+                    className="form-select form-select-md mb-4"
+                    aria-label=".form-select-md"
                     disabled={showEditProf}>
                     <option selected>Male</option>
                     <option value="2">Female</option>
@@ -227,16 +227,15 @@ const PersonalInfo = () => {
                   <div className="col-md-4 ">
                     <label>Country of Residence</label>
                     <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder="Middle Name"
-                        aria-label="First Name..."
-                        type="text"
+                      <select
+                        className="form-select form-select-md mb-3"
+                        aria-label=".form-select-md"
                         disabled={showEditCont}
-                      />
-                      <span className=" input-font-awe">
-                        <i className="fa-solid fa-angle-down"></i>
-                      </span>
+                        name="name"
+                      >
+                        <option value=""></option>
+                        <option value="Nigeria">Nigeria</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -244,8 +243,8 @@ const PersonalInfo = () => {
                   <div className="col-md-6 col-lg-4">
                     <label>State</label>
                     <select
-                      className="form-select form-select-lg mb-4"
-                      aria-label=".form-select-lg"
+                      className="form-select form-select-md mb-4"
+                      aria-label=".form-select-md"
                       disabled={showEditCont}>
                       <option selected>Male</option>
                       <option value="2">Female</option>
@@ -266,15 +265,15 @@ const PersonalInfo = () => {
                   <div className="col-md-6 col-lg-6 pb-md-4">
                     <label>Nationality</label>
                     <div className="input-group mb-4">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Nationality"
+                      <select
+                        className="form-select form-select-md mb-3"
+                        aria-label=".form-select-md"
+                        name="country"
                         disabled={showEditCont}
-                      />
-                      <span className=" input-font-awe">
-                        <i className="fa-solid fa-angle-down"></i>
-                      </span>
+                      >
+                        <option value=""></option>
+                        <option value="Nigeria">Nigeria</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -318,11 +317,11 @@ const PersonalInfo = () => {
                     </div>
                   </div>
                   <div className="col-md-4 ">
-                    <label>Employer’s name</label>
+                    <label>Employer's name</label>
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder="Employer’s name"
+                        placeholder="Employer's name"
                         type="text"
                         disabled={showEditEmpoy}
                       />
@@ -417,6 +416,17 @@ const PersonalInfo = () => {
           </div>
         </form>
       </WrapperBody>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-end footer-content">
+            <div>
+              <button className="blue-btn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </div>
   );
 };
@@ -496,6 +506,11 @@ const WrapperBody = styled.div`
     padding-left: 20px;
     position: relative;
   }
+
+  select {
+    height: 54px;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -518,5 +533,37 @@ const WrapperBody = styled.div`
     line-height: 21px;
     text-align: right;
     color: #ffffff;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 80px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    width: 300px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;

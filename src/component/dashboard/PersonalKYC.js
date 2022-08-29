@@ -404,13 +404,15 @@ const PersonalKYC = () => {
                 <div className="footer-body">
                   <div className="d-flex align-items-center justify-content-between footer-content">
                     <div>
-                      <button className="">Save and Invest Now</button>
+                      <Link to="/personal-profile">
+                        <button className="">Save and Continue</button>
+                      </Link>
                     </div>
                     <div>
                       {formData.dateOfBirth &&
                       formData.gender &&
                       formData.bvn ? (
-                        <Link to="/personal-profile">
+                        <Link to="/plan-product">
                           <button className="blue-btn" onClick={handleSubmit}>
                             Save and Invest Now
                           </button>
@@ -521,6 +523,11 @@ const WrapperBody = styled.div`
     border-radius: 8px;
     padding-left: 20px;
   }
+
+  select {
+    height: 54px;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;

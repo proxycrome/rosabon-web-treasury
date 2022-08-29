@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { MDBDataTable } from "mdbreact";
 import halfEllipse from "../../asset/halfEllipse.png";
 import ChoosePlanHolder from "../../asset/chooseplaneHolder.png";
 import Verve from "../../asset/master-card-logo.png";
@@ -1380,6 +1381,66 @@ const HistoryTableWarapper = styled.div`
 `;
 
 export const ReferalTable = () => {
+  const data = {
+    columns: [
+      {
+        label: 'S/N',
+        field: 'sn',
+        width: 100,
+      },
+      {
+        label: 'Date',
+        field: 'date',
+        width: 100,
+      },
+      {
+        label: 'Name',
+        field: 'name',
+        width: 100,
+      },
+      {
+        label: 'Status',
+        field: 'status',
+        width: 100,
+      },
+      {
+        label: null,
+        field: 'action',
+        width: 100,
+      },
+    ],
+    rows: [
+      {
+        sn: 1,
+        date: 'Apr 28 2022',
+        name: 'Jane Doe',
+        status: 'Active',
+        action: (<button className="active">Poke User</button>),
+      },
+      {
+        sn: 2,
+        date: 'Apr 28 2022',
+        name: 'Jane Doe',
+        status: 'Active',
+        action: (<button className="active">Poke User</button>),
+      },
+      {
+        sn: 3,
+        date: 'Apr 28 2022',
+        name: 'Jane Doe',
+        status: 'Active',
+        action: (<button className="active">Poke User</button>),
+      },
+      {
+        sn: 4,
+        date: 'Apr 28 2022',
+        name: 'Jane Doe',
+        status: 'Active',
+        action: (<button className="in-active">Poke User</button>),
+      },    
+    ],
+  };
+
   return (
     <div>
       <ProfileNavBar>
@@ -1401,65 +1462,14 @@ export const ReferalTable = () => {
           </div>
           <div className="">
             <p className="p-0 m-0">Total Referrals</p>
-            <div className="box-image d-flex justify-content-center align-items-center">
+            <div className="box-image">
               <h3>12</h3>
             </div>
           </div>
         </div>
 
         <div>
-          <table
-            id="dtBasicExample"
-            className="table table-striped table-sm"
-            cellSpacing="0"
-            width="100%">
-            <thead>
-              <tr>
-                <th className="">S/N</th>
-                <th className="">Date</th>
-                <th className="">Name</th>
-                <th className="">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Apr 28, 2022</td>
-                <td>Jane Doe</td>
-                <td>Active</td>
-                <td>
-                  <button className="active">Poke User</button>{" "}
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Apr 28, 2022</td>
-                <td>Jane Doe</td>
-                <td>Active</td>
-                <td>
-                  <button className="active">Poke User</button>{" "}
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Apr 28, 2022</td>
-                <td>Jane Doe</td>
-                <td>Active</td>
-                <td>
-                  <button className="active">Poke User</button>{" "}
-                </td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Apr 28, 2022</td>
-                <td>Jane Doe</td>
-                <td>Inactive</td>
-                <td>
-                  <button className="in-active">Poke User</button>{" "}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <MDBDataTable responsive striped data={data} searching={false} />
         </div>
       </ReferalTableWarapper>
     </div>
@@ -1469,12 +1479,22 @@ export const ReferalTable = () => {
 const ReferalTableWarapper = styled.div`
   padding: 30px;
   padding-right: 30%;
+
   .box-image {
     width: 94px;
-    height: 48px;
+    height: 40px;
     background: #ffffff;
-    box-shadow: 0px 4px 10px rgba(148, 148, 148, 0.25);
-    border-radius: 10px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h3 {
+      font-size: 17px;
+      font-weight: 600;
+    }
   }
   p {
     font-family: "Montserrat";
@@ -1543,6 +1563,58 @@ const ReferalTableWarapper = styled.div`
 `;
 
 export const ReferralBonus = () => {
+  const data = {
+    columns: [
+      {
+        label: 'ID',
+        field: 'id',
+        width: 100,
+      },
+      {
+        label: 'Date',
+        field: 'date',
+        width: 100,
+      },
+      {
+        label: 'Description',
+        field: 'description',
+        width: 100,
+      },
+      {
+        label: 'Balance',
+        field: 'balance',
+        width: 100,
+      },
+    ],
+    rows: [
+      {
+        id: 1,
+        date: 'Apr 28 2022',
+        description: 'Referral Bonus for Jane Doe first activation',
+        balance: '₦1,000,000',
+      },
+      {
+        id: 2,
+        date: 'Apr 28 2022',
+        description: 'Referral Bonus for Jane Doe first activation',
+        balance: '₦1,000,000',
+      },
+      {
+        id: 3,
+        date: 'Apr 28 2022',
+        description: 'Referral Bonus for Jane Doe first activation',
+        balance: '₦1,000,000',
+      },
+      {
+        id: 4,
+        date: 'Apr 28 2022',
+        description: 'Referral Bonus for Jane Doe first activation',
+        balance: '₦1,000,000',
+      },   
+    ],
+  };
+
+
   return (
     <div>
       <ProfileNavBar>
@@ -1574,46 +1646,7 @@ export const ReferralBonus = () => {
         </div>
 
         <div>
-          <table
-            id="dtBasicExample"
-            className="table table-striped table-sm"
-            cellSpacing="0"
-            width="100%">
-            <thead>
-              <tr>
-                <th className="">ID</th>
-                <th className="">Date</th>
-                <th className="">Description</th>
-                <th className="">Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-            </tbody>
-          </table>
+          <MDBDataTable responsive striped data={data} searching={false} />
         </div>
       </ReferalTableBonusWarapper>
     </div>
@@ -1718,16 +1751,110 @@ export const TransferDeposit = () => {
   const [credit, setCredit] = useState(false);
   const [transfer, setTransfer] = useState(false);
 
+  const data = {
+    columns: [
+      {
+        label: 'S/N',
+        field: 'sn',
+        width: 100,
+      },
+      {
+        label: 'Date',
+        field: 'date',
+        width: 100,
+      },
+      {
+        label: 'Description',
+        field: 'description',
+        width: 100,
+      },
+      {
+        label: 'Type',
+        field: 'type',
+        width: 100,
+      },
+      {
+        label: 'Amount',
+        field: 'amount',
+        width: 100,
+      },
+      {
+        label: 'Balance',
+        field: 'balance',
+        width: 100,
+      },
+    ],
+    rows: [
+      {
+        sn: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        type: 'Debit',
+        amount: ' - ₦1,500,000',
+        balance: '₦1,000,000',
+      },
+      {
+        sn: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        type: 'Debit',
+        amount: ' - ₦1,500,000',
+        balance: '₦1,000,000',
+      },
+      {
+        sn: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        type: 'Debit',
+        amount: ' - ₦1,500,000',
+        balance: '₦1,000,000',
+      },
+      {
+        sn: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        type: 'Debit',
+        amount: ' - ₦1,500,000',
+        balance: '₦1,000,000',
+      },
+      {
+        sn: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        type: 'Debit',
+        amount: ' - ₦1,500,000',
+        balance: '₦1,000,000',
+      },
+      {
+        sn: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        type: 'Debit',
+        amount: ' - ₦1,500,000',
+        balance: '₦1,000,000',
+      },
+      {
+        sn: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        type: 'Debit',
+        amount: ' - ₦1,500,000',
+        balance: '₦1,000,000',
+      },    
+    ],
+  };
+
+
   const handleClick = (values) => {
-    if (values == "bank") {
+    if (values === "bank") {
       setBank(true);
       setCredit(false);
       setTransfer(false);
-    } else if (values == "credit") {
+    } else if (values === "credit") {
       setBank(false);
       setCredit(true);
       setTransfer(false);
-    } else if (values == "transfer") {
+    } else if (values === "transfer") {
       setBank(false);
       setCredit(false);
       setTransfer(true);
@@ -1742,7 +1869,7 @@ export const TransferDeposit = () => {
         </NavTitle>
       </ProfileNavBar>
       <HistoryTableWarapper>
-        <h3 className="pb-4">My Referral Bonus</h3>
+        <h3 className="pb-4">My Deposits</h3>
         <div className="d-flex align-items-content justify-content-around pb-5">
           <h3
             className={bank ? "" : "grey-text"}
@@ -1762,56 +1889,7 @@ export const TransferDeposit = () => {
         </div>
 
         <div>
-          <table
-            id="dtBasicExample"
-            className="table table-striped table-sm"
-            cellSpacing="0"
-            width="100%">
-            <thead>
-              <tr>
-                <th className="">S/N</th>
-                <th className="">Date</th>
-                <th className="">Description</th>
-                <th className="">Type</th>
-                <th className="">Amount</th>
-                <th className="">Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-            </tbody>
-          </table>
+          <MDBDataTable responsive striped data={data} searching={false} />
         </div>
       </HistoryTableWarapper>
     </div>
@@ -1855,6 +1933,58 @@ export const WithdrawalCard = () => {
 const Wrapper = styled.div``;
 
 export const SpecialEarnings = () => {
+  
+  const data = {
+    columns: [
+      {
+        label: 'ID',
+        field: 'id',
+        width: 100,
+      },
+      {
+        label: 'Date',
+        field: 'date',
+        width: 100,
+      },
+      {
+        label: 'Description',
+        field: 'description',
+        width: 100,
+      },
+      {
+        label: 'Amount',
+        field: 'amount',
+        width: 100,
+      },
+    ],
+    rows: [
+      {
+        id: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Referral Bonus for Jane Doe first activation',
+        amount: '₦1,500,000',
+      },
+      {
+        id: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        amount: '₦1,500,000',
+      },
+      {
+        id: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        amount: '₦1,500,000',
+      }, 
+      {
+        id: 'N0_1947034',
+        date: 'Apr 28 2022',
+        description: 'Part withdrawal',
+        amount: '₦1,500,000',
+      },   
+    ],
+  };
+
   return (
     <div>
       <ProfileNavBar>
@@ -1863,14 +1993,14 @@ export const SpecialEarnings = () => {
         </NavTitle>
       </ProfileNavBar>
       <SpecialEarningsWarapper>
-        <h3>My Referral Bonus</h3>
+        <h3>Rosabon Special Earnings</h3>
         <div className="bonus-card d-flex justify-content-start aligin-items-center">
           <div className="total-bonus">
-            <p className="p-0 m-0">Total Redeemed Bonus :</p>
+            <p className="p-0 m-0">Total Redeemed Earnings :</p>
             <h4 className="total-amount">₦ 0.00</h4>
           </div>
           <div className="redeem-card">
-            <p className="p-0 m-0">Total Redeemed Bonus :</p>
+            <p className="p-0 m-0">Total Earnings :</p>
             <div className="d-flex total-amount justify-content-between aligin-items-center">
               <h4 className="">₦ 0.00</h4>
               <div>
@@ -1881,46 +2011,7 @@ export const SpecialEarnings = () => {
         </div>
 
         <div>
-          <table
-            id="dtBasicExample"
-            className="table table-striped table-sm"
-            cellSpacing="0"
-            width="100%">
-            <thead>
-              <tr>
-                <th className="">S/N</th>
-                <th className="">Date</th>
-                <th className="">Description</th>
-                <th className="">Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Apr 28, 2022</td>
-                <td>Referral Bonus for Jane Doe first activation</td>
-                <td>₦1,000,000</td>
-              </tr>
-            </tbody>
-          </table>
+          <MDBDataTable responsive striped data={data} searching={false} />
         </div>
       </SpecialEarningsWarapper>
     </div>

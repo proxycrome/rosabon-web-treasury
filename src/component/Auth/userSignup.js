@@ -284,7 +284,7 @@ function UserSignup() {
                             Offers
                           </label>
                         </div>
-                        <div className="form-check">
+                        {/* <div className="form-check">
                           <Input
                             className="form-check-input"
                             type="checkbox"
@@ -296,7 +296,7 @@ function UserSignup() {
                             htmlFor="checkIsAssisted">
                             Check the box if this registration is assisted
                           </label>
-                        </div>
+                        </div> */}
                         <div className="form-check">
                           <input
                             className="form-check-input"

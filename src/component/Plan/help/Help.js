@@ -15,39 +15,70 @@ const Help = () => {
         <Wrapper>
           <div className="d-flex justify-content-between align-items-center">
             <h3 className="w-50">Frequently Asked Questions</h3>
-            <div className="input-group w-50">
-              <i class="fa-solid fa-magnifying-glass  position-absolute"></i>
+            <div className="input-group w-50 position-relative search-group">
               <Input
                 placeholder="Search Using Keywords"
                 type="text"
-                className="form-control position-relative"
+                className="form-control"
               />
-              <i class="fa-solid fa-xmark position-absolute"></i>
+              <i class="fa-solid fa-magnifying-glass position-absolute search"></i>
+              <i class="fa-solid fa-xmark position-absolute clear"></i>
             </div>
           </div>
           <hr className="my-5" />
-          <div className="d-flex justify-content-between align-items-center py-3">
-            <h4 className="w-50">About Rosabon</h4>
-            <i className="fa-solid fa-chevron-down mx-2"></i>
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <div class="accordion-button collapsed" style={{backgroundColor: '#FFFFFF'}} type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  About Rosabon
+                </div>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <h5>What is Rosabon?</h5>
+                  <p className="p-0 m-0">
+                    The passage experienced a surge in popularity during the 1960s when
+                    Letraset used it on their dry-transfer sheets, and again during the
+                    90s as desktop publishers bundled the text with their software.{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" style={{backgroundColor: '#FFFFFF'}} type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  About Rosabon
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <h5>What is Rosabon?</h5>
+                  <p className="p-0 m-0">
+                    The passage experienced a surge in popularity during the 1960s when
+                    Letraset used it on their dry-transfer sheets, and again during the
+                    90s as desktop publishers bundled the text with their software.{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" style={{backgroundColor: '#FFFFFF'}} type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  About Rosabon
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <h5>What is Rosabon?</h5>
+                  <p className="p-0 m-0">
+                    The passage experienced a surge in popularity during the 1960s when
+                    Letraset used it on their dry-transfer sheets, and again during the
+                    90s as desktop publishers bundled the text with their software.{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h5>What is Rosabon?</h5>
-
-          <p className="p-0 m-0">
-            The passage experienced a surge in popularity during the 1960s when
-            Letraset used it on their dry-transfer sheets, and again during the
-            90s as desktop publishers bundled the text with their software.{" "}
-          </p>
-          <hr className="my-3" />
-          <div className="d-flex justify-content-between align-items-center">
-            <h4 className="w-50">About Rosabon</h4>
-            <i className="fa-solid fa-chevron-down mx-2"></i>
-          </div>
-          <hr className="my-3" />
-          <div className="d-flex justify-content-between align-items-center">
-            <h4 className="w-50">About Rosabon</h4>
-            <i className="fa-solid fa-chevron-down mx-2"></i>
-          </div>
-          <hr className="my-3" />
         </Wrapper>
       </WrapperBody>
     </div>
@@ -135,6 +166,8 @@ const Wrapper = styled.div`
     color: #4f4f4f;
   }
   input {
+    width: 440px;
+    height: 50px;
     font-family: "Montserrat";
     font-style: normal;
     font-weight: 400;
@@ -143,5 +176,20 @@ const Wrapper = styled.div`
     text-align: center;
     letter-spacing: -0.01em;
     color: #bdbdbd;
+  }
+
+  .search-group {
+    width: auto;
+    height: auto;
+    .search {
+      color: #828282;
+      top: 30%;
+      left: 10px;
+    }
+    .clear {
+      color: #828282;
+      top: 30%;
+      right: 10px;
+    }
   }
 `;

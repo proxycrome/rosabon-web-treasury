@@ -174,7 +174,7 @@ const TransactionDetails = () => {
           </div>
         </div>
         <div>
-          <MDBDataTable responsive striped bordered data={data} />
+          <MDBDataTable responsive striped bordered data={data} searching={false} />
         </div>
         <ModalComponent
           show={modalState}

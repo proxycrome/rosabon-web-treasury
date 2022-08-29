@@ -7,32 +7,19 @@ import { ProfileSideBarList } from "../component/dashboard/ProfileSideBar";
 const Profile = ({ user_profile }) => {
   return (
     <WrapperBody>
-      <div className="">
-        <div
-          style={{
-            height: "100vh",
-            overflow: "hidden",
-          }}
-          className="content">
-          <div className="">
-            <ProfileSideBarList  profile="profile" />
-          </div>
-
-          {user_profile ? (
-            <>
-              <div style={{ overflowY: "auto" }} className="">
-                <PersonalProfile />
-              </div>
-            </>
-          ) : (
-            <>
-              <div style={{ overflowY: "auto" }} className="">
-                <CompanyProfile />
-              </div>
-            </>
-          )}
-        </div>
+      <div className="side-bar">
+        <ProfileSideBarList  profile="profile" />
       </div>
+
+      {user_profile ? (
+        <div style={{ overflowY: "auto" }} className="main-body">
+          <PersonalProfile />
+        </div>
+      ) : (
+        <div style={{ overflowY: "auto" }} className="main-body">
+          <CompanyProfile />
+        </div>
+      )}
     </WrapperBody>
   );
 };
@@ -40,10 +27,21 @@ const Profile = ({ user_profile }) => {
 export default Profile;
 
 const WrapperBody = styled.div`
-  .content {
-    display: grid;
-    @media (min-width: 1200px) {
-      grid-template-columns: 0.2fr 1fr;
+  display: flex;
+  flex-direction: row;
+
+  @media (min-width: 1200px) {
+    width: 100%;
+    .side-bar {
+      width: 20%;
+    }
+    .main-body {
+      width: 80%;
+    }
+  }
+  @media (max-width: 1200px) {
+    .main-body {
+      width: 100%;
     }
   }
 `;

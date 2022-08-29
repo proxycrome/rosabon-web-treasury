@@ -439,6 +439,7 @@ const WrappCongrate = styled.div`
   }
 
   .grey_btn {
+    font-size: 14px;
     width: 180px;
     height: 41px;
     background: #F2F2F2;
@@ -448,6 +449,7 @@ const WrappCongrate = styled.div`
   }
 
   .blue_btn {
+    font-size: 14px;
     width: 180px;
     height: 41px;
     background: #111E6C;

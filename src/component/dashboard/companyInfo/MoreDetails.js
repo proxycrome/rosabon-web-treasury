@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import User from "../../../asset/user.png";
 import { uploadPersonalDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
 import { successMessage } from "../../../redux/actions/auth/SignupAction";
+import plus from "../../../asset/plus.svg";
 
 const MoreDetails = () => {
   const dispatch = useDispatch();
@@ -61,12 +62,21 @@ const MoreDetails = () => {
                 <h4>
                   Director 1{" "}
                   <span className="pl-5">
-                    <i className="fa-solid fa-angle-down"></i>
+                    <i className="fa-solid fa-angle-down arrow"></i>
                   </span>
                 </h4>
                 <div>
-                  <button className="cancel-button">Cancel</button>
-                  <button>Edit</button>
+                  {showEdit ? (
+                    <button
+                      className={showEdit ? " btn_bg_blue" : ""}
+                      onClick={toggleEdit}>
+                      Edit
+                    </button>
+                  ) : (
+                    <button className="grey-button" onClick={toggleEdit}>
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -82,17 +92,9 @@ const MoreDetails = () => {
                       </div>
                     </div>
                     <div>
-                      {showEdit ? (
-                        <button
-                          className={showEdit ? " btn_bg_blue" : ""}
-                          onClick={toggleEdit}>
-                          Choose file
-                        </button>
-                      ) : (
-                        <button className="grey-button" onClick={toggleEdit}>
-                          Cancel
-                        </button>
-                      )}
+                      <button className="grey-button" disabled={!showEdit}>
+                        Choose File
+                      </button>  
                     </div>
                     {/* <button>Choose file</button> */}
                   </div>
@@ -185,8 +187,7 @@ const MoreDetails = () => {
                         />
                       </div>
                     </div>
-
-                    <div className="col-4 ">
+                    <div className="col-4">
                       <button
                         //   type="button"
                         //   onClick={() => setShow(true)}
@@ -194,6 +195,7 @@ const MoreDetails = () => {
                         Verify
                       </button>
                     </div>
+
                     <div>
                       <div
                         style={{
@@ -239,10 +241,27 @@ const MoreDetails = () => {
                   </div>
                 </div>
               </div>
+              <div className="row">
+                <div className="d-flex align-items-center mt-5">
+                  <img src={plus} alt="plus" className="mx-2"/>
+                  <span style={{color: '#111E6C', marginRight: '30px'}}> Add More</span>
+                </div>
+              </div>
             </div>
           </form>
         </div>
       </WrapperBody>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-end footer-content">
+            <div>
+              <button className="blue-btn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </div>
   );
 };
@@ -257,6 +276,12 @@ const WrapperBody = styled.div`
   @media (max-width: 560px) {
     padding: 0 1rem 7rem 1rem;
   }
+
+  .arrow {
+    font-size: 16px;
+    margin-left: 10px;
+  }
+
   h4 {
     font-style: normal;
     font-weight: 600;
@@ -325,5 +350,37 @@ const WrapperBody = styled.div`
     font-size: 17px;
     line-height: 21px;
     color: #ffffff;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 80px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    width: 300px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;

@@ -28,32 +28,34 @@ const PersonalProfile = () => {
   // }, [isLoggedIn]);
 
   return (
-    <WrapperBody>
-      <div className="container-fluid">
-        <div className="row">
-          <ProfileNavBar />
-        </div>
-        <div className="row pt-5">
-          <div className="col-md-3">
-            <ProfileTabs personal="personal" handleChange={(e) => setTabs(e)} />
+    <>
+      <WrapperBody>
+        <div className="container-fluid">
+          <div className="row">
+            <ProfileNavBar />
           </div>
-          {/* <div className="horiz-line col-md-1"></div> */}
-          <div className="col-md-9">
-            {tabs === "profile" ? (
-              <PersonalInfo />
-            ) : tabs === "bank" ? (
-              <BankDetails />
-            ) : tabs === "documents" ? (
-              <MyDocu />
-            ) : tabs === "password" ? (
-              <ChangePassword />
-            ) : (
-              <></>
-            )}
+          <div className="row pt-5">
+            <div className="col-md-3">
+              <ProfileTabs personal="personal" handleChange={(e) => setTabs(e)} />
+            </div>
+            {/* <div className="horiz-line col-md-1"></div> */}
+            <div className="col-md-9">
+              {tabs === "profile" ? (
+                <PersonalInfo />
+              ) : tabs === "bank" ? (
+                <BankDetails />
+              ) : tabs === "documents" ? (
+                <MyDocu />
+              ) : tabs === "password" ? (
+                <ChangePassword />
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </WrapperBody>
+      </WrapperBody>
+    </>
   );
 };
 

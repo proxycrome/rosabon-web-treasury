@@ -1,17 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  FormFeedback,
+  InputGroup,
+  InputGroupText,
+} from "reactstrap";
 import styled from "styled-components";
-import { changeCompanyPassword } from "../../../redux/actions/updateProfile/changePassword.action";
+import { changePersonalPassword } from "../../../redux/actions/updateProfile/changePassword.action";
 import { successMessage } from "../../../redux/actions/auth/SignupAction";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
+  const [passwordShown1, setPasswordShown1] = useState(false);
+  const [passwordShown2, setPasswordShown2] = useState(false);
+  const [passwordShown3, setPasswordShown3] = useState(false);
+  // const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(true);
   const toggleEdit = () => {
     setShowEdit(!showEdit);
+  };
+
+  const togglePassword1 = () => {
+    setPasswordShown1(!passwordShown1);
+  };
+
+  const togglePassword2 = () => {
+    setPasswordShown2(!passwordShown2);
+  };
+
+  const togglePassword3 = () => {
+    setPasswordShown3(!passwordShown3);
   };
 
   const data = {
@@ -34,7 +58,7 @@ const ChangePassword = () => {
     const { acc_name, acc_no, bankType } = formData;
     let data = { acc_name, acc_no, bankType };
     console.log(data);
-    dispatch(changeCompanyPassword(data));
+    dispatch(changePersonalPassword(data));
   };
 
   useEffect(() => {
@@ -58,75 +82,117 @@ const ChangePassword = () => {
             <div className="d-flex justify-content-between">
               <h4>Change Password</h4>
               <div>
-                <div>
-                  {showEdit ? (
-                    <button
-                      className={showEdit ? " btn_bg_blue" : ""}
-                      onClick={toggleEdit}>
-                      Edit
-                    </button>
-                  ) : (
-                    <button className="grey-button" onClick={toggleEdit}>
-                      Cancel
-                    </button>
-                  )}
-                </div>
+                {showEdit ? (
+                  <button
+                    className={showEdit ? " btn_bg_blue" : ""}
+                    onClick={toggleEdit}>
+                    Edit
+                  </button>
+                ) : (
+                  <button className="grey-button" onClick={toggleEdit}>
+                    Cancel
+                  </button>
+                )}
               </div>
             </div>
           </div>
           <div className="row">
-            <div className="py-5 col-md-6 ">
-              <label>Current Password</label>
-              <div className="input-group mb-4">
-                <input
-                  className="position-relative form-control"
-                  placeholder="First Name"
-                  aria-label="First Name..."
-                  type="password"
-                  disabled={showEdit}
-                />
-                <span className=" input-font-awe">
-                  <i className="far fa-eye-slash"></i>
-                </span>
-              </div>
+            <div className="my-5 col-md-6 ">
+              <FormGroup className="w-100">
+                <Label
+                  htmlFor="currentPassword"
+                  className="">
+                  Current Password
+                </Label>
+                <InputGroup>
+                  <Input
+                    type={passwordShown1 ? "text" : "password"}
+                    bsSize="lg"
+                    id="currentPassword"
+                    name="password"
+                    disabled={showEdit}
+                  />
+                  <InputGroupText>
+                    <i
+                      onClick={togglePassword1}
+                      style={{ cursor: "pointer" }}
+                      className={
+                        passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
+                      }></i>
+                  </InputGroupText>
+                </InputGroup>
+              </FormGroup>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-6 my-4">
+            <FormGroup className="w-100">
+                <Label
+                  htmlFor="newPassword"
+                  className="">
+                  New Password
+                </Label>
+                <InputGroup>
+                  <Input
+                    type={passwordShown2 ? "text" : "password"}
+                    bsSize="lg"
+                    id="newPassword"
+                    name="password"
+                    disabled={showEdit}
+                  />
+                  <InputGroupText>
+                    <i
+                      onClick={togglePassword2}
+                      style={{ cursor: "pointer" }}
+                      className={
+                        passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
+                      }></i>
+                  </InputGroupText>
+                </InputGroup>
+              </FormGroup>
             </div>
           </div>
           <div className="row">
             <div className="col-md-6 ">
-              <label>New Password</label>
-              <div className="input-group mb-4">
-                <input
-                  className="position-relative form-control"
-                  placeholder="First Name"
-                  aria-label="First Name..."
-                  type="password"
-                  disabled={showEdit}
-                />
-                <span className=" input-font-awe">
-                  <i className="far fa-eye-slash"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-              <label>Confirm Password</label>
-              <div className="input-group mb-4">
-                <input
-                  className="position-relative form-control"
-                  placeholder="First Name"
-                  aria-label="First Name..."
-                  type="password"
-                  disabled={showEdit}
-                />
-                <span className=" input-font-awe">
-                  <i className="far fa-eye-slash"></i>
-                </span>
-              </div>
+            <FormGroup className="w-100">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="">
+                  Confirm Password
+                </Label>
+                <InputGroup>
+                  <Input
+                    type={passwordShown3 ? "text" : "password"}
+                    bsSize="lg"
+                    id="confirmPassword"
+                    name="password"
+                    disabled={showEdit}
+                  />
+                  <InputGroupText>
+                    <i
+                      onClick={togglePassword3}
+                      style={{ cursor: "pointer" }}
+                      className={
+                        passwordShown3 ? "far fa-eye" : "far fa-eye-slash"
+                      }></i>
+                  </InputGroupText>
+                </InputGroup>
+              </FormGroup>
             </div>
           </div>
         </div>
       </WrapperBody>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-end footer-content">
+            <div>
+              <button className="blue-btn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </div>
   );
 };
@@ -213,5 +279,37 @@ const WrapperBody = styled.div`
     font-size: 17px;
     line-height: 21px;
     color: #ffffff;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 65px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    width: 300px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;

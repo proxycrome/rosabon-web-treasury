@@ -68,8 +68,8 @@ const MyDocu = () => {
             <div className="row">
               <div className="d-flex justify-content-between">
                 <div className="fileText pl-5">
-                  <h5 className="">Upload ID (front)</h5>
-                  <h5 className="">jpg, png. 2 MB</h5>
+                  <h4 className="">Profile</h4>
+                  <span className="">Update your photo and personal details</span>
                 </div>
                 <div>
                   {showEdit ? (
@@ -109,6 +109,29 @@ const MyDocu = () => {
           </div>
           <div>
             <div>
+            <div className="row pb-4">
+                <div className="d-flex align-items-center justify-content-between">
+                  <div className="d-flex align-items-center justify-content-center">
+                    <img
+                      className="file-image image-fluid"
+                      src={FileDoc}
+                      alt="FileDoc"
+                    />
+                    <div>
+                      <h5 className="">Upload ID (front)</h5>
+                      <h5 className="">jpg, png. 2 MB</h5>
+                    </div>
+                  </div>
+                  <div className=" style-attachment">
+                    <button className="font-awe-btn grey-button">
+                      <i className="fa-solid fa-paperclip"></i>
+                    </button>
+                    <button className="normal-btn grey-button">
+                      Choose file
+                    </button>
+                  </div>
+                </div>
+              </div>
               <div className="row pb-4">
                 <div className="d-flex align-items-center justify-content-between w-100">
                   <div className="progress-bar-style d-flex align-items-center justify-content-start">
@@ -173,6 +196,17 @@ const MyDocu = () => {
           </div>
         </form>
       </WrapperBody>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-end footer-content">
+            <div>
+              <button className="blue-btn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </div>
   );
 };
@@ -224,13 +258,14 @@ const WrapperBody = styled.div`
     padding-top: 20px;
   }
   .camera-font-awe {
-    bottom: 10px;
-    right: 20px;
+    bottom: 5px;
+    right: 15px;
     font-size: 30px;
-    background: #f2f2f2;
+    color: #f2f2f2;
     width: 44px;
     height: 44px;
     border-radius: 5px;
+    cursor: pointer;
   }
   .grey-button {
     background: #f2f2f2;
@@ -279,7 +314,6 @@ const WrapperBody = styled.div`
     line-height: 24px;
     text-transform: capitalize;
     color: #222222;
-    padding-bottom: 45px;
   }
   h3 {
     font-style: normal;
@@ -299,14 +333,19 @@ const WrapperBody = styled.div`
     color: #333333;
     padding-bottom: 65px;
   }
-  input {
-    width: 239.5px;
+  input, select {
+    width: 350px !important;
     height: 54px;
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     padding-left: 20px;
     position: relative;
   }
+  
+  select:disabled {
+    background: #FFFFFF;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -329,6 +368,38 @@ const WrapperBody = styled.div`
     line-height: 21px;
     text-align: right;
     color: #ffffff;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 40px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    width: 300px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;
 

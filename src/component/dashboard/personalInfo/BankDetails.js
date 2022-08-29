@@ -85,10 +85,11 @@ const BankDetails = () => {
                 <div className="col-md-8 ">
                   <label>Select Bank</label>
                   <select
-                    className="form-select form-select-lg mb-3"
-                    aria-label=".form-select-lg"
+                    className="form-select form-select-md mb-3"
+                    aria-label=".form-select-md"
                     onChange={handleChange}
-                    name="bankType">
+                    name="bankType"
+                    disabled={showEdit}>
                     <option value="" selected>
                       Please choose an option
                     </option>
@@ -100,7 +101,7 @@ const BankDetails = () => {
               <div className="row">
                 <div className="col-md-6">
                   <div className="row">
-                    <div className="col-6 ">
+                    <div className="col-7 ">
                       <label>Account Number</label>
                       <div className="input-group mb-4">
                         <input
@@ -114,7 +115,7 @@ const BankDetails = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-6 ">
+                    <div className="col-5 ">
                       <button
                         type="button"
                         onClick={() => setShow(true)}
@@ -141,7 +142,7 @@ const BankDetails = () => {
                 </div>
 
                 <div className="col-md-6 ">
-                  <label>Acount Name</label>
+                  <label>Account Name</label>
                   <div className="input-group mb-4">
                     <input
                       className="form-control"
@@ -159,6 +160,17 @@ const BankDetails = () => {
           </form>
         </div>
       </WrapperBody>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-end footer-content">
+            <div>
+              <button className="blue-btn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </WrapperFooter>
     </div>
   );
 };
@@ -240,6 +252,11 @@ const WrapperBody = styled.div`
     padding-left: 20px;
     position: relative;
   }
+
+  select {
+    height: 54px;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -261,5 +278,37 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
     padding: 15px 25px;
+  }
+`;
+
+const WrapperFooter = styled.div`
+  background: #ffffff;
+  box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
+  padding: 40px 65px;
+  @media (max-width: 600px) {
+    padding: 40px 20px;
+  }
+  @media (max-width: 800px) {
+    .footer-content {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      margin: 10px 0;
+    }
+  }
+  button {
+    width: 300px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 15px;
+  }
+  .blue-btn {
+    color: #f2f2f2;
+    background: #111e6c;
   }
 `;

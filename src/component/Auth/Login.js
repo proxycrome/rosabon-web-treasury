@@ -63,6 +63,7 @@ const Login = () => {
     };
     dispatch(loginUser(data));
   };
+  
   useEffect(() => {
     if (users && users.kyc && users.role === "COMPANY") {
       navigate("/company-profile");
