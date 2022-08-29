@@ -4,8 +4,7 @@ import Company from './CompanyKYC'
 import Personale from './PersonalKYC'
 
 const Index = () => {
-  const { login, isAuth } = useSelector((state) => state.auth)
-  console.log(login)
+  const { login } = useSelector((state) => state.auth)
   if (login.role.name === 'INDIVIDUAL_USER') {
     return <Personale />
   } else if (login.role.name === 'COMPANY') {
