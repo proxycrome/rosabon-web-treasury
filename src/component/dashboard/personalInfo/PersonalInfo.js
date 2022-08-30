@@ -70,7 +70,7 @@ const PersonalInfo = () => {
           <div className="container-fluid">
             <div>
               <div className="row">
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between mt-2">
                   <h4>Personal Details</h4>
                   <div>
                     {showEditProf ? (

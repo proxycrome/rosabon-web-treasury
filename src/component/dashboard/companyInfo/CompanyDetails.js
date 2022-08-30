@@ -70,7 +70,7 @@ const CompanyDetails = () => {
           <div>
             <form autoComplete="off" onSubmit={handleSubmit}>
               <div className="row">
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between mt-2">
                   <h4>Company Details</h4>
                   <div>
                     {showEditDetail ? (

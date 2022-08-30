@@ -31,7 +31,7 @@ const CompanyProfile = () => {
       <div className="container-fluid">
         <ProfileNavBar />
         <div className="row pt-5">
-          <div className="col-md-3">
+          <div className="col-md-3 shadow-sm style-log">
             <ProfileTabs handleChange={(e) => setTabs(e)} />
           </div>
           {/* <div className="horiz-line col-md-1"></div> */}

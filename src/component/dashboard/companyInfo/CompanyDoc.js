@@ -56,7 +56,7 @@ const CompanyDoc = () => {
       <WrapperBody>
         <div className="container-fluid">
           <div className="row">
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between mt-2">
               <h4>Company Document</h4>
               {showEdit ? (
                 <button
@@ -378,6 +378,9 @@ const WrapperBody = styled.div`
     border: none;
     padding: 10px 27px;
     color: #f2f2f2;
+    &:disabled{
+      cursor: not-allowed;
+    }
   }
   span {
     position: absolute;
@@ -402,6 +405,7 @@ const WrapperBody = styled.div`
     letter-spacing: -0.04em;
     color: #333333;
   }
+
 `;
 
 const WrapperFooter = styled.div`

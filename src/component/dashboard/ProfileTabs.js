@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 export function ProfileTabs({ personal, handleChange }) {
@@ -10,7 +10,7 @@ export function ProfileTabs({ personal, handleChange }) {
         <>
           <div>
             <h3>Profile</h3>
-            <div>
+            <div className="mt-5">
               <ul>
                 <a
                   className="link_style"
@@ -21,7 +21,7 @@ export function ProfileTabs({ personal, handleChange }) {
                     setActiveBtn("profile");
                   }}
                 >
-                  <li className={activeBtn == "profile" ? "style-active" : ""}>
+                  <li className={activeBtn === "profile" ? "style-active" : ""}>
                     Personal information
                   </li>
                 </a>
@@ -35,7 +35,7 @@ export function ProfileTabs({ personal, handleChange }) {
                   }}
                 >
                   <li
-                    className={activeBtn == "documents" ? "style-active" : ""}
+                    className={activeBtn === "documents" ? "style-active" : ""}
                   >
                     My documents
                   </li>
@@ -49,7 +49,7 @@ export function ProfileTabs({ personal, handleChange }) {
                     setActiveBtn("bank");
                   }}
                 >
-                  <li className={activeBtn == "bank" ? "style-active" : ""}>
+                  <li className={activeBtn === "bank" ? "style-active" : ""}>
                     My Bank Details
                   </li>
                 </a>
@@ -62,7 +62,7 @@ export function ProfileTabs({ personal, handleChange }) {
                     setActiveBtn("password");
                   }}
                 >
-                  <li className={activeBtn == "password" ? "style-active" : ""}>
+                  <li className={activeBtn === "password" ? "style-active" : ""}>
                     Change Password
                   </li>
                 </a>
@@ -74,7 +74,7 @@ export function ProfileTabs({ personal, handleChange }) {
         <>
           <div>
             <h3>Profile</h3>
-            <div>
+            <div className="mt-5">
               <ul>
                 <a
                   className="link_style"
@@ -85,7 +85,7 @@ export function ProfileTabs({ personal, handleChange }) {
                     setActiveBtn("company");
                   }}
                 >
-                  <li className={activeBtn == "company" ? "style-active" : ""}>
+                  <li className={activeBtn === "company" ? "style-active" : ""}>
                     Company information
                   </li>
                 </a>
@@ -98,7 +98,7 @@ export function ProfileTabs({ personal, handleChange }) {
                     setActiveBtn("details");
                   }}
                 >
-                  <li className={activeBtn == "details" ? "style-active" : ""}>
+                  <li className={activeBtn === "details" ? "style-active" : ""}>
                     More Details
                   </li>
                 </a>
@@ -112,7 +112,7 @@ export function ProfileTabs({ personal, handleChange }) {
                   }}
                 >
                   <li
-                    className={activeBtn == "documents" ? "style-active" : ""}
+                    className={activeBtn === "documents" ? "style-active" : ""}
                   >
                     Company Documents
                   </li>
@@ -126,7 +126,7 @@ export function ProfileTabs({ personal, handleChange }) {
                     setActiveBtn("password");
                   }}
                 >
-                  <li className={activeBtn == "password" ? "style-active" : ""}>
+                  <li className={activeBtn === "password" ? "style-active" : ""}>
                     Change Password
                   </li>
                 </a>

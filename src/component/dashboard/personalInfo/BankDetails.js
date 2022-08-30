@@ -60,7 +60,7 @@ const BankDetails = () => {
           <form autoComplete="off" onSubmit={handleSubmit}>
             <div>
               <div className="row">
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between mt-2">
                   <h4 className="">My Bank Details</h4>
                   <div>
                     <div>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Collapse } from 'reactstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Discovery from '../../asset/Discovery.png';
 import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png';
 
 export const ProfileSideBarList = ({ profile, handleChange }) => {
   const styleContent = profile === 'profile' ? 'profile' : ''
-  const [is_active, setIsActive] = useState(null)
+  // const [isActive, setIsActive] = useState(null)
   const [openFeedback, setOpenFeedback] = useState(false);
   const [openPlan, setOpenPlan] = useState(false);
   const [isTicket, setTicket] = useState(false)
@@ -16,7 +16,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
 
   return (
     <WrappSideBarList classname="shadow">
-      <div className="`${styleContent}`">
+      <div className={`${styleContent}`}>
         <div>
           <div className="text-center">
             <div>

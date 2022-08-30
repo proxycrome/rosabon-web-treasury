@@ -29,13 +29,13 @@ const PersonalProfile = () => {
 
   return (
     <>
+      <ProfileNavBar />
       <WrapperBody>
         <div className="container-fluid">
           <div className="row">
-            <ProfileNavBar />
           </div>
           <div className="row pt-5">
-            <div className="col-md-3">
+            <div className="col-md-3 shadow-sm style-log">
               <ProfileTabs personal="personal" handleChange={(e) => setTabs(e)} />
             </div>
             {/* <div className="horiz-line col-md-1"></div> */}

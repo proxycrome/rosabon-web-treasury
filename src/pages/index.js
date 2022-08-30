@@ -7,7 +7,7 @@ import { ProfileSideBarList } from "../component/dashboard/ProfileSideBar";
 const Profile = ({ user_profile }) => {
   return (
     <WrapperBody>
-      <div className="side-bar">
+      <div className="side-bar shadow-sm style-log">
         <ProfileSideBarList  profile="profile" />
       </div>
 

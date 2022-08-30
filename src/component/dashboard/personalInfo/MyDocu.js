@@ -69,7 +69,7 @@ const MyDocu = () => {
               <div className="d-flex justify-content-between">
                 <div className="fileText pl-5">
                   <h4 className="">Profile</h4>
-                  <span className="">Update your photo and personal details</span>
+                  <small className="">Update your photo and personal details</small>
                 </div>
                 <div>
                   {showEdit ? (
@@ -103,6 +103,7 @@ const MyDocu = () => {
                   className="form-control"
                   placeholder="123-000-3456"
                   type="text"
+                  disabled={showEdit}
                 />
               </div>
             </div>
@@ -123,10 +124,12 @@ const MyDocu = () => {
                     </div>
                   </div>
                   <div className=" style-attachment">
-                    <button className="font-awe-btn grey-button">
+                    <button className="font-awe-btn grey-button" disabled={showEdit}>
                       <i className="fa-solid fa-paperclip"></i>
                     </button>
-                    <button className="normal-btn grey-button">
+                    <button
+                      className="normal-btn grey-button"
+                      disabled={showEdit}>
                       Choose file
                     </button>
                   </div>
@@ -159,10 +162,12 @@ const MyDocu = () => {
                     </div>
                   </div>
                   <div className="w-30 style-attachment">
-                    <button className="font-awe-btn grey-button">
+                    <button className="font-awe-btn grey-button" disabled={showEdit}>
                       <i className="fa-solid fa-paperclip"></i>
                     </button>
-                    <button className="normal-btn grey-button">
+                    <button
+                      className="normal-btn grey-button"
+                      disabled={showEdit}>
                       Choose file
                     </button>
                   </div>
@@ -183,10 +188,12 @@ const MyDocu = () => {
                     </div>
                   </div>
                   <div className=" style-attachment">
-                    <button className="font-awe-btn grey-button">
+                    <button className="font-awe-btn grey-button" disabled={showEdit}>
                       <i className="fa-solid fa-paperclip"></i>
                     </button>
-                    <button className="normal-btn grey-button">
+                    <button
+                      className="normal-btn grey-button"
+                      disabled={showEdit}>
                       Choose file
                     </button>
                   </div>
@@ -275,6 +282,14 @@ const WrapperBody = styled.div`
   .content-doc {
     padding-top: 45px;
   }
+
+  span {
+    position: absolute;
+    right: 10px;
+    color: rgba(17, 30, 108, 1);
+    font-size: 20px;
+  }
+
   button {
     background: #111e6c;
     border-radius: 5px;
@@ -282,6 +297,9 @@ const WrapperBody = styled.div`
     border: none;
     padding: 10px 27px;
     color: #f2f2f2;
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
   .input-font-awe {
     position: absolute;
