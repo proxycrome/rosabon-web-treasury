@@ -24,7 +24,11 @@ export const RefreshUser = () => async (dispatch) => {
   }
 }
 
-export const registerCompany = (dataObj) => async (dispatch) => {
+export const registerCompany = (dataObj, navigate) => async (dispatch) => {
+  dispatch({
+    type: types.LOADING,
+    payload: true,
+  })
   const { formData, message } = await register(dataObj)
   console.log(formData)
   if (formData) {
@@ -33,8 +37,12 @@ export const registerCompany = (dataObj) => async (dispatch) => {
       payload: formData,
       success: true,
     })
-    toast.success('Signup was successful')
-  } else {
+    navigate('/congrates', { state: 'success_signup' })
+    // setTimeout(() => {
+    //   toast.success('Signup was successful')
+    // }, 5000)
+  } 
+  if (message) {
     dispatch({
       type: types.AUTHORIZE_FAIL,
       payload: message,
@@ -45,7 +53,7 @@ export const registerCompany = (dataObj) => async (dispatch) => {
   }
 }
 
-export const registerUser = (dataObj) => async (dispatch) => {
+export const registerUser = (dataObj, navigate) => async (dispatch) => {
   dispatch({
     type: types.LOADING,
     payload: true,
@@ -57,8 +65,12 @@ export const registerUser = (dataObj) => async (dispatch) => {
       payload: formData,
       success: true,
     })
-    toast.success('Signup was successful')
-  } else {
+    navigate('/congrates', { state: 'success_signup' })
+    // setTimeout(() => {
+    //   toast.success('Signup was successful');
+    // }, 5000)
+  } 
+  if (message) {
     dispatch({
       type: types.AUTHORIZE_FAIL,
       payload: message,
@@ -83,9 +95,11 @@ export const loginUser = (dataObj, navigate) => async (dispatch) => {
     if (formData.kyc) {
       navigate('/')
     } else {
-      navigate('/KYC/person')
+      navigate('/kyc')
     }
-  } else {
+  } 
+
+  if (message) {
     dispatch({
       type: types.AUTHORIZE_FAIL,
       payload: message,

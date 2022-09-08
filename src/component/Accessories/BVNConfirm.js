@@ -33,7 +33,7 @@ export function BVNConfirm({ bank, show, handleClose }) {
                             onClick={() => setComplete(true)}
                             type="button"
                             className=" verify_congrates_btn">
-                            ok
+                            Ok
                           </button>
                         </div>
                       </>
@@ -51,7 +51,7 @@ export function BVNConfirm({ bank, show, handleClose }) {
                             onClick={() => setComplete(true)}
                             type="button"
                             className=" verify_congrates_btn">
-                            ok
+                            Ok
                           </button>
                         </div>
                       </>
@@ -65,7 +65,7 @@ export function BVNConfirm({ bank, show, handleClose }) {
       </div>
     </ConfirmBVN>
   ) : (
-    <SuccessConfirm bank="bank" handleClose={handleClose} />
+    <SuccessConfirm handleClose={handleClose} />
   );
 }
 
@@ -128,7 +128,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                       />
                     )}
                   </div>
-                  {bank ? (
+                  {bank === "bank" ? (
                     <>
                       <p className="">
                         Your bank details have been updated <br />
@@ -230,7 +230,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                   ) : (
                     <>
                       <h4>Success!</h4>
-                      <p className="">BVN validation Successful</p>
+                      <p className="">Your BVN validation was Successful</p>
                       <div className=" ">
                         <button
                           onClick={handleClose}

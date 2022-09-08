@@ -32,16 +32,17 @@ function Congratulatios(props) {
     
   // }, []);
 
-  useEffect(() => {
-    if (!register || !email) {
-      navigate("/login");
-    } 
-  }, []);
+  // useEffect(() => {
+  //   if (!email) {
+  //     navigate("/login");
+  //   } 
+  // }, [email]);
 
   const handleClick = () => {
-    if(email){
-      dispatch({ type: types.USERS_EMAIL, payload: null });
-    }
+    // if(email){
+    //   dispatch({ type: types.USERS_EMAIL, payload: null });
+    // }
+    navigate("/login")
   } 
 
   return (

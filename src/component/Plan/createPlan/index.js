@@ -2,6 +2,7 @@ import React from "react";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import CreatePlan from "./CreatePlan";
 import styled from "styled-components";
+import { Toaster } from 'react-hot-toast';
 
 const PlanProduct = () => {
   return (
@@ -11,6 +12,9 @@ const PlanProduct = () => {
           <NavTitle>
             <span className="fw-bold">Choose Plan</span>
           </NavTitle>
+          <div>
+            <Toaster/>
+          </div>
         </ProfileNavBar>
         <CreatePlan />
       </div>

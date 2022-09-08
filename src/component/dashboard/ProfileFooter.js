@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const Footer = ({ position, active, single, double }) => {
-  const footerStylin = position == "bank" ? "bank" : "profile";
+  const footerStylin = position === "bank" ? "bank" : "profile";
 
   return (
     <WrapperFooter>
@@ -34,6 +34,7 @@ const WrapperFooter = styled.div`
   @media (max-width: 400px) {
     .footer-content {
       display: block !important;
+      margin-top: 20px;
     }
     .footer-body {
       padding-left: 25%;
@@ -44,8 +45,8 @@ const WrapperFooter = styled.div`
   }
   .active {
     button {
-      background: #f2f2f2 !important;
-      color: #828282;
+      background: #111e6c !important;
+      color: #f2f2f2;
     }
   }
   .bank {
@@ -64,8 +65,8 @@ const WrapperFooter = styled.div`
     border: 1px solid #ffffff;
     border-radius: 10px;
     margin-right: 20px;
-    background: #111e6c;
-    color: #f2f2f2;
+    background: #f2f2f2;
+    color: #828282;
   }
 
   /* button {

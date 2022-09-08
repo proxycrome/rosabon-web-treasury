@@ -6,9 +6,9 @@ import {
   updateUserCompanyKYC,
   getAuthUsers,
 } from "../../../redux/actions/personalInfo/userProfile.actions";
+import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import halfEllipse from "../../../asset/halfEllipse.png";
-import YelloBackgroud from "../../../asset/yello-backgroud.png";
 import Telephone from "../../../asset/telephone.png";
 import HistoryImag from "../../../asset/history.png";
 import TransferImg from "../../../asset/transfer.png";
@@ -23,8 +23,6 @@ const UserWallet = () => {
 
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const [tabs, setTabs] = useState("");
   const user_details = useSelector((state) => state.user_profile.users);
 
   const [show, setShow] = useState(false);
@@ -33,14 +31,14 @@ const UserWallet = () => {
   const [closeFooter, setClosefooter] = useState(false);
 
   const handleClick = (value) => {
-    if (value == "transter") {
+    if (value === "transfer") {
       setIsWithDraw(true);
       setIsTransfer(false);
       setSidebar(true);
       setClosefooter(true);
       setModalvalue(value);
     }
-    if (value == "withdraw") {
+    if (value === "withdraw") {
       setIsWithDraw(false);
       setIsTransfer(true);
       setSidebar(true);
@@ -54,16 +52,11 @@ const UserWallet = () => {
     setClosefooter(false);
   };
 
-  // console.log(show)
-  // console.log(sidebar);
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("token"));
-  //   if (tokenString) {
-  //     dispatch(getAuthUsers(tokenString));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    dispatch(getWalletBalance())
+  }, [dispatch])
+
+  const {walletBalance} = useSelector(state => state.wallet);
 
   return (
     <div>
@@ -96,7 +89,7 @@ const UserWallet = () => {
                 <h3 className="pt-1 pb-3">2200 - 1234 - 5678</h3>
                 <div className="down-button pt-4">
                   <p className="p-0 m-0">Balance</p>
-                  <h5>₦ 1,500,000.00</h5>
+                  <h5>₦ {walletBalance?.amount ? walletBalance?.amount.toFixed(2) : 0}</h5>
                 </div>
               </div>
               <div className="grey-background"></div>
@@ -123,14 +116,14 @@ const UserWallet = () => {
 
                 <div>
                   <div
-                    value="transter"
+                    value="transfer"
                     onClick={() => {
-                      handleClick("transter");
+                      handleClick("transfer");
                       setClosefooter(true);
                     }}
                     className="d-flex box-image justify-content-center align-items-center">
                     <img
-                      value="transter"
+                      value="transfer"
                       // onClick={() => handleClick("transter")}
                       className=" image-fluid"
                       src={TransferImg}
@@ -140,7 +133,7 @@ const UserWallet = () => {
                   <p className="pt-3">Transfer</p>
                 </div>
                 <div>
-                  <NavLink to="/waller-history">
+                  <NavLink to="/wallet-history">
                     <div className="d-flex box-image justify-content-center align-items-center">
                       <img
                         className=" image-fluid"

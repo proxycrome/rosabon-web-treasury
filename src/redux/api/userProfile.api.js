@@ -40,7 +40,7 @@ export const update_user_company_kyc = async (token, objData) => {
     const formData = await response.data;
     return { formData };
   } catch (error) {
-    
+    console.log(error.response);
   }
   
 };

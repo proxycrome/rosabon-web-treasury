@@ -44,14 +44,15 @@ function CompanySignup() {
     setPasswordShown2(!passwordShown2)
   }
 
-  useEffect(() => {
-    if (isSignedup) {
-      navigate('/congrates', { state: 'success_signup' })
-    }
-  }, [isSignedup])
+  // useEffect(() => {
+  //   if (isSignedup) {
+  //     navigate('/congrates', { state: 'success_signup' })
+  //   }
+  // }, [isSignedup])
 
   return (
     <div>
+      <Footer />
       <Wrapper>
         <div
           style={{
@@ -140,6 +141,12 @@ function CompanySignup() {
                       <div className="mb-4">
                         <label>Contact Person Number</label>
                         <div className="input-group">
+                          <select
+                            className="form-select-md select-field"
+                            style={{border: "1.5px solid #E0E0E0", outline: "none"}}
+                          >
+                            <option>NGN</option>
+                          </select>
                           <Input
                             type="text"
                             className="form-control"
@@ -204,7 +211,7 @@ function CompanySignup() {
                       </div>
                       <div className="mb-4">
                         <div className="">
-                          <label>How did you hear about us</label>
+                          <label>How did you hear about us?</label>
                           <select
                             className="form-select form-select-lg select-field"
                             aria-label=".form-select-md"
@@ -278,7 +285,7 @@ function CompanySignup() {
                             className="form-check-label"
                             htmlFor="checkNewsLetter"
                           >
-                            Yes, I want to recieve newsletters of Promos and
+                            Yes, I want to receive newsletters of Promos and
                             Offers
                           </label>
                         </div>
@@ -361,7 +368,6 @@ function CompanySignup() {
           </div>
         </div>
       </Wrapper>
-      <Footer />
     </div>
   )
 }

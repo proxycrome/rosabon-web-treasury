@@ -45,11 +45,11 @@ function UserSignup() {
     setPasswordShown2(!passwordShown2)
   }
 
-  useEffect(() => {
-    if (isSignedup) {
-      navigate('/congrates', { state: 'success_signup' })
-    }
-  }, [isSignedup])
+  // useEffect(() => {
+  //   if (isSignedup) {
+  //     navigate('/congrates', { state: 'success_signup' })
+  //   }
+  // }, [isSignedup])
 
   return (
     <div>
@@ -60,6 +60,7 @@ function UserSignup() {
           }}
         />
       </div>
+      <Footer />
       <Wrapper>
         <div
           style={{
@@ -83,7 +84,7 @@ function UserSignup() {
                   <form autoComplete="off" onSubmit={handleSubmit}>
                     <LoginInput>
                       <div className="row">
-                        <div className="col-md-12 d-flex align-items-center">
+                        <div className="col-md-12 d-flex align-items-start">
                           <div className="col-md-6  mb-4">
                             <label>First Name</label>
                             <div className="input-group">
@@ -95,7 +96,9 @@ function UserSignup() {
                                 value={values.firstName}
                               />
                             </div>
-                            {errors.firstName && <h3>{errors.firstName}</h3>}
+                            <div>
+                              {errors.firstName && <h3>{errors.firstName}</h3>}
+                            </div>  
                           </div>
                           <div className="col-md-6 ps-2 mb-4">
                             <label>Last Name</label>
@@ -109,7 +112,9 @@ function UserSignup() {
                                 value={values.lastName}
                               />
                             </div>
-                            {errors.lastName && <h3>{errors.lastName}</h3>}
+                            <div>
+                              {errors.lastName && <h3>{errors.lastName}</h3>}
+                            </div>  
                           </div>
                         </div>
                       </div>
@@ -129,13 +134,19 @@ function UserSignup() {
                       <div className="mb-4">
                         <label>Mobile Number</label>
                         <div className="input-group">
+                          <select
+                            className="form-select-md select-field"
+                            style={{border: "1.5px solid #E0E0E0", outline: "none"}}
+                          >
+                            <option>NGN</option>
+                          </select>
                           <Input
                             type="text"
                             className="form-control"
                             onChange={handleValueChange}
                             name="phone"
                             value={values.phone}
-                          />
+                          />  
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
@@ -193,7 +204,7 @@ function UserSignup() {
                       </div>
                       <div className="mb-4">
                         <div className="">
-                          <label>How did you hear about us</label>
+                          <label>How did you hear about us?</label>
                           <select
                             className="form-select form-select-lg select-field"
                             aria-label=".form-select-lg"
@@ -266,7 +277,7 @@ function UserSignup() {
                             className="form-check-label"
                             htmlFor="checkNewsLetter"
                           >
-                            Yes, I want to recieve newsletters of Promos and
+                            Yes, I want to receive newsletters of Promos and
                             Offers
                           </label>
                         </div>
@@ -343,7 +354,6 @@ function UserSignup() {
           </div>
         </div>
       </Wrapper>
-      <Footer />
     </div>
   )
 }

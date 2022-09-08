@@ -17,7 +17,7 @@ export const ValidateCompanyForm = (
   const [values, setValues] = useState({
     email: "",
     password: "",
-    phone: "",
+    phone: "+234",
     source: "",
     sourceOthers: "",
     contactFirstName: "",
@@ -69,7 +69,7 @@ export const ValidateCompanyForm = (
         isAssited: true,
         isNewsLetters: isCompanyNewsLetters,
         password,
-        phone,
+        phone: phone.substr( 0, 1 ) === "+" ? "0"+ phone.split("+234")[1].trim() : phone,
         role: "COMPANY",
         source,
         sourceOthers,
@@ -77,7 +77,7 @@ export const ValidateCompanyForm = (
         refferedBy,
       };
 
-      dispatch(registerCompany(data));
+      dispatch(registerCompany(data, navigate));
     }
   }, [errors]);
 
@@ -138,7 +138,7 @@ export const ValidateUserForm = (
   const [values, setValues] = useState({
     email: "",
     password: "",
-    phone: "",
+    phone: "+234",
     source: "",
     sourceOthers: "",
     firstName: "",
@@ -186,7 +186,7 @@ export const ValidateUserForm = (
         isAssited: true,
         isNewsLetters: isUserNewsLetters,
         password,
-        phone,
+        phone: phone.substr( 0, 1 ) === "+" ? "0"+ phone.split("+234")[1].trim() : phone,
         role: "INDIVIDUAL_USER",
         source,
         sourceOthers,
@@ -194,7 +194,7 @@ export const ValidateUserForm = (
         refferedBy,
       };
 
-      dispatch(registerUser(data));
+      dispatch(registerUser(data, navigate));
     }
   }, [errors]);
 

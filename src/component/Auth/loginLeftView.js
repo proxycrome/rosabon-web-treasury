@@ -66,6 +66,7 @@ const Wrapper = styled.div`
   height: 100vh;
   @media (max-width: 900px) {
     display: none;
+    
   }
   @media (max-width: 1200px) {
     .spiral-content {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Input, Label, InputGroup } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { MDBDataTable } from 'mdbreact';
 import ModalComponent from '../../../ModalComponent';
@@ -139,29 +140,31 @@ const TransactionDetails = () => {
   };
 
   return (
-    <>
+    <> 
       <Wrapper>
-        <div className="row d-flex justify-content-between align-items-center mb-5">
+        <div className="row top d-flex justify-content-between">
           <div className="col-md-6 col-sm-12">
-            <h6>Filter By Transaction Date</h6>
+            <h3>Filter By Transaction Date</h3>
           </div>
           <div className="col-md-6 col-sm-12">
             <div className="row">
               <div className="col-md-6 col-sm-12">
-                <div className="input-group">
-                  <input
+                <div className="d-flex flex-column">
+                  <Label htmlFor="startDate">Start Date</Label>
+                  <Input
                     className="form-control"
-                    placeholder="Start Date"
-                    type="text"
+                    type="date"
+                    id="startDate"
                   />
                 </div>
               </div>
               <div className="col-md-6 col-sm-12">
-                <div className="input-group">
-                  <input
-                    type="text"
+                <div className="d-flex flex-column">
+                  <Label htmlFor="endDate">End Date</Label>
+                  <Input
+                    type="date"
                     className="form-control"
-                    placeholder="End Date"
+                    id="endDate"
                   />
                 </div>
               </div>
@@ -174,7 +177,7 @@ const TransactionDetails = () => {
           </div>
         </div>
         <div>
-          <MDBDataTable responsive striped bordered data={data} searching={false} />
+          <MDBDataTable responsive striped data={data} searching={false} />
         </div>
         <ModalComponent
           show={modalState}
@@ -219,6 +222,11 @@ const Wrapper = styled.div`
       padding: 20px;
     }
   }
+
+  .top {
+    height: 150px;
+  }
+
   .dotted {
     width: 100%;
     background: #f9fafb;

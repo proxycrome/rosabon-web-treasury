@@ -1,108 +1,136 @@
-import React, { useState, useEffect } from 'react'
-import { config } from '../../../redux/config'
-import { headers } from '../../../redux/headers'
-import axios from 'axios'
-import styled from 'styled-components'
-import { useSelector, useDispatch } from 'react-redux'
-import { BVNConfirm } from '../../Accessories/BVNConfirm'
-import ModalComponent from '../../ModalComponent'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { config } from '../../../redux/config';
+import { headers } from '../../../redux/headers';
+import axios from 'axios';
+import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { BVNConfirm } from '../../Accessories/BVNConfirm';
+import ModalComponent from '../../ModalComponent';
+import { Link, useNavigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from '../../../redux/actions/personalInfo/userProfile.actions'
-import moment from 'moment'
+} from '../../../redux/actions/personalInfo/userProfile.actions';
+import moment from 'moment';
 
 const PersonalKYC = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const user_details = useSelector((state) => state.user_profile.users)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user_details = useSelector((state) => state.user_profile.users);
 
-  const auth = useSelector((state) => state.auth)
-  const { login, isLoggedIn } = auth
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
 
-  const user_profile = useSelector((state) => state.user_profile)
-  const { users, user } = user_profile
+  const user_profile = useSelector((state) => state.user_profile);
+  const { user } = user_profile;
 
-  console.log(user_details)
+  console.log(user_details);
 
   // const success = useSelector((state) => state.auth.success);
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
 
   const data = {
     dateOfBirth: '',
     gender: '',
     bvn: '',
+    firstName: '',
     middleName: '',
+    lastName: '',
     name: '',
-    source: '',
     houseNoAddress: '',
     state: '',
     city: '',
     country: '',
-  }
+    phone: '',
+    email: '',
+  };
 
-  const [formData, setformData] = useState(data)
+  const [formData, setformData] = useState(data);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    e.preventDefault();
+    const { name, value } = e.target;
     setformData({
       ...formData,
       [name]: value,
-    })
-  }
+    });
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e, route) => {
+    e.preventDefault();
 
     const {
       dateOfBirth,
       gender,
       bvn,
+      firstName,
       middleName,
+      lastName,
       name,
-      source,
       houseNoAddress,
       state,
       city,
       country,
-    } = formData
+      phone,
+      email,
+    } = formData;
 
     let data = {
       isAssited: user_details && user_details.assited,
       isNewsLetters: user_details && user_details.newsLetters,
       isKyc: true,
-      phone: user_details && user_details?.phone,
+      phone: phone ? phone : user_details && user_details?.phone,
       role: 'INDIVIDUAL_USER',
-      source,
-      sourceOthers: user_details && user_details?.sourceOthers,
       status: user_details && user_details?.status,
       usage: 'TREASURY',
+      source: user_details?.source,
+      sourceOthers: user_details?.sourceOthers,
+      email: email ? email : user_details && user_details?.email,
       individualUser: {
-        bvn,
+        bvn: bvn ? bvn : user_details.individualUser.bvn,
         contactAddress: {
-          city,
-          country,
-          houseNoAddress,
-          state,
+          city: city ? city : user_details?.individualUser?.address?.city,
+          country: country
+            ? country
+            : user_details?.individualUser?.address?.country,
+          houseNoAddress: houseNoAddress
+            ? houseNoAddress
+            : user_details?.individualUser?.address.houseNoAddress,
+          state: state ? state : user_details?.individualUser?.address?.state,
         },
-        dateOfBirth: String(moment(dateOfBirth).format('DD-MM-YYYY')),
-        gender,
-        firstName: user_details?.individualUser?.firstName,
-        lastName: user_details?.individualUser?.lastName,
-        middleName,
+        coutryOfResidence: {name},
+        dateOfBirth: dateOfBirth
+          ? String(moment(dateOfBirth).format('DD-MM-YYYY'))
+          : user_details?.individualUser?.dateOfBirth,
+        gender: gender ? gender : user_details?.individualUser?.gender,
+        firstName: firstName
+          ? firstName
+          : user_details?.individualUser?.firstName,
+        lastName: lastName ? lastName : user_details?.individualUser?.lastName,
+        middleName: middleName
+          ? middleName
+          : user_details?.individualUser?.middleName,
       },
-    }
+    };
 
-    const tokenString = JSON.parse(localStorage.getItem('token'))
-    console.log(data)
-    dispatch(updateUserCompanyKYC(tokenString, data))
-  }
+    const tokenString = JSON.parse(localStorage.getItem('token'));
+    const pathCred = {
+      navigate,
+      route,
+    };
+    console.log(data);
+    console.log(tokenString);
+    dispatch(updateUserCompanyKYC(tokenString.token, data, pathCred));
+  };
 
   return (
     <div>
       {user_details && user_details ? (
         <div className="">
+          <div>
+            <Toaster />
+          </div>
           <div>
             <div className="" style={{ overflowY: 'auto' }}>
               <WrapperBody>
@@ -110,9 +138,9 @@ const PersonalKYC = () => {
                   <div>
                     <div className="d-flex justify-content-between align-items-center">
                       <h3>Hello {user_details.individualUser.firstName},</h3>
-                      <Link to="/">
+                      {/* <Link to="/">
                         <button className="dashboard">Dashboard</button>
-                      </Link>
+                      </Link> */}
                     </div>
 
                     <p>
@@ -130,10 +158,10 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                value={
-                                  user_details &&
-                                  user_details.individualUser.firstName
-                                }
+                                placeholder={user_details?.individualUser?.firstName || "Enter first name"}
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
                               />
                             </div>
                           </div>
@@ -143,10 +171,7 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                placeholder={
-                                  user_details &&
-                                  user_details.individualUser.middleName
-                                }
+                                placeholder={user_details?.individualUser?.middleName || "Enter middle name"}
                                 name="middleName"
                                 onChange={handleChange}
                                 value={formData.middleName}
@@ -159,10 +184,12 @@ const PersonalKYC = () => {
                               <input
                                 type="text"
                                 className="form-control"
-                                value={
-                                  user_details &&
-                                  user_details.individualUser.lastName
+                                placeholder={
+                                  user_details?.individualUser?.lastName || "Enter last name"
                                 }
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
                               />
                             </div>
                           </div>
@@ -175,10 +202,13 @@ const PersonalKYC = () => {
                                 className="form-select form-select-lg mb-3 select-field"
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                value={formData.gender}
+                                value={
+                                  formData.gender ||
+                                    user_details?.individualUser?.gender
+                                }
                                 name="gender"
                               >
-                                <option value=""></option>
+                                <option value="">Select Gender...</option>
                                 <option value="MALE">Male</option>
                                 <option value="FEMALE">Female</option>
                               </select>
@@ -189,8 +219,11 @@ const PersonalKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder="Date of Birth"
-                                type="date"
+                                placeholder={
+                                    user_details?.individualUser?.dateOfBirth ||
+                                  'DD-MM-YYYY'
+                                }
+                                type="text"
                                 onChange={handleChange}
                                 name="dateOfBirth"
                                 value={formData.dateOfBirth}
@@ -203,7 +236,10 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                value={user_details && user_details.phone}
+                                placeholder={user_details?.phone || "Enter Primary Phone number"}
+                                onChange={handleChange}
+                                name="phone"
+                                value={formData.phone}
                               />
                             </div>
                           </div>
@@ -214,7 +250,10 @@ const PersonalKYC = () => {
                             <div className="input-group">
                               <input
                                 className="form-control"
-                                placeholder="Bank verification number (BVN)"
+                                placeholder={
+                                    user_details?.individualUser?.bvn ||
+                                  'Bank verification number (BVN)'
+                                }
                                 type="text"
                                 onChange={handleChange}
                                 name="bvn"
@@ -263,7 +302,10 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                value={user_details && user_details.email}
+                                placeholder={(user_details?.email) || "Enter your email"}
+                                onChange={handleChange}
+                                name="email"
+                                value={formData.email}
                               />
                             </div>
                           </div>
@@ -274,7 +316,7 @@ const PersonalKYC = () => {
                                 className="form-select form-select-lg mb-3 select-field"
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                value={formData.name}
+                                value={formData.name || user_details?.individualUser?.coutryOfResidence?.name}
                                 name="name"
                               >
                                 <option value=""></option>
@@ -282,7 +324,7 @@ const PersonalKYC = () => {
                               </select>
                             </div>
                           </div>
-                          <div className="col-md-6 ">
+                          {/* <div className="col-md-6 ">
                             <label>How did you hear about us</label>
                             <select
                               className="form-select form-select-lg mb-3 select-field"
@@ -298,7 +340,7 @@ const PersonalKYC = () => {
                               <option value="ANOTHER_USER">Another user</option>
                               <option value="OTHER">Others</option>
                             </select>
-                          </div>
+                          </div> */}
                         </div>
                         <div className="row">
                           <div className=" ">
@@ -306,7 +348,10 @@ const PersonalKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder="Contact Address"
+                                placeholder={
+                                  (user_details?.individualUser?.address?.houseNoAddress) ||
+                                  'Contact Address'
+                                }
                                 type="text"
                                 onChange={handleChange}
                                 name="houseNoAddress"
@@ -323,11 +368,14 @@ const PersonalKYC = () => {
                                 className="form-select form-select-lg mb-3 select-field"
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                value={formData.state}
+                                value={
+                                  formData.state ||
+                                  (user_details?.individualUser?.address?.state)
+                                }
                                 name="state"
                               >
-                                <option value=""></option>
-                                <option value="Bauchi">Lagos</option>
+                                <option value="">Select State...</option>
+                                <option value="Lagos">Lagos</option>
                               </select>
                             </div>
                           </div>
@@ -336,7 +384,10 @@ const PersonalKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder="City"
+                                placeholder={
+                                  (user_details?.individualUser?.address?.city) ||
+                                  'City'
+                                }
                                 type="text"
                                 onChange={handleChange}
                                 name="city"
@@ -351,10 +402,13 @@ const PersonalKYC = () => {
                                 className="form-select form-select-lg mb-3 select-field"
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                value={formData.country}
+                                value={
+                                  formData.country ||
+                                  (user_details?.individualUser?.address?.country)
+                                }
                                 name="country"
                               >
-                                <option value=""></option>
+                                <option value="">Select your Nationality...</option>
                                 <option value="Nigeria">Nigeria</option>
                               </select>
                             </div>
@@ -370,19 +424,66 @@ const PersonalKYC = () => {
                 <div className="footer-body">
                   <div className="d-flex align-items-center justify-content-between footer-content">
                     <div>
-                      <Link to="/personal-profile">
-                        <button className="">Save and Continue</button>
-                      </Link>
+                      {(formData.firstName ||
+                        user_details?.individualUser?.firstName) &&
+                      (formData.middleName ||
+                        user_details?.individualUser?.middleName) &&
+                      (formData.lastName ||
+                        user_details?.individualUser?.lastName) &&
+                      (formData.dateOfBirth ||
+                        user_details?.individualUser?.dateOfBirth) &&
+                      (formData.phone || user_details?.phone) &&
+                      (formData.email || user_details?.email) &&
+                      (formData.name || user_details?.individualUser?.coutryOfResidence?.name) &&
+                      (formData.houseNoAddress ||
+                        user_details?.individualUser?.address?.houseNoAddress) &&
+                      (formData.state ||
+                        user_details?.individualUser?.address?.state) &&
+                      (formData.city ||
+                        user_details?.individualUser?.address?.city) &&
+                      (formData.country ||
+                        user_details?.individualUser?.address?.country) &&
+                      (formData.gender || user_details?.individualUser?.gender) &&
+                      (formData.bvn || user_details?.individualUser?.bvn) ? (
+                        <button
+                          className=""
+                          onClick={(e) => handleSubmit(e, '/personal-profile')}
+                        >
+                          Save and Continue
+                        </button>
+                      ) : (
+                        <button className="" disabled>
+                          Save and Continue
+                        </button>
+                      )}
                     </div>
                     <div>
-                      {formData.dateOfBirth &&
-                      formData.gender &&
-                      formData.bvn ? (
-                        <Link to="/plan-product">
-                          <button className="blue-btn" onClick={handleSubmit}>
-                            Save and Invest Now
-                          </button>
-                        </Link>
+                      {(formData.firstName ||
+                        user_details?.individualUser?.firstName) &&
+                      (formData.middleName ||
+                        user_details?.individualUser?.middleName) &&
+                      (formData.lastName ||
+                        user_details?.individualUser?.lastName) &&
+                      (formData.dateOfBirth ||
+                        user_details?.individualUser?.dateOfBirth) &&
+                      (formData.phone || user_details?.phone) &&
+                      (formData.email || user_details?.email) &&
+                      (formData.houseNoAddress ||
+                        user_details?.individualUser?.address?.houseNoAddress) &&
+                      (formData.state ||
+                        user_details?.individualUser?.address?.state) &&
+                      (formData.city ||
+                        user_details?.individualUser?.address?.city) &&
+                      (formData.country ||
+                        user_details?.individualUser?.address?.country) &&
+                      (formData.gender || user_details?.individualUser?.gender) &&
+                      (formData.bvn || user_details?.individualUser?.bvn) ? (
+                        <button
+                          className="blue-btn"
+                          onClick={(e) => handleSubmit(e, '/plan-product')}
+                        >
+                          Save and Invest Now
+                        </button>
                       ) : (
                         <button className="" disabled>
                           Save and Invest Now
@@ -399,10 +500,10 @@ const PersonalKYC = () => {
         <p>Please Wait...</p>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default PersonalKYC
+export default PersonalKYC;
 
 const WrapperFooter = styled.div`
   background: #ffffff;
@@ -427,13 +528,17 @@ const WrapperFooter = styled.div`
     border-radius: 10px;
     outline: none;
     border: none;
+    cursor: pointer;
     padding: 10px 15px;
+    &:disabled{
+      cursor: not-allowed;
+    }
   }
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
   }
-`
+`;
 const WrapperBody = styled.div`
   .dashboard {
     padding: 10px;
@@ -514,4 +619,4 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
   }
-`
+`;

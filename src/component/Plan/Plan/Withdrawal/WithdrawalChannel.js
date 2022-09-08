@@ -125,6 +125,7 @@ const NavTitle = styled.div`
 
 const RightView = styled.div`
   width: 50%;
+  margin-top: 20px;
   @media (max-width: 850px) {
     width: 100% !important;
   }

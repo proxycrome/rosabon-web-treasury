@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { useSelector, useDispatch } from 'react-redux'
-import { ProfileSideBar } from '../ProfileSideBar'
-import { BVNConfirm } from '../../Accessories/BVNConfirm'
-import ModalComponent from '../../ModalComponent'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { ProfileSideBar } from '../ProfileSideBar';
+import { BVNConfirm } from '../../Accessories/BVNConfirm';
+import ModalComponent from '../../ModalComponent';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from '../../../redux/actions/personalInfo/userProfile.actions'
-import moment from 'moment'
+} from '../../../redux/actions/personalInfo/userProfile.actions';
+import moment from 'moment';
 
 const CompanyKYC = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const company_details = useSelector((state) => state.user_profile.users)
-  const auth = useSelector((state) => state.auth)
-  const { login, isLoggedIn } = auth
+  const company_details = useSelector((state) => state.user_profile.users);
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
 
-  const user_profile = useSelector((state) => state.user_profile)
-  const { users } = user_profile
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
+
+  console.log(company_details);
 
   const data = {
     rcNumber: '',
@@ -28,74 +30,98 @@ const CompanyKYC = () => {
     companyType: '',
     dateOfInco: '',
     companyAddress: '',
-  }
+    name: '',
+    contactFirstName: '',
+    contactLastName: '',
+    email: '',
+    phone: '',
+  };
 
-  const [formData, setformData] = useState(data)
+  const [formData, setformData] = useState(data);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    e.preventDefault();
+    const { name, value } = e.target;
     setformData({
       ...formData,
       [name]: value,
-    })
-  }
+    });
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e, route) => {
+    e.preventDefault();
     const {
       rcNumber,
       natureOfBusiness,
       companyType,
       dateOfInco,
       companyAddress,
-    } = formData
+      name,
+      contactFirstName,
+      contactLastName,
+      email,
+      phone,
+    } = formData;
 
     let data = {
-      email: company_details && company_details.email,
-      isAssited: true,
-      isNewsLetters: true,
-      phone: company_details && company_details.phone,
-      source: company_details && company_details.source,
-      sourceOthers: company_details && company_details.sourceOthers,
+      email: email ? email : company_details?.email,
+      isAssited: company_details && company_details?.assited,
+      isNewsLetters: company_details && company_details?.newsLetters,
+      phone: phone ? phone : company_details?.phone,
+      source: company_details?.source,
+      sourceOthers: company_details?.sourceOthers,
       role: 'COMPANY',
       usage: 'TREASURY',
       isKyc: true,
-      status: company_details && company_details.status,
+      status: company_details?.status,
       company: {
-        rcNumber,
-        natureOfBusiness,
-        companyType,
-        dateOfInco: String(moment(dateOfInco).format('DD-MM-YYYY')),
-        companyAddress,
-        contactFirstName:
-          company_details && company_details?.company?.contactFirstName,
-        contactLastName:
-          company_details && company_details.company.contactLastName,
-        contactMiddleName:
-          company_details && company_details.company.contactMiddleName,
-        name: company_details && company_details?.company?.name,
+        rcNumber: rcNumber ? rcNumber : company_details?.company?.rcNumber,
+        natureOfBusiness: natureOfBusiness
+          ? natureOfBusiness
+          : company_details?.company?.natureOfBusiness,
+        companyType: companyType
+          ? companyType
+          : company_details?.company?.companyType,
+        dateOfInco: dateOfInco
+          ? dateOfInco
+          : company_details?.company?.dateOfInco,
+        companyAddress: companyAddress
+          ? companyAddress
+          : company_details?.company?.companyAddress,
+        contactFirstName: contactFirstName
+          ? contactFirstName
+          : company_details?.company?.contactFirstName,
+        contactLastName: contactLastName
+          ? contactLastName
+          : company_details.company.contactLastName,
+        contactMiddleName: company_details?.company?.contactMiddleName,
+        name: name ? name : company_details?.company?.name,
       },
-    }
+    };
 
-    const tokenString = JSON.parse(localStorage.getItem('token'))
-
-    dispatch(updateUserCompanyKYC(tokenString, data))
-  }
+    const tokenString = JSON.parse(localStorage.getItem('token'));
+    const pathCred = {
+      navigate,
+      route,
+    };
+    console.log(data);
+    dispatch(updateUserCompanyKYC(tokenString.token, data, pathCred));
+  };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem('token'))
+    const tokenString = JSON.parse(localStorage.getItem('token'));
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString))
+      dispatch(getAuthUsers(tokenString.token));
     } else {
-      navigate('/login')
+      navigate('/login');
     }
-  }, [])
+  }, []);
 
   return (
     <div>
       <div className="">
         <div>
-          <form autoComplete="off" onSubmit={handleSubmit}>
+          <form autoComplete="off">
             <div className="">
               <WrapperBody>
                 <div>
@@ -103,13 +129,11 @@ const CompanyKYC = () => {
                     <div className="d-flex justify-content-between align-items-center">
                       <h3>
                         Hello{' '}
-                        {company_details &&
-                          company_details?.company?.name.toUpperCase()}
-                        ,
+                        {company_details && company_details?.company?.name},
                       </h3>
-                      <Link to="/">
+                      {/* <Link to="/">
                         <button className="dashboard">Dashboard</button>
-                      </Link>
+                      </Link> */}
                     </div>
 
                     <p>
@@ -125,22 +149,29 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              value={
+                              placeholder={
                                 company_details &&
                                 company_details?.company?.name
                               }
                               type="text"
+                              name="name"
+                              onChange={handleChange}
+                              value={formData.name}
                             />
                           </div>
                         </div>
                       </div>
-                      <div className="row">
+                      <div className="row d-flex align-items-baseline">
                         <div className="col-sm-6 col-lg-4 ">
                           <label>Company RC number</label>
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder="Company RC number"
+                              placeholder={
+                                (company_details &&
+                                  company_details?.company?.rcNumber) ||
+                                'Company RC number'
+                              }
                               type="text"
                               onChange={handleChange}
                               name="rcNumber"
@@ -153,8 +184,11 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder=""
-                              type="date"
+                              placeholder={
+                                 company_details?.company?.dateOfInco ||
+                                'DD-MM-YYYY'
+                              }
+                              type="text"
                               onChange={handleChange}
                               name="dateOfInco"
                               value={formData.dateOfInco}
@@ -169,7 +203,10 @@ const CompanyKYC = () => {
                             <input
                               type="text"
                               className="form-control"
-                              placeholder="Company Address"
+                              placeholder={
+                                company_details?.company?.companyAddress ||
+                                'Company Address'
+                              }
                               onChange={handleChange}
                               name="companyAddress"
                               value={formData.companyAddress}
@@ -183,7 +220,10 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              placeholder="Nature of Business"
+                              placeholder={
+                                company_details?.company?.natureOfBusiness ||
+                                'Nature of Business'
+                              }
                               type="text"
                               onChange={handleChange}
                               name="natureOfBusiness"
@@ -197,17 +237,22 @@ const CompanyKYC = () => {
                             className="form-select form-select-lg mb-3 select-field"
                             aria-label=".form-select-lg"
                             onChange={handleChange}
-                            value={formData.companyType}
+                            value={
+                              formData.companyType ||
+                              company_details?.company?.companyType
+                            }
                             name="companyType"
                           >
-                            <option value=""></option>
+                            <option value="" disabled>
+                              Company Type...
+                            </option>
                             <option value="Sole proprietorship">
                               Sole proprietorship
                             </option>
-                            <option value="Sole proprietorship">
+                            <option value="Partnership">
                               Partnership
                             </option>
-                            <option value="Sole proprietorship">
+                            <option value="Corporate Limited">
                               Corporate Limited
                             </option>
                           </select>
@@ -223,11 +268,14 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              value={
-                                company_details &&
-                                company_details?.company?.contactFirstName
+                              placeholder={
+                                company_details?.company?.contactFirstName ||
+                                'First name'
                               }
                               type="text"
+                              name="contactFirstName"
+                              onChange={handleChange}
+                              value={formData.contactFirstName}
                             />
                           </div>
                         </div>
@@ -236,11 +284,14 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              value={
-                                company_details &&
-                                company_details?.company?.contactLastName
+                              placeholder={
+                                company_details?.company?.contactLastName ||
+                                'Last Name'
                               }
                               type="text"
+                              name="contactLastName"
+                              onChange={handleChange}
+                              value={formData.contactLastName}
                             />
                           </div>
                         </div>
@@ -251,18 +302,28 @@ const CompanyKYC = () => {
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              value={company_details && company_details?.email}
+                              placeholder={
+                                company_details?.email || 'Email Address'
+                              }
                               type="text"
+                              name="email"
+                              onChange={handleChange}
+                              value={formData.email}
                             />
                           </div>
                         </div>
                         <div className="col-md-4 ">
-                          <label>Contact person Number</label>
+                          <label>Contact Person Number</label>
                           <div className="input-group mb-4">
                             <input
                               className="form-control"
-                              value={company_details && company_details?.phone}
+                              placeholder={
+                                company_details?.phone || 'phone number'
+                              }
                               type="text"
+                              name="phone"
+                              onChange={handleChange}
+                              value={formData.phone}
                             />
                           </div>
                         </div>
@@ -275,30 +336,63 @@ const CompanyKYC = () => {
                 <div className="footer-body">
                   <div className="d-flex align-items-center justify-content-between btn-style  footer-content">
                     <div>
-                      <Link to="/company-profile">
-                        <button type="submit" className="">
+                      {(formData.rcNumber ||
+                        company_details?.company?.rcNumber) &&
+                      (formData.natureOfBusiness ||
+                        company_details?.company?.natureOfBusiness) &&
+                      (formData.companyType ||
+                        company_details?.company?.companyType) &&
+                      (formData.dateOfInco ||
+                        company_details?.company?.dateOfInco) &&
+                      (formData.companyAddress ||
+                        company_details?.company?.companyAddress) &&
+                      (formData.name || company_details?.company?.name) &&
+                      (formData.contactFirstName ||
+                        company_details?.company?.contactFirstName) &&
+                      (formData.contactLastName ||
+                        company_details?.company?.contactLastName) &&
+                      (formData.email || company_details?.email) &&
+                      (formData.phone || company_details?.phone) ? (
+                        <button
+                          className=""
+                          onClick={(e) => handleSubmit(e, '/company-profile')}
+                        >
                           Save and Continue
                         </button>
-                      </Link>
-                      
+                      ) : (
+                        <button className="" disabled>
+                          Save and Continue
+                        </button>
+                      )}
                     </div>
                     <div>
-                      {formData.rcNumber &&
-                      formData.natureOfBusiness &&
-                      formData.companyType &&
-                      formData.dateOfInco &&
-                      formData.companyAddress ? (
-                        <Link to="/plan-product">
-                          <button type="submit" className="blue-btn">
-                            Save and Invest Now
-                          </button>
-                        </Link> 
+                      {(formData.rcNumber ||
+                        company_details?.company?.rcNumber) &&
+                      (formData.natureOfBusiness ||
+                        company_details?.company?.natureOfBusiness) &&
+                      (formData.companyType ||
+                        company_details?.company?.companyType) &&
+                      (formData.dateOfInco ||
+                        company_details?.company?.dateOfInco) &&
+                      (formData.companyAddress ||
+                        company_details?.company?.companyAddress) &&
+                      (formData.name || company_details?.company?.name) &&
+                      (formData.contactFirstName ||
+                        company_details?.company?.contactFirstName) &&
+                      (formData.contactLastName ||
+                        company_details?.company?.contactLastName) &&
+                      (formData.email || company_details?.email) &&
+                      (formData.phone || company_details?.phone) ? (
+                        <button
+                          className="blue-btn"
+                          onClick={(e) => handleSubmit(e, '/plan-product')}
+                        >
+                          Save and Invest Now
+                        </button>
                       ) : (
-                        <>
-                          <button type="submit" className="" disabled>
-                            Save and Invest Now
-                          </button>
-                        </>
+                        <button className="" disabled>
+                          Save and Invest Now
+                        </button>
                       )}
                     </div>
                   </div>
@@ -309,10 +403,10 @@ const CompanyKYC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CompanyKYC
+export default CompanyKYC;
 
 const WrapperFooter = styled.div`
   background: #ffffff;
@@ -332,12 +426,15 @@ const WrapperFooter = styled.div`
     border: none;
     padding: 10px 25px;
     color: #111e6c;
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
   }
-`
+`;
 const WrapperBody = styled.div`
   .dashboard {
     padding: 10px;
@@ -413,4 +510,4 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
   }
-`
+`;

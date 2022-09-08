@@ -6,7 +6,7 @@ const initialState = {
   isSigned: false,
   isLoading: false,
   isSuccess: false,
-  register: {},
+  register: null,
   email: null,
 }
 
@@ -66,6 +66,8 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload,
+        isSignedup: action.success,
+        isloading: false,
       }
     case types.USERS_EMAIL:
       return {
@@ -75,7 +77,7 @@ const authReducer = (state = initialState, action) => {
     case types.AUTHORIZE_FAIL:
       return {
         ...state,
-        login: {},
+        login: null,
         isAuth: false,
         isLoggedIn: false,
         isSigned: false,

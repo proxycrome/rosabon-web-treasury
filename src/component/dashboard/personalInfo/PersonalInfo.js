@@ -61,7 +61,7 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     dispatch(successMessage(false));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

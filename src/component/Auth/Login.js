@@ -90,11 +90,7 @@ const Login = () => {
       </div>
       <div className="">
         <RightWrapper>
-          <Toaster
-            toastOptions={{
-              className: 'bg-danger text-white',
-            }}
-          />
+          <Toaster/>
           <h4>Login</h4>
           <div className="container">
             <Form autoComplete="off" onSubmit={handleUserSubmit}>
@@ -156,7 +152,7 @@ const Login = () => {
                 <p>
                   Don’t have an account?{' '}
                   <span className="">
-                    <Link to="/register-company">Sign up</Link>
+                    <Link to="/register-user">Sign up</Link>
                   </span>
                 </p>
               </div>

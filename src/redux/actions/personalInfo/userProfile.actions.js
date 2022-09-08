@@ -1,4 +1,5 @@
 import * as types from "../../constant/auth";
+import toast from 'react-hot-toast';
 import {
   get_users,
   get_user,
@@ -22,10 +23,32 @@ export const getAuthUser = (token, email) => async (dispatch) => {
   } catch (error) {}
 };
 
-export const updateUserCompanyKYC = (token, objData) => async (dispatch) => {
+export const updateUserCompanyKYC = (token, objData, pathCred) => async (dispatch) => {
   try {
     const { formData } = await update_user_company_kyc(token, objData);
     dispatch({ type: types.GET_AUTH_USER, payload: formData });
     dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+    
+    if(formData && pathCred.route === "/plan-product") {
+      setTimeout(() => {
+        toast.success('KYC Updated Successfully');
+      }, 5000);
+      pathCred.navigate(pathCred.route);
+    }
+    
+    if(formData && pathCred.route === "/personal-profile") {
+      setTimeout(() => {
+        toast.success('KYC Updated Successfully');
+      }, 5000);
+      pathCred.navigate(pathCred.route);
+    }
+
+    if(formData && pathCred.route === "/company-profile") {
+      setTimeout(() => {
+        toast.success('KYC Updated Successfully');
+      }, 5000);
+      pathCred.navigate(pathCred.route);
+    }
+
   } catch (error) {}
 };

@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { MDBDataTable } from "mdbreact";
-import halfEllipse from "../../asset/halfEllipse.png";
-import ChoosePlanHolder from "../../asset/chooseplaneHolder.png";
-import Verve from "../../asset/master-card-logo.png";
-import MOneyTransfer from "../../asset/money-transfer.png";
-import FileDoc from "../../asset/file.png";
-import { ProfileNavBar } from "../dashboard/ProfileNavbar";
-import { Link } from "react-router-dom";
-import ModalComponent from "../ModalComponent";
-import { Table } from "reactstrap";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { MDBDataTable } from 'mdbreact';
+import { Input, Label } from 'reactstrap';
+import halfEllipse from '../../asset/halfEllipse.png';
+import ChoosePlanHolder from '../../asset/chooseplaneHolder.png';
+import Verve from '../../asset/master-card-logo.png';
+import MOneyTransfer from '../../asset/money-transfer.png';
+import FileDoc from '../../asset/file.png';
+import { ProfileNavBar } from '../dashboard/ProfileNavbar';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import ModalComponent from '../ModalComponent';
+import { Table } from 'reactstrap';
+import { TransactionPreview } from '../Accessories/BVNConfirm';
+import { getWalletTransactions } from '../../redux/actions/wallet/walletAction';
+import moment from "moment";
 
 export const NairaCard = () => {
   return (
@@ -62,14 +67,14 @@ export const NairaCard = () => {
                 <h5>Product 1</h5>
                 <div>
                   <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
+                    Lorem Ipsum is simply dummy text of the{' '}
                   </p>
                   <p className="p-0 m-0 pb-2">
-                    {" "}
+                    {' '}
                     printing and typesetting industry.
                   </p>
                   <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
+                    Lorem Ipsum is simply dummy text of the{' '}
                   </p>
                 </div>
               </div>
@@ -85,14 +90,14 @@ export const NairaCard = () => {
                 <h5>Product 1</h5>
                 <div>
                   <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
+                    Lorem Ipsum is simply dummy text of the{' '}
                   </p>
                   <p className="p-0 m-0 pb-2">
-                    {" "}
+                    {' '}
                     printing and typesetting industry.
                   </p>
                   <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
+                    Lorem Ipsum is simply dummy text of the{' '}
                   </p>
                 </div>
               </div>
@@ -245,17 +250,17 @@ const RightWrapper = styled.div`
 `;
 
 export const MakePayment = ({ setPaymentType }) => {
-  const [card, setCard] = useState("");
-  const [bank, setBank] = useState("");
+  const [card, setCard] = useState('');
+  const [bank, setBank] = useState('');
 
   const handleClick = (e) => {
-    if (e.target.value === "card") {
-      setCard("card");
-      setBank("");
+    if (e.target.value === 'card') {
+      setCard('card');
+      setBank('');
     }
-    if (e.target.value === "bank") {
-      setBank("bank");
-      setCard("");
+    if (e.target.value === 'bank') {
+      setBank('bank');
+      setCard('');
     }
   };
 
@@ -561,7 +566,7 @@ export const RolloverSummary = () => {
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">
-                    Interest Payment <br /> frequency{" "}
+                    Interest Payment <br /> frequency{' '}
                   </p>
                   <h4 className="">Daily</h4>
                 </div>
@@ -637,7 +642,7 @@ const RolloverSummaryWrapper = styled.div`
 `;
 
 export const RolloverWithdrawMethod = () => {
-  const [withdraw, setWithdraw] = useState("");
+  const [withdraw, setWithdraw] = useState('');
   return (
     <div>
       <RolloverSummaryWrapper>
@@ -654,7 +659,8 @@ export const RolloverWithdrawMethod = () => {
                       className="form-select form-select-md"
                       aria-label=".form-select-md"
                       name="withdraw"
-                      onChange={(e) => setWithdraw(e.target.value)}>
+                      onChange={(e) => setWithdraw(e.target.value)}
+                    >
                       <option value="">Select withdrawal destination</option>
                       <option value="bank">To Bank</option>
                       <option value="wallet">My Wallet</option>
@@ -662,7 +668,7 @@ export const RolloverWithdrawMethod = () => {
                   </div>
                 </div>
               </div>
-              {withdraw === "bank" && (
+              {withdraw === 'bank' && (
                 <div className="mt-3">
                   <div className="pt-4">
                     <p className="p-0 m-0">Account Number</p>
@@ -708,7 +714,7 @@ export const WithdrawalSummary = () => {
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">
-                    Balance before <br /> Liquidation{" "}
+                    Balance before <br /> Liquidation{' '}
                   </p>
                   <h4> ₦2,000,000</h4>
                 </div>
@@ -725,7 +731,7 @@ export const WithdrawalSummary = () => {
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">
                     Available Plan
-                    <br /> Balance{" "}
+                    <br /> Balance{' '}
                   </p>
                   <h4 className="">₦460,000</h4>
                 </div>
@@ -786,7 +792,7 @@ export const PlanSummary = ({ planPay }) => {
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">
-                    Interest Payment <br /> frequency{" "}
+                    Interest Payment <br /> frequency{' '}
                   </p>
                   <h4 className="">Daily</h4>
                 </div>
@@ -1011,7 +1017,7 @@ export const AvailableBalance = ({ role }) => {
   const [showTextArea, setShowTextArea] = useState(false);
 
   const handleOnclick = (e) => {
-    if (e.target.value === "others") {
+    if (e.target.value === 'others') {
       setShowTextArea(!showTextArea);
     }
   };
@@ -1046,7 +1052,7 @@ export const AvailableBalance = ({ role }) => {
           </div>
         </div>
       </div>
-      {role && role === "Company" ? (
+      {role && role === 'Company' ? (
         <>
           <div className="row pb-4">
             <div className="d-flex align-items-center justify-content-between w-100">
@@ -1085,7 +1091,8 @@ export const AvailableBalance = ({ role }) => {
               className="form-select form-select-lg mb-3 select-field"
               aria-label=".form-select-lg"
               onClick={handleOnclick}
-              name="companyType">
+              name="companyType"
+            >
               <option value=""></option>
               <option value="">I want to close the account</option>
               <option value="others">Others</option>
@@ -1103,7 +1110,8 @@ export const AvailableBalance = ({ role }) => {
                   cols="60"
                   placeholder="Please provide reason for withdrawal"
                   className="form-control select-field"
-                  name="description"></textarea>
+                  name="description"
+                ></textarea>
               </div>
             </div>
           </div>
@@ -1140,7 +1148,8 @@ export const TransferCard = () => {
           <select
             className="form-select form-select-lg mb-3 select-field"
             aria-label=".form-select-lg"
-            name="companyType">
+            name="companyType"
+          >
             <option value=""></option>
             <option value="others">Plan 1</option>
             <option value="others">Plan 2</option>
@@ -1155,7 +1164,7 @@ export const TransferCard = () => {
 
 const AvailableBalanceWapper = styled.div`
   input {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -1165,7 +1174,7 @@ const AvailableBalanceWapper = styled.div`
     padding: 0.7rem;
   }
   textarea {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -1174,7 +1183,7 @@ const AvailableBalanceWapper = styled.div`
     color: #bdbdbd;
   }
   .select-field {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
@@ -1211,6 +1220,62 @@ const AvailableBalanceWapper = styled.div`
 
 export const HistoryTable = () => {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getWalletTransactions());
+  }, [dispatch])
+
+  const { walletTransactions } = useSelector(state => state.wallet);
+
+  console.log(walletTransactions);
+
+  const data = {
+    columns: [
+      {
+        label: 'ID',
+        field: 'id',
+        width: 150,
+      },
+      {
+        label: 'Date',
+        field: 'date',
+        width: 100,
+      },
+      {
+        label: 'Description',
+        field: 'description',
+        width: 100,
+      },
+      {
+        label: 'Type',
+        field: 'type',
+        width: 100,
+      },
+      {
+        label: 'Amount',
+        field: 'amount',
+        width: 100,
+      },
+      {
+        label: 'Balance',
+        field: 'balance',
+        width: 100,
+      },
+    ],
+    rows: walletTransactions?.entities?.map(data => ({
+      id: (
+        <Link to="#" onClick={() => setShow(true)}>
+          <div>{data?.id}</div>
+        </Link>
+      ),
+      date: `${moment(data?.createdAt).format("MM-DD-YYYY")}`,
+      description: `${data?.transactionDescription}`,
+      type: `${data?.transactionType}`,
+      amount: `${data?.transactionType === "CREDIT" ? "+ " + data?.amount : "- " + data?.amount}`,
+      balance: '',
+    }))  
+  }
 
   return (
     <div>
@@ -1229,8 +1294,9 @@ export const HistoryTable = () => {
               <div className="row">
                 <div className="col-sm-4 col-md-6">
                   <div className=" ">
-                    <div className="input-group mb-4">
-                      <input
+                    <div className="mb-4">
+                      <Label>Start Date</Label>
+                      <Input
                         className="form-control"
                         placeholder="Start date"
                         type="date"
@@ -1240,8 +1306,9 @@ export const HistoryTable = () => {
                 </div>
                 <div className="col-sm-4 col-md-6">
                   <div className=" ">
-                    <div className="input-group mb-4">
-                      <input
+                    <div className="mb-4">
+                      <Label>End Date</Label>
+                      <Input
                         className="form-control"
                         placeholder="End date"
                         type="date"
@@ -1258,77 +1325,18 @@ export const HistoryTable = () => {
         <hr className="mb-5" />
 
         <div>
-          <table
-            id="dtBasicExample"
-            className="table table-striped table-sm"
-            cellSpacing="0"
-            width="100%">
-            <thead>
-              <tr>
-                <th className="">S/N</th>
-                <th className="">Date</th>
-                <th className="">Description</th>
-                <th className="">Type</th>
-                <th className="">Amount</th>
-                <th className="">Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                onClick={() => {
-                  setShow(true);
-                }}>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr
-                onClick={() => {
-                  setShow(true);
-                }}>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr
-                onClick={() => {
-                  setShow(true);
-                }}>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-              <tr
-                onClick={() => {
-                  setShow(true);
-                }}>
-                <td>N0_1947034</td>
-                <td>Apr 28, 2022</td>
-                <td>Part withdrawal</td>
-                <td>Debit</td>
-                <td> - ₦1,500,000</td>
-                <td>₦1,000,000</td>
-              </tr>
-            </tbody>
-
+          <div>
+            <MDBDataTable responsive striped data={data} searching={false} />
+          </div>
             <ModalComponent
               show={show}
-              size={"md"}
+              size={'md'}
               handleClose={() => {
                 setShow(false);
-              }}>
-              <WithdrawalCard show={show} handleClose={() => setShow(false)} />
+              }}
+            >
+              <TransactionPreview handleClose={() => setShow(false)} />
             </ModalComponent>
-          </table>
         </div>
       </HistoryTableWarapper>
     </div>
@@ -1338,7 +1346,7 @@ export const HistoryTable = () => {
 const HistoryTableWarapper = styled.div`
   padding: 30px;
   tr {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1348,7 +1356,7 @@ const HistoryTableWarapper = styled.div`
     cursor: pointer;
   }
   th {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -1365,7 +1373,7 @@ const HistoryTableWarapper = styled.div`
     border-radius: 5px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -1415,29 +1423,29 @@ export const ReferalTable = () => {
         date: 'Apr 28 2022',
         name: 'Jane Doe',
         status: 'Active',
-        action: (<button className="active">Poke User</button>),
+        action: <button className="active">Poke User</button>,
       },
       {
         sn: 2,
         date: 'Apr 28 2022',
         name: 'Jane Doe',
         status: 'Active',
-        action: (<button className="active">Poke User</button>),
+        action: <button className="active">Poke User</button>,
       },
       {
         sn: 3,
         date: 'Apr 28 2022',
         name: 'Jane Doe',
         status: 'Active',
-        action: (<button className="active">Poke User</button>),
+        action: <button className="active">Poke User</button>,
       },
       {
         sn: 4,
         date: 'Apr 28 2022',
         name: 'Jane Doe',
         status: 'Active',
-        action: (<button className="in-active">Poke User</button>),
-      },    
+        action: <button className="in-active">Poke User</button>,
+      },
     ],
   };
 
@@ -1484,7 +1492,7 @@ const ReferalTableWarapper = styled.div`
     width: 94px;
     height: 40px;
     background: #ffffff;
-    border: 1px solid #E0E0E0;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -1497,7 +1505,7 @@ const ReferalTableWarapper = styled.div`
     }
   }
   p {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -1526,7 +1534,7 @@ const ReferalTableWarapper = styled.div`
     color: #828282;
   }
   tr {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1535,7 +1543,7 @@ const ReferalTableWarapper = styled.div`
     color: #242424;
   }
   th {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -1552,7 +1560,7 @@ const ReferalTableWarapper = styled.div`
     border-radius: 5px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -1610,10 +1618,9 @@ export const ReferralBonus = () => {
         date: 'Apr 28 2022',
         description: 'Referral Bonus for Jane Doe first activation',
         balance: '₦1,000,000',
-      },   
+      },
     ],
   };
-
 
   return (
     <div>
@@ -1659,7 +1666,7 @@ const ReferalTableBonusWarapper = styled.div`
   button {
     background: #111e6c;
     border-radius: 10px;
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
@@ -1695,7 +1702,7 @@ const ReferalTableBonusWarapper = styled.div`
     padding-top: 50px;
   }
   tr {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1704,7 +1711,7 @@ const ReferalTableBonusWarapper = styled.div`
     color: #242424;
   }
   th {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -1717,7 +1724,7 @@ const ReferalTableBonusWarapper = styled.div`
     padding: 20px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
     font-size: 17px;
@@ -1726,7 +1733,7 @@ const ReferalTableBonusWarapper = styled.div`
     color: #242424;
   }
   h4 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
     font-size: 17px;
@@ -1735,7 +1742,7 @@ const ReferalTableBonusWarapper = styled.div`
     color: #242424;
   }
   p {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1840,21 +1847,20 @@ export const TransferDeposit = () => {
         type: 'Debit',
         amount: ' - ₦1,500,000',
         balance: '₦1,000,000',
-      },    
+      },
     ],
   };
 
-
   const handleClick = (values) => {
-    if (values === "bank") {
+    if (values === 'bank') {
       setBank(true);
       setCredit(false);
       setTransfer(false);
-    } else if (values === "credit") {
+    } else if (values === 'credit') {
       setBank(false);
       setCredit(true);
       setTransfer(false);
-    } else if (values === "transfer") {
+    } else if (values === 'transfer') {
       setBank(false);
       setCredit(false);
       setTransfer(true);
@@ -1872,18 +1878,21 @@ export const TransferDeposit = () => {
         <h3 className="pb-4">My Deposits</h3>
         <div className="d-flex align-items-content justify-content-around pb-5">
           <h3
-            className={bank ? "" : "grey-text"}
-            onClick={() => handleClick("bank")}>
+            className={bank ? '' : 'grey-text'}
+            onClick={() => handleClick('bank')}
+          >
             Bank Transfer Deposit
           </h3>
           <h3
-            className={credit ? "" : "grey-text"}
-            onClick={() => handleClick("credit")}>
+            className={credit ? '' : 'grey-text'}
+            onClick={() => handleClick('credit')}
+          >
             Credit Wallet Transfer Deposit
           </h3>
           <h3
-            className={transfer ? "" : "grey-text"}
-            onClick={() => handleClick("transfer")}>
+            className={transfer ? '' : 'grey-text'}
+            onClick={() => handleClick('transfer')}
+          >
             Plan Transfer Deposit
           </h3>
         </div>
@@ -1933,7 +1942,6 @@ export const WithdrawalCard = () => {
 const Wrapper = styled.div``;
 
 export const SpecialEarnings = () => {
-  
   const data = {
     columns: [
       {
@@ -1975,13 +1983,13 @@ export const SpecialEarnings = () => {
         date: 'Apr 28 2022',
         description: 'Part withdrawal',
         amount: '₦1,500,000',
-      }, 
+      },
       {
         id: 'N0_1947034',
         date: 'Apr 28 2022',
         description: 'Part withdrawal',
         amount: '₦1,500,000',
-      },   
+      },
     ],
   };
 
@@ -2039,7 +2047,7 @@ const SpecialEarningsWarapper = styled.div`
     button {
       background: #111e6c;
       border-radius: 10px;
-      font-family: "Montserrat";
+      font-family: 'Montserrat';
       font-style: normal;
       font-weight: 500;
       font-size: 13px;
@@ -2068,7 +2076,7 @@ const SpecialEarningsWarapper = styled.div`
     padding-top: 50px;
   }
   tr {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -2077,7 +2085,7 @@ const SpecialEarningsWarapper = styled.div`
     color: #242424;
   }
   th {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -2099,7 +2107,7 @@ const SpecialEarningsWarapper = styled.div`
     color: #242424;
   } */
   h4 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
     font-size: 17px;
@@ -2108,7 +2116,7 @@ const SpecialEarningsWarapper = styled.div`
     color: #242424;
   }
   p {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -2135,7 +2143,8 @@ export const FeedbackTickets = () => {
             id="dtBasicExample"
             className="table borderless table-sm"
             cellSpacing="0"
-            width="100%">
+            width="100%"
+          >
             <thead>
               <tr>
                 <th className="">Tickets #</th>
@@ -2152,11 +2161,12 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#828282",
-                      padding: "6px 30px",
-                      background: "#F2F2F2",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#828282',
+                      padding: '6px 30px',
+                      background: '#F2F2F2',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Pending
                   </button>
                 </td>
@@ -2165,11 +2175,12 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
@@ -2180,11 +2191,12 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "6px 30px",
-                      background: "#6FCF97",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '6px 30px',
+                      background: '#6FCF97',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Need your reply
                   </button>
                 </td>
@@ -2193,11 +2205,12 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
@@ -2208,13 +2221,14 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#111E6C",
-                      padding: "6px 30px",
-                      fontWeight: "500",
-                      background: "#F2F2F2",
-                      borderRadius: "10px",
-                    }}>
-                    {" "}
+                      color: '#111E6C',
+                      padding: '6px 30px',
+                      fontWeight: '500',
+                      background: '#F2F2F2',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    {' '}
                     Resolved
                   </button>
                 </td>
@@ -2223,11 +2237,12 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
@@ -2238,13 +2253,14 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#111E6C",
-                      padding: "6px 30px",
-                      fontWeight: "500",
-                      background: "#F2F2F2",
-                      borderRadius: "10px",
-                    }}>
-                    {" "}
+                      color: '#111E6C',
+                      padding: '6px 30px',
+                      fontWeight: '500',
+                      background: '#F2F2F2',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    {' '}
                     Resolved
                   </button>
                 </td>
@@ -2253,11 +2269,12 @@ export const FeedbackTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
@@ -2281,7 +2298,7 @@ const FeedbackticketWarapper = styled.div`
   }
 
   tr {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -2290,7 +2307,7 @@ const FeedbackticketWarapper = styled.div`
     color: #242424;
   }
   th {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -2307,7 +2324,7 @@ const FeedbackticketWarapper = styled.div`
     border-radius: 5px;
   }
   h3 {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -2338,7 +2355,8 @@ export const FeedbackOpenTickets = () => {
             id="dtBasicExample"
             className="table borderless table-sm"
             cellSpacing="0"
-            width="100%">
+            width="100%"
+          >
             <thead>
               <tr>
                 <th className="">Tickets #</th>
@@ -2349,17 +2367,18 @@ export const FeedbackOpenTickets = () => {
               </tr>
             </thead>
             <tbody>
-              <tr style={{ background: "#F8F8F8" }}>
+              <tr style={{ background: '#F8F8F8' }}>
                 <td className="ticket-row">N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
                   <button
                     style={{
-                      color: "#828282",
-                      padding: "6px 30px",
-                      background: "#F2F2F2",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#828282',
+                      padding: '6px 30px',
+                      background: '#F2F2F2',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Pending
                   </button>
                 </td>
@@ -2368,26 +2387,28 @@ export const FeedbackOpenTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
               </tr>
-              <tr style={{ background: "#F8F8F8" }}>
+              <tr style={{ background: '#F8F8F8' }}>
                 <td className="ticket-row">N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
                   <button
                     style={{
-                      color: "#828282",
-                      padding: "6px 30px",
-                      background: "#F2F2F2",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#828282',
+                      padding: '6px 30px',
+                      background: '#F2F2F2',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Pending
                   </button>
                 </td>
@@ -2396,26 +2417,28 @@ export const FeedbackOpenTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
               </tr>
-              <tr style={{ background: "#F8F8F8" }}>
+              <tr style={{ background: '#F8F8F8' }}>
                 <td>N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
                   <button
                     style={{
-                      color: "#828282",
-                      padding: "6px 30px",
-                      background: "#F2F2F2",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#828282',
+                      padding: '6px 30px',
+                      background: '#F2F2F2',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Pending
                   </button>
                 </td>
@@ -2424,28 +2447,30 @@ export const FeedbackOpenTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
               </tr>
-              <tr style={{ background: "#F8F8F8" }}>
+              <tr style={{ background: '#F8F8F8' }}>
                 <td>N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
                   <button
                     style={{
-                      color: "#111E6C",
-                      padding: "6px 30px",
-                      fontWeight: "500",
-                      background: "#F2F2F2",
-                      borderRadius: "10px",
-                    }}>
-                    {" "}
+                      color: '#111E6C',
+                      padding: '6px 30px',
+                      fontWeight: '500',
+                      background: '#F2F2F2',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    {' '}
                     Resolved
                   </button>
                 </td>
@@ -2454,11 +2479,12 @@ export const FeedbackOpenTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
@@ -2492,17 +2518,19 @@ export const FeedbackCloseTickets = () => {
             <tbody>
               <tr
                 class="separator"
-                style={{ background: "#F8F8F8", padding: "30px" }}>
+                style={{ background: '#F8F8F8', padding: '30px' }}
+              >
                 <td>N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "6px 30px",
-                      background: "#333333",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '6px 30px',
+                      background: '#333333',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Closed
                   </button>
                 </td>
@@ -2511,26 +2539,28 @@ export const FeedbackCloseTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
               </tr>
-              <tr style={{ background: "#F8F8F8", padding: "30px" }}>
+              <tr style={{ background: '#F8F8F8', padding: '30px' }}>
                 <td>N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "6px 30px",
-                      background: "#333333",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '6px 30px',
+                      background: '#333333',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Closed
                   </button>
                 </td>
@@ -2539,26 +2569,28 @@ export const FeedbackCloseTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>
               </tr>
-              <tr style={{ background: "#F8F8F8", padding: "30px" }}>
+              <tr style={{ background: '#F8F8F8', padding: '30px' }}>
                 <td>N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "6px 30px",
-                      background: "#333333",
-                      borderRadius: "10px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '6px 30px',
+                      background: '#333333',
+                      borderRadius: '10px',
+                    }}
+                  >
                     Closed
                   </button>
                 </td>
@@ -2567,11 +2599,12 @@ export const FeedbackCloseTickets = () => {
                 <td>
                   <button
                     style={{
-                      color: "#FFFFFF",
-                      padding: "10px 25px",
-                      background: "#111E6C",
-                      borderRadius: "5px",
-                    }}>
+                      color: '#FFFFFF',
+                      padding: '10px 25px',
+                      background: '#111E6C',
+                      borderRadius: '5px',
+                    }}
+                  >
                     View
                   </button>
                 </td>

@@ -97,7 +97,7 @@ export function ProfileNavBar({ children }) {
                   />
                   <i className="fa-solid fa-chevron-down mx-2"></i>
                 </DropdownToggle>
-                <DropdownMenu right>
+                <DropdownMenu end>
                   <DropdownItem>
                     {users && users.role == 'COMPANY' ? (
                       <>
