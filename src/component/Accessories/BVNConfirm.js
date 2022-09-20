@@ -1,19 +1,60 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Confetti from "../../asset/confetti.png";
-import Checked from "../../asset/checked.png";
-import Caneled from "../../asset/cnaceled.png";
-import OtpInput from "react-otp-input";
-import { Link, useNavigate, NavLink } from "react-router-dom";
-// import { useSelector, useDispatch, connect } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Confetti from '../../asset/confetti.png';
+import Checked from '../../asset/checked.png';
+import Caneled from '../../asset/cnaceled.png';
+import OtpInput from 'react18-input-otp';
+import {
+  sendOtp,
+  updateUserCompanyKYC,
+} from '../../redux/actions/personalInfo/userProfile.actions';
+import { Link, useNavigate, NavLink } from 'react-router-dom';
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { validatePhoneOtp, verifyPhone } from '../../redux/actions/updateProfile/updateProfile.actions';
 // import { REMOVE_FOOTER } from "../../redux/constant/auth";
 
-export function BVNConfirm({ bank, show, handleClose }) {
+export function BVNConfirm({ bank, show, handleClose, name, bvn, nameMatch }) {
   const [complete, setComplete] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (nameMatch) {
+      setComplete(nameMatch);
+    }
+  }, [nameMatch]);
+
+  const { success } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.user_profile);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const data = {
+      role: 'INDIVIDUAL_USER',
+      usage: 'TREASURY',
+      individualUser: {
+        bvn,
+        firstName: name.split(' ')[0],
+        lastName: name.split(' ')[1],
+      },
+    };
+
+    const tokenString = JSON.parse(localStorage.getItem('token'));
+
+    console.log(data);
+    dispatch(updateUserCompanyKYC(tokenString.token, data, null));
+  };
+
+  console.log(user);
+  useEffect(() => {
+    if (success && user) {
+      setComplete(true);
+    }
+  }, [success, user]);
 
   return !complete ? (
     <ConfirmBVN>
-      <div className={""}>
+      <div className={''}>
         <Wrapper>
           <div className="d-flex justify-content-center align-items-center">
             <WrappCongrate>
@@ -32,7 +73,8 @@ export function BVNConfirm({ bank, show, handleClose }) {
                           <button
                             onClick={() => setComplete(true)}
                             type="button"
-                            className=" verify_congrates_btn">
+                            className=" verify_congrates_btn"
+                          >
                             Ok
                           </button>
                         </div>
@@ -41,16 +83,15 @@ export function BVNConfirm({ bank, show, handleClose }) {
                       <>
                         <h4>BVN Verification</h4>
                         <p className="pt-5">
-                          Your name on our system will be updated
-                          <br /> with Ekiyee Bilaowei to reflect exactly as it{" "}
-                          <br />
-                          appears on your BVN
+                          Your name on our system will be updated with {name} to
+                          reflect exactly as it appears on your BVN
                         </p>
                         <div className=" text-center pt-3">
                           <button
-                            onClick={() => setComplete(true)}
+                            onClick={handleSubmit}
                             type="button"
-                            className=" verify_congrates_btn">
+                            className=" verify_congrates_btn"
+                          >
                             Ok
                           </button>
                         </div>
@@ -98,8 +139,15 @@ const ConfirmBVN = styled.div`
   }
 `;
 
-export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createPlan, confirmNotice, transferNotice }) {
-
+export function SuccessConfirm({
+  bank,
+  handleClose,
+  withdraw,
+  cardTopup,
+  createPlan,
+  confirmNotice,
+  transferNotice,
+}) {
   // const dispatch = useDispatch();
   // const logout = (e) => {
   //   dispatch({ type: REMOVE_FOOTER });
@@ -113,8 +161,13 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
             <div className="container">
               <div className="row">
                 <div className="col text-center">
-                  <div> 
-                    {bank || withdraw || cardTopup || createPlan || confirmNotice || transferNotice ? (
+                  <div>
+                    {bank ||
+                    withdraw ||
+                    cardTopup ||
+                    createPlan ||
+                    confirmNotice ||
+                    transferNotice ? (
                       <img
                         className="congrate_confet"
                         src={Checked}
@@ -128,7 +181,7 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                       />
                     )}
                   </div>
-                  {bank === "bank" ? (
+                  {bank === 'bank' ? (
                     <>
                       <p className="">
                         Your bank details have been updated <br />
@@ -138,12 +191,13 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                         <button
                           onClick={handleClose}
                           type="button"
-                          className="verify_congrates_btn">
+                          className="verify_congrates_btn"
+                        >
                           ok
                         </button>
                       </div>
                     </>
-                  ) : withdraw === "withdraw" ? (
+                  ) : withdraw === 'withdraw' ? (
                     <>
                       <p className="py-5">Withdrawal Requested Successfully</p>
                       <div className=" ">
@@ -151,13 +205,14 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                           <button
                             onClick={handleClose}
                             type="button"
-                            className="verify_congrates_btn">
+                            className="verify_congrates_btn"
+                          >
                             Ok
                           </button>
                         </NavLink>
                       </div>
                     </>
-                  ) : withdraw === "transter" ? (
+                  ) : withdraw === 'transter' ? (
                     <>
                       <p className="py-5">Your Transfer was successful</p>
                       <div className=" ">
@@ -165,18 +220,23 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                           <button
                             onClick={handleClose}
                             type="button"
-                            className="verify_congrates_btn">
+                            className="verify_congrates_btn"
+                          >
                             Ok
                           </button>
                         </NavLink>
                       </div>
                     </>
-                  ) : confirmNotice === "rollover" || transferNotice === "transfer" || confirmNotice === "withdrawal" ? (
+                  ) : confirmNotice === 'rollover' ||
+                    transferNotice === 'transfer' ||
+                    confirmNotice === 'withdrawal' ? (
                     <>
-                      {transferNotice === "transfer" ? (
+                      {transferNotice === 'transfer' ? (
                         <p className="py-5">Your Transfer was Successful</p>
-                      ) : confirmNotice === "withdrawal" ? (
-                        <p className="py-5">Withdrawal Requested Successfully</p>
+                      ) : confirmNotice === 'withdrawal' ? (
+                        <p className="py-5">
+                          Withdrawal Requested Successfully
+                        </p>
                       ) : (
                         <p className="py-5">Your Rollover was successful</p>
                       )}
@@ -185,46 +245,51 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                           <button
                             onClick={handleClose}
                             type="button"
-                            className="verify_congrates_btn">
+                            className="verify_congrates_btn"
+                          >
                             Go back to Plan
                           </button>
                         </NavLink>
                       </div>
                     </>
-                  ) : cardTopup === "paid" ? (
+                  ) : cardTopup === 'paid' ? (
                     <>
                       <p className="py-5">Your Payment was successful</p>
                       <div className="d-flex justify-content-between">
-                          <button
-                            onClick={handleClose}
-                            type="button"
-                            className="grey_btn">
-                            Check my investments
-                          </button>
-                          <button
-                            onClick={handleClose}
-                            type="button"
-                            className="blue_btn">
-                            Invest more
-                          </button>
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="grey_btn"
+                        >
+                          Check my investments
+                        </button>
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="blue_btn"
+                        >
+                          Invest more
+                        </button>
                       </div>
                     </>
-                  ) : createPlan === "paid" ? (
+                  ) : createPlan === 'paid' ? (
                     <>
                       <p className="py-5">Plan Successfully Saved</p>
                       <div className="d-flex justify-content-between">
-                          <button
-                            onClick={handleClose}
-                            type="button"
-                            className="grey_btn">
-                            Check my investments
-                          </button>
-                          <button
-                            onClick={handleClose}
-                            type="button"
-                            className="blue_btn">
-                            Invest more
-                          </button>
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="grey_btn"
+                        >
+                          Check my investments
+                        </button>
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="blue_btn"
+                        >
+                          Invest more
+                        </button>
                       </div>
                     </>
                   ) : (
@@ -235,7 +300,8 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
                         <button
                           onClick={handleClose}
                           type="button"
-                          className="verify_congrates_btn">
+                          className="verify_congrates_btn"
+                        >
                           Continue
                         </button>
                       </div>
@@ -251,8 +317,61 @@ export function SuccessConfirm({ bank, handleClose, withdraw, cardTopup, createP
   );
 }
 
-export function OTPVerify({ handleClose }) {
-  const [otp, setOtp] = useState("");
+export function OTPVerify({
+  handleClose,
+  emailOtp,
+  updateOtp,
+  toggleCont,
+  otpData,
+  secondPhone,
+}) {
+  const [token, setToken] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const dispatch = useDispatch();
+  const { otp } = useSelector((state) => state.user_profile);
+  const { phoneMsg, validatePhone } = useSelector(state => state.updateProfile);
+
+  const handleChange = (otp) => setToken(otp);
+
+  const handleEmailOtpSubmit = (e) => {
+    e.preventDefault();
+    if ((otpData && token === otpData) || (otp?.data && token === otp?.data)) {
+      updateOtp(token);
+      toggleCont();
+      handleClose();
+    }
+
+    if ((otpData && token !== otpData) || (otp?.data && token !== otp?.data)) {
+      setErrorMsg('Enter correct one time password');
+    }
+  };
+
+  const handlePhoneOtpSubmit = (e) => {
+    e.preventDefault();
+    if ((otpData && token === otpData) || (phoneMsg?.data?.otp && token === phoneMsg?.data?.otp)) {
+      dispatch(validatePhoneOtp(token));
+    }
+
+    if ((otpData && token === otpData) || (phoneMsg?.data?.otp && token === phoneMsg?.data?.otp)) {
+      setErrorMsg('Enter correct one time password');
+    }
+  }
+
+  const handleResendEmailOtp = () => {
+    dispatch(sendOtp());
+  };
+
+  const handleResendPhoneOtp = () => {
+    dispatch(verifyPhone(secondPhone))
+  }
+
+  console.log(validatePhone);
+
+  useEffect(() => {
+    if(validatePhone) {
+      handleClose();
+    }
+  }, [validatePhone])
 
   return (
     <div>
@@ -263,40 +382,69 @@ export function OTPVerify({ handleClose }) {
               <div className="row">
                 <div className="col text-left">
                   <h4>OTP Verification</h4>
-                  <p className="">Enter OTP sent to this Phone Number</p>
-                  <div className="otp_verify">
-                    <div className=" ">
-                      <div className="">
-                        <OtpInput
-                          value={otp}
-                          onChange={(e) => setOtp(e)}
-                          inputStyle={"input"}
-                          numInputs={5}
-                        />
-                      </div>
-                    </div>
+                  {emailOtp ? (
+                    <p className="">Enter OTP sent to your Email</p>
+                  ) : (
+                    <p className="">Enter OTP sent to this Phone Number</p>
+                  )}
+                  <div>
+                    <OtpInput
+                      value={token}
+                      onChange={handleChange}
+                      inputStyle="inputField"
+                      containerStyle="enclose"
+                      numInputs={5}
+                    />
                   </div>
-                  <p className="text-center">Didn’t get an OTP? Resend</p>
+                  {errorMsg && <span className="text-center" style={{color: "#FF0000"}}>{errorMsg}</span>}
+                  <p className="text-center">
+                    Didn't get an OTP?{' '}
+                    {emailOtp ? (
+                      <strong
+                        onClick={handleResendEmailOtp}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        Resend
+                      </strong>
+                    ) : (
+                      <strong onClick={handleResendPhoneOtp} style={{ cursor: 'pointer' }}>Resend</strong>
+                    )}
+                  </p>
                   <OTPButton>
                     <div className="d-flex justify-content-between align-items-center ">
                       <button
                         style={{
-                          outline: "none",
-                          border: "none",
+                          outline: 'none',
+                          border: 'none',
                         }}
                         onClick={handleClose}
-                        className=" ">
+                        className=" "
+                      >
                         Cancel
                       </button>
-                      <button
-                        style={{
-                          outline: "none",
-                          border: "none",
-                        }}
-                        onClick={handleClose}
-                        className=" otp_button_blue ">
-                        OK
-                      </button>
+                      {emailOtp ? (
+                        <button
+                          style={{
+                            outline: 'none',
+                            border: 'none',
+                          }}
+                          onClick={handleEmailOtpSubmit}
+                          className=" otp_button_blue "
+                        >
+                          Ok
+                        </button>
+                      ) : (
+                        <button
+                          style={{
+                            outline: 'none',
+                            border: 'none',
+                          }}
+                          className="otp_button_blue"
+                          onClick={handlePhoneOtpSubmit}
+                        >
+                          Ok
+                        </button>
+                      )}
                     </div>
                   </OTPButton>
                 </div>
@@ -387,8 +535,8 @@ const OTPButton = styled.div`
     font-size: 16px;
     line-height: 20px;
     color: #111e6c;
-    outline: "none";
-    border: "none";
+    outline: 'none';
+    border: 'none';
   }
   .otp_button_blue {
     background: #111e6c;
@@ -407,8 +555,25 @@ const WrappCongrate = styled.div`
     padding: 1rem 2rem;
     border-radius: 3px;
     margin-right: 10px;
-    outline: "none";
-    border: "none";
+    outline: 'none';
+    border: 'none';
+  }
+
+  .inputField {
+    border: 1px solid #e0e0e0;
+    height: 56px;
+    border-radius: 3px;
+    font-size: 20px;
+    color: #000;
+    flex: 1 0 56px;
+    // outline: none;
+    // border: none;
+  }
+
+  .enclose {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 
   h4 {
@@ -442,25 +607,24 @@ const WrappCongrate = styled.div`
     font-size: 14px;
     width: 180px;
     height: 41px;
-    background: #F2F2F2;
+    background: #f2f2f2;
     border-radius: 10px;
-    color: #111E6C;
-    margin-right: 30px;
+    color: #111e6c;
+    margin-right: 2rem;
   }
 
   .blue_btn {
     font-size: 14px;
     width: 180px;
     height: 41px;
-    background: #111E6C;
+    background: #111e6c;
     border-radius: 10px;
-    color: #FFFFFF
+    color: #ffffff;
+    margin-left: 2rem;
   }
 `;
 
-
-export function Notice({handleClose, handleShowModalTwo, transferNotice}){  
-
+export function Notice({ handleClose, handleShowModalTwo, transferNotice }) {
   return (
     <>
       <Wrapper>
@@ -470,26 +634,32 @@ export function Notice({handleClose, handleShowModalTwo, transferNotice}){
               <div className="row">
                 <div className="col">
                   <h5>Note</h5>
-                  {transferNotice === "transfer" ? (
-                    <p className="">You are about to transfer ₦1,000,000 from your Plan 1 plan into Plan 2 plan</p>
+                  {transferNotice === 'transfer' ? (
+                    <p className="">
+                      You are about to transfer ₦1,000,000 from your Plan 1 plan
+                      into Plan 2 plan
+                    </p>
                   ) : (
-                    <p className="">Your plan is about to be rolled over. kindly confirm action</p>
+                    <p className="">
+                      Your plan is about to be rolled over. kindly confirm
+                      action
+                    </p>
                   )}
                   <div className="d-flex justify-content-between">
                     <button
                       onClick={handleClose}
                       type="button"
-                      className="grey_btn">
+                      className="grey_btn"
+                    >
                       Cancel
                     </button>
                     <button
-                      onClick={handleShowModalTwo} 
+                      onClick={handleShowModalTwo}
                       type="button"
                       className="blue_btn"
                     >
                       Proceed
                     </button>
-                    
                   </div>
                 </div>
               </div>
@@ -498,10 +668,10 @@ export function Notice({handleClose, handleShowModalTwo, transferNotice}){
         </div>
       </Wrapper>
     </>
-  )
+  );
 }
 
-export function TransactionPreview({handleClose}) {
+export function TransactionPreview({ handleClose }) {
   return (
     <div>
       <Wrapper>
@@ -531,13 +701,17 @@ export function TransactionPreview({handleClose}) {
                     <h6>₦1,000,000</h6>
                   </div>
                   <div className="pt-5 d-flex justify-content-center">
-                    <button type="button" className="btn grey_btn" onClick={handleClose}>
+                    <button
+                      type="button"
+                      className="btn grey_btn"
+                      onClick={handleClose}
+                    >
                       Download PDF
                     </button>
                   </div>
                 </div>
               </div>
-            </div> 
+            </div>
           </WrapDetails>
         </div>
       </Wrapper>
@@ -568,8 +742,8 @@ const WrapDetails = styled.div`
   .grey_btn {
     width: 180px;
     height: 41px;
-    background: #F2F2F2;
+    background: #f2f2f2;
     border-radius: 10px;
-    color: #111E6C;
+    color: #111e6c;
   }
 `;

@@ -11,7 +11,7 @@ const logger = createLogger()
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user_profile', 'wallet'],
+  whitelist: ['user_profile', 'wallet', 'updateProfile'],
   blacklist: ['auth'],
 }
 

@@ -99,16 +99,16 @@ export function ProfileNavBar({ children }) {
                 </DropdownToggle>
                 <DropdownMenu end>
                   <DropdownItem>
-                    {users && users.role == 'COMPANY' ? (
+                    {users && users.role ==='COMPANY' ? (
                       <>
-                        <NavLink className="nav_link" to="/company-profile">
+                        <NavLink className="nav_link" to="/profile">
                           <i className="ri-user-line align-middle mr-1"></i>{' '}
                           Profile
                         </NavLink>
                       </>
-                    ) : users && users.role == 'INDIVIDUAL_USER' ? (
+                    ) : users && users.role === 'INDIVIDUAL_USER' ? (
                       <>
-                        <NavLink className="nav_link" to="/personal-profile">
+                        <NavLink className="nav_link" to="/profile">
                           <i className="ri-user-line align-middle mr-1"></i>{' '}
                           Profile
                         </NavLink>

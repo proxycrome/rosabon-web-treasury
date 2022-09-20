@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as types from '../../../redux/constant/auth';
 import { config } from '../../../redux/config';
 import { headers } from '../../../redux/headers';
 import axios from 'axios';
@@ -10,7 +11,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import {
   updateUserCompanyKYC,
-  getAuthUsers,
+  verifyBvn,
+  getCountries,
+  getStates,
 } from '../../../redux/actions/personalInfo/userProfile.actions';
 import moment from 'moment';
 
@@ -23,7 +26,7 @@ const PersonalKYC = () => {
   const { login, isLoggedIn } = auth;
 
   const user_profile = useSelector((state) => state.user_profile);
-  const { user } = user_profile;
+  const { showBvnModal, bvnError, bvnMessage, countries, states } = user_profile;
 
   console.log(user_details);
 
@@ -44,6 +47,7 @@ const PersonalKYC = () => {
     country: '',
     phone: '',
     email: '',
+    countryId: 1,
   };
 
   const [formData, setformData] = useState(data);
@@ -67,7 +71,7 @@ const PersonalKYC = () => {
       firstName,
       middleName,
       lastName,
-      name,
+      countryId,
       houseNoAddress,
       state,
       city,
@@ -89,7 +93,7 @@ const PersonalKYC = () => {
       email: email ? email : user_details && user_details?.email,
       individualUser: {
         bvn: bvn ? bvn : user_details.individualUser.bvn,
-        contactAddress: {
+        address: {
           city: city ? city : user_details?.individualUser?.address?.city,
           country: country
             ? country
@@ -99,7 +103,7 @@ const PersonalKYC = () => {
             : user_details?.individualUser?.address.houseNoAddress,
           state: state ? state : user_details?.individualUser?.address?.state,
         },
-        coutryOfResidence: {name},
+        countryId: +countryId,
         dateOfBirth: dateOfBirth
           ? String(moment(dateOfBirth).format('DD-MM-YYYY'))
           : user_details?.individualUser?.dateOfBirth,
@@ -120,9 +124,39 @@ const PersonalKYC = () => {
       route,
     };
     console.log(data);
-    console.log(tokenString);
+    // console.log(tokenString);
     dispatch(updateUserCompanyKYC(tokenString.token, data, pathCred));
   };
+
+  const handleVerifyBVN = (e) => {
+    e.preventDefault();
+    const {firstName, lastName, bvn, phone} = formData;
+
+    const objData = {
+      firstName: firstName
+      ? firstName
+      : user_details?.individualUser?.firstName,
+      lastName: lastName ? lastName : user_details?.individualUser?.lastName,
+      id: bvn ? bvn : user_details.individualUser.bvn,
+      isSubjectConsent: true,
+      phoneNumber: phone ? phone : user_details && user_details?.phone,
+    }
+
+    console.log(objData);
+    dispatch(verifyBvn(objData));
+  }
+
+  const handleBVNModalClose = () => {
+    dispatch({type: types.CLOSE_MODAL});
+  }
+
+  useEffect(() => {
+    dispatch(getCountries());
+    dispatch(getStates(formData.countryId));
+  }, [formData.countryId])
+
+  console.log(bvnError);
+  console.log(bvnMessage);
 
   return (
     <div>
@@ -264,12 +298,13 @@ const PersonalKYC = () => {
                           <div className="col-md-6 col-lg-4">
                             <button
                               type="button"
-                              onClick={() => setShow(true)}
+                              onClick={handleVerifyBVN}
                               className="profile_vify_btn"
                             >
                               Verify
                             </button>
                           </div>
+                          <small className='text-danger'>{bvnError?.message ? bvnError?.message : ""}</small>
                           <div>
                             <div
                               style={{
@@ -279,13 +314,16 @@ const PersonalKYC = () => {
                               }}
                             >
                               <ModalComponent
-                                show={show}
+                                show={showBvnModal}
                                 size={'md'}
-                                handleClose={() => setShow(false)}
+                                handleClose={handleBVNModalClose}
                               >
                                 <BVNConfirm
-                                  show={show}
-                                  handleClose={() => setShow(false)}
+                                  show={showBvnModal}
+                                  handleClose={handleBVNModalClose}
+                                  name={`${bvnMessage?.data?.firstName} ${bvnMessage?.data?.lastName}`}
+                                  bvn={formData.bvn || user_details?.individualUser?.bvn}
+                                  nameMatch={bvnMessage?.isNameMatched}
                                 />
                               </ModalComponent>
                             </div>
@@ -295,7 +333,7 @@ const PersonalKYC = () => {
 
                       <h4 className="pt-5">Contact Details</h4>
                       <div>
-                        <div className="row">
+                        <div className="row d-flex align-items-baseline">
                           <div className="col-md-8 ">
                             <label>Email</label>
                             <div className="input-group mb-4">
@@ -316,31 +354,18 @@ const PersonalKYC = () => {
                                 className="form-select form-select-lg mb-3 select-field"
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                value={formData.name || user_details?.individualUser?.coutryOfResidence?.name}
-                                name="name"
+                                value={formData.countryId || user_details?.individualUser?.coutryOfResidence?.id}
+                                name="countryId"
+                                // value={1}
                               >
-                                <option value=""></option>
-                                <option value="Nigeria">Nigeria</option>
+                                <option value={0}></option>
+                                {countries?.map(country => (
+                                  <option key={country.id} value={country.id}>{country.name}</option>
+                                ))}
+                                
                               </select>
                             </div>
                           </div>
-                          {/* <div className="col-md-6 ">
-                            <label>How did you hear about us</label>
-                            <select
-                              className="form-select form-select-lg mb-3 select-field"
-                              aria-label=".form-select-lg"
-                              onChange={handleChange}
-                              value={formData.source}
-                              name="source"
-                            >
-                              <option value=""></option>
-                              <option value="ROSABON_SALES">
-                                Rosabon sales executive
-                              </option>
-                              <option value="ANOTHER_USER">Another user</option>
-                              <option value="OTHER">Others</option>
-                            </select>
-                          </div> */}
                         </div>
                         <div className="row">
                           <div className=" ">
@@ -375,7 +400,9 @@ const PersonalKYC = () => {
                                 name="state"
                               >
                                 <option value="">Select State...</option>
-                                <option value="Lagos">Lagos</option>
+                                {states?.map(state => (
+                                  <option key={state.id} value={state.name}>{state.name}</option>
+                                ))}
                               </select>
                             </div>
                           </div>
@@ -409,7 +436,9 @@ const PersonalKYC = () => {
                                 name="country"
                               >
                                 <option value="">Select your Nationality...</option>
-                                <option value="Nigeria">Nigeria</option>
+                                {countries?.map(country => (
+                                  <option key={country.id} value={country.name}>{country.name}</option>
+                                ))}
                               </select>
                             </div>
                           </div>
@@ -444,10 +473,12 @@ const PersonalKYC = () => {
                       (formData.country ||
                         user_details?.individualUser?.address?.country) &&
                       (formData.gender || user_details?.individualUser?.gender) &&
-                      (formData.bvn || user_details?.individualUser?.bvn) ? (
+                      (formData.bvn || user_details?.individualUser?.bvn) && (
+                        bvnMessage?.success
+                      ) ? (
                         <button
                           className=""
-                          onClick={(e) => handleSubmit(e, '/personal-profile')}
+                          onClick={(e) => handleSubmit(e, '/profile')}
                         >
                           Save and Continue
                         </button>
@@ -477,7 +508,9 @@ const PersonalKYC = () => {
                       (formData.country ||
                         user_details?.individualUser?.address?.country) &&
                       (formData.gender || user_details?.individualUser?.gender) &&
-                      (formData.bvn || user_details?.individualUser?.bvn) ? (
+                      (formData.bvn || user_details?.individualUser?.bvn) && (
+                        bvnMessage?.success
+                      ) ? (
                         <button
                           className="blue-btn"
                           onClick={(e) => handleSubmit(e, '/plan-product')}

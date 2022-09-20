@@ -8,6 +8,7 @@ const initialState = {
   isSuccess: false,
   register: null,
   email: null,
+  success: false,
 }
 
 const authReducer = (state = initialState, action) => {

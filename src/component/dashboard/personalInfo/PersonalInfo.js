@@ -1,40 +1,100 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { successMessage } from "../../../redux/actions/auth/SignupAction";
-import { updatePersonalDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
+import React, { useState, useEffect } from 'react';
+import * as types from '../../../redux/constant/auth';
+import { useSelector, useDispatch } from 'react-redux';
+import { UncontrolledTooltip, Alert } from 'reactstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+// import { successMessage } from '../../../redux/actions/auth/SignupAction';
+import {
+  getCountries,
+  getStates,
+  getlgas,
+  sendOtp,
+} from '../../../redux/actions/personalInfo/userProfile.actions';
+import {
+  updateContactDetails,
+  updatePersonalInfo,
+  verifyPhone,
+} from '../../../redux/actions/updateProfile/updateProfile.actions';
+import ModalComponent from '../../ModalComponent';
+import { OTPVerify } from '../../Accessories/BVNConfirm';
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [token, setToken] = useState('');
   const [showEditProf, setShowEditProf] = useState(true);
   const [showEditCont, setShowEditCont] = useState(true);
   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
   const [showEditNOK, setShowEditNOK] = useState(true);
 
-  const toggleProf = () => {
+  const { users, countries, states, lgas, showEmailOtpModal, otp, otpError } =
+    useSelector((state) => state.user_profile);
+
+  const {
+    phoneMsg,
+    phoneMsgError,
+    showPhoneOtpModal,
+    contactMsg,
+    contactMsgError,
+    personalInfoMsg,
+    personalInfoMsgError,
+    infoSuccess,
+  } = useSelector((state) => state.updateProfile);
+
+  // console.log('otp.....', otp);
+  // console.log(otpError);
+
+  console.log(users);
+
+  console.log(contactMsg);
+  console.log(contactMsgError);
+  console.log(personalInfoMsg);
+  console.log(personalInfoMsgError);
+
+  console.log(phoneMsg?.data?.otp);
+  // console.log(phoneMsgError);
+
+  const toggleProf = (e) => {
+    e.preventDefault();
     setShowEditProf(!showEditProf);
   };
-  const toggleCont = () => {
+  const toggleCont = (e) => {
+    e?.preventDefault();
     setShowEditCont(!showEditCont);
   };
-  const toggleEmploy = () => {
+  const toggleEmploy = (e) => {
+    e.preventDefault();
     setShowEditEmpoy(!showEditEmpoy);
   };
-  const toggleNOK = () => {
+  const toggleNOK = (e) => {
+    e.preventDefault();
     setShowEditNOK(!showEditNOK);
   };
 
+  const createOtp = (otp) => {
+    setToken(otp);
+  };
+
   const data = {
-    acc_name: "",
-    acc_no: "",
-    bankType: "",
+    address: '',
+    stateId: '',
+    secondaryPhoneNumber: '',
+    countryId: 1,
+    lgaId: '',
+    occupation: '',
+    employerName: '',
+    employerAddress: '',
+    email: '',
+    name: '',
+    nokAddress: '',
+    phone: '',
   };
 
   const [formData, setformData] = useState(data);
 
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setformData({
       ...formData,
@@ -44,29 +104,112 @@ const PersonalInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { acc_name, acc_no, bankType } = formData;
-    let data = { acc_name, acc_no, bankType };
-    console.log(data);
-    dispatch(updatePersonalDetails(data));
+
+    const selectState = () => {
+      return states?.find(
+        (state) => state.name === users?.individualUser?.address?.state
+      ).id;
+    };
+
+    const { address, stateId, secondaryPhoneNumber, countryId, lgaId } =
+      formData;
+
+    let contactData = {
+      address: address
+        ? address
+        : users?.individualUser?.address?.houseNoAddress,
+      stateId: stateId ? Number(stateId) : selectState(),
+      secondaryPhoneNumber: secondaryPhoneNumber
+        ? secondaryPhoneNumber
+        : users.phone,
+      countryId: Number(countryId),
+      lgaId: Number(lgaId),
+      otp: token,
+    };
+
+    console.log(contactData);
+
+    dispatch(updateContactDetails(contactData));
+  };
+
+  const handleInfoSubmit = (e) => {
+    e.preventDefault();
+    const {
+      occupation,
+      employerName,
+      employerAddress,
+      email,
+      name,
+      nokAddress,
+      phone,
+    } = formData;
+
+    let PersonalData = {
+      employmentDetail: {
+        employerAddress: employerAddress
+          ? employerAddress
+          : users?.individualUser?.employmentDetail?.employerAddress,
+        employerName: employerName
+          ? employerName
+          : users?.individualUser?.employmentDetail?.employerName,
+        occupation: occupation
+          ? occupation
+          : users?.individualUser?.employmentDetail?.occupation,
+      },
+      nokDetail: {
+        email: email ? email : users?.individualUser?.nokDetail?.email,
+        name: name ? name : users?.individualUser?.nokDetail?.name,
+        nokAddress: nokAddress
+          ? nokAddress
+          : users?.individualUser?.nokDetail?.address,
+        phone: phone ? phone : users?.individualUser?.nokDetail?.phone,
+      },
+    };
+    console.log(PersonalData);
+    dispatch(updatePersonalInfo(PersonalData));
   };
 
   // useEffect(() => {
-  //   const tokenString = localStorage.getItem("user-token");
-  //   if (tokenString) {
-  //     dispatch(getAuthUser(tokenString));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  //   dispatch(successMessage(false));
+  // }, [dispatch]);
+
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    dispatch(sendOtp());
+  };
+
+  const handleVerify = (e) => {
+    e.preventDefault();
+    dispatch(verifyPhone(formData.secondaryPhoneNumber));
+  };
+
+  const handleOTPModalClose = () => {
+    dispatch({ type: types.CLOSE_MODAL });
+  };
 
   useEffect(() => {
-    dispatch(successMessage(false));
-  }, [dispatch]);
+    dispatch(getCountries());
+    dispatch(getStates(formData.countryId));
+  }, [formData.countryId]);
+
+  const sId = states?.find(
+    (state) => state.name === users?.individualUser?.address?.state
+  ).id;
+
+  useEffect(() => {
+    dispatch(getlgas(formData.stateId || sId));
+  }, [formData.stateId]);
 
   return (
     <div>
-      <WrapperBody>
-        <form autoComplete="off" onSubmit={handleSubmit}>
+      <form
+        autoComplete="off"
+        onSubmit={(e) => {
+          handleSubmit(e);
+          handleInfoSubmit(e);
+        }}
+      >
+        <WrapperBody>
           <div className="container-fluid">
             <div>
               <div className="row">
@@ -89,8 +232,8 @@ const PersonalInfo = () => {
                   <div className="input-group mb-4">
                     <input
                       className="form-control"
-                      placeholder="First Name"
                       type="text"
+                      value={users?.individualUser?.firstName}
                       disabled={showEditProf}
                     />
                   </div>
@@ -100,8 +243,8 @@ const PersonalInfo = () => {
                   <div className="input-group mb-4">
                     <input
                       className="form-control"
-                      placeholder="Middle Name"
                       type="text"
+                      value={users?.individualUser?.middleName}
                       disabled={showEditProf}
                     />
                   </div>
@@ -112,7 +255,7 @@ const PersonalInfo = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Last Name"
+                      value={users?.individualUser?.lastName}
                       disabled={showEditProf}
                     />
                   </div>
@@ -121,22 +264,23 @@ const PersonalInfo = () => {
               <div className="row">
                 <div className="col-md-6 col-lg-4">
                   <label>Gender</label>
-                  <select
-                    className="form-select form-select-md mb-4"
-                    aria-label=".form-select-md"
-                    disabled={showEditProf}>
-                    <option selected>Male</option>
-                    <option value="2">Female</option>
-                  </select>
+                  <div className="input-group mb-4">
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={users?.individualUser?.gender}
+                      disabled={showEditProf}
+                    />
+                  </div>
                 </div>
                 <div className="col-md-6 col-lg-4">
                   <label>Date of Birth</label>
                   <div className="input-group mb-4">
                     <input
                       className="form-control"
-                      placeholder="Date of Birth"
-                      aria-label="First Name..."
-                      type="date"
+                      placeholder="dd-mm-yyyy"
+                      type="text"
+                      value={users?.individualUser?.dateOfBirth}
                       disabled={showEditProf}
                     />
                     {showEditProf && (
@@ -152,7 +296,7 @@ const PersonalInfo = () => {
                     <input
                       type="tel"
                       className="form-control"
-                      placeholder="Primary phone number"
+                      value={users?.phone}
                       disabled={showEditProf}
                     />
                   </div>
@@ -164,8 +308,8 @@ const PersonalInfo = () => {
                   <div className="input-group mb-4">
                     <input
                       className="form-control"
-                      placeholder="Contact Person Email Address"
                       type="text"
+                      value={users?.email}
                       disabled={showEditProf}
                     />
                   </div>
@@ -176,7 +320,7 @@ const PersonalInfo = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="BVN"
+                      value={users?.individualUser?.bvn}
                       disabled={showEditProf}
                     />
                   </div>
@@ -190,6 +334,7 @@ const PersonalInfo = () => {
                       className="form-control"
                       placeholder="Customer ID Number"
                       type="text"
+                      // value={users?.virtualAccountNo}
                       disabled={showEditProf}
                     />
                   </div>
@@ -201,7 +346,7 @@ const PersonalInfo = () => {
                 <div className="d-flex align-items-center justify-content-between">
                   <h4 className="pt-5">Contact Details</h4>
                   {showEditCont ? (
-                    <button onClick={toggleCont}>Edit</button>
+                    <button onClick={handleSendOtp}>Edit</button>
                   ) : (
                     <>
                       <button className="grey-button" onClick={toggleCont}>
@@ -209,32 +354,99 @@ const PersonalInfo = () => {
                       </button>
                     </>
                   )}
+                  <ModalComponent
+                    show={showEmailOtpModal}
+                    size={'md'}
+                    handleClose={handleOTPModalClose}
+                  >
+                    <OTPVerify
+                      show={showEmailOtpModal}
+                      handleClose={handleOTPModalClose}
+                      emailOtp={true}
+                      updateOtp={(otp) => createOtp(otp)}
+                      toggleCont={toggleCont}
+                      otpData={otp?.data}
+                    />
+                  </ModalComponent>
                 </div>
               </div>
               <div>
                 <div className="row">
-                  <div className="col-md-8 ">
-                    <label>Secondary Phone Number</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder=""
-                        type="text"
-                        disabled={showEditCont}
-                      />
+                  <div className="col-lg-8 d-flex">
+                    <div className="mb-5">
+                      <label>Secondary Phone Number</label>
+                      <div className="input-group">
+                        <select
+                          className="form-select-md select-field"
+                          style={{
+                            border: '1.5px solid #E0E0E0',
+                            outline: 'none',
+                          }}
+                          disabled={showEditCont}
+                        >
+                          <option>NGN</option>
+                        </select>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="secondaryPhoneNumber"
+                          id="phone"
+                          value={formData?.secondaryPhoneNumber}
+                          onChange={handleChange}
+                          placeholder={
+                            users?.individualUser?.secondaryPhoneNumber ||
+                            users?.phone
+                          }
+                          disabled={showEditCont}
+                        />
+                      </div>
+                      <UncontrolledTooltip placement="bottom" target="phone">
+                        Please provide your most active phone number here in
+                        case this is different from your primary phone number
+                      </UncontrolledTooltip>
                     </div>
+                    <div className="mx-2">
+                      <button
+                        className="profile_vify_btn"
+                        disabled={showEditCont}
+                        onClick={handleVerify}
+                      >
+                        Verify
+                      </button>
+                    </div>
+                    <ModalComponent
+                      show={showPhoneOtpModal}
+                      size={'md'}
+                      handleClose={handleOTPModalClose}
+                    >
+                      <OTPVerify
+                        show={showPhoneOtpModal}
+                        handleClose={handleOTPModalClose}
+                        otpData={phoneMsg?.data?.otp}
+                        secondPhone={formData.secondaryPhoneNumber}
+                      />
+                    </ModalComponent>
                   </div>
-                  <div className="col-md-4 ">
+                  <div className="col-lg-4 ">
                     <label>Country of Residence</label>
                     <div className="input-group mb-4">
                       <select
                         className="form-select form-select-md mb-3"
                         aria-label=".form-select-md"
                         disabled={showEditCont}
-                        name="name"
+                        onChange={handleChange}
+                        name="countryId"
+                        value={
+                          formData?.countryId ||
+                          users?.individualUser?.coutryOfResidence?.id
+                        }
                       >
-                        <option value=""></option>
-                        <option value="Nigeria">Nigeria</option>
+                        <option value={0}></option>
+                        {countries?.map((country) => (
+                          <option key={country.id} value={country.id}>
+                            {country.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -245,34 +457,73 @@ const PersonalInfo = () => {
                     <select
                       className="form-select form-select-md mb-4"
                       aria-label=".form-select-md"
-                      disabled={showEditCont}>
-                      <option selected>Male</option>
-                      <option value="2">Female</option>
+                      disabled={showEditCont}
+                      onChange={handleChange}
+                      value={
+                        formData?.stateId ||
+                        states
+                          ?.find(
+                            (state) =>
+                              state.name ===
+                              users?.individualUser?.address?.state
+                          )
+                          .id.toString()
+                      }
+                      name="stateId"
+                    >
+                      <option value="">Select State...</option>
+                      {states?.map((state) => (
+                        <option key={state.id} value={state.id.toString()}>
+                          {state.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="col-md-6 col-lg-4 ">
                     <label>City</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder="City"
-                        aria-label="First Name..."
-                        type="text"
-                        disabled={showEditCont}
-                      />
-                    </div>
+                    <select
+                      className="form-select form-select-md mb-4"
+                      aria-label=".form-select-md"
+                      disabled={showEditCont}
+                      onChange={handleChange}
+                      value={
+                        formData?.lgaId ||
+                        lgas
+                          ?.find(
+                            (lga) => lga.name === users?.individualUser?.lga
+                          )
+                          ?.id?.toString()
+                      }
+                      name="lgaId"
+                    >
+                      <option value="">Select City...</option>
+                      {lgas?.map((lga) => (
+                        <option key={lga.id} value={lga.id.toString()}>
+                          {lga.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="col-md-6 col-lg-6 pb-md-4">
                     <label>Nationality</label>
-                    <div className="input-group mb-4">
+                    <div className="input-group">
                       <select
-                        className="form-select form-select-md mb-3"
+                        className="form-select form-select-md mb-4"
                         aria-label=".form-select-md"
                         name="country"
+                        value={
+                          formData?.country ||
+                          users.individualUser?.address?.country
+                        }
+                        onChange={handleChange}
                         disabled={showEditCont}
                       >
                         <option value=""></option>
-                        <option value="Nigeria">Nigeria</option>
+                        {countries?.map((country) => (
+                          <option key={country.id} value={country.name}>
+                            {country.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -283,8 +534,13 @@ const PersonalInfo = () => {
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder="Address"
+                        placeholder={
+                          users?.individualUser?.address?.houseNoAddress
+                        }
                         type="text"
+                        name="address"
+                        value={formData?.address}
+                        onChange={handleChange}
                         disabled={showEditCont}
                       />
                     </div>
@@ -304,14 +560,25 @@ const PersonalInfo = () => {
                     )}
                   </div>
                 </div>
+                {infoSuccess && (
+                  <Alert color="success" className="text-center">
+                    Employment Details Updated Successfully
+                  </Alert>
+                )}
                 <div className="row">
                   <div className="col-md-4 ">
                     <label>Occupation</label>
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder="Occupation"
+                        placeholder={
+                          users?.individualUser?.employmentDetail?.occupation ||
+                          'Occupation'
+                        }
                         type="text"
+                        name="occupation"
+                        value={formData?.occupation}
+                        onChange={handleChange}
                         disabled={showEditEmpoy}
                       />
                     </div>
@@ -321,8 +588,14 @@ const PersonalInfo = () => {
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder="Employer's name"
+                        placeholder={
+                          users?.individualUser?.employmentDetail
+                            ?.employerName || "Employer's name"
+                        }
                         type="text"
+                        name="employerName"
+                        value={formData?.employerName}
+                        onChange={handleChange}
                         disabled={showEditEmpoy}
                       />
                     </div>
@@ -334,8 +607,14 @@ const PersonalInfo = () => {
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder="Employers Address"
+                        placeholder={
+                          users?.individualUser?.employmentDetail
+                            ?.employerAddress || 'Employers Address'
+                        }
                         type="text"
+                        name="employerAddress"
+                        value={formData?.employerAddress}
+                        onChange={handleChange}
                         disabled={showEditEmpoy}
                       />
                     </div>
@@ -355,14 +634,25 @@ const PersonalInfo = () => {
                     )}
                   </div>
                 </div>
+                {infoSuccess && (
+                  <Alert color="success" className="text-center">
+                    Next of Kin Details Updated Successfully
+                  </Alert>
+                )}
                 <div className="row">
                   <div className="col-md-4 ">
                     <label>Next of Kin Name</label>
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder="Next of Kin Name"
+                        placeholder={
+                          users?.individualUser?.nokDetail?.name ||
+                          'Next of Kin Name'
+                        }
                         type="text"
+                        name="name"
+                        value={formData?.name}
+                        onChange={handleChange}
                         disabled={showEditNOK}
                       />
                     </div>
@@ -372,8 +662,14 @@ const PersonalInfo = () => {
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder=""
+                        placeholder={
+                          users?.individualUser?.nokDetail?.email ||
+                          'Next of Kin Email'
+                        }
                         type="text"
+                        name="email"
+                        value={formData?.email}
+                        onChange={handleChange}
                         disabled={showEditNOK}
                       />
                     </div>
@@ -385,8 +681,14 @@ const PersonalInfo = () => {
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder=""
+                        placeholder={
+                          users?.individualUser?.nokDetail?.address ||
+                          'Next of Kin Address'
+                        }
                         type="text"
+                        name="nokAddress"
+                        value={formData?.nokAddress}
+                        onChange={handleChange}
                         disabled={showEditNOK}
                       />
                     </div>
@@ -394,39 +696,49 @@ const PersonalInfo = () => {
                 </div>
                 <div className="row">
                   <div className="col-md-8 ">
-                    <label>next of kin phone number</label>
+                    <label>Next of kin phone number</label>
                     <div className="input-group mb-4">
+                      <select
+                        className="form-select-md select-field"
+                        style={{
+                          border: '1.5px solid #E0E0E0',
+                          outline: 'none',
+                        }}
+                        disabled={showEditNOK}
+                      >
+                        <option>NGN</option>
+                      </select>
                       <input
                         className="form-control"
-                        placeholder=""
+                        placeholder={
+                          users?.individualUser?.nokDetail?.phone ||
+                          'Next of kin phone number'
+                        }
                         type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
                         disabled={showEditNOK}
                       />
-                      <span className="input-font-awe">
-                        {/* <i className=" fa-solid fa-angle-down"></i>
-                      <i className="fa-solid fa-angle-down"></i>
-                      <i className="fa-solid fa-angle-down"></i> */}
-                        {/* <i className="font-num fa-solid fa-angle-down"></i> */}
-                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </form>
-      </WrapperBody>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-end footer-content">
-            <div>
-              <button className="blue-btn">
-                Save
-              </button>
+        </WrapperBody>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-end footer-content">
+              <div>
+                <button type="submit" className="blue-btn">
+                  Save
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </div>
   );
 };
@@ -448,6 +760,9 @@ const WrapperBody = styled.div`
     border: none;
     padding: 10px 27px;
     color: #f2f2f2;
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
   .grey-button {
     background: #f2f2f2;
@@ -505,10 +820,29 @@ const WrapperBody = styled.div`
     border-radius: 8px;
     padding-left: 20px;
     position: relative;
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
 
   select {
     height: 54px;
+    &:disabled {
+      background: rgba(28, 68, 141, 0.09);
+      cursor: not-allowed;
+    }
+  }
+
+  .select-field {
+    height: 54px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
   }
 
   label {
@@ -522,9 +856,8 @@ const WrapperBody = styled.div`
     padding-left: 10px;
   }
   .profile_vify_btn {
-    width: 83px;
-    height: 54px;
-    margin-top: 35px;
+    padding: 10px 10px;
+    margin-top: 40px;
     background: #111e6c;
     border-radius: 8px;
     font-style: normal;

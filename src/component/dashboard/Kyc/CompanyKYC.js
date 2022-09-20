@@ -355,7 +355,7 @@ const CompanyKYC = () => {
                       (formData.phone || company_details?.phone) ? (
                         <button
                           className=""
-                          onClick={(e) => handleSubmit(e, '/company-profile')}
+                          onClick={(e) => handleSubmit(e, '/profile')}
                         >
                           Save and Continue
                         </button>

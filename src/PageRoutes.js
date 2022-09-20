@@ -89,14 +89,13 @@ function PageRoutes({ login, isAuth }) {
       </Route>
 
       <Route
-        path="/personal-profile"
+        path="/profile"
         element={
           <ProtectedRoute isAuth={isAuth}>
-            <Profile user_profile="user_profile" />
+            <Profile/>
           </ProtectedRoute>
         }
       />
-      <Route path="/company-profile" element={<Profile />} />
       <Route
         path="/plan-details-form"
         element={
