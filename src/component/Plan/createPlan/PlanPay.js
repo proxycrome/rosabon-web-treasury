@@ -5,11 +5,14 @@ import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { MakePayment, PlanSummary } from "../Accesssories";
 import PlanBankPayment from "./PlanBankPayment";
 import PlanCardPayment from "./PlanCardPayment";
+import { useSelector } from 'react-redux';
 
 const PlanPay = ({ goBack }) => {
   const [isBank, setIsBank] = useState(false);
   const [isCard, setIsCard] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+
+  const { singlePlan } = useSelector((state) => state.plan)
 
   const checkDetails = (values) => {
     const { bank, card } = values;

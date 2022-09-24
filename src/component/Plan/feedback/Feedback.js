@@ -10,29 +10,59 @@ import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import Checked from "../../../asset/checked.png";
 import ModalComponent from "../../ModalComponent";
 import { Input } from "reactstrap";
+import { postFeedback } from "../../../redux/actions/feedback/feedbackAction";
+
+const initialForm = {
+  categoryId: "",
+  content: "",
+  title: ""
+}
 
 const Feedback = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [feedbackForm, setFeedbackForm] = useState(initialForm)
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [tabs, setTabs] = useState("");
   const user_details = useSelector((state) => state.user_profile.users);
+  const { posted_feedback } = useSelector((state) => state.feedback);
 
   const [show, setShow] = useState(false);
 
   const handleClick = (value) => {
     console.log(value);
-    if (value == "transter") {
+    if (value === "transter") {
       setIsWithDraw(true);
       setIsTransfer(false);
     }
-    if (value == "withdraw") {
+    if (value === "withdraw") {
       setIsWithDraw(false);
       setIsTransfer(true);
     }
   };
+
+  const handleChange = (e) => {
+    if(e.target.name === "categoryId") {
+      setFeedbackForm({
+        ...feedbackForm,
+        [e.target.name]: parseInt(e.target.value)
+      })
+    } else {
+      setFeedbackForm({
+        ...feedbackForm,
+        [e.target.name]: e.target.value
+      })
+    }
+  }
+ 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await dispatch(postFeedback(feedbackForm, setShow));
+    setFeedbackForm(initialForm);
+  }
 
   // useEffect(() => {
   //   const tokenString = JSON.parse(localStorage.getItem("token"));
@@ -44,7 +74,7 @@ const Feedback = () => {
   // }, []);
 
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <WrapperBody>
         <ProfileNavBar>
           <NavTitle>
@@ -61,10 +91,13 @@ const Feedback = () => {
                   className="form-select form-select-lg mb-3 select-field"
                   aria-label=".form-select-lg"
                   //   onClick={handleOnclick}
-                  name="companyType">
+                  name="categoryId"
+                  onChange={handleChange}
+                  value={feedbackForm.categoryId}
+                >
                   <option value=""></option>
-                  <option value="others">Complaints</option>
-                  <option value="others">Enquiries</option>
+                  <option value={2}>Complaints</option>
+                  <option value={1}>Enquiries</option>
                 </select>
               </div>
             </div>
@@ -72,7 +105,13 @@ const Feedback = () => {
           <div className="pb-4">
             <label>Title of Message </label>
             <div className="input-group">
-              <Input type="text" className="form-control" />
+              <Input 
+                type="text" 
+                className="form-control" 
+                name="title"
+                onChange={handleChange}
+                value={feedbackForm.title}
+              />
             </div>
             {/* {errors.name && <h3>{errors.name}</h3>} */}
           </div>
@@ -85,7 +124,10 @@ const Feedback = () => {
                   cols="60"
                   placeholder="Enter your message"
                   className="form-control select-field"
-                  name="description"></textarea>
+                  name="content"
+                  onChange={handleChange}
+                  value={feedbackForm.content}
+                ></textarea>
               </div>
             </div>
           </div>
@@ -101,9 +143,11 @@ const Feedback = () => {
                     color: "#FFFFFF",
                     width: "300px",
                   }}
-                  onClick={() => {
-                    setShow(true);
-                  }}>
+                  // onClick={() => {
+                  //   setShow(true);
+                  // }}
+                  type='submit'
+                  >
                   Submit
                 </button>
                 <ModalComponent show={show} size={"md"}>
@@ -147,7 +191,7 @@ const Feedback = () => {
           </div>
         </WrapperFooter>
       </WrapperBody>
-    </div>
+    </form>
   );
 };
 

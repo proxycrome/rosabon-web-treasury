@@ -16,6 +16,11 @@ import { TransactionPreview } from '../Accessories/BVNConfirm';
 import { getWalletTransactions } from '../../redux/actions/wallet/walletAction';
 import moment from "moment";
 import { CLEAR_TRANSACTIONS } from '../../redux/constant/walletActionTypes';
+import { 
+  getTickets, 
+  getOpenTickets, 
+  getClosedTickets 
+} from "../../redux/actions/feedback/feedbackAction";
 
 export const NairaCard = () => {
   return (
@@ -2133,6 +2138,13 @@ const SpecialEarningsWarapper = styled.div`
 `;
 
 export const FeedbackTickets = () => {
+  const dispatch = useDispatch();
+  const { my_tickets } = useSelector((state) => state.feedback);
+  const tickets = my_tickets ? my_tickets : []
+
+  useEffect(() => {
+    dispatch(getTickets())
+  },[])
   return (
     <div>
       <ProfileNavBar>
@@ -2160,7 +2172,45 @@ export const FeedbackTickets = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {
+                tickets.map(item => (
+                  <tr key={item.id} >
+                    <td>NO_{item.id} </td>
+                    <td>{item.title} </td>
+                    <td>
+                      <button
+                        style={{
+                          color: item.status === "OPENED" ? "#FFFFFF" :'#828282',
+                          padding: '6px 30px',
+                          background: item.status === "OPENED" ? "#6FCF97" :'#F2F2F2',
+                          borderRadius: '10px',
+                        }}
+                      >
+                        {item.status}
+                      </button>
+                    </td>
+                    <td>
+                      {item.createdAt[0]} / {item.createdAt[1]} / {item.createdAt[2]}
+                    </td>
+                    <td>
+                      {item.createdAt[0]} / {item.createdAt[1]} / {item.createdAt[2]}
+                    </td>
+                    <td>
+                      <button
+                        style={{
+                          color: '#FFFFFF',
+                          padding: '10px 25px',
+                          background: '#111E6C',
+                          borderRadius: '5px',
+                        }}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              }
+              {/* <tr>
                 <td>N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
@@ -2283,7 +2333,7 @@ export const FeedbackTickets = () => {
                     View
                   </button>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
         </div>
@@ -2345,6 +2395,13 @@ const FeedbackticketWarapper = styled.div`
 `;
 
 export const FeedbackOpenTickets = () => {
+  const dispatch = useDispatch();
+  const { open_tickets } = useSelector((state) => state.feedback);
+  const openedTickets = open_tickets ? open_tickets : []
+
+  useEffect(() => {
+    dispatch(getOpenTickets())
+  },[])
   return (
     <div>
       <ProfileNavBar>
@@ -2372,7 +2429,45 @@ export const FeedbackOpenTickets = () => {
               </tr>
             </thead>
             <tbody>
-              <tr style={{ background: '#F8F8F8' }}>
+              {
+                open_tickets?.map((item) => (
+                  <tr key={item.id}>
+                    <td className="ticket-row">N0_{item.id} </td>
+                    <td>{item.title} </td>
+                    <td>
+                      <button
+                        style={{
+                          color: item.status === "OPENED" ? "#FFFFFF" :'#828282',
+                          padding: '6px 30px',
+                          background: item.status === "OPENED" ? "#6FCF97" :'#F2F2F2',
+                          borderRadius: '10px',
+                        }}
+                      >
+                        {item.status}
+                      </button>
+                    </td>
+                    <td>
+                      {item.createdAt[0]} / {item.createdAt[1]} / {item.createdAt[2]}
+                    </td>
+                    <td>
+                      {item.createdAt[0]} / {item.createdAt[1]} / {item.createdAt[2]}
+                    </td>
+                    <td>
+                      <button
+                        style={{
+                          color: '#FFFFFF',
+                          padding: '10px 25px',
+                          background: '#111E6C',
+                          borderRadius: '5px',
+                        }}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              }
+              {/* <tr style={{ background: '#F8F8F8' }}>
                 <td className="ticket-row">N0_1947034</td>
                 <td>The passage is attributed to an..</td>
                 <td>
@@ -2493,7 +2588,7 @@ export const FeedbackOpenTickets = () => {
                     View
                   </button>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
         </div>
@@ -2503,6 +2598,13 @@ export const FeedbackOpenTickets = () => {
 };
 
 export const FeedbackCloseTickets = () => {
+  const dispatch = useDispatch();
+  const { closed_tickets } = useSelector((state) => state.feedback);
+  const closedTickets = closed_tickets ? closed_tickets : []
+
+  useEffect(() => {
+    dispatch(getClosedTickets())
+  },[])
   return (
     <div>
       <ProfileNavBar />
@@ -2521,7 +2623,45 @@ export const FeedbackCloseTickets = () => {
               </tr>
             </thead>
             <tbody>
-              <tr
+              {
+                closedTickets?.map((item) => (
+                  <tr key={item.id}>
+                    <td className="ticket-row">N0_{item.id} </td>
+                    <td>{item.title} </td>
+                    <td>
+                      <button
+                        style={{
+                          color: item.status === "OPENED" ? "#FFFFFF" :'#828282',
+                          padding: '6px 30px',
+                          background: item.status === "OPENED" ? "#6FCF97" :'#F2F2F2',
+                          borderRadius: '10px',
+                        }}
+                      >
+                        {item.status}
+                      </button>
+                    </td>
+                    <td>
+                      {item.createdAt[0]} / {item.createdAt[1]} / {item.createdAt[2]}
+                    </td>
+                    <td>
+                      {item.createdAt[0]} / {item.createdAt[1]} / {item.createdAt[2]}
+                    </td>
+                    <td>
+                      <button
+                        style={{
+                          color: '#FFFFFF',
+                          padding: '10px 25px',
+                          background: '#111E6C',
+                          borderRadius: '5px',
+                        }}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              }
+              {/* <tr
                 class="separator"
                 style={{ background: '#F8F8F8', padding: '30px' }}
               >
@@ -2613,7 +2753,7 @@ export const FeedbackCloseTickets = () => {
                     View
                   </button>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </Table>
         </div>

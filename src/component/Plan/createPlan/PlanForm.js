@@ -1,13 +1,54 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import PlanPay from "./PlanPay";
 import { useNavigate } from "react-router-dom";
+import { createPlan } from "../../../redux/actions/plan/planAction";
+
+const initialState = {
+  planName: "",
+  currency: "",
+  exchangeRate: null,
+  amount: null,
+  targetAmount: null,
+  tenorId: null,
+  savingFrequency: "DAILY",
+  interestReceiptOption: null,
+  contributionValue: null,
+  directDebit: true,
+  interestRate: null,
+  numberOfTickets: null,
+  autoRenew: true,
+  allowsLiquidation: true
+}
 
 const PlanForm = () => {
   const [isClicked, setIsClicked] = useState(false);
+  const [formData, setFormData] = useState({
+    planName: "",
+    currency: "",
+    exchangeRate: null,
+    amount: null,
+    targetAmount: null,
+    tenorId: null,
+    savingFrequency: "DAILY",
+    interestReceiptOption: null,
+    contributionValue: null,
+    directDebit: true,
+    interestRate: null,
+    numberOfTickets: null,
+    autoRenew: true,
+    allowsLiquidation: true
+  })
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { singleProduct  } = useSelector((state) => state.product)
+  const { newPlan  } = useSelector((state) => state.plan)
+  const productStatus = singleProduct?.statusCode
+  const product = singleProduct?.data.body ? singleProduct?.data.body : {}
+
 
   if (isClicked) {
     return <PlanPay goBack={() => setIsClicked(false)} />;
@@ -17,38 +58,70 @@ const PlanForm = () => {
     navigate("/plan-product");
   };
 
+  const handleChange = (e) => {
+    if(e.target.type === "number") {
+      setFormData({
+        ...formData,
+        [e.target.name]: parseInt(e.target.value)
+      })
+    }else {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      })
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const objData = {
+      ...formData,
+      productId: product.id
+    }
+    dispatch(createPlan(objData))
+    if(newPlan) { 
+      setIsClicked(true);
+      // setFormData(initialState);
+    }
+  }
+
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Choose Plan</span>
         </NavTitle>
       </ProfileNavBar>
       <Wrapper>
-        <div className="choose-plan">
-          <h5>Product 1</h5>
-          <div className="d-flex align-items-center justify-content-between">
-            <img
-              className="image-holder"
-              src={ChoosePlanHolder}
-              alt="ChoosePlanHolder"
-            />
-            <div>
-              <div>
-                <p className="p-0 m-0 pb-2">
-                  Lorem Ipsum is simply dummy text of the{" "}
-                </p>
-                <p className="p-0 m-0 pb-2">
-                  {" "}
-                  printing and typesetting industry.
-                </p>
-                <p className="p-0 m-0 pb-2">
-                  Lorem Ipsum is simply dummy text of the{" "}
-                </p>
+        {
+          productStatus === "OK" ? (
+            <div className="choose-plan">
+              <h5>{product.productName} </h5>
+              <div className="d-flex align-items-center justify-content-between">
+                <img
+                  className="image-holder"
+                  src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
+                  alt="ChoosePlanHolder"
+                />
+                <div>
+                  <div>
+                    {/* <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{" "}
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      {" "}
+                      printing and typesetting industry.
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      Lorem Ipsum is simply dummy text of the{" "}
+                    </p> */}
+                    <p>{product.productDescription} </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          ) : (<></>)
+        }
 
         <div className="container-fluid">
           <div className="row">
@@ -60,8 +133,11 @@ const PlanForm = () => {
               <div className="input-group mb-4">
                 <input
                   className="form-control"
+                  name="planName"
                   placeholder="Enter a plan name"
                   type="text"
+                  value={formData.planName}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -70,8 +146,11 @@ const PlanForm = () => {
               <div className="input-group mb-4">
                 <input
                   className="form-control"
+                  name="currency"
                   placeholder="Select investment currency"
                   type="text"
+                  value={formData.currency}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -80,13 +159,27 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Exchange rate</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control" 
+                  name="exchangeRate"
+                  placeholder="" 
+                  type="number" 
+                  value={formData.exchangeRate}
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className="col-md-6">
               <label>Amount to be placed</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control" 
+                  name="amount"
+                  placeholder="" 
+                  type="number" 
+                  value={formData.amount}
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>
@@ -94,31 +187,57 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Target amount</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control" 
+                  name="targetAmount"
+                  placeholder="" 
+                  type="number" 
+                  value={formData.targetAmount}
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className="col-md-6">
               <label>Tenor</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control"
+                  name="tenorId" 
+                  placeholder="" 
+                  type="number" 
+                  value={formData.tenorId}
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>
           <div className="row">
             <div className="col-md-6 ">
               <label>Savings frequency</label>
-              <select className="form-select form-select-lg mb-3" name="source">
-                <option value="" selected>
+              <select 
+                className="form-select form-select-lg mb-3" 
+                name="savingFrequency" 
+                onChange={handleChange}
+                value={formData.savingFrequency}
+              >
+                <option value="DAILY">
                   Daily
                 </option>
-                <option value="">Weekly</option>
-                <option value="">Monthly</option>
+                <option value="WEEKLY">Weekly</option>
+                <option value="MONTHLY">Monthly</option>
               </select>
             </div>
             <div className="col-md-6">
               <label>Interest Reciept Option</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control" 
+                  name="interestReceiptOption"
+                  placeholder="" 
+                  type="number" 
+                  value={formData.interestReceiptOption}
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>
@@ -126,7 +245,14 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Contribution value</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control" 
+                  name="contributionValue"
+                  placeholder="" 
+                  type="number" 
+                  value={formData.contributionValue}
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className="col-md-6">
@@ -134,9 +260,13 @@ const PlanForm = () => {
               <div className="input-group mb-4">
                 <select
                   className="form-select form-select-lg"
-                  placeholder="Setup Direct Debit">
-                  <option>Yes</option>
-                  <option>No</option>
+                  placeholder="Setup Direct Debit"
+                  onChange={handleChange}
+                  name="directDebit"
+                  value={formData.directDebit}
+                >
+                  <option value={true} selected >Yes</option>
+                  <option value={false} >No</option>
                 </select>
               </div>
             </div>
@@ -145,13 +275,27 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Calculate interest rate</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control" 
+                  name="interestRate"
+                  placeholder="" 
+                  type="number" 
+                  value={formData.interestRate}
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className="col-md-6">
               <label>Number of tickets</label>
               <div className="input-group mb-4">
-                <input className="form-control" placeholder="" type="text" />
+                <input 
+                  className="form-control" 
+                  name="numberOfTickets"
+                  placeholder="" 
+                  type="number"
+                  value={formData.numberOfTickets} 
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>
@@ -159,18 +303,30 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Auto renew</label>
               <div className="input-group mb-4">
-                <select className="form-select form-select-lg" placeholder="">
-                  <option>Yes</option>
-                  <option>No</option>
+                <select 
+                  className="form-select form-select-lg" 
+                  placeholder=""
+                  name="autoRenew"
+                  onChange={handleChange}
+                  value={formData.autoRenew}
+                >
+                  <option value={true} >Yes</option>
+                  <option value={false} >No</option>
                 </select>
               </div>
             </div>
             <div className="col-md-6">
               <label>Allow liquidation</label>
               <div className="input-group mb-4">
-                <select className="form-select form-select-lg" placeholder="">
-                  <option>Yes</option>
-                  <option>No</option>
+                <select 
+                  className="form-select form-select-lg" 
+                  placeholder=""
+                  name="allowsLiquidation"
+                  onChange={handleChange}
+                  value={formData.allowsLiquidation}
+                >
+                  <option value={true} >Yes</option>
+                  <option value={false} >No</option>
                 </select>
               </div>
             </div>
@@ -194,14 +350,16 @@ const PlanForm = () => {
                   color: "#FFFFFF",
                   width: "300px",
                 }}
-                onClick={() => setIsClicked(true)}>
+                type="submit"
+                // onClick={() => setIsClicked(true)}
+              >
                 Next
               </button>
             </div>
           </div>
         </div>
       </WrapperFooter>
-    </>
+    </form>
   );
 };
 
@@ -270,6 +428,14 @@ const Wrapper = styled.div`
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     padding-left: 20px;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
   }
   label {
     font-style: normal;

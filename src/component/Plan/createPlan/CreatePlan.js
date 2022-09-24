@@ -1,15 +1,91 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { Collapse } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
+import { getCatWithProducts } from "../../../redux/actions/product/productCategoriesAction";
+import { getSingleProduct } from "../../../redux/actions/product/productAction";
 
 const CreatePlan = () => {
   const [open, setOpen] = useState(false);
+
+  const { catWithProducts, catWithProductsError } = useSelector((state) => state.product)
+  const productStatus = catWithProducts?.statusCode
+  const products = catWithProducts?.data.body ? catWithProducts?.data.body : []
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCatWithProducts());
+  }, [])
+
+  const handleSingleProduct = (id) => {
+    dispatch(getSingleProduct(id));
+  }
+
   // console.log(open)
   return (
     <Wrapper>
-      <div>
+      {
+        productStatus === "OK" ? 
+         products.map((item) => (
+          <div className=" pb-5" key={item.productCategoryId} >
+            <div>
+              <div className="d-flex align-items-center justify-content-between savins-drop">
+                <h5>{item.productCategoryName} </h5>
+                <div>
+                  {open ? (
+                    <i
+                      onClick={() => setOpen(!open)}
+                      className="fa-solid fa-chevron-up"></i>
+                  ) : (
+                    <i
+                      onClick={() => setOpen(!open)}
+                      className="fa-solid fa-chevron-down"></i>
+                  )}
+                </div>
+              </div>
+              <p className="para-header">
+                Choose from a {item.productCategoryName} plan
+              </p>
+            </div>
+            <div className="plan-list">
+              {item.products.map((product) => (
+                <div className="choose-plan" key={product.id}>
+                  <div className="d-flex align-items-center justify-content-around">
+                    <img
+                      className="image-holder"
+                      src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
+                      alt="ChoosePlanHolder"
+                    />
+                    <div>
+                      <h5>{product.productName} </h5>
+                      <div>
+                        {/* <p className="p-0 m-0 pb-2">
+                          Lorem Ipsum is simply dummy text of the{" "}
+                        </p>
+                        <p className="p-0 m-0 pb-2">
+                          {" "}
+                          printing and typesetting industry.
+                        </p>
+                        <p className="p-0 m-0 pb-2">
+                          Lorem Ipsum is simply dummy text of the{" "}
+                        </p> */}
+                        {product.productDescription}
+                      </div>
+                    </div>
+                  </div>
+                  <Link to="/create-plan" onClick={() => handleSingleProduct(product.id)} >
+                    <button>Create Plan</button>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+         ))
+        : (<></>)
+      }
+      {/* <div>
         <div>
           <div className="d-flex align-items-center justify-content-between savins-drop">
             <h5>Fix Savings </h5>
@@ -375,7 +451,7 @@ const CreatePlan = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </Wrapper>
   );
 };
