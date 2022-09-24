@@ -19,12 +19,13 @@ import {
   get_closed_tickets 
 } from '../../api/feedback/feedback.api';
 
-export const postFeedback = (dataObj) => async (dispatch) => {
+export const postFeedback = (dataObj, setShow) => async (dispatch) => {
   dispatch({ type:POST_FEEDBACK });
   const { formData, errorObj } = await post_feedback(dataObj);
 
   if (formData) {
     dispatch({ type: POST_FEEDBACK_SUCCESS, payload: formData });
+    setShow(true);
   }
 
   if (errorObj) {
