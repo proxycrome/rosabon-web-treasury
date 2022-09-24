@@ -34,10 +34,10 @@ function HomeView() {
 
   useEffect(() => {
     if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/kyc/person");
+      navigate("/kyc");
     }
     if (users && !users.kyc && users.role === "COMPANY") {
-      navigate("/kyc/company");
+      navigate("/kyc");
     }
   }, [users]);
 

@@ -14,6 +14,17 @@ const CompanyDetails = () => {
   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
   const [showEditNOK, setShowEditNOK] = useState(true);
 
+  const {
+    users,
+    countries,
+    states,
+    lgas,
+    showEmailOtpModal,
+    otp,
+    otpError,
+    validateEmailOtp,
+  } = useSelector((state) => state.user_profile);
+
   const toggleDetail = () => {
     setShowEditDetail(!showEditDetail);
   };

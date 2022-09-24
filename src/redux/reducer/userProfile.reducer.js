@@ -1,5 +1,8 @@
 import * as types from '../constant/auth';
 import {
+  GET_BANKS,
+  GET_BANKS_ERROR,
+  GET_BANKS_SUCCESS,
   GET_COUNTRY,
   GET_COUNTRY_ERROR,
   GET_COUNTRY_SUCCESS,
@@ -12,6 +15,9 @@ import {
   SEND_OTP,
   SEND_OTP_ERROR,
   SEND_OTP_SUCCESS,
+  VALIDATE_OTP,
+  VALIDATE_OTP_ERROR,
+  VALIDATE_OTP_SUCCESS,
 } from '../constant/userActionTypes';
 
 const initialState = {
@@ -31,6 +37,10 @@ const initialState = {
   otp: null,
   otpError: null,
   showEmailOtpModal: false,
+  banks: null,
+  banksError: null,
+  validateEmailOtp: null,
+  validateOtpError: null,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -139,29 +149,29 @@ const userProfileReducer = (state = initialState, action) => {
         statesError: action.payload,
       };
 
-    case GET_LGA: 
+    case GET_LGA:
       return {
         ...state,
         loading: true,
         lgas: null,
         lgasError: null,
-      }
+      };
 
-    case GET_LGA_SUCCESS: 
+    case GET_LGA_SUCCESS:
       return {
         ...state,
         loading: false,
         lgas: action.payload,
         lgasError: null,
-      }
+      };
 
-    case GET_LGA_ERROR: 
+    case GET_LGA_ERROR:
       return {
         ...state,
         loading: false,
         lgas: null,
         lgasError: action.payload,
-      }
+      };
 
     case SEND_OTP:
       return {
@@ -169,7 +179,7 @@ const userProfileReducer = (state = initialState, action) => {
         loading: true,
         otp: null,
         otpError: null,
-      }
+      };
 
     case SEND_OTP_SUCCESS:
       return {
@@ -178,7 +188,7 @@ const userProfileReducer = (state = initialState, action) => {
         otp: action.payload,
         otpError: null,
         showEmailOtpModal: true,
-      }
+      };
 
     case SEND_OTP_ERROR:
       return {
@@ -187,6 +197,61 @@ const userProfileReducer = (state = initialState, action) => {
         otp: null,
         otpError: action.payload,
         showEmailOtpModal: false,
+      };
+
+    case GET_BANKS:
+      return {
+        ...state,
+        loading: true,
+        banks: null,
+        banksError: null,
+      };
+
+    case GET_BANKS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        banks: action.payload,
+        banksError: null,
+      };
+
+    case GET_BANKS_ERROR:
+      return {
+        ...state,
+        loading: false,
+        banks: null,
+        banksError: action.payload,
+      };
+
+    case VALIDATE_OTP:
+      return {
+        ...state,
+        loading: true,
+        validateEmailOtp: null,
+        validateOtpError: null,
+      };
+
+    case VALIDATE_OTP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        validateEmailOtp: action.payload,
+        validateOtpError: null,
+      };
+
+    case VALIDATE_OTP_ERROR:
+      return {
+        ...state,
+        loading: false,
+        validateEmailOtp: null,
+        validateOtpError: action.payload,
+      };
+
+    case types.CLEAR_MESSAGES:
+      return {
+        ...state,
+        validateEmailOtp: null,
+        validateOtpError: null,
       }
 
     default:

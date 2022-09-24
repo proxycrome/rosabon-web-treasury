@@ -10,6 +10,7 @@ import {
   getStates,
   getlgas,
   sendOtp,
+  getAuthUsers,
 } from '../../../redux/actions/personalInfo/userProfile.actions';
 import {
   updateContactDetails,
@@ -27,9 +28,18 @@ const PersonalInfo = () => {
   const [showEditCont, setShowEditCont] = useState(true);
   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
   const [showEditNOK, setShowEditNOK] = useState(true);
+  const tokenString = JSON.parse(localStorage.getItem('token'));
 
-  const { users, countries, states, lgas, showEmailOtpModal, otp, otpError } =
-    useSelector((state) => state.user_profile);
+  const {
+    users,
+    countries,
+    states,
+    lgas,
+    showEmailOtpModal,
+    otp,
+    otpError,
+    validateEmailOtp,
+  } = useSelector((state) => state.user_profile);
 
   const {
     phoneMsg,
@@ -60,7 +70,6 @@ const PersonalInfo = () => {
     setShowEditProf(!showEditProf);
   };
   const toggleCont = (e) => {
-    e?.preventDefault();
     setShowEditCont(!showEditCont);
   };
   const toggleEmploy = (e) => {
@@ -107,8 +116,12 @@ const PersonalInfo = () => {
 
     const selectState = () => {
       return states?.find(
-        (state) => state.name === users?.individualUser?.address?.state
+        (state) => state.name === users?.individualUser?.state
       ).id;
+    };
+
+    const selectLga = () => {
+      return lgas?.find((lga) => lga.name === users?.individualUser?.lga).id;
     };
 
     const { address, stateId, secondaryPhoneNumber, countryId, lgaId } =
@@ -118,13 +131,14 @@ const PersonalInfo = () => {
       address: address
         ? address
         : users?.individualUser?.address?.houseNoAddress,
-      stateId: stateId ? Number(stateId) : selectState(),
+      stateId: stateId ? Number(stateId) : Number(selectState()),
       secondaryPhoneNumber: secondaryPhoneNumber
         ? secondaryPhoneNumber
         : users.phone,
-      countryId: Number(countryId),
-      lgaId: Number(lgaId),
-      otp: token,
+      countryId: countryId
+        ? Number(countryId)
+        : users?.individualUser?.coutryOfResidence?.id,
+      lgaId: lgaId ? Number(lgaId) : Number(selectLga()),
     };
 
     console.log(contactData);
@@ -165,9 +179,17 @@ const PersonalInfo = () => {
         phone: phone ? phone : users?.individualUser?.nokDetail?.phone,
       },
     };
+
     console.log(PersonalData);
     dispatch(updatePersonalInfo(PersonalData));
+    dispatch(getAuthUsers(tokenString.token));
   };
+
+  useEffect(() => {
+    if (contactMsg || personalInfoMsg) {
+      dispatch(getAuthUsers(tokenString.token));
+    }
+  }, [contactMsg, personalInfoMsg]);
 
   // useEffect(() => {
   //   dispatch(successMessage(false));
@@ -185,7 +207,15 @@ const PersonalInfo = () => {
 
   const handleOTPModalClose = () => {
     dispatch({ type: types.CLOSE_MODAL });
+    dispatch({ type: types.CLEAR_MESSAGES });
   };
+
+  useEffect(() => {
+    if (validateEmailOtp) {
+      handleOTPModalClose();
+      toggleCont();
+    }
+  }, [validateEmailOtp]);
 
   useEffect(() => {
     dispatch(getCountries());
@@ -346,10 +376,16 @@ const PersonalInfo = () => {
                 <div className="d-flex align-items-center justify-content-between">
                   <h4 className="pt-5">Contact Details</h4>
                   {showEditCont ? (
-                    <button onClick={handleSendOtp}>Edit</button>
+                    <button type="button" onClick={handleSendOtp}>
+                      Edit
+                    </button>
                   ) : (
                     <>
-                      <button className="grey-button" onClick={toggleCont}>
+                      <button
+                        type="button"
+                        className="grey-button"
+                        onClick={toggleCont}
+                      >
                         Cancel
                       </button>
                     </>
@@ -370,6 +406,11 @@ const PersonalInfo = () => {
                   </ModalComponent>
                 </div>
               </div>
+              {contactMsg && (
+                <Alert color="success" className="text-center">
+                  Contact Details Updated Successfully
+                </Alert>
+              )}
               <div>
                 <div className="row">
                   <div className="col-lg-8 d-flex">
@@ -464,8 +505,7 @@ const PersonalInfo = () => {
                         states
                           ?.find(
                             (state) =>
-                              state.name ===
-                              users?.individualUser?.address?.state
+                              state.name === users?.individualUser?.state
                           )
                           .id.toString()
                       }

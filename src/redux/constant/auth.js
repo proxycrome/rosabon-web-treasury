@@ -21,6 +21,7 @@ export const VERIFY_BVN = "VERIFY_BVN";
 export const VERIFY_BVN_SUCCESS = "VERIFY_BVN_SUCCESS";
 export const VERIFY_BVN_ERROR = "VERIFY_BVN_ERROR";
 export const CLOSE_MODAL = "CLOSE_MODAL"
+export const CLEAR_MESSAGES = "CLEAR_MESSAGES"
 //
 
 

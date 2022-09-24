@@ -122,3 +122,38 @@ export const send_otp = async () => {
     return { errorObj };
   }
 };
+
+export const get_banks = async () => {
+  try {
+    const response = await axios.get(`${config.rosobon}bank-account/get-all-banks`, {
+      headers: authHeader(tokenObj.token),
+    });
+
+    const formData = await response.data;
+    return { formData };
+  } catch (error) {
+    const errorObj = await error.response.data;
+    return { errorObj };
+  }
+};
+
+export const validate_otp = async (otp) => {
+  try {
+    const response = await axios.put(
+      `${config.rosobon}auth/validate-otp/${otp}`,
+      null,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokenObj.token}`,
+        },
+      }
+    );
+
+    const formData = await response.data;
+    return { formData };
+  } catch (error) {
+    const errorObj = await error.response.data;
+    return { errorObj };
+  }
+};

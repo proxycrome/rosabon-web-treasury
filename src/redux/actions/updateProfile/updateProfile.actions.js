@@ -1,6 +1,5 @@
 import * as types from '../../constant/auth';
 import {
-  update_personal_details,
   update_company_details,
   verify_phone,
   update_contact_details,

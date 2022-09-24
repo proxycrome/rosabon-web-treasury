@@ -1,15 +1,24 @@
-import { config } from "../../config";
-import { authHeader } from "../../headers";
-import axios from "axios";
+import { config } from '../../config';
+import { authHeader } from '../../headers';
+import axios from 'axios';
 
-export const upload_personal_document = async (token, objData) => {
+const tokenObj = JSON.parse(localStorage.getItem('token'));
+
+export const upload_personal_document = async (dataObj) => {
   try {
-    const response = await axios.post(`${config.rosobon}`, objData, {
-      headers: authHeader(token),
-    });
+    const response = await axios.put(
+      `${config.rosobon}auth/individual-user/my-document`,
+      dataObj,
+      {
+        headers: authHeader(tokenObj.token),
+      }
+    );
     const formData = await response.data;
     return { formData };
-  } catch (error) {}
+  } catch (error) {
+    const errorObj = await error.response.data;
+    return { errorObj };
+  }
 };
 
 export const upload_company_document = async (token, objData) => {

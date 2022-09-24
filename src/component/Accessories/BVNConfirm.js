@@ -7,10 +7,14 @@ import OtpInput from 'react18-input-otp';
 import {
   sendOtp,
   updateUserCompanyKYC,
+  validateOtp,
 } from '../../redux/actions/personalInfo/userProfile.actions';
 import { Link, useNavigate, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch, connect } from 'react-redux';
-import { validatePhoneOtp, verifyPhone } from '../../redux/actions/updateProfile/updateProfile.actions';
+import {
+  validatePhoneOtp,
+  verifyPhone,
+} from '../../redux/actions/updateProfile/updateProfile.actions';
 // import { REMOVE_FOOTER } from "../../redux/constant/auth";
 
 export function BVNConfirm({ bank, show, handleClose, name, bvn, nameMatch }) {
@@ -328,50 +332,66 @@ export function OTPVerify({
   const [token, setToken] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const dispatch = useDispatch();
-  const { otp } = useSelector((state) => state.user_profile);
-  const { phoneMsg, validatePhone } = useSelector(state => state.updateProfile);
+  const { otp, validateEmailOtp } = useSelector((state) => state.user_profile);
+  const { phoneMsg, validatePhone } = useSelector(
+    (state) => state.updateProfile
+  );
 
   const handleChange = (otp) => setToken(otp);
 
-  const handleEmailOtpSubmit = (e) => {
+  const handleEmailOtpSubmit = async(e) => {
     e.preventDefault();
     if ((otpData && token === otpData) || (otp?.data && token === otp?.data)) {
       updateOtp(token);
-      toggleCont();
-      handleClose();
+      dispatch(validateOtp(token));
+      // toggleCont();
+      // handleClose();
     }
 
     if ((otpData && token !== otpData) || (otp?.data && token !== otp?.data)) {
-      setErrorMsg('Enter correct one time password');
+      setErrorMsg('Please enter a valid OTP');
     }
   };
 
-  const handlePhoneOtpSubmit = (e) => {
+  const handlePhoneOtpSubmit = async(e) => {
     e.preventDefault();
-    if ((otpData && token === otpData) || (phoneMsg?.data?.otp && token === phoneMsg?.data?.otp)) {
-      dispatch(validatePhoneOtp(token));
+    if (
+      (otpData && token === otpData) ||
+      (phoneMsg?.data?.otp && token === phoneMsg?.data?.otp)
+    ) {
+      await dispatch(validatePhoneOtp(token));
     }
 
-    if ((otpData && token === otpData) || (phoneMsg?.data?.otp && token === phoneMsg?.data?.otp)) {
-      setErrorMsg('Enter correct one time password');
+    if (
+      (otpData && token === otpData) ||
+      (phoneMsg?.data?.otp && token === phoneMsg?.data?.otp)
+    ) {
+      setErrorMsg('Please enter a valid OTP');
     }
-  }
+  };
 
   const handleResendEmailOtp = () => {
     dispatch(sendOtp());
   };
 
   const handleResendPhoneOtp = () => {
-    dispatch(verifyPhone(secondPhone))
-  }
+    dispatch(verifyPhone(secondPhone));
+  };
 
   console.log(validatePhone);
 
+  // useEffect(() => {
+  //   if(validateEmailOtp){
+  //       handleClose();
+  //       toggleCont();
+  //   }
+  // }, [validateEmailOtp])
+
   useEffect(() => {
-    if(validatePhone) {
+    if (validatePhone) {
       handleClose();
     }
-  }, [validatePhone])
+  }, [validatePhone]);
 
   return (
     <div>
@@ -396,7 +416,11 @@ export function OTPVerify({
                       numInputs={5}
                     />
                   </div>
-                  {errorMsg && <span className="text-center" style={{color: "#FF0000"}}>{errorMsg}</span>}
+                  {errorMsg && (
+                    <span className="text-center" style={{ color: '#FF0000' }}>
+                      {errorMsg}
+                    </span>
+                  )}
                   <p className="text-center">
                     Didn't get an OTP?{' '}
                     {emailOtp ? (
@@ -407,7 +431,12 @@ export function OTPVerify({
                         Resend
                       </strong>
                     ) : (
-                      <strong onClick={handleResendPhoneOtp} style={{ cursor: 'pointer' }}>Resend</strong>
+                      <strong
+                        onClick={handleResendPhoneOtp}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        Resend
+                      </strong>
                     )}
                   </p>
                   <OTPButton>

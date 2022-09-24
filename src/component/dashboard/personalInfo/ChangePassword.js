@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import * as types from '../../../redux/constant/auth';
+import { Toaster } from 'react-hot-toast';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Form,
   FormGroup,
@@ -9,20 +11,27 @@ import {
   FormFeedback,
   InputGroup,
   InputGroupText,
-} from "reactstrap";
-import styled from "styled-components";
-import { changePersonalPassword } from "../../../redux/actions/updateProfile/changePassword.action";
-import { successMessage } from "../../../redux/actions/auth/SignupAction";
+} from 'reactstrap';
+import styled from 'styled-components';
+import { changePersonalPassword } from '../../../redux/actions/updateProfile/changePassword.action';
+// import { successMessage } from '../../../redux/actions/auth/SignupAction';
+import { sendOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
+import ModalComponent from '../../ModalComponent';
+import { OTPVerify } from '../../Accessories/BVNConfirm';
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [token, setToken] = useState('');
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [passwordShown3, setPasswordShown3] = useState(false);
   // const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(true);
-  const toggleEdit = () => {
+  const toggleEdit = (e) => {
+    e.preventDefault();
     setShowEdit(!showEdit);
   };
 
@@ -38,10 +47,26 @@ const ChangePassword = () => {
     setPasswordShown3(!passwordShown3);
   };
 
+  const { users, showEmailOtpModal, otp, otpError, validateEmailOtp } = useSelector(
+    (state) => state.user_profile
+  );
+
+  const { passChangeMsg, passChangeError } = useSelector(
+    (state) => state.updateProfile
+  );
+
+  console.log(passChangeMsg);
+  console.log(passChangeError);
+
+  const createOtp = (otp) => {
+    setToken(otp);
+    handleSubmit();
+  };
+
   const data = {
-    acc_name: "",
-    acc_no: "",
-    bankType: "",
+    newPassword: '',
+    oldPassword: '',
+    cNewPassword: '',
   };
   const [formData, setformData] = useState(data);
 
@@ -53,146 +78,214 @@ const ChangePassword = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  function validatePassword(values) {
+    let errors = {};
+    var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+
+    if (!values.oldPassword) {
+      errors.oldPassword = 'Current Password is required';
+    }
+    if (!values.newPassword) {
+      errors.newPassword = 'New Password is required';
+    } else if (!re.test(values.newPassword)) {
+      errors.newPassword =
+        'Your password must contain at least one uppercase, one lowercase, a special character, and must be at least 8 characters';
+    }
+    if (values.cNewPassword !== values.newPassword) {
+      errors.cNewPassword = 'Password does not match';
+    }
+
+    return errors;
+  }
+
+  const handleSendOtp = (e) => {
     e.preventDefault();
-    const { acc_name, acc_no, bankType } = formData;
-    let data = { acc_name, acc_no, bankType };
-    console.log(data);
-    dispatch(changePersonalPassword(data));
+    dispatch(sendOtp());
+  };
+
+  const handleSubmit = async (e) => {
+    setErrors(validatePassword(formData));
+
+    setIsSubmitted(true);
   };
 
   useEffect(() => {
-    dispatch(successMessage(false));
-  }, []);
+    if (Object.keys(errors).length === 0 && isSubmitted) {
+      const { newPassword, oldPassword } = formData;
+      const data = {
+        oldPassword,
+        newPassword,
+        otp: token,
+      };
+      console.log(data);
+      dispatch(changePersonalPassword(data));
+    }
+  }, [errors]);
 
-  // useEffect(() => {
-  //   const tokenString = localStorage.getItem("user-token");
-  //   if (tokenString) {
-  //     dispatch(getAuthUser(tokenString));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  const handleOTPModalClose = () => {
+    dispatch({ type: types.CLOSE_MODAL });
+    dispatch({ type: types.CLEAR_MESSAGES });
+  };
+
+  useEffect(() => {
+    if (validateEmailOtp) {
+      handleOTPModalClose();
+    }
+  }, [validateEmailOtp]);
 
   return (
     <div>
-      <WrapperBody>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="d-flex justify-content-between mt-2">
-              <h4>Change Password</h4>
-              <div>
-                {showEdit ? (
-                  <button
-                    className={showEdit ? " btn_bg_blue" : ""}
-                    onClick={toggleEdit}>
-                    Edit
-                  </button>
-                ) : (
-                  <button className="grey-button" onClick={toggleEdit}>
-                    Cancel
-                  </button>
-                )}
+      <Toaster />
+      <Form autoComplete="off" onSubmit={handleSendOtp}>
+        <WrapperBody>
+          <div className="container-fluid">
+            <div className="row">
+              <div className="d-flex justify-content-between mt-2">
+                <h4>Change Password</h4>
+                <div>
+                  {showEdit ? (
+                    <button
+                      type="button"
+                      className="btn_bg_blue"
+                      onClick={toggleEdit}
+                    >
+                      Edit
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="grey-button"
+                      onClick={toggleEdit}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="my-5 col-md-6 ">
+                <FormGroup className="w-100">
+                  <Label htmlFor="oldPassword" className="">
+                    Current Password
+                  </Label>
+                  <InputGroup>
+                    <Input
+                      type={passwordShown1 ? 'text' : 'password'}
+                      bsSize="lg"
+                      id="oldPassword"
+                      name="oldPassword"
+                      value={formData.oldPassword}
+                      onChange={handleChange}
+                      disabled={showEdit}
+                    />
+                    <InputGroupText>
+                      <i
+                        onClick={togglePassword1}
+                        style={{ cursor: 'pointer' }}
+                        className={
+                          passwordShown1 ? 'far fa-eye' : 'far fa-eye-slash'
+                        }
+                      ></i>
+                    </InputGroupText>
+                  </InputGroup>
+                  {errors.oldPassword && (
+                    <span className="text-danger">{errors.oldPassword}</span>
+                  )}
+                </FormGroup>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-6 my-4">
+                <FormGroup className="w-100">
+                  <Label htmlFor="newPassword" className="">
+                    New Password
+                  </Label>
+                  <InputGroup>
+                    <Input
+                      type={passwordShown2 ? 'text' : 'password'}
+                      bsSize="lg"
+                      id="newPassword"
+                      onChange={handleChange}
+                      value={formData.newPassword}
+                      name="newPassword"
+                      disabled={showEdit}
+                    />
+                    <InputGroupText>
+                      <i
+                        onClick={togglePassword2}
+                        style={{ cursor: 'pointer' }}
+                        className={
+                          passwordShown2 ? 'far fa-eye' : 'far fa-eye-slash'
+                        }
+                      ></i>
+                    </InputGroupText>
+                  </InputGroup>
+                  {errors.newPassword && (
+                    <span className="text-danger">{errors.newPassword}</span>
+                  )}
+                </FormGroup>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-6 ">
+                <FormGroup className="w-100">
+                  <Label htmlFor="cNewPassword" className="">
+                    Confirm Password
+                  </Label>
+                  <InputGroup>
+                    <Input
+                      type={passwordShown3 ? 'text' : 'password'}
+                      bsSize="lg"
+                      id="cNewPassword"
+                      name="cNewPassword"
+                      value={formData.cNewPassword}
+                      onChange={handleChange}
+                      disabled={showEdit}
+                    />
+                    <InputGroupText>
+                      <i
+                        onClick={togglePassword3}
+                        style={{ cursor: 'pointer' }}
+                        className={
+                          passwordShown3 ? 'far fa-eye' : 'far fa-eye-slash'
+                        }
+                      ></i>
+                    </InputGroupText>
+                  </InputGroup>
+                  {errors.cNewPassword && (
+                    <span className="text-danger">{errors.cNewPassword}</span>
+                  )}
+                </FormGroup>
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="my-5 col-md-6 ">
-              <FormGroup className="w-100">
-                <Label
-                  htmlFor="currentPassword"
-                  className="">
-                  Current Password
-                </Label>
-                <InputGroup>
-                  <Input
-                    type={passwordShown1 ? "text" : "password"}
-                    bsSize="lg"
-                    id="currentPassword"
-                    name="password"
-                    disabled={showEdit}
-                  />
-                  <InputGroupText>
-                    <i
-                      onClick={togglePassword1}
-                      style={{ cursor: "pointer" }}
-                      className={
-                        passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
-                      }></i>
-                  </InputGroupText>
-                </InputGroup>
-              </FormGroup>
+        </WrapperBody>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-end footer-content">
+              <div>
+                <button type="submit" className="blue-btn">
+                  Save
+                </button>
+              </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-md-6 my-4">
-            <FormGroup className="w-100">
-                <Label
-                  htmlFor="newPassword"
-                  className="">
-                  New Password
-                </Label>
-                <InputGroup>
-                  <Input
-                    type={passwordShown2 ? "text" : "password"}
-                    bsSize="lg"
-                    id="newPassword"
-                    name="password"
-                    disabled={showEdit}
-                  />
-                  <InputGroupText>
-                    <i
-                      onClick={togglePassword2}
-                      style={{ cursor: "pointer" }}
-                      className={
-                        passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
-                      }></i>
-                  </InputGroupText>
-                </InputGroup>
-              </FormGroup>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-            <FormGroup className="w-100">
-                <Label
-                  htmlFor="confirmPassword"
-                  className="">
-                  Confirm Password
-                </Label>
-                <InputGroup>
-                  <Input
-                    type={passwordShown3 ? "text" : "password"}
-                    bsSize="lg"
-                    id="confirmPassword"
-                    name="password"
-                    disabled={showEdit}
-                  />
-                  <InputGroupText>
-                    <i
-                      onClick={togglePassword3}
-                      style={{ cursor: "pointer" }}
-                      className={
-                        passwordShown3 ? "far fa-eye" : "far fa-eye-slash"
-                      }></i>
-                  </InputGroupText>
-                </InputGroup>
-              </FormGroup>
-            </div>
-          </div>
-        </div>
-      </WrapperBody>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-end footer-content">
-            <div>
-              <button className="blue-btn">
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </Form>
+      <ModalComponent
+        show={showEmailOtpModal}
+        size={'md'}
+        handleClose={handleOTPModalClose}
+      >
+        <OTPVerify
+          show={showEmailOtpModal}
+          handleClose={handleOTPModalClose}
+          emailOtp={true}
+          updateOtp={(otp) => createOtp(otp)}
+          otpData={otp?.data}
+        />
+      </ModalComponent>
     </div>
   );
 };

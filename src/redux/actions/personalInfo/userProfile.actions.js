@@ -9,8 +9,13 @@ import {
   get_states,
   get_lgas,
   send_otp,
+  get_banks,
+  validate_otp,
 } from '../../api/userProfile.api';
 import {
+  GET_BANKS,
+  GET_BANKS_ERROR,
+  GET_BANKS_SUCCESS,
   GET_COUNTRY,
   GET_COUNTRY_ERROR,
   GET_COUNTRY_SUCCESS,
@@ -23,6 +28,9 @@ import {
   SEND_OTP,
   SEND_OTP_ERROR,
   SEND_OTP_SUCCESS,
+  VALIDATE_OTP,
+  VALIDATE_OTP_ERROR,
+  VALIDATE_OTP_SUCCESS,
 } from '../../constant/userActionTypes';
 
 export const getAuthUsers = (token) => async (dispatch) => {
@@ -130,5 +138,31 @@ export const sendOtp = () => async (dispatch) => {
 
   if (errorObj) {
     dispatch({ type: SEND_OTP_ERROR, payload: errorObj });
+  }
+};
+
+export const getBanks = () => async (dispatch) => {
+  dispatch({ type: GET_BANKS });
+  const { formData, errorObj } = await get_banks();
+
+  if (formData) {
+    dispatch({ type: GET_BANKS_SUCCESS, payload: formData });
+  }
+
+  if (errorObj) {
+    dispatch({ type: GET_BANKS_ERROR, payload: errorObj });
+  }
+};
+
+export const validateOtp = (otp) => async (dispatch) => {
+  dispatch({ type: VALIDATE_OTP });
+  const { formData, errorObj } = await validate_otp(otp);
+
+  if (formData) {
+    dispatch({ type: VALIDATE_OTP_SUCCESS, payload: formData });
+  }
+
+  if (errorObj) {
+    dispatch({ type: VALIDATE_OTP_ERROR, payload: errorObj });
   }
 };
