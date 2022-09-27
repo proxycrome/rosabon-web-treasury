@@ -11,11 +11,17 @@ import {
   send_otp,
   get_banks,
   validate_otp,
+  send_company_otp,
+  get_company_docs,
 } from '../../api/userProfile.api';
 import {
+  // CLEAR_OTP,
   GET_BANKS,
   GET_BANKS_ERROR,
   GET_BANKS_SUCCESS,
+  GET_COMPANY_DOCS,
+  GET_COMPANY_DOCS_ERROR,
+  GET_COMPANY_DOCS_SUCCESS,
   GET_COUNTRY,
   GET_COUNTRY_ERROR,
   GET_COUNTRY_SUCCESS,
@@ -25,6 +31,9 @@ import {
   GET_STATE,
   GET_STATE_ERROR,
   GET_STATE_SUCCESS,
+  SEND_COMPANY_OTP,
+  SEND_COMPANY_OTP_ERROR,
+  SEND_COMPANY_OTP_SUCCESS,
   SEND_OTP,
   SEND_OTP_ERROR,
   SEND_OTP_SUCCESS,
@@ -34,12 +43,18 @@ import {
 } from '../../constant/userActionTypes';
 
 export const getAuthUsers = (token) => async (dispatch) => {
-  try {
-    const { formData } = await get_users(token);
-    console.log(formData);
-    dispatch({ type: types.GET_AUTH_USERS, payload: formData });
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
-  } catch (error) {}
+  
+    const { formData, errorObj } = await get_users(token);
+
+    if (formData) {
+      dispatch({ type: types.GET_AUTH_USERS, payload: formData });
+      dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
+    } 
+
+    if (errorObj) {
+      console.log(errorObj.message)
+    }
+    
 };
 
 export const getAuthUser = (token, email) => async (dispatch) => {
@@ -160,9 +175,38 @@ export const validateOtp = (otp) => async (dispatch) => {
 
   if (formData) {
     dispatch({ type: VALIDATE_OTP_SUCCESS, payload: formData });
+    // dispatch({ type: CLEAR_OTP })
   }
 
   if (errorObj) {
     dispatch({ type: VALIDATE_OTP_ERROR, payload: errorObj });
+  }
+};
+
+export const sendCompanyOtp = () => async (dispatch) => {
+  dispatch({ type: SEND_COMPANY_OTP });
+
+  const { formData, errorObj } = await send_company_otp();
+
+  console.log(formData);
+  if (formData) {
+    dispatch({ type: SEND_COMPANY_OTP_SUCCESS, payload: formData });
+  }
+
+  if (errorObj) {
+    dispatch({ type: SEND_COMPANY_OTP_ERROR, payload: errorObj });
+  }
+};
+
+export const getCompanyDocs = () => async (dispatch) => {
+  dispatch({ type: GET_COMPANY_DOCS });
+  const { formData, errorObj } = await get_company_docs();
+
+  if (formData) {
+    dispatch({ type: GET_COMPANY_DOCS_SUCCESS, payload: formData });
+  }
+
+  if (errorObj) {
+    dispatch({ type: GET_COMPANY_DOCS_ERROR, payload: errorObj });
   }
 };

@@ -1,47 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import storage from 'redux-persist/lib/storage'
-import { useSelector, useDispatch, connect } from 'react-redux'
-import { NavLink, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import storage from 'redux-persist/lib/storage';
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap'
+} from 'reactstrap';
 import {
   updateUserCompanyKYC,
   getAuthUsers,
-} from '../../redux/actions/personalInfo/userProfile.actions'
-import { logOut } from '../../redux/actions/auth/SignupAction'
-import { CLEAR_USERS } from '../../redux/constant/auth'
+} from '../../redux/actions/personalInfo/userProfile.actions';
+import { logOut } from '../../redux/actions/auth/SignupAction';
+import { CLEAR_USERS } from '../../redux/constant/auth';
 
 export function ProfileNavBar({ children }) {
-  const [menu, setMenu] = useState(false)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const [menu, setMenu] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const profile = useSelector((state) => state.user_profile)
-  const { users } = profile
-  const auth = useSelector((state) => state.auth)
-  const { login, isLoggedIn } = auth
+  const profile = useSelector((state) => state.user_profile);
+  const { users } = profile;
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
 
   const toggle = () => {
-    setMenu(!menu)
-  }
+    setMenu(!menu);
+  };
 
   const logout = (e) => {
-    dispatch(logOut(navigate))
-  }
+    dispatch(logOut(navigate));
+  };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem('token'))
+    const tokenString = JSON.parse(localStorage.getItem('token'));
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString.token))
+      dispatch(getAuthUsers(tokenString.token));
     } else {
-      navigate('/login')
+      navigate('/login');
     }
-  }, [])
+  }, []);
 
   // const user =
   //   users && users.role == 'COMPANY'
@@ -52,12 +52,12 @@ export function ProfileNavBar({ children }) {
 
   useEffect(() => {
     if (users && !users.kyc && users.role === 'INDIVIDUAL_USER') {
-      navigate('/kyc/person')
+      navigate('/kyc/person');
     }
     if (users && !users.kyc && users.role === 'COMPANY') {
-      navigate('/kyc/company')
+      navigate('/kyc/company');
     }
-  }, [users])
+  }, [users]);
 
   return (
     <WrappeNavBar>
@@ -78,7 +78,6 @@ export function ProfileNavBar({ children }) {
               >
                 <DropdownToggle
                   tag="button"
-                  outline
                   className="btn header-item waves-effect border-0"
                   id="page-header-user-dropdown"
                 >
@@ -99,23 +98,12 @@ export function ProfileNavBar({ children }) {
                 </DropdownToggle>
                 <DropdownMenu end>
                   <DropdownItem>
-                    {users && users.role ==='COMPANY' ? (
-                      <>
-                        <NavLink className="nav_link" to="/profile">
-                          <i className="ri-user-line align-middle mr-1"></i>{' '}
-                          Profile
-                        </NavLink>
-                      </>
-                    ) : users && users.role === 'INDIVIDUAL_USER' ? (
-                      <>
-                        <NavLink className="nav_link" to="/profile">
-                          <i className="ri-user-line align-middle mr-1"></i>{' '}
-                          Profile
-                        </NavLink>
-                      </>
-                    ) : (
-                      <></>
-                    )}
+                    <NavLink className="nav_link" to="/profile">
+                      <div>
+                        <i className="ri-user-line align-middle mr-1"></i>{' '}
+                        Profile
+                      </div>
+                    </NavLink>
                   </DropdownItem>
                   <DropdownItem className="d-block">Settings</DropdownItem>
                   <DropdownItem divider />
@@ -134,7 +122,7 @@ export function ProfileNavBar({ children }) {
         </div>
       </div>
     </WrappeNavBar>
-  )
+  );
 }
 
 const WrappeNavBar = styled.div`
@@ -176,4 +164,4 @@ const WrappeNavBar = styled.div`
   .fa-bell {
     font-size: 16px;
   }
-`
+`;

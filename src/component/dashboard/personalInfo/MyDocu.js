@@ -222,11 +222,11 @@ const MyDocu = () => {
             </div>
           </div>
           <div className="row pt-5">
-            <div className="col-md-6 ">
+            <div className="col-md-12 col-lg-6">
               <label>ID Type</label>
               <select
-                className="form-select form-select-lg mb-3"
-                aria-label=".form-select-lg"
+                className="form-select form-select-md mb-3"
+                aria-label=".form-select-md"
                 name="idType"
                 value={formData.idType}
                 onChange={handleChange}
@@ -239,12 +239,12 @@ const MyDocu = () => {
                 <option value="VOTERS_CARD">Voter's Card </option>
               </select>
             </div>
-            <div className="col-md-6 ">
+            <div className="col-md-12 col-lg-6">
               <label>ID Number</label>
               <div className="input-group mb-4">
                 <input
                   className="form-control"
-                  placeholder="123-000-3456"
+                  placeholder="Enter ID Number"
                   type="text"
                   name="idNumber"
                   value={formData.idNumber}
@@ -266,8 +266,8 @@ const MyDocu = () => {
                         alt="FileDoc"
                       />
                       <div>
-                        <h5 className="">Upload ID (front)</h5>
-                        <h5 className="">jpg, pdf. 2 MB</h5>
+                        <h5 className="">Upload ID Card</h5>
+                        <h5 className="">jpg, pdf, 2MB</h5>
                       </div>
                     </div>
                     <div className=" style-attachment">
@@ -299,7 +299,7 @@ const MyDocu = () => {
                       />
                       <div className="progress-bar-style">
                         <h5 className="position-relative">
-                          Upload ID (front){' '}
+                          ID Card {' '}
                           <span
                             style={{ cursor: 'pointer' }}
                             onClick={() =>
@@ -446,7 +446,7 @@ const MyDocu = () => {
                       />
                       <div>
                         <h5 className="">Upload Utility Bill</h5>
-                        <h5 className="">jpg, pdf. 2 MB</h5>
+                        <h5 className="">jpg, pdf, 2 MB</h5>
                       </div>
                     </div>
                     <div className=" style-attachment">
@@ -480,7 +480,7 @@ const MyDocu = () => {
                       />
                       <div className="progress-bar-style">
                         <h5 className="position-relative">
-                          Upload Utility Bill){' '}
+                          Utility Bill{' '}
                           <span
                             style={{ cursor: 'pointer' }}
                             onClick={() =>
@@ -561,6 +561,7 @@ const WrapperBody = styled.div`
       display: block;
     }
   }
+
   @media (max-width: 900px) {
     padding: 0 2rem 7rem 1rem;
     .style-attachment {
@@ -585,7 +586,6 @@ const WrapperBody = styled.div`
   }
   .user-image {
     bottom: -80px;
-    cursor: pointer;
   }
   .fileText {
     padding-left: 130px;
@@ -597,10 +597,10 @@ const WrapperBody = styled.div`
     padding-top: 20px;
   }
   .camera-font-awe {
-    bottom: 5px;
-    right: 15px;
-    font-size: 30px;
-    color: #f2f2f2;
+    bottom: -95px;
+    left: 47px;
+    font-size: 20px;
+    color: #252525;
     width: 44px;
     height: 44px;
     border-radius: 5px;

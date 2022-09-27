@@ -164,7 +164,7 @@ const ChangePassword = () => {
               </div>
             </div>
             <div className="row">
-              <div className="my-5 col-md-6 ">
+              <div className="my-3 col-md-6 ">
                 <FormGroup className="w-100">
                   <Label htmlFor="oldPassword" className="">
                     Current Password
@@ -196,7 +196,7 @@ const ChangePassword = () => {
               </div>
             </div>
             <div className="row">
-              <div className="col-md-6 my-4">
+              <div className="col-md-6 mt-2">
                 <FormGroup className="w-100">
                   <Label htmlFor="newPassword" className="">
                     New Password

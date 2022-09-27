@@ -1279,7 +1279,7 @@ export const HistoryTable = () => {
           <div>{data?.id}</div>
         </Link>
       ),
-      date: `${moment(data?.createdAt).format("MM-DD-YYYY")}`,
+      date: `${data?.createdAt?.split(" ")[0]}`,
       description: `${data?.transactionDescription}`,
       type: `${data?.transactionType}`,
       amount: `${data?.transactionType === "CREDIT" ? "+ " + data?.amount : "- " + data?.amount}`,

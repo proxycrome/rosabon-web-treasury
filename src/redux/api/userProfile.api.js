@@ -14,7 +14,8 @@ export const get_users = async (token) => {
     const formData = await response.data;
     return { formData };
   } catch (error) {
-    console.log(error);
+    const errorObj = await error?.response?.data;
+    return { errorObj }
   }
 };
 
@@ -39,10 +40,11 @@ export const update_user_company_kyc = async (token, objData) => {
       },
     });
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    console.log(error.response);
+    const errorObj = await error?.response?.data;
+    return { errorObj };
   }
 };
 
@@ -59,10 +61,10 @@ export const verify_bvn = async (objData) => {
       }
     );
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    const errorObj = await error.response.data;
+    const errorObj = await error?.response?.data;
     return { errorObj };
   }
 };
@@ -73,10 +75,10 @@ export const get_countries = async () => {
       headers: authHeader(tokenObj.token),
     });
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    const errorObj = await error.response.data;
+    const errorObj = await error?.response?.data;
     return { errorObj };
   }
 };
@@ -87,10 +89,10 @@ export const get_states = async (countryId) => {
       headers: authHeader(tokenObj.token),
     });
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    const errorObj = await error.response.data;
+    const errorObj = await error?.response?.data;
     return { errorObj };
   }
 };
@@ -101,38 +103,61 @@ export const get_lgas = async (stateId) => {
       headers: authHeader(tokenObj.token),
     });
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    const errorObj = await error.response.data;
+    const errorObj = await error?.response?.data;
     return { errorObj };
   }
 };
 
 export const send_otp = async () => {
   try {
-    const response = await axios.get(`${config.rosobon}auth/individual-user/send-otp`, {
-      headers: authHeader(tokenObj.token),
-    });
+    const response = await axios.get(
+      `${config.rosobon}auth/individual-user/send-otp`,
+      {
+        headers: authHeader(tokenObj.token),
+      }
+    );
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    const errorObj = await error.response.data;
+    const errorObj = await error?.response?.data;
+    return { errorObj };
+  }
+};
+
+export const send_company_otp = async () => {
+  try {
+    const response = await axios.get(
+      `${config.rosobon}auth/company/company-document/send-otp`,
+      {
+        headers: authHeader(tokenObj.token),
+      }
+    );
+
+    const formData = await response?.data;
+    return { formData };
+  } catch (error) {
+    const errorObj = await error?.response?.data;
     return { errorObj };
   }
 };
 
 export const get_banks = async () => {
   try {
-    const response = await axios.get(`${config.rosobon}bank-account/get-all-banks`, {
-      headers: authHeader(tokenObj.token),
-    });
+    const response = await axios.get(
+      `${config.rosobon}bank-account/get-all-banks`,
+      {
+        headers: authHeader(tokenObj.token),
+      }
+    );
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    const errorObj = await error.response.data;
+    const errorObj = await error?.response?.data;
     return { errorObj };
   }
 };
@@ -150,10 +175,25 @@ export const validate_otp = async (otp) => {
       }
     );
 
-    const formData = await response.data;
+    const formData = await response?.data;
     return { formData };
   } catch (error) {
-    const errorObj = await error.response.data;
+    const errorObj = await error?.response?.data;
+    return { errorObj };
+  }
+};
+
+export const get_company_docs = async () => {
+  try {
+    const response = await axios.get(`${config.rosobon}auth/company/company-document`, {
+      headers: authHeader(tokenObj.token),
+    });
+
+    const formData = await response?.data;
+    return { formData };
+
+  } catch (error) {
+    const errorObj = await error?.response?.data;
     return { errorObj };
   }
 };

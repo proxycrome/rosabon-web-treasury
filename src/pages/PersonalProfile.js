@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import styled from "styled-components";
 import MyDocu from "../component/dashboard/personalInfo/MyDocu";
 import PersonalInfo from "../component/dashboard/personalInfo/PersonalInfo";
@@ -15,7 +15,6 @@ const PersonalProfile = () => {
   const [tabs, setTabs] = useState("profile");
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
-
 
 
   // useEffect(() => {
@@ -40,7 +39,7 @@ const PersonalProfile = () => {
           </div>
           <div className="row pt-5">
             <div className="col-md-3 shadow-sm style-log">
-              <ProfileTabs personal="personal" handleChange={(e) => setTabs(e)} />
+              <ProfileTabs personal="personal" handleChange={(tabName) => setTabs(tabName)} />
             </div>
             {/* <div className="horiz-line col-md-1"></div> */}
             <div className="col-md-9">

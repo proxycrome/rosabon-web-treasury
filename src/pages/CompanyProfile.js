@@ -36,7 +36,7 @@ const CompanyProfile = () => {
         </div>
         <div className="row pt-5">
           <div className="col-md-3 shadow-sm style-log">
-            <ProfileTabs handleChange={(e) => setTabs(e)} />
+            <ProfileTabs handleChange={(tabName) => setTabs(tabName)} />
           </div>
           {/* <div className="horiz-line col-md-1"></div> */}
           <div className="col-md-9">

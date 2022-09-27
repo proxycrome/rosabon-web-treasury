@@ -1,4 +1,5 @@
-import * as types from '../../constant/auth';
+import toast from 'react-hot-toast';
+
 import {
   update_company_details,
   verify_phone,
@@ -6,6 +7,7 @@ import {
   validate_phone_otp,
   update_personal_info,
 } from '../../api/updateProfile/updateProfile.api';
+
 import {
   PUT_CONTACT_DETAILS,
   PUT_CONTACT_DETAILS_ERROR,
@@ -13,6 +15,9 @@ import {
   PUT_PERSONAL_INFO,
   PUT_PERSONAL_INFO_ERROR,
   PUT_PERSONAL_INFO_SUCCESS,
+  UPDATE_COMPANY_INFO,
+  UPDATE_COMPANY_INFO_ERROR,
+  UPDATE_COMPANY_INFO_SUCCESS,
   VALIDATE_PHONE_OTP,
   VALIDATE_PHONE_OTP_ERROR,
   VALIDATE_PHONE_OTP_SUCCESS,
@@ -21,11 +26,18 @@ import {
   VERIFY_PHONE_SUCCESS,
 } from '../../constant/updateProfileActionTypes';
 
-export const updateCompanyDetails = (token) => async (dispatch) => {
-  try {
-    await update_company_details(token);
-    dispatch({ type: types.AUTHORIZE_SUCCESS, payload: true });
-  } catch (error) {}
+export const updateCompanyDetails = (objData) => async (dispatch) => {
+  dispatch({ type: UPDATE_COMPANY_INFO });
+  const { formData, errorObj } = await update_company_details(objData);
+  if (formData) {
+    dispatch({ type: UPDATE_COMPANY_INFO_SUCCESS, payload: formData });
+    toast.success("Company Details Updated Successfully");
+  }
+
+  if (errorObj) {
+    dispatch({ type: UPDATE_COMPANY_INFO_ERROR, payload: errorObj });
+    toast.error(errorObj.message);
+  }
 };
 
 export const updateContactDetails = (dataObj) => async (dispatch) => {
@@ -34,6 +46,7 @@ export const updateContactDetails = (dataObj) => async (dispatch) => {
 
   if (formData) {
     dispatch({ type: PUT_CONTACT_DETAILS_SUCCESS, payload: true });
+    
   }
 
   if (errorObj) {

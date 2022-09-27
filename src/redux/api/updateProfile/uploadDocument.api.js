@@ -10,7 +10,7 @@ export const upload_personal_document = async (dataObj) => {
       `${config.rosobon}auth/individual-user/my-document`,
       dataObj,
       {
-        headers: authHeader(tokenObj.token),
+        headers: authHeader(tokenObj?.token),
       }
     );
     const formData = await response.data;
@@ -21,12 +21,19 @@ export const upload_personal_document = async (dataObj) => {
   }
 };
 
-export const upload_company_document = async (token, objData) => {
+export const upload_company_document = async (objData) => {
   try {
-    const response = await axios.post(`${config.rosobon}`, objData, {
-      headers: authHeader(token),
-    });
+    const response = await axios.put(
+      `${config.rosobon}auth/company/company-document`,
+      objData,
+      {
+        headers: authHeader(tokenObj?.token),
+      }
+    );
     const formData = await response.data;
     return { formData };
-  } catch (error) {}
+  } catch (error) {
+    const errorObj = await error?.response?.data;
+    return { errorObj };
+  }
 };

@@ -19,6 +19,7 @@ import {
 } from '../../../redux/actions/updateProfile/updateProfile.actions';
 import ModalComponent from '../../ModalComponent';
 import { OTPVerify } from '../../Accessories/BVNConfirm';
+import { CLEAR_OTP } from '../../../redux/constant/userActionTypes';
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
@@ -32,12 +33,6 @@ const PersonalInfo = () => {
 
   const {
     users,
-    countries,
-    states,
-    lgas,
-    showEmailOtpModal,
-    otp,
-    otpError,
     validateEmailOtp,
   } = useSelector((state) => state.user_profile);
 
@@ -50,6 +45,12 @@ const PersonalInfo = () => {
     personalInfoMsg,
     personalInfoMsgError,
     infoSuccess,
+    countries,
+    states,
+    lgas,
+    showEmailOtpModal,
+    otp,
+    otpError,
   } = useSelector((state) => state.updateProfile);
 
   // console.log('otp.....', otp);
@@ -208,6 +209,7 @@ const PersonalInfo = () => {
   const handleOTPModalClose = () => {
     dispatch({ type: types.CLOSE_MODAL });
     dispatch({ type: types.CLEAR_MESSAGES });
+    dispatch({ type: CLEAR_OTP });
   };
 
   useEffect(() => {
@@ -218,8 +220,8 @@ const PersonalInfo = () => {
   }, [validateEmailOtp]);
 
   useEffect(() => {
-    dispatch(getCountries());
-    dispatch(getStates(formData.countryId));
+      dispatch(getCountries());
+      dispatch(getStates(formData.countryId));
   }, [formData.countryId]);
 
   const sId = states?.find(
@@ -228,7 +230,7 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     dispatch(getlgas(formData.stateId || sId));
-  }, [formData.stateId]);
+  }, [formData.stateId, sId]);
 
   return (
     <div>
@@ -297,8 +299,8 @@ const PersonalInfo = () => {
                   <div className="input-group mb-4">
                     <input
                       type="text"
-                      className="form-control"
-                      value={users?.individualUser?.gender}
+                      className="form-control text-capitalize"
+                      value={users?.individualUser?.gender?.toLowerCase()}
                       disabled={showEditProf}
                     />
                   </div>
@@ -364,7 +366,7 @@ const PersonalInfo = () => {
                       className="form-control"
                       placeholder="Customer ID Number"
                       type="text"
-                      // value={users?.virtualAccountNo}
+                      value={users?.id}
                       disabled={showEditProf}
                     />
                   </div>
@@ -575,7 +577,7 @@ const PersonalInfo = () => {
                       <input
                         className="form-control"
                         placeholder={
-                          users?.individualUser?.address?.houseNoAddress
+                          users?.individualUser?.address?.houseNoAddress || "Contact Address"
                         }
                         type="text"
                         name="address"

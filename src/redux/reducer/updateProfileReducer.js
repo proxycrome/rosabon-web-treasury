@@ -1,267 +1,512 @@
-import { CLOSE_MODAL } from '../constant/auth';
+import * as types from "../constant/auth";
+import { CLOSE_MODAL } from "../constant/auth";
 import {
-  CHANGE_PASSWORD,
-  CHANGE_PASSWORD_ERROR,
-  CHANGE_PASSWORD_SUCCESS,
-  CLEAR_MESSAGES,
-  PUT_CONTACT_DETAILS,
-  PUT_CONTACT_DETAILS_ERROR,
-  PUT_CONTACT_DETAILS_SUCCESS,
-  PUT_PERSONAL_DOCUMENTS,
-  PUT_PERSONAL_DOCUMENTS_ERROR,
-  PUT_PERSONAL_DOCUMENTS_SUCCESS,
-  PUT_PERSONAL_INFO,
-  PUT_PERSONAL_INFO_ERROR,
-  PUT_PERSONAL_INFO_SUCCESS,
-  VALIDATE_PHONE_OTP,
-  VALIDATE_PHONE_OTP_ERROR,
-  VALIDATE_PHONE_OTP_SUCCESS,
-  VERIFY_ACCOUNT_NO,
-  VERIFY_ACCOUNT_NO_ERROR,
-  VERIFY_ACCOUNT_NO_SUCCESS,
-  VERIFY_PHONE,
-  VERIFY_PHONE_ERROR,
-  VERIFY_PHONE_SUCCESS,
-} from '../constant/updateProfileActionTypes';
+	CHANGE_PASSWORD,
+	CHANGE_PASSWORD_ERROR,
+	CHANGE_PASSWORD_SUCCESS,
+	CLEAR_MESSAGES,
+	PUT_CONTACT_DETAILS,
+	PUT_CONTACT_DETAILS_ERROR,
+	PUT_CONTACT_DETAILS_SUCCESS,
+	PUT_PERSONAL_DOCUMENTS,
+	PUT_PERSONAL_DOCUMENTS_ERROR,
+	PUT_PERSONAL_DOCUMENTS_SUCCESS,
+	PUT_PERSONAL_INFO,
+	PUT_PERSONAL_INFO_ERROR,
+	PUT_PERSONAL_INFO_SUCCESS,
+	UPDATE_COMPANY_DOCS,
+	UPDATE_COMPANY_DOCS_ERROR,
+	UPDATE_COMPANY_DOCS_SUCCESS,
+	UPDATE_COMPANY_INFO,
+	UPDATE_COMPANY_INFO_ERROR,
+	UPDATE_COMPANY_INFO_SUCCESS,
+	VALIDATE_PHONE_OTP,
+	VALIDATE_PHONE_OTP_ERROR,
+	VALIDATE_PHONE_OTP_SUCCESS,
+	VERIFY_ACCOUNT_NO,
+	VERIFY_ACCOUNT_NO_ERROR,
+	VERIFY_ACCOUNT_NO_SUCCESS,
+	VERIFY_PHONE,
+	VERIFY_PHONE_ERROR,
+	VERIFY_PHONE_SUCCESS,
+} from "../constant/updateProfileActionTypes";
+import {
+	CLEAR_OTP,
+	GET_COUNTRY,
+	GET_COUNTRY_ERROR,
+	GET_COUNTRY_SUCCESS,
+	GET_LGA,
+	GET_LGA_ERROR,
+	GET_LGA_SUCCESS,
+	GET_STATE,
+	GET_STATE_ERROR,
+	GET_STATE_SUCCESS,
+	SEND_COMPANY_OTP,
+	SEND_COMPANY_OTP_ERROR,
+	SEND_COMPANY_OTP_SUCCESS,
+	SEND_OTP,
+	SEND_OTP_ERROR,
+	SEND_OTP_SUCCESS,
+} from "../constant/userActionTypes";
 
 const initialState = {
-  loading: false,
-  phoneMsg: null,
-  phoneMsgError: null,
-  contactMsg: null,
-  contactMsgError: null,
-  personalInfoMsg: null,
-  personalInfoMsgError: null,
-  infoSuccess: false,
-  showPhoneOtpModal: false,
-  validatePhone: null,
-  validatePhoneError: null,
-  accountDetail: null,
-  accountDetailError: null,
-  showAccountValidErrorModal: false,
-  passChangeMsg: null,
-  passChangeError: null,
-  docMsg: null,
-  docMsgError: null,
+	loading: false,
+	phoneMsg: null,
+	phoneMsgError: null,
+	contactMsg: null,
+	contactMsgError: null,
+	personalInfoMsg: null,
+	personalInfoMsgError: null,
+	infoSuccess: false,
+	showPhoneOtpModal: false,
+	validatePhone: null,
+	validatePhoneError: null,
+	accountDetail: null,
+	accountDetailError: null,
+	showAccountValidErrorModal: false,
+	passChangeMsg: null,
+	passChangeError: null,
+	docMsg: null,
+	docMsgError: null,
+	companyInfoMsg: null,
+	companyInfoError: null,
+	companyDocMsg: null,
+	companyDocMsgError: null,
+	countries: null,
+	countriesError: null,
+	states: null,
+	statesError: null,
+	lgas: null,
+	lgasError: null,
+	showEmailOtpModal: false,
+	otp: null,
+	otpError: null,
 };
 
 const updateProfile = (state = initialState, action) => {
-  switch (action.type) {
-    case VERIFY_PHONE:
-      state = {
-        ...state,
-        loading: true,
-      };
-      break;
+	switch (action.type) {
+		case VERIFY_PHONE:
+			state = {
+				...state,
+				loading: true,
+			};
+			break;
 
-    case VERIFY_PHONE_SUCCESS:
-      state = {
-        ...state,
-        loading: false,
-        phoneMsg: action.payload,
-        phoneMsgError: null,
-        showPhoneOtpModal: true,
-      };
-      break;
+		case VERIFY_PHONE_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				phoneMsg: action.payload,
+				phoneMsgError: null,
+				showPhoneOtpModal: true,
+			};
+			break;
 
-    case VERIFY_PHONE_ERROR:
-      state = {
-        ...state,
-        loading: false,
-        phoneMsg: null,
-        phoneMsgError: action.payload,
-        showPhoneOtpModal: false,
-      };
-      break;
+		case VERIFY_PHONE_ERROR:
+			state = {
+				...state,
+				loading: false,
+				phoneMsg: null,
+				phoneMsgError: action.payload,
+				showPhoneOtpModal: false,
+			};
+			break;
 
-    case CLOSE_MODAL:
-      state = {
-        ...state,
-        showPhoneOtpModal: false,
-        validatePhone: null,
-      };
-      break;
+		case CLOSE_MODAL:
+			state = {
+				...state,
+				showPhoneOtpModal: false,
+				validatePhone: null,
+			};
+			break;
 
-    case PUT_CONTACT_DETAILS:
-      state = {
-        ...state,
-        loading: true,
-        contactMsg: null,
-        contactMsgError: null,
-      };
-      break;
+		case PUT_CONTACT_DETAILS:
+			state = {
+				...state,
+				loading: true,
+				contactMsg: null,
+				contactMsgError: null,
+			};
+			break;
 
-    case PUT_CONTACT_DETAILS_SUCCESS:
-      state = {
-        ...state,
-        loading: false,
-        contactMsg: action.payload,
-        contactMsgError: null,
-      };
-      break;
+		case PUT_CONTACT_DETAILS_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				contactMsg: action.payload,
+				contactMsgError: null,
+			};
+			break;
 
-    case PUT_CONTACT_DETAILS_ERROR:
-      state = {
-        ...state,
-        loading: false,
-        contactMsg: null,
-        contactMsgError: action.payload,
-      };
-      break;
+		case PUT_CONTACT_DETAILS_ERROR:
+			state = {
+				...state,
+				loading: false,
+				contactMsg: null,
+				contactMsgError: action.payload,
+			};
+			break;
 
-    case PUT_PERSONAL_INFO:
-      state = {
-        ...state,
-        loading: true,
-        personalInfoMsg: null,
-        personalInfoMsgError: null,
-      };
-      break;
+		case PUT_PERSONAL_INFO:
+			state = {
+				...state,
+				loading: true,
+				personalInfoMsg: null,
+				personalInfoMsgError: null,
+			};
+			break;
 
-    case PUT_PERSONAL_INFO_SUCCESS:
-      state = {
-        ...state,
-        loading: false,
-        personalInfoMsg: action.payload,
-        personalInfoMsgError: null,
-        infoSuccess: true,
-      };
-      break;
+		case PUT_PERSONAL_INFO_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				personalInfoMsg: action.payload,
+				personalInfoMsgError: null,
+				infoSuccess: true,
+			};
+			break;
 
-    case PUT_PERSONAL_INFO_ERROR:
-      state = {
-        ...state,
-        loading: false,
-        personalInfoMsg: null,
-        personalInfoMsgError: action.payload,
-        infoSuccess: false,
-      };
-      break;
+		case PUT_PERSONAL_INFO_ERROR:
+			state = {
+				...state,
+				loading: false,
+				personalInfoMsg: null,
+				personalInfoMsgError: action.payload,
+				infoSuccess: false,
+			};
+			break;
 
-    case VALIDATE_PHONE_OTP:
-      state = {
-        ...state,
-        loading: true,
-        validatePhone: null,
-        validatePhoneError: null,
-      };
-      break;
+		case VALIDATE_PHONE_OTP:
+			state = {
+				...state,
+				loading: true,
+				validatePhone: null,
+				validatePhoneError: null,
+			};
+			break;
 
-    case VALIDATE_PHONE_OTP_SUCCESS:
-      state = {
-        ...state,
-        loading: false,
-        validatePhone: action.payload,
-        validatePhoneError: null,
-      };
-      break;
+		case VALIDATE_PHONE_OTP_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				validatePhone: action.payload,
+				validatePhoneError: null,
+			};
+			break;
 
-    case VALIDATE_PHONE_OTP_ERROR:
-      state = {
-        ...state,
-        loading: false,
-        validatePhone: null,
-        validatePhoneError: action.payload,
-      };
-      break;
+		case VALIDATE_PHONE_OTP_ERROR:
+			state = {
+				...state,
+				loading: false,
+				validatePhone: null,
+				validatePhoneError: action.payload,
+			};
+			break;
 
-    case CLEAR_MESSAGES:
-      state = {
-        ...state,
-        infoSuccess: false,
-        contactMsg: null,
-        contactMsgError: null,
-      };
-      break;
+		case CLEAR_MESSAGES:
+			state = {
+				...state,
+				infoSuccess: false,
+				contactMsg: null,
+				contactMsgError: null,
+			};
+			break;
 
-    case VERIFY_ACCOUNT_NO:
-      state = {
-        ...state,
-        loading: true,
-        accountDetail: null,
-        accountDetailError: null,
-      };
-      break;
+		case VERIFY_ACCOUNT_NO:
+			state = {
+				...state,
+				loading: true,
+				accountDetail: null,
+				accountDetailError: null,
+			};
+			break;
 
-    case VERIFY_ACCOUNT_NO_SUCCESS:
-      state = {
-        ...state,
-        loading: false,
-        accountDetail: action.payload,
-        accountDetailError: null,
-      };
-      break;
+		case VERIFY_ACCOUNT_NO_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				accountDetail: action.payload,
+				accountDetailError: null,
+			};
+			break;
 
-    case VERIFY_ACCOUNT_NO_ERROR:
-      state = {
-        ...state,
-        loading: false,
-        accountDetail: null,
-        accountDetailError: action.payload,
-        // showAccountValidErrorModal: true,
-      };
-      break;
+		case VERIFY_ACCOUNT_NO_ERROR:
+			state = {
+				...state,
+				loading: false,
+				accountDetail: null,
+				accountDetailError: action.payload,
+				// showAccountValidErrorModal: true,
+			};
+			break;
 
-    case CHANGE_PASSWORD:
-      state = {
-        ...state,
-        loading: true,
-        passChangeMsg: null,
-        passChangeError: null,
-      };
-      break;
+		case CHANGE_PASSWORD:
+			state = {
+				...state,
+				loading: true,
+				passChangeMsg: null,
+				passChangeError: null,
+			};
+			break;
 
-    case CHANGE_PASSWORD_SUCCESS:
-      state = {
-        ...state,
-        loading: false,
-        passChangeMsg: action.payload,
-        passChangeError: null,
-      };
-      break;
+		case CHANGE_PASSWORD_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				passChangeMsg: action.payload,
+				passChangeError: null,
+			};
+			break;
 
-    case CHANGE_PASSWORD_ERROR:
-      state = {
-        ...state,
-        loading: false,
-        passChangeMsg: null,
-        passChangeError: action.payload,
-      };
-      break;
+		case CHANGE_PASSWORD_ERROR:
+			state = {
+				...state,
+				loading: false,
+				passChangeMsg: null,
+				passChangeError: action.payload,
+			};
+			break;
 
-    case PUT_PERSONAL_DOCUMENTS:
-      state = {
-        ...state,
-        loading: true,
-        docMsg: null,
-        docMsgError: null,
-      };
-      break;
+		case PUT_PERSONAL_DOCUMENTS:
+			state = {
+				...state,
+				loading: true,
+				docMsg: null,
+				docMsgError: null,
+			};
+			break;
 
-    case PUT_PERSONAL_DOCUMENTS_SUCCESS:
-      state = {
-        ...state,
-        loading: false,
-        docMsg: action.payload,
-        docMsgError: null,
-      };
-      break;
+		case PUT_PERSONAL_DOCUMENTS_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				docMsg: action.payload,
+				docMsgError: null,
+			};
+			break;
 
-    case PUT_PERSONAL_DOCUMENTS_ERROR:
-      state = {
-        ...state,
-        loading: false,
-        docMsg: null,
-        docMsgError: action.payload,
-      };
-      break;
+		case PUT_PERSONAL_DOCUMENTS_ERROR:
+			state = {
+				...state,
+				loading: false,
+				docMsg: null,
+				docMsgError: action.payload,
+			};
+			break;
 
-    default:
-      state = { ...state };
-      break;
-  }
+		case UPDATE_COMPANY_INFO:
+			state = {
+				...state,
+				loading: true,
+				companyInfoMsg: null,
+				companyInfoError: null,
+			};
+			break;
 
-  return state;
+		case UPDATE_COMPANY_INFO_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				companyInfoMsg: action.payload,
+				companyInfoError: null,
+			};
+			break;
+
+		case UPDATE_COMPANY_INFO_ERROR:
+			state = {
+				...state,
+				loading: false,
+				companyInfoMsg: null,
+				companyInfoError: action.payload,
+			};
+			break;
+
+		case UPDATE_COMPANY_DOCS:
+			state = {
+				...state,
+				loading: true,
+				companyDocMsg: null,
+				companyDocMsgError: null,
+			};
+			break;
+
+		case UPDATE_COMPANY_DOCS_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				companyDocMsg: action.payload,
+				companyDocMsgError: null,
+			};
+			break;
+
+		case UPDATE_COMPANY_DOCS_ERROR:
+			state = {
+				...state,
+				loading: false,
+				companyDocMsg: null,
+				companyDocMsgError: action.payload,
+			};
+			break;
+
+		case GET_COUNTRY:
+			state = {
+				...state,
+				loading: true,
+				countries: null,
+				countriesError: null,
+			};
+			break;
+
+		case GET_COUNTRY_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				countries: action.payload,
+				countriesError: null,
+			};
+			break;
+
+		case GET_COUNTRY_ERROR:
+			state = {
+				...state,
+				loading: false,
+				countries: null,
+				countriesError: action.payload,
+			};
+			break;
+
+		case GET_STATE:
+			state = {
+				...state,
+				loading: true,
+				states: null,
+				statesError: null,
+			};
+			break;
+
+		case GET_STATE_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				states: action.payload,
+				statesError: null,
+			};
+			break;
+
+		case GET_STATE_ERROR:
+			state = {
+				...state,
+				loading: false,
+				states: null,
+				statesError: action.payload,
+			};
+			break;
+
+		case GET_LGA:
+			state = {
+				...state,
+				loading: true,
+				lgas: null,
+				lgasError: null,
+			};
+			break;
+
+		case GET_LGA_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				lgas: action.payload,
+				lgasError: null,
+			};
+			break;
+
+		case GET_LGA_ERROR:
+			state = {
+				...state,
+				loading: false,
+				lgas: null,
+				lgasError: action.payload,
+			};
+			break;
+
+		case types.CLOSE_MODAL:
+			state = {
+				...state,
+				showEmailOtpModal: false,
+			};
+			break;
+
+		case SEND_OTP:
+			state = {
+				...state,
+				loading: true,
+				otp: null,
+				otpError: null,
+			};
+			break;
+
+		case SEND_OTP_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				otp: action.payload,
+				otpError: null,
+				showEmailOtpModal: true,
+			};
+			break;
+
+		case SEND_OTP_ERROR:
+			state = {
+				...state,
+				loading: false,
+				otp: null,
+				otpError: action.payload,
+				showEmailOtpModal: false,
+			};
+			break;
+
+		case SEND_COMPANY_OTP:
+			state = {
+				...state,
+				loading: true,
+				otp: null,
+				otpError: null,
+			};
+			break;
+
+		case SEND_COMPANY_OTP_SUCCESS:
+			state = {
+				...state,
+				loading: false,
+				otp: action.payload,
+				otpError: null,
+				showEmailOtpModal: true,
+			};
+			break;
+
+		case SEND_COMPANY_OTP_ERROR:
+			state = {
+				...state,
+				loading: false,
+				otp: null,
+				otpError: action.payload,
+				showEmailOtpModal: false,
+			};
+			break;
+
+		case CLEAR_OTP:
+			state = {
+				otp: null,
+				otpError: null,
+			};
+			break;
+
+		default:
+			state = { ...state };
+			break;
+	}
+
+	return state;
 };
 
 export default updateProfile;

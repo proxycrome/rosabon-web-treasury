@@ -4,24 +4,17 @@ import axios from 'axios';
 
 const tokenObj = JSON.parse(localStorage.getItem('token'));
 
-export const update_personal_details = async (token, objData) => {
+export const update_company_details = async (objData) => {
   try {
-    const response = await axios.post(`${config.rosobon}`, objData, {
-      headers: authHeader(token),
+    const response = await axios.put(`${config.rosobon}auth/company`, objData, {
+      headers: authHeader(tokenObj.token),
     });
     const formData = await response.data;
     return { formData };
-  } catch (error) {}
-};
-
-export const update_company_details = async (token, objData) => {
-  try {
-    const response = await axios.post(`${config.rosobon}`, objData, {
-      headers: authHeader(token),
-    });
-    const formData = await response.data;
-    return { formData };
-  } catch (error) {}
+  } catch (error) {
+    const errorObj = await error?.response?.data;
+    return { errorObj };
+  }
 };
 
 export const verify_phone = async (recipient) => {
@@ -34,10 +27,10 @@ export const verify_phone = async (recipient) => {
       }
     );
     const formData = await response.data;
-    return {formData};
+    return { formData };
   } catch (error) {
     const errorObj = await error.response.data;
-    return {errorObj}
+    return { errorObj };
   }
 };
 
@@ -51,10 +44,10 @@ export const update_contact_details = async (dataObj) => {
       }
     );
     const formData = await response.data;
-    return {formData};
+    return { formData };
   } catch (error) {
     const errorObj = await error.response.data;
-    return {errorObj}
+    return { errorObj };
   }
 };
 
@@ -68,11 +61,10 @@ export const update_personal_info = async (dataObj) => {
       }
     );
     const formData = await response.data;
-    return {formData};
-
+    return { formData };
   } catch (error) {
     const errorObj = await error.response.data;
-    return {errorObj}
+    return { errorObj };
   }
 };
 
@@ -85,10 +77,9 @@ export const validate_phone_otp = async (otp) => {
       }
     );
     const formData = await response.data;
-    return {formData};
-
+    return { formData };
   } catch (error) {
     const errorObj = await error.response.data;
-    return {errorObj}
+    return { errorObj };
   }
 };

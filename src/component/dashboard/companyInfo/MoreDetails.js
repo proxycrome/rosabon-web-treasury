@@ -244,7 +244,7 @@ const MoreDetails = () => {
               <div className="row">
                 <div className="d-flex align-items-center mt-5">
                   <img src={plus} alt="plus" className="mx-2"/>
-                  <span style={{color: '#111E6C', marginRight: '30px'}}> Add More</span>
+                  <span style={{color: '#111E6C', marginRight: '30px'}}> Add More Directors</span>
                 </div>
               </div>
             </div>

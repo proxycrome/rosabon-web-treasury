@@ -378,7 +378,6 @@ export function OTPVerify({
     dispatch(verifyPhone(secondPhone));
   };
 
-  console.log(validatePhone);
 
   // useEffect(() => {
   //   if(validateEmailOtp){
