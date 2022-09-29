@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import Verve from '../../../asset/master-card-logo.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { PlanSummary } from '../Accesssories';
 import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
+import { useDispatch } from "react-redux";
+import { createPlan } from "../../../redux/actions/plan/planAction";
+import { PlanContext } from "./PlanForm";
 
 const PlanCardPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
+  const { form } = useContext(PlanContext);
+  const dispatch = useDispatch();
+  console.log("card here", form)
+
+  const handleSubmit = () => {
+    // dispatch(createPlan(form, setShow));
+  }
 
   return (
     <>
@@ -44,7 +54,8 @@ const PlanCardPayment = ({goBack}) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setShow(true)}
+                // onClick={() => setShow(true)}
+                onClick={handleSubmit}
               >
                 Pay
               </button>

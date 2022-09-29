@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { MDBDataTable } from 'mdbreact';
 import { Input, Label } from 'reactstrap';
@@ -21,6 +21,7 @@ import {
   getOpenTickets, 
   getClosedTickets 
 } from "../../redux/actions/feedback/feedbackAction";
+import { PlanContext } from "./createPlan/PlanForm";
 
 export const NairaCard = () => {
   return (
@@ -258,13 +259,24 @@ const RightWrapper = styled.div`
 export const MakePayment = ({ setPaymentType }) => {
   const [card, setCard] = useState('');
   const [bank, setBank] = useState('');
+  const {form, setForm} = useContext(PlanContext);
+  const directDebit = form.directDebit;
+
 
   const handleClick = (e) => {
     if (e.target.value === 'card') {
+      setForm({
+        ...form,
+        paymentType: "DEBIT_CARD"
+      })
       setCard('card');
       setBank('');
     }
     if (e.target.value === 'bank') {
+      setForm({
+        ...form,
+        paymentType: "BANK_TRANSFER"
+      })
       setBank('bank');
       setCard('');
     }
@@ -307,6 +319,7 @@ export const MakePayment = ({ setPaymentType }) => {
               type="radio"
               id="bank"
               name="paymentType"
+              disabled={directDebit===true ? true:false}
               value="bank"
               onClick={handleClick}
             />
@@ -341,6 +354,8 @@ const PaymentTypeWrapper = styled.div`
 `;
 
 export const UserBankDetails = () => {
+  const { login } = useSelector((state) => state.auth )
+
   return (
     <div>
       <UserBankDetailsWrapper>
@@ -348,20 +363,20 @@ export const UserBankDetails = () => {
           <h4>Bank Details</h4>
           <div className="pt-3">
             <p className="p-0 m-0">
-              Hi Ekiyee, Kindly make payment into the displayed account details
+              Hi {login.fullName}, Kindly make payment into the displayed account details
             </p>
           </div>
           <div className="pt-4">
             <div>
               <p className="p-0 m-0">Account Number</p>
             </div>
-            <p className="p-0 m-0 bold-text">01234567890</p>
+            <p className="p-0 m-0 bold-text">{login.virtualAccountNo} </p>
           </div>
           <div className="pt-3">
             <div>
               <p className="p-0 m-0">Account Name</p>
             </div>
-            <p className="p-0 m-0 bold-text">Rosabon</p>
+            <p className="p-0 m-0 bold-text">{login.virtualAccountName} </p>
           </div>
           <div className="pt-3">
             <div>
@@ -767,6 +782,9 @@ export const WithdrawalSummary = () => {
 };
 
 export const PlanSummary = ({ planPay }) => {
+  const {form} = useContext(PlanContext);
+  console.log("gg")
+  let planData = form
   return (
     <div>
       <PlanSummaryWrapper>
@@ -774,25 +792,30 @@ export const PlanSummary = ({ planPay }) => {
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
-              <h4>Plan 1</h4>
+              {/* <h4>Plan 1</h4> */}
+              <h4>{planData.planSummary.planName} </h4>
               <div className="d-flex align-items-center justify-content-between pt-3">
                 <div>
                   <p className="p-0 m-0">Start date </p>
-                  <h4>24/06/2023</h4>
+                  {/* <h4>24/06/2023</h4> */}
+                  <h4>{planData.planSummary.startDate}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">End date </p>
-                  <h4>24/06/2023</h4>
+                  {/* <h4>24/06/2023</h4> */}
+                  <h4>{planData.planSummary.endDate}</h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Principal </p>
-                  <h4> ₦2,500,000</h4>
+                  {/* <h4> ₦2,500,000</h4> */}
+                  <h4>{planData.planSummary.principal}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Interest Rate </p>
-                  <h4>20.00 %</h4>
+                  {/* <h4>20.00 %</h4> */}
+                  <h4>{planData.planSummary.interestRate} %</h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
@@ -800,21 +823,25 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">
                     Interest Payment <br /> frequency{' '}
                   </p>
-                  <h4 className="">Daily</h4>
+                  {/* <h4 className="">Daily</h4> */}
+                  <h4>{planData.planSummary.interestPaymentFrequency}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Calculated Interest </p>
-                  <h4>₦200,000</h4>
+                  {/* <h4>₦200,000</h4> */}
+                  <h4>₦{planData.planSummary.calculatedInterest} </h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Withholding Tax</p>
-                  <h4 className="">₦2,000</h4>
+                  {/* <h4 className="">₦2,000</h4> */}
+                  <h4>₦{planData.planSummary.withholdingTax}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Payment at Maturity</p>
-                  <h4>₦2,700,000</h4>
+                  {/* <h4>₦2,700,000</h4> */}
+                  <h4>₦{planData.planSummary.paymentMaturity} </h4>
                 </div>
               </div>
             </div>
@@ -1230,7 +1257,7 @@ export const HistoryTable = () => {
 
   useEffect(() => {
     dispatch(getWalletTransactions());
-  }, [dispatch])
+  }, [])
 
   useEffect(() => {
     dispatch({type: CLEAR_TRANSACTIONS})
