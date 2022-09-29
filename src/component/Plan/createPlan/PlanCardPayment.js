@@ -16,7 +16,7 @@ const PlanCardPayment = ({goBack}) => {
   console.log("card here", form)
 
   const handleSubmit = () => {
-    // dispatch(createPlan(form, setShow));
+    dispatch(createPlan(form, setShow));
   }
 
   return (

@@ -18,7 +18,7 @@ const PlanBankPayment = ({goBack}) => {
   console.log("bank here", form)
 
   const handleSubmit = () => {
-    // dispatch(createPlan(form, setShow));
+    dispatch(createPlan(form, setShow));
   }
 
 
