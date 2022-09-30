@@ -52,7 +52,7 @@ const CreatePlan = () => {
             <div className="plan-list">
               {item.products.map((product) => (
                 <div className="choose-plan" key={product.id}>
-                  <div className="d-flex align-items-center justify-content-around">
+                  <div className="d-flex align-items-center " style={{gap:16}}>
                     <img
                       className="image-holder"
                       src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
@@ -71,7 +71,18 @@ const CreatePlan = () => {
                         <p className="p-0 m-0 pb-2">
                           Lorem Ipsum is simply dummy text of the{" "}
                         </p> */}
-                        {product.productDescription}
+                        <p className="p-0 m-0 pb-2">
+                          {" "}
+                          {product.productDescription}
+                        </p>
+                        <p className="p-0 m-0 pb-2">
+                          {" "}
+                          {product.productDescription}
+                        </p>
+                        <p className="p-0 m-0 pb-2">
+                          {" "}
+                          {product.productDescription}
+                        </p>
                       </div>
                     </div>
                   </div>
