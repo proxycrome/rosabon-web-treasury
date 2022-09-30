@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   Dropdown,
@@ -9,8 +9,23 @@ import {
 import { Link } from "react-router-dom";
 import plus from "../../../asset/plus.svg";
 import Switch from "react-switch";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { getPlans } from "../../../redux/actions/plan/planAction";
+import { getProducts } from "../../../redux/actions/product/productAction";
 
 export const Plans = () => {
+  const dispatch = useDispatch();
+  const { plans } = useSelector((state) => state.plan);
+  const { products  } = useSelector((state) => state.product)
+  const userPlans = plans?.data.body ? plans?.data.body : [];
+  const planStatus = plans?.statusCode;
+  const product = products?.data.body ? products?.data.body : []
+
+  useEffect(() => {
+    dispatch(getPlans());
+    dispatch(getProducts());
+  },[])
   return (
     <Wrapper>
       <div className="row">
@@ -59,6 +74,54 @@ export const Plans = () => {
         </div>
       </div>
       <div className="plan-content">
+        {
+          planStatus === "OK" && userPlans.map((item) => (
+            <div className="plan" key={item.id} >
+              <div className="plan-top h-50 p-4">
+                <div className="d-flex align-items-center justify-content-between">
+                  <div>
+                    <h4>{item.planName} </h4>
+                    <p className="p-0 m-0">
+                      {product?.find((product)=>product.id===item.productId)?.productName}
+                    </p>
+                  </div>
+                  <h4 className="Active" >{item.planStatus} </h4>
+                </div>
+                <div className="d-flex align-items-center justify-content-between pt-4">
+                  <div>
+                    <h4>Start date</h4>
+                    <p className="p-0 m-0">
+                      {moment(item.planSummary.startDate).format("DD/MM/YYYY")} 
+                    </p>
+                  </div>
+                  <div>
+                    <h4>End date</h4>
+                    <p className="p-0 m-0">
+                      {moment(item.planSummary.endDate).format("DD/MM/YYYY")} 
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex position-relative horizontal-line">
+                <div className="position-absolute horizontal-circle-left"></div>
+                <hr className="dotted" />
+                <div className="position-absolute end-0 horizontal-circle-right"></div>
+              </div>
+
+              <div className="plan-top h-50 py-1 px-4">
+                <div className="d-flex align-items-center justify-content-between">
+                  <div>
+                    <h4>{item.planName} </h4>
+                    <p className="p-0 m-0">
+                      {product.find((product)=>product.id===item.productId)?.productName}
+                    </p>
+                  </div>
+                  <DropDown status="Active" />
+                </div>
+              </div>
+            </div>
+          ))
+        }
         <div className="plan">
           <div className="plan-top h-50 p-4">
             <div className="d-flex align-items-center justify-content-between">
@@ -357,6 +420,7 @@ const Wrapper = styled.div`
       font-size: 13px;
       line-height: 16px;
       letter-spacing: -0.01em;
+      text-transform: uppercase;
     }
     .Active {
       color: #219653;

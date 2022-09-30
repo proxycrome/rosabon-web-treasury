@@ -7,6 +7,7 @@ import PlanBankPayment from "./PlanBankPayment";
 import PlanCardPayment from "./PlanCardPayment";
 import { useSelector } from 'react-redux';
 
+
 const PlanPay = ({ goBack }) => {
   const [isBank, setIsBank] = useState(false);
   const [isCard, setIsCard] = useState(false);
@@ -108,7 +109,9 @@ const PlanPay = ({ goBack }) => {
                   color: "#FFFFFF",
                   width: "300px",
                 }}
-                onClick={() => setIsClicked(true)}>
+                onClick={() => setIsClicked(true)}
+                type="submit"
+              >
                 Proceed
               </button>
             </div>

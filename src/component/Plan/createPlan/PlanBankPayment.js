@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import MOneyTransfer from '../../../asset/money-transfer.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { PlanSummary, UserBankDetails } from '../Accesssories';
 import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
+import { useDispatch } from "react-redux";
+import { createPlan } from "../../../redux/actions/plan/planAction";
+import { PlanContext } from "./PlanForm";
+
 
 const PlanBankPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
+  const { form } = useContext(PlanContext);
+  const dispatch = useDispatch();
+
+  console.log("bank here", form)
+
+  const handleSubmit = () => {
+    // dispatch(createPlan(form, setShow));
+  }
 
 
   return (
@@ -52,7 +64,8 @@ const PlanBankPayment = ({goBack}) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setShow(true)}
+                // onClick={() => setShow(true)}
+                onClick={handleSubmit}
               >
                 Pay
               </button>
