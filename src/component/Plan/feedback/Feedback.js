@@ -27,7 +27,7 @@ const Feedback = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [tabs, setTabs] = useState("");
   const user_details = useSelector((state) => state.user_profile.users);
-  const { posted_feedback } = useSelector((state) => state.feedback);
+  const { loading } = useSelector((state) => state.feedback);
 
   const [show, setShow] = useState(false);
 
@@ -148,7 +148,7 @@ const Feedback = () => {
                   // }}
                   type='submit'
                   >
-                  Submit
+                  {loading ? 'LOADING...' : 'Submit'}
                 </button>
                 <ModalComponent show={show} size={"md"}>
                   <div className="">

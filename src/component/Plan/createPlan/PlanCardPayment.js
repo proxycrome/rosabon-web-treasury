@@ -5,7 +5,7 @@ import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { PlanSummary } from '../Accesssories';
 import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createPlan } from "../../../redux/actions/plan/planAction";
 import { PlanContext } from "./PlanForm";
 
@@ -13,7 +13,7 @@ const PlanCardPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
   const { form } = useContext(PlanContext);
   const dispatch = useDispatch();
-  console.log("card here", form)
+  const { loading } = useSelector((state) => state.plan);
 
   const handleSubmit = () => {
     dispatch(createPlan(form, setShow));
@@ -57,7 +57,7 @@ const PlanCardPayment = ({goBack}) => {
                 // onClick={() => setShow(true)}
                 onClick={handleSubmit}
               >
-                Pay
+                {loading ? 'LOADING...' : 'Pay'}
               </button>
               <ModalComponent
                 show={show}

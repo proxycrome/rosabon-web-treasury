@@ -74,7 +74,9 @@ const PlanForm = () => {
       ...formData,
       // amount: formData.targetAmount !== null ? null : formData.amount,
       contributionValue: formData.contributionValue,
+      tenorId: Number(formData.tenorId),
       planSummary: summary,
+      interestReceiptOption: 0,
       directDebit: formData.directDebit === "true" || 
       formData.directDebit === true ? true : false,
       autoRenew: formData.autoRenew === "true" || 
@@ -106,7 +108,7 @@ const PlanForm = () => {
       }
       setFormData({
         ...formData,
-        contributionValue: parseFloat(computedValue).toFixed(2)
+        contributionValue: Number(parseFloat(computedValue).toFixed(2))
       })
     } else {
       let computedValue;
@@ -127,7 +129,7 @@ const PlanForm = () => {
       }
       setFormData({
         ...formData,
-        targetAmount: parseFloat(computedValue).toFixed(2)
+        targetAmount: Number(parseFloat(computedValue).toFixed(2))
       })
     }
   }
@@ -144,7 +146,7 @@ const PlanForm = () => {
     } else {
       setFormData({
         ...formData,
-        exchangeRate: parseFloat(currency?.sellingPrice).toFixed(2)
+        exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
       })
     }
 
@@ -164,29 +166,42 @@ const PlanForm = () => {
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, 'days')?._d
     // calculate principal
     let principal;
-    if (product?.properties?.hasTargetAmount !== null) {
-      switch(formData.savingFrequency) {
-        case "DAILY":
-          principal = formData.contributionValue * selectedTenor?.tenorDays
-          break;
-        case "WEEKLY":
-          principal = formData.contributionValue * selectedTenor?.tenorWeeks
-          break;
-        case "MONTHLY":
-          principal = formData.contributionValue * selectedTenor?.tenorMonths
-          break;
-        default: break;
-      }
-    } else if(product?.properties?.hasTargetAmount === null) {
-      principal = formData.amount
+    // if (product?.properties?.hasTargetAmount !== null) {
+    //   switch(formData.savingFrequency) {
+    //     case "DAILY":
+    //       principal = formData.contributionValue * selectedTenor?.tenorDays
+    //       break;
+    //     case "WEEKLY":
+    //       principal = formData.contributionValue * selectedTenor?.tenorWeeks
+    //       break;
+    //     case "MONTHLY":
+    //       principal = formData.contributionValue * selectedTenor?.tenorMonths
+    //       break;
+    //     default: break;
+    //   }
+    // } else if(product?.properties?.hasTargetAmount === null) {
+    //   principal = formData.amount
+    // }
+    switch(formData.savingFrequency) {
+      case "DAILY":
+        principal = formData.contributionValue * selectedTenor?.tenorDays
+        break;
+      case "WEEKLY":
+        principal = formData.contributionValue * selectedTenor?.tenorWeeks
+        break;
+      case "MONTHLY":
+        principal = formData.contributionValue * selectedTenor?.tenorMonths
+        break;
+      default: break;
     }
     setSummary({
       planName: formData.planName,
       startDate: formData.dateCreated,
       endDate: moment(endDate).format("YYYY-MM-DD"),
-      principal: parseFloat(principal).toFixed(2),
+      principal: Number(parseFloat(principal).toFixed(2)),
       interestRate: 10.00,
-      interestPaymentFrequency: formData.interestReceiptOption,
+      // interestPaymentFrequency: formData.interestReceiptOption,
+      interestPaymentFrequency: 0,
       calculatedInterest: 10.00,
       withholdingTax: 0.00,
       paymentMaturity: 0.00
@@ -197,7 +212,8 @@ const PlanForm = () => {
     formData.tenorId,
     formData.interestRate,
     formData.interestReceiptOption,
-    formData.targetAmount
+    formData.targetAmount,
+    formData.amount
   ])
 
   useEffect(() => {
@@ -371,7 +387,7 @@ const PlanForm = () => {
     if(e.target.type === "number") {
       setFormData({
         ...formData,
-        [e.target.name]: parseInt(e.target.value)
+        [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
       })
     }else {
       setFormData({
@@ -434,7 +450,7 @@ const PlanForm = () => {
           productStatus === "OK" ? (
             <div className="choose-plan">
               <h5>{product.productName} </h5>
-              <div className="d-flex align-items-center justify-content-between">
+              <div className="d-flex align-items-center" style={{gap:16}} >
                 <img
                   className="image-holder"
                   src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
@@ -452,7 +468,18 @@ const PlanForm = () => {
                     <p className="p-0 m-0 pb-2">
                       Lorem Ipsum is simply dummy text of the{" "}
                     </p> */}
-                    <p>{product.productDescription} </p>
+                    <p className="p-0 m-0 pb-2">
+                      {" "}
+                      {product.productDescription}
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      {" "}
+                      {product.productDescription}
+                    </p>
+                    <p className="p-0 m-0 pb-2">
+                      {" "}
+                      {product.productDescription}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -489,7 +516,7 @@ const PlanForm = () => {
                 >
                   <option value="" disabled hidden selected >Select investment currency</option>
                   {
-                    product?.currency.map((item, id) => (
+                    product?.currency?.map((item, id) => (
                       <option key={id} value={item} >{item} </option>
                     ))
                   }
@@ -520,7 +547,8 @@ const PlanForm = () => {
                   name="amount"
                   placeholder="" 
                   type="number" 
-                  disabled={product?.properties?.hasTargetAmount===null?false:true}
+                  // disabled={product?.properties?.hasTargetAmount===null?false:true}
+                  disabled={true}
                   value={formData.amount}
                   onChange={handleChange}
                 />
@@ -535,16 +563,23 @@ const PlanForm = () => {
                   className="form-control" 
                   name="targetAmount"
                   placeholder="" 
-                  disabled={product?.properties?.hasTargetAmount===null?true:false}
+                  // disabled={product?.properties?.hasTargetAmount===null?true:false}
                   type="number" 
                   value={formData.targetAmount}
                   onChange={handleChange}
                 />
               </div>
-              {
+              {/* {
                 (calculateMinAllowTargetVal(formData.targetAmount).isLesser &&
                 product?.properties?.hasTargetAmount!==null) ? (
                   <small>
+                    Target value cannot be below {product?.minTransactionLimit}
+                  </small>
+                ) : (<></>)
+              } */}
+              {
+                formData.targetAmount < product?.minTransactionLimit ? (
+                  <small style={{color:"red"}} >
                     Target value cannot be below {product?.minTransactionLimit}
                   </small>
                 ) : (<></>)
