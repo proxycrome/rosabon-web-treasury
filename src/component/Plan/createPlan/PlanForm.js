@@ -556,9 +556,9 @@ const PlanForm = () => {
             </div>
           </div>
           <div className="row">
-            <div className="col-md-6 ">
+            <div className="col-md-6 mb-4">
               <label>Target amount</label>
-              <div className="input-group mb-4">
+              <div className="input-group">
                 <input 
                   className="form-control" 
                   name="targetAmount"
