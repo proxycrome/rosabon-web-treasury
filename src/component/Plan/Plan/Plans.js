@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import plus from "../../../asset/plus.svg";
 import Switch from "react-switch";
 import moment from "moment";
@@ -16,6 +16,7 @@ import { getProducts } from "../../../redux/actions/product/productAction";
 
 export const Plans = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { plans } = useSelector((state) => state.plan);
   const { products  } = useSelector((state) => state.product)
   const userPlans = plans?.data.body ? plans?.data.body : [];
@@ -67,7 +68,11 @@ export const Plans = () => {
       <div className="row">
         <div className="d-flex justify-content-between mb-3">
           <h4>Here are your investments at a glance</h4>
-          <div className="d-flex align-items-center">
+          <div 
+            className="d-flex align-items-center" 
+            style={{cursor:"pointer"}} 
+            onClick={()=>navigate("/plan-product")}
+          >
             <img src={plus} alt="plus" className="mx-2"/>
             <span style={{color: '#111E6C', marginRight: '30px'}}> Add More</span>
           </div>
@@ -122,224 +127,6 @@ export const Plans = () => {
             </div>
           ))
         }
-        <div className="plan">
-          <div className="plan-top h-50 p-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <h4 className="Active">Active</h4>
-            </div>
-            <div className="d-flex align-items-center justify-content-between pt-4">
-              <div>
-                <h4>Start date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-              <div>
-                <h4>End date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-            </div>
-          </div>
-          <div className="d-flex position-relative horizontal-line">
-            <div className="position-absolute horizontal-circle-left"></div>
-            <hr className="dotted" />
-            <div className="position-absolute end-0 horizontal-circle-right"></div>
-          </div>
-
-          <div className="plan-top h-50 py-1 px-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <DropDown status="Active" />
-            </div>
-          </div>
-        </div>
-
-        <div className="plan">
-          <div className="plan-top h-50 p-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <h4 className="Pending">Pending</h4>
-            </div>
-            <div className="d-flex align-items-center justify-content-between pt-4">
-              <div>
-                <h4>Start date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-              <div>
-                <h4>End date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-            </div>
-          </div>
-          <div className="d-flex position-relative horizontal-line">
-            <div className="position-absolute horizontal-circle-left"></div>
-            <hr className="dotted" />
-            <div className="position-absolute end-0 horizontal-circle-right"></div>
-          </div>
-
-          <div className="plan-top h-50 py-1 px-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <DropDown status="Pending" />
-            </div>
-          </div>
-        </div>
-
-        <div className="plan">
-          <div className="plan-top h-50 p-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <h4 className="Matured">Matured</h4>
-            </div>
-            <div className="d-flex align-items-center justify-content-between pt-4">
-              <div>
-                <h4>Start date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-              <div>
-                <h4>End date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-            </div>
-          </div>
-          <div className="d-flex position-relative horizontal-line">
-            <div className="position-absolute horizontal-circle-left"></div>
-            <hr className="dotted" />
-            <div className="position-absolute end-0 horizontal-circle-right"></div>
-          </div>
-
-          <div className="plan-top h-50 py-1 px-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <DropDown status="Matured" />
-            </div>
-          </div>
-        </div>
-        <div className="plan">
-          <div className="plan-top h-50 p-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <h4 className="Active">Active</h4>
-            </div>
-            <div className="d-flex align-items-center justify-content-between pt-4">
-              <div>
-                <h4>Start date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-              <div>
-                <h4>End date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-            </div>
-          </div>
-          <div className="d-flex position-relative horizontal-line">
-            <div className="position-absolute horizontal-circle-left"></div>
-            <hr className="dotted" />
-            <div className="position-absolute end-0 horizontal-circle-right"></div>
-          </div>
-
-          <div className="plan-top h-50 py-1 px-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <DropDown status="Active" />
-            </div>
-          </div>
-        </div>
-        <div className="plan">
-          <div className="plan-top h-50 p-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <h4 className="Active">Active</h4>
-            </div>
-            <div className="d-flex align-items-center justify-content-between pt-4">
-              <div>
-                <h4>Start date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-              <div>
-                <h4>End date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-            </div>
-          </div>
-          <div className="d-flex position-relative horizontal-line">
-            <div className="position-absolute horizontal-circle-left"></div>
-            <hr className="dotted" />
-            <div className="position-absolute end-0 horizontal-circle-right"></div>
-          </div>
-
-          <div className="plan-top h-50 py-1 px-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <DropDown status="Active" />
-            </div>
-          </div>
-        </div>
-        <div className="plan">
-          <div className="plan-top h-50 p-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <h4 className="Active">Active</h4>
-            </div>
-            <div className="d-flex align-items-center justify-content-between pt-4">
-              <div>
-                <h4>Start date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-              <div>
-                <h4>End date</h4>
-                <p className="p-0 m-0">24/06/2023</p>
-              </div>
-            </div>
-          </div>
-          <div className="d-flex position-relative horizontal-line">
-            <div className="position-absolute horizontal-circle-left"></div>
-            <hr className="dotted" />
-            <div className="position-absolute end-0 horizontal-circle-right"></div>
-          </div>
-
-          <div className="plan-top h-50 py-1 px-4">
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <h4>Plan 1</h4>
-                <p className="p-0 m-0">Product 1</p>
-              </div>
-              <DropDown status="Active" />
-            </div>
-          </div>
-        </div>
       </div>
       <div className="row">
         <div className="d-flex justify-content-center my-5">
