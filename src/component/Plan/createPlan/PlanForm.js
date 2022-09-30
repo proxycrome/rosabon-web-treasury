@@ -432,7 +432,7 @@ const PlanForm = () => {
               <label>Currency</label>
               <div className="input-group mb-4">
                 <select
-                  className="form-select form-select-lg"
+                  className="form-select form-select-md"
                   onChange={handleChange}
                   name="currency"
                   value={formData.currency}
@@ -511,7 +511,7 @@ const PlanForm = () => {
                 />
               </div> */}
               <select 
-                className="form-select form-select-lg mb-3" 
+                className="form-select form-select-md mb-3" 
                 name="tenorId" 
                 onChange={handleChange}
                 value={formData.tenorId}
@@ -534,7 +534,7 @@ const PlanForm = () => {
                 style={{gap: 14}}
               >
                 <select 
-                  className="form-select form-select-lg mb-3" 
+                  className="form-select form-select-md mb-3" 
                   name="savingFrequency" 
                   onChange={handleChange}
                   value={formData.savingFrequency}
@@ -549,7 +549,7 @@ const PlanForm = () => {
                 {
                   formData.savingFrequency === "WEEKLY" && (
                     <select 
-                      className="form-select form-select-lg option-select mb-3" 
+                      className="form-select form-select-md option-select mb-3" 
                       name="weeklyContributionDay" 
                       onChange={handleChange}
                       value={formData.weeklyContributionDay}
@@ -568,7 +568,7 @@ const PlanForm = () => {
                 {
                   formData.savingFrequency === "MONTHLY" && (
                     <select 
-                      className="form-select form-select-lg option-select mb-3" 
+                      className="form-select form-select-md option-select mb-3" 
                       name="monthlyContributionDay" 
                       onChange={handleChange}
                       value={formData.monthlyContributionDay}
@@ -596,7 +596,7 @@ const PlanForm = () => {
                   onChange={handleChange}
                 /> */}
                 <select 
-                  className="form-select form-select-lg mb-3" 
+                  className="form-select form-select-md mb-3" 
                   name="interestReceiptOption" 
                   onChange={handleChange}
                   id="intRecOpt"
@@ -651,7 +651,7 @@ const PlanForm = () => {
               <label>Direct Debit</label>
               <div className="input-group mb-4">
                 <select
-                  className="form-select form-select-lg"
+                  className="form-select form-select-md"
                   placeholder="Setup Direct Debit"
                   onChange={handleChange}
                   name="directDebit"
@@ -698,7 +698,7 @@ const PlanForm = () => {
               <label>Auto renew</label>
               <div className="input-group mb-4">
                 <select 
-                  className="form-select form-select-lg" 
+                  className="form-select form-select-md" 
                   placeholder=""
                   name="autoRenew"
                   onChange={handleChange}
@@ -715,7 +715,7 @@ const PlanForm = () => {
               <label>Allow liquidation</label>
               <div className="input-group mb-4">
                 <select 
-                  className="form-select form-select-lg" 
+                  className="form-select form-select-md" 
                   placeholder=""
                   name="allowsLiquidation"
                   id="allowLiquidation"
@@ -857,6 +857,10 @@ const Wrapper = styled.div`
     color: #828282;
     padding-bottom: 15px;
     padding-left: 10px;
+  }
+
+  select {
+    height: 54px;
   }
 `;
 
