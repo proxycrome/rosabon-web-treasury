@@ -34,6 +34,12 @@ const PersonalInfo = () => {
   const {
     users,
     validateEmailOtp,
+    countries,
+    states,
+    lgas,
+    showEmailOtpModal,
+    otp,
+    otpError,
   } = useSelector((state) => state.user_profile);
 
   const {
@@ -45,12 +51,6 @@ const PersonalInfo = () => {
     personalInfoMsg,
     personalInfoMsgError,
     infoSuccess,
-    countries,
-    states,
-    lgas,
-    showEmailOtpModal,
-    otp,
-    otpError,
   } = useSelector((state) => state.updateProfile);
 
   // console.log('otp.....', otp);

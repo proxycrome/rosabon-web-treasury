@@ -159,6 +159,9 @@ const WrappSideBarList = styled.div`
   }
   .nav_link {
     text-decoration: none;
+    &:active {
+      background-color: #111e6c;
+    }
   }
   .active {
     li {

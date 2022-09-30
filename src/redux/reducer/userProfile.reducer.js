@@ -1,27 +1,27 @@
 import * as types from "../constant/auth";
 import {
-	// CLEAR_OTP,
+	CLEAR_OTP,
 	GET_BANKS,
 	GET_BANKS_ERROR,
 	GET_BANKS_SUCCESS,
 	GET_COMPANY_DOCS,
 	GET_COMPANY_DOCS_ERROR,
 	GET_COMPANY_DOCS_SUCCESS,
-	// GET_COUNTRY,
-	// GET_COUNTRY_ERROR,
-	// GET_COUNTRY_SUCCESS,
-	// GET_LGA,
-	// GET_LGA_ERROR,
-	// GET_LGA_SUCCESS,
-	// GET_STATE,
-	// GET_STATE_ERROR,
-	// GET_STATE_SUCCESS,
-	// SEND_COMPANY_OTP,
-	// SEND_COMPANY_OTP_ERROR,
-	// SEND_COMPANY_OTP_SUCCESS,
-	// SEND_OTP,
-	// SEND_OTP_ERROR,
-	// SEND_OTP_SUCCESS,
+	GET_COUNTRY,
+	GET_COUNTRY_ERROR,
+	GET_COUNTRY_SUCCESS,
+	GET_LGA,
+	GET_LGA_ERROR,
+	GET_LGA_SUCCESS,
+	GET_STATE,
+	GET_STATE_ERROR,
+	GET_STATE_SUCCESS,
+	SEND_COMPANY_OTP,
+	SEND_COMPANY_OTP_ERROR,
+	SEND_COMPANY_OTP_SUCCESS,
+	SEND_OTP,
+	SEND_OTP_ERROR,
+	SEND_OTP_SUCCESS,
 	VALIDATE_OTP,
 	VALIDATE_OTP_ERROR,
 	VALIDATE_OTP_SUCCESS,
@@ -35,21 +35,22 @@ const initialState = {
 	bvnMessage: null,
 	bvnError: null,
 	showBvnModal: false,
-	// countries: null,
-	// countriesError: null,
-	// states: null,
-	// statesError: null,
-	// lgas: null,
-	// lgasError: null,
-	// otp: null,
-	// otpError: null,
-	// showEmailOtpModal: false,
+	countries: null,
+	countriesError: null,
+	states: null,
+	statesError: null,
+	lgas: null,
+	lgasError: null,
+	otp: null,
+	otpError: null,
+	showEmailOtpModal: false,
 	banks: null,
 	banksError: null,
 	validateEmailOtp: null,
 	validateOtpError: null,
 	companyDocs: null,
 	companyDocsError: null,
+	id: 0,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -101,112 +102,113 @@ const userProfileReducer = (state = initialState, action) => {
 				bvnMessage: null,
 				bvnError: action.payload,
 				showBvnModal: false,
+				id: action.id,
 			};
 
 		case types.CLOSE_MODAL:
 			return {
 				...state,
 				showBvnModal: false,
-				// showEmailOtpModal: false,
+				showEmailOtpModal: false,
 			};
 
-		// case GET_COUNTRY:
-		// 	return {
-		// 		...state,
-		// 		loading: true,
-		// 		countries: null,
-		// 		countriesError: null,
-		// 	};
+		case GET_COUNTRY:
+			return {
+				...state,
+				loading: true,
+				countries: null,
+				countriesError: null,
+			};
 
-		// case GET_COUNTRY_SUCCESS:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		countries: action.payload,
-		// 		countriesError: null,
-		// 	};
+		case GET_COUNTRY_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				countries: action.payload,
+				countriesError: null,
+			};
 
-		// case GET_COUNTRY_ERROR:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		countries: null,
-		// 		countriesError: action.payload,
-		// 	};
+		case GET_COUNTRY_ERROR:
+			return {
+				...state,
+				loading: false,
+				countries: null,
+				countriesError: action.payload,
+			};
 
-		// case GET_STATE:
-		// 	return {
-		// 		...state,
-		// 		loading: true,
-		// 		states: null,
-		// 		statesError: null,
-		// 	};
+		case GET_STATE:
+			return {
+				...state,
+				loading: true,
+				states: null,
+				statesError: null,
+			};
 
-		// case GET_STATE_SUCCESS:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		states: action.payload,
-		// 		statesError: null,
-		// 	};
+		case GET_STATE_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				states: action.payload,
+				statesError: null,
+			};
 
-		// case GET_STATE_ERROR:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		states: null,
-		// 		statesError: action.payload,
-		// 	};
+		case GET_STATE_ERROR:
+			return {
+				...state,
+				loading: false,
+				states: null,
+				statesError: action.payload,
+			};
 
-		// case GET_LGA:
-		// 	return {
-		// 		...state,
-		// 		loading: true,
-		// 		lgas: null,
-		// 		lgasError: null,
-		// 	};
+		case GET_LGA:
+			return {
+				...state,
+				loading: true,
+				lgas: null,
+				lgasError: null,
+			};
 
-		// case GET_LGA_SUCCESS:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		lgas: action.payload,
-		// 		lgasError: null,
-		// 	};
+		case GET_LGA_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				lgas: action.payload,
+				lgasError: null,
+			};
 
-		// case GET_LGA_ERROR:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		lgas: null,
-		// 		lgasError: action.payload,
-		// 	};
+		case GET_LGA_ERROR:
+			return {
+				...state,
+				loading: false,
+				lgas: null,
+				lgasError: action.payload,
+			};
 
-		// case SEND_OTP:
-		// 	return {
-		// 		...state,
-		// 		loading: true,
-		// 		otp: null,
-		// 		otpError: null,
-		// 	};
+		case SEND_OTP:
+			return {
+				...state,
+				loading: true,
+				otp: null,
+				otpError: null,
+			};
 
-		// case SEND_OTP_SUCCESS:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		otp: action.payload,
-		// 		otpError: null,
-		// 		showEmailOtpModal: true,
-		// 	};
+		case SEND_OTP_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				otp: action.payload,
+				otpError: null,
+				showEmailOtpModal: true,
+			};
 
-		// case SEND_OTP_ERROR:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		otp: null,
-		// 		otpError: action.payload,
-		// 		showEmailOtpModal: false,
-		// 	};
+		case SEND_OTP_ERROR:
+			return {
+				...state,
+				loading: false,
+				otp: null,
+				otpError: action.payload,
+				showEmailOtpModal: false,
+			};
 
 		case GET_BANKS:
 			return {
@@ -263,37 +265,37 @@ const userProfileReducer = (state = initialState, action) => {
 				validateOtpError: null,
 			};
 
-		// case SEND_COMPANY_OTP:
-		// 	return {
-		// 		...state,
-		// 		loading: true,
-		// 		otp: null,
-		// 		otpError: null,
-		// 	};
+		case SEND_COMPANY_OTP:
+			return {
+				...state,
+				loading: true,
+				otp: null,
+				otpError: null,
+			};
 
-		// case SEND_COMPANY_OTP_SUCCESS:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		otp: action.payload,
-		// 		otpError: null,
-		// 		showEmailOtpModal: true,
-		// 	};
+		case SEND_COMPANY_OTP_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				otp: action.payload,
+				otpError: null,
+				showEmailOtpModal: true,
+			};
 
-		// case SEND_COMPANY_OTP_ERROR:
-		// 	return {
-		// 		...state,
-		// 		loading: false,
-		// 		otp: null,
-		// 		otpError: action.payload,
-		// 		showEmailOtpModal: false,
-		// 	};
+		case SEND_COMPANY_OTP_ERROR:
+			return {
+				...state,
+				loading: false,
+				otp: null,
+				otpError: action.payload,
+				showEmailOtpModal: false,
+			};
 
-		// case CLEAR_OTP:
-		// 	return {
-		// 		otp: null,
-		// 		otpError: null,
-		// 	};
+		case CLEAR_OTP:
+			return {
+				otp: null,
+				otpError: null,
+			};
 
 		case GET_COMPANY_DOCS:
 			return {

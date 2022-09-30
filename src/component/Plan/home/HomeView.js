@@ -23,14 +23,14 @@ function HomeView() {
   //     ? users.individualUser.firstName
   //     : "";
 
-  useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
-    if (tokenString) {
-      dispatch(getAuthUsers(tokenString.token));
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("token"));
+  //   if (tokenString) {
+  //     dispatch(getAuthUsers(tokenString.token));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {

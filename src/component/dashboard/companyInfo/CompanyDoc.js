@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as types from "../../../redux/constant/auth";
 import styled from "styled-components";
 import toast, { Toaster } from "react-hot-toast";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import ModalComponent from "../../ModalComponent";
 import { OTPVerify } from "../../Accessories/BVNConfirm";
@@ -17,7 +17,12 @@ import {
 } from "../../../redux/actions/personalInfo/userProfile.actions";
 import { CLEAR_OTP } from "../../../redux/constant/userActionTypes";
 
-const CompanyDoc = () => {
+const CompanyDoc = ({
+	getAuthUsers,
+	getCompanyDocs,
+	sendCompanyOtp,
+	uploadCompanyDocument,
+}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [token, setToken] = useState("");
@@ -39,15 +44,15 @@ const CompanyDoc = () => {
 
 	const {
 		users,
+		companyDocs,
+		companyDocsError,
 		showEmailOtpModal,
 		otp,
 		otpError,
 		validateEmailOtp,
-		companyDocs,
-		companyDocsError,
 	} = useSelector((state) => state.user_profile);
 
-  const { companyDocMsg } = useSelector((state) => state.updateProfile)
+	const { companyDocMsg } = useSelector((state) => state.updateProfile);
 
 	// console.log(companyDocs);
 	// console.log(users);
@@ -141,7 +146,7 @@ const CompanyDoc = () => {
 			},
 		};
 		console.log(data);
-		dispatch(uploadCompanyDocument(data));
+		uploadCompanyDocument(data);
 	};
 
 	const handleFileSelect = (e, reference) => {
@@ -150,19 +155,18 @@ const CompanyDoc = () => {
 	};
 
 	const handleSendOtp = () => {
-		dispatch(sendCompanyOtp());
+		sendCompanyOtp();
 	};
-
 
 	const handleOTPModalClose = () => {
 		dispatch({ type: types.CLOSE_MODAL });
 		dispatch({ type: types.CLEAR_MESSAGES });
-    dispatch({ type: CLEAR_OTP })
+		dispatch({ type: CLEAR_OTP });
 	};
 
 	useEffect(() => {
 		if (validateEmailOtp) {
-      toggleEdit();
+			toggleEdit();
 			handleOTPModalClose();
 		}
 	}, [validateEmailOtp]);
@@ -184,23 +188,19 @@ const CompanyDoc = () => {
 		});
 	};
 
-  const tokenObj = JSON.parse(localStorage.getItem("token"));
+	const tokenObj = JSON.parse(localStorage.getItem("token"));
 
 	useEffect(() => {
-    if(!users){
-      dispatch(getAuthUsers(tokenObj?.token));
-    }
-	}, [users, tokenObj.token]); 
+		if (!users) {
+			getAuthUsers(tokenObj?.token);
+		}
+	}, [users, tokenObj.token]);
 
-  useEffect(() => {
-    if(!companyDocs || companyDocMsg){
-      dispatch(getCompanyDocs());
-    }
-  }, [companyDocs, companyDocMsg])
-
-  useEffect(() => {
-    dispatch(sendCompanyOtp());
-  }, [])
+	useEffect(() => {
+		if (!companyDocs || companyDocMsg) {
+			getCompanyDocs();
+		}
+	}, [companyDocs, companyDocMsg]);
 
 	return (
 		<div>
@@ -1042,7 +1042,12 @@ const CompanyDoc = () => {
 	);
 };
 
-export default CompanyDoc;
+export default connect(null, {
+	getAuthUsers,
+	getCompanyDocs,
+	sendCompanyOtp,
+	uploadCompanyDocument,
+})(CompanyDoc);
 
 const WrapperBody = styled.div`
 	.grey-button {

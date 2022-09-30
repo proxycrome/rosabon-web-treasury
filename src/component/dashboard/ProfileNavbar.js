@@ -15,6 +15,7 @@ import {
 } from '../../redux/actions/personalInfo/userProfile.actions';
 import { logOut } from '../../redux/actions/auth/SignupAction';
 import { CLEAR_USERS } from '../../redux/constant/auth';
+import avatar from '../../asset/avi.jpg';
 
 export function ProfileNavBar({ children }) {
   const [menu, setMenu] = useState(false);
@@ -90,7 +91,7 @@ export function ProfileNavBar({ children }) {
                   </span>
                   <img
                     className="rounded-circle header-profile-user mr-3"
-                    src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                    src={avatar}
                     width="50"
                     alt="Avatar"
                   />

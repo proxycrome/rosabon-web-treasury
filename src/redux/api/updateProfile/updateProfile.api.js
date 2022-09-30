@@ -83,3 +83,17 @@ export const validate_phone_otp = async (otp) => {
     return { errorObj };
   }
 };
+
+export const update_director_details = async (objData) => {
+  try {
+    const response = await axios.put(`${config.rosobon}auth/company/director-details`, objData, {
+      headers: authHeader(tokenObj.token),
+    });
+    
+    const formData = await response.data;
+    return { formData };
+  } catch (error) {
+    const errorObj = await error?.response?.data;
+    return { errorObj };
+  }
+};

@@ -248,8 +248,7 @@ const PersonalKYC = () => {
 																	formData.gender ||
 																	user_details?.individualUser?.gender
 																}
-																name="gender"
-															>
+																name="gender">
 																<option value="">Select Gender...</option>
 																<option value="MALE">Male</option>
 																<option value="FEMALE">Female</option>
@@ -310,8 +309,7 @@ const PersonalKYC = () => {
 														<button
 															type="button"
 															onClick={handleVerifyBVN}
-															className="profile_vify_btn"
-														>
+															className="profile_vify_btn">
 															Verify
 														</button>
 													</div>
@@ -324,13 +322,11 @@ const PersonalKYC = () => {
 																position: "absolute",
 																top: "100px",
 																right: "300px",
-															}}
-														>
+															}}>
 															<ModalComponent
 																show={showBvnModal}
 																size={"md"}
-																handleClose={handleBVNModalClose}
-															>
+																handleClose={handleBVNModalClose}>
 																<BVNConfirm
 																	show={showBvnModal}
 																	handleClose={handleBVNModalClose}
@@ -420,8 +416,7 @@ const PersonalKYC = () => {
 																	formData.state ||
 																	user_details?.individualUser?.address?.state
 																}
-																name="state"
-															>
+																name="state">
 																<option value="">Select State...</option>
 																{states?.map((state) => (
 																	<option key={state.id} value={state.name}>
@@ -458,8 +453,7 @@ const PersonalKYC = () => {
 																	formData.country ||
 																	user_details?.individualUser?.address?.country
 																}
-																name="country"
-															>
+																name="country">
 																<option value="">
 																	Select your Nationality...
 																</option>
@@ -510,8 +504,7 @@ const PersonalKYC = () => {
 											bvnMessage?.success ? (
 												<button
 													className=""
-													onClick={(e) => handleSubmit(e, "/profile")}
-												>
+													onClick={(e) => handleSubmit(e, "/profile")}>
 													Save and Continue
 												</button>
 											) : (
@@ -546,8 +539,7 @@ const PersonalKYC = () => {
 											bvnMessage?.success ? (
 												<button
 													className="blue-btn"
-													onClick={(e) => handleSubmit(e, "/plan-product")}
-												>
+													onClick={(e) => handleSubmit(e, "/plan-product")}>
 													Save and Invest Now
 												</button>
 											) : (

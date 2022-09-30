@@ -1,4 +1,3 @@
-import * as types from "../constant/auth";
 import { CLOSE_MODAL } from "../constant/auth";
 import {
 	CHANGE_PASSWORD,
@@ -20,6 +19,9 @@ import {
 	UPDATE_COMPANY_INFO,
 	UPDATE_COMPANY_INFO_ERROR,
 	UPDATE_COMPANY_INFO_SUCCESS,
+	UPDATE_DIRECTOR_DETAILS,
+	UPDATE_DIRECTOR_DETAILS_ERROR,
+	UPDATE_DIRECTOR_DETAILS_SUCCESS,
 	VALIDATE_PHONE_OTP,
 	VALIDATE_PHONE_OTP_ERROR,
 	VALIDATE_PHONE_OTP_SUCCESS,
@@ -30,24 +32,6 @@ import {
 	VERIFY_PHONE_ERROR,
 	VERIFY_PHONE_SUCCESS,
 } from "../constant/updateProfileActionTypes";
-import {
-	CLEAR_OTP,
-	GET_COUNTRY,
-	GET_COUNTRY_ERROR,
-	GET_COUNTRY_SUCCESS,
-	GET_LGA,
-	GET_LGA_ERROR,
-	GET_LGA_SUCCESS,
-	GET_STATE,
-	GET_STATE_ERROR,
-	GET_STATE_SUCCESS,
-	SEND_COMPANY_OTP,
-	SEND_COMPANY_OTP_ERROR,
-	SEND_COMPANY_OTP_SUCCESS,
-	SEND_OTP,
-	SEND_OTP_ERROR,
-	SEND_OTP_SUCCESS,
-} from "../constant/userActionTypes";
 
 const initialState = {
 	loading: false,
@@ -72,15 +56,8 @@ const initialState = {
 	companyInfoError: null,
 	companyDocMsg: null,
 	companyDocMsgError: null,
-	countries: null,
-	countriesError: null,
-	states: null,
-	statesError: null,
-	lgas: null,
-	lgasError: null,
-	showEmailOtpModal: false,
-	otp: null,
-	otpError: null,
+	directorMsg: null,
+	directorMsgError: null,
 };
 
 const updateProfile = (state = initialState, action) => {
@@ -348,156 +325,30 @@ const updateProfile = (state = initialState, action) => {
 			};
 			break;
 
-		case GET_COUNTRY:
+		case UPDATE_DIRECTOR_DETAILS:
 			state = {
 				...state,
 				loading: true,
-				countries: null,
-				countriesError: null,
+				directorMsg: null,
+				directorMsgError: null,
 			};
 			break;
 
-		case GET_COUNTRY_SUCCESS:
+		case UPDATE_DIRECTOR_DETAILS_SUCCESS:
 			state = {
 				...state,
 				loading: false,
-				countries: action.payload,
-				countriesError: null,
+				directorMsg: action.payload,
+				directorMsgError: null,
 			};
 			break;
 
-		case GET_COUNTRY_ERROR:
+		case UPDATE_DIRECTOR_DETAILS_ERROR:
 			state = {
 				...state,
 				loading: false,
-				countries: null,
-				countriesError: action.payload,
-			};
-			break;
-
-		case GET_STATE:
-			state = {
-				...state,
-				loading: true,
-				states: null,
-				statesError: null,
-			};
-			break;
-
-		case GET_STATE_SUCCESS:
-			state = {
-				...state,
-				loading: false,
-				states: action.payload,
-				statesError: null,
-			};
-			break;
-
-		case GET_STATE_ERROR:
-			state = {
-				...state,
-				loading: false,
-				states: null,
-				statesError: action.payload,
-			};
-			break;
-
-		case GET_LGA:
-			state = {
-				...state,
-				loading: true,
-				lgas: null,
-				lgasError: null,
-			};
-			break;
-
-		case GET_LGA_SUCCESS:
-			state = {
-				...state,
-				loading: false,
-				lgas: action.payload,
-				lgasError: null,
-			};
-			break;
-
-		case GET_LGA_ERROR:
-			state = {
-				...state,
-				loading: false,
-				lgas: null,
-				lgasError: action.payload,
-			};
-			break;
-
-		case types.CLOSE_MODAL:
-			state = {
-				...state,
-				showEmailOtpModal: false,
-			};
-			break;
-
-		case SEND_OTP:
-			state = {
-				...state,
-				loading: true,
-				otp: null,
-				otpError: null,
-			};
-			break;
-
-		case SEND_OTP_SUCCESS:
-			state = {
-				...state,
-				loading: false,
-				otp: action.payload,
-				otpError: null,
-				showEmailOtpModal: true,
-			};
-			break;
-
-		case SEND_OTP_ERROR:
-			state = {
-				...state,
-				loading: false,
-				otp: null,
-				otpError: action.payload,
-				showEmailOtpModal: false,
-			};
-			break;
-
-		case SEND_COMPANY_OTP:
-			state = {
-				...state,
-				loading: true,
-				otp: null,
-				otpError: null,
-			};
-			break;
-
-		case SEND_COMPANY_OTP_SUCCESS:
-			state = {
-				...state,
-				loading: false,
-				otp: action.payload,
-				otpError: null,
-				showEmailOtpModal: true,
-			};
-			break;
-
-		case SEND_COMPANY_OTP_ERROR:
-			state = {
-				...state,
-				loading: false,
-				otp: null,
-				otpError: action.payload,
-				showEmailOtpModal: false,
-			};
-			break;
-
-		case CLEAR_OTP:
-			state = {
-				otp: null,
-				otpError: null,
+				directorMsg: null,
+				directorMsgError: action.payload,
 			};
 			break;
 

@@ -6,6 +6,7 @@ import {
   update_contact_details,
   validate_phone_otp,
   update_personal_info,
+  update_director_details,
 } from '../../api/updateProfile/updateProfile.api';
 
 import {
@@ -18,6 +19,9 @@ import {
   UPDATE_COMPANY_INFO,
   UPDATE_COMPANY_INFO_ERROR,
   UPDATE_COMPANY_INFO_SUCCESS,
+  UPDATE_DIRECTOR_DETAILS,
+  UPDATE_DIRECTOR_DETAILS_ERROR,
+  UPDATE_DIRECTOR_DETAILS_SUCCESS,
   VALIDATE_PHONE_OTP,
   VALIDATE_PHONE_OTP_ERROR,
   VALIDATE_PHONE_OTP_SUCCESS,
@@ -51,6 +55,22 @@ export const updateContactDetails = (dataObj) => async (dispatch) => {
 
   if (errorObj) {
     dispatch({ type: PUT_CONTACT_DETAILS_ERROR, payload: errorObj });
+  }
+};
+
+export const updateDirectorDetails = (objData) => async (dispatch) => {
+  dispatch({ type: UPDATE_DIRECTOR_DETAILS });
+  const { formData, errorObj } = await update_director_details(objData);
+
+  if (formData) {
+    dispatch({ type: UPDATE_DIRECTOR_DETAILS_SUCCESS, payload: formData });
+    toast.success("Director Details Updated Successfully");
+  }
+
+  if (errorObj) {
+    dispatch({ type: UPDATE_DIRECTOR_DETAILS_ERROR, payload: errorObj });
+    toast.error(errorObj);
+    console.log(errorObj);
   }
 };
 

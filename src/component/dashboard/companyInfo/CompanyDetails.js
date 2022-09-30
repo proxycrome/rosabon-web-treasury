@@ -119,7 +119,6 @@ const CompanyDetails = () => {
 		}
 	}, [users]);
 
-
 	return (
 		<div>
 			<Toaster />
@@ -135,16 +134,14 @@ const CompanyDetails = () => {
 											<button
 												type="button"
 												className="btn_bg_blue"
-												onClick={toggleDetail}
-											>
+												onClick={toggleDetail}>
 												Edit
 											</button>
 										) : (
 											<button
 												type="button"
 												className="grey-button"
-												onClick={toggleDetail}
-											>
+												onClick={toggleDetail}>
 												Cancel
 											</button>
 										)}
@@ -245,8 +242,7 @@ const CompanyDetails = () => {
 												name="companyType"
 												value={
 													formData?.companyType || users?.company?.companyType
-												}
-											>
+												}>
 												<option value="" disabled>
 													Select Company Type
 												</option>
@@ -274,16 +270,14 @@ const CompanyDetails = () => {
 												<button
 													type="button"
 													className="tn_bg_blue"
-													onClick={toggleCont}
-												>
+													onClick={toggleCont}>
 													Edit
 												</button>
 											) : (
 												<button
 													type="button"
 													className="grey-button"
-													onClick={toggleCont}
-												>
+													onClick={toggleCont}>
 													Cancel
 												</button>
 											)}

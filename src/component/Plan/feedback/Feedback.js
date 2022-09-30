@@ -22,6 +22,8 @@ const Feedback = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [feedbackForm, setFeedbackForm] = useState(initialForm)
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -57,12 +59,32 @@ const Feedback = () => {
     }
   }
  
+  const validateForm = (values) => {
+    let errors = {};
+
+    if(!values.content) {
+      errors.content = "Message Description is required";
+    }
+
+    if(!values.title) {
+      errors.title = "Message Title is required";
+    }
+
+    return errors;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(postFeedback(feedbackForm, setShow));
-    setFeedbackForm(initialForm);
+    setErrors(validateForm(feedbackForm));
+    setIsSubmitted(true);
   }
+
+  useEffect(() => {
+    if(Object.keys(errors).length === 0 && isSubmitted) {
+      dispatch(postFeedback(feedbackForm, setShow));
+      setFeedbackForm(initialForm);
+    }
+  }, [errors])
 
   // useEffect(() => {
   //   const tokenString = JSON.parse(localStorage.getItem("token"));
@@ -113,12 +135,12 @@ const Feedback = () => {
                 value={feedbackForm.title}
               />
             </div>
-            {/* {errors.name && <h3>{errors.name}</h3>} */}
+            {errors.title && <small className="text-danger">{errors.title}</small>}
           </div>
           <div className="pb-4">
-            <div className=" ">
+            <div className="mb-4">
               <label>Description </label>
-              <div className="input-group mb-4">
+              <div className="input-group">
                 <textarea
                   rows="5"
                   cols="60"
@@ -129,6 +151,7 @@ const Feedback = () => {
                   value={feedbackForm.content}
                 ></textarea>
               </div>
+              {errors.content && <small className="text-danger">{errors.content}</small>}
             </div>
           </div>
         </Wrapper>
