@@ -44,115 +44,316 @@ function PageRoutes({ login, isAuth }) {
 	console.log(isAuth);
 	return (
 		// <HashRouter>
-			<Routes>
-				<Route path="*" element={<p>Error 404</p>} />
-				<Route
-					path="/"
-					element={
-						<ProtectedRoute isAuth={isAuth}>
-							<PlanHome />
-						</ProtectedRoute>
-					}>
-					<Route path="" element={<HomeView />} />
-					<Route path="plan-product" element={<PlanProduct />} />
-					<Route path="plan-list" element={<ListPlans />} />
-					<Route path="plan-topup" element={<TopupPlan />} />
-					<Route path="plan-payment" element={<PlanPayment />} />
-					<Route path="create-plan" element={<PlanForm />} />
-					<Route path="rollover" element={<PlanRollover />} />
-					<Route path="transfer" element={<Transfer />} />
-					<Route path="withdrawal" element={<Withdrawal />} />
-					<Route path="history" element={<Transactions />} />
-					<Route path="archives" element={<Archives />} />
-					<Route path="user-wallet" element={<UserWallet />} />
-					<Route path="wallet-history" element={<HistoryTable />} />
-					<Route path="referral-table" element={<ReferalTable />} />
-					<Route path="referral-table/bonus" element={<ReferralBonus />} />
-					<Route path="deposit-table" element={<TransferDeposit />} />
-					<Route path="special-earnings" element={<SpecialEarnings />} />
-					<Route path="feedback" element={<Feedback />} />
-					<Route path="feedback-tickets" element={<FeedbackTickets />} />
-					<Route path="open-tickets" element={<FeedbackOpenTickets />} />
-					<Route path="close-tickets" element={<FeedbackCloseTickets />} />
-					<Route path="admin-message" element={<AdminMessage />} />
-					<Route path="help" element={<Help />} />
-				</Route>
-				<Route
-					path="/kyc"
-					element={
-						<ProtectedRoute isAuth={isAuth}>
-							<KYC />
-						</ProtectedRoute>
-					}>
-					<Route path="" element={<GeneralKYC />} />
-				</Route>
+		<Routes>
+			<Route path="*" element={<p>Error 404</p>} />
 
-				<Route
-					path="/profile"
-					element={
-						<ProtectedRoute isAuth={isAuth}>
-							<Profile />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/plan-details-form"
-					element={
-						<ProtectedRoute isAuth={isAuth}>
-							<PlanHome details="details" />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/login"
-					element={
-						<NotProtectedRoute isAuth={isAuth}>
-							<Login />
-						</NotProtectedRoute>
-					}
-				/>
+			<Route
+				exact
+				path="/"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<HomeView />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/plan-product"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<PlanProduct />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/plan-list"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<ListPlans />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/plan-topup"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<TopupPlan />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/plan-payment"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<PlanPayment />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/create-plan"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<PlanForm />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/rollover"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<PlanRollover />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/transfer"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<Transfer />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/withdrawal"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<Withdrawal />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/history"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<Transactions />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/archives"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<Archives />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/user-wallet"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<UserWallet />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/wallet-history"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<HistoryTable />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/referral-table"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<ReferalTable />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/referral-table/bonus"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<ReferralBonus />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/deposit-table"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<TransferDeposit />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/special-earnings"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<SpecialEarnings />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/feedback"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<Feedback />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/feedback-tickets"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<FeedbackTickets />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/open-tickets"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<FeedbackOpenTickets />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/close-tickets"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<FeedbackCloseTickets />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/admin-message"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<AdminMessage />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/help"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<Help />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/kyc"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<KYC />
+					</ProtectedRoute>
+				}>
+				<Route path="" element={<GeneralKYC />} />
+			</Route>
 
-				<Route
-					path="/register-user"
-					element={
-						<NotProtectedRoute isAuth={isAuth}>
-							<UserSignup signup="signup" />
-						</NotProtectedRoute>
-					}
-				/>
-				<Route
-					path="/register-company"
-					element={
-						<NotProtectedRoute isAuth={isAuth}>
-							<CompanySignup signup="signup" />
-						</NotProtectedRoute>
-					}
-				/>
-				<Route
-					path="/forgot-password"
-					element={
-						<NotProtectedRoute isAuth={isAuth}>
-							<ForgotPassword />
-						</NotProtectedRoute>
-					}
-				/>
-				<Route
-					path="/congrates"
-					element={
-						<NotProtectedRoute isAuth={isAuth}>
-							<Congratulatios />
-						</NotProtectedRoute>
-					}
-				/>
-				<Route
-					path="/reset-password"
-					element={
-						<NotProtectedRoute isAuth={isAuth}>
-							<ResetPassword />
-						</NotProtectedRoute>
-					}
-				/>
-			</Routes>
+			<Route
+				path="/profile"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<Profile />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/plan-details-form"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome details="details" />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/login"
+				element={
+					<NotProtectedRoute isAuth={isAuth}>
+						<Login />
+					</NotProtectedRoute>
+				}
+			/>
+
+			<Route
+				path="/register-user"
+				element={
+					<NotProtectedRoute isAuth={isAuth}>
+						<UserSignup signup="signup" />
+					</NotProtectedRoute>
+				}
+			/>
+			<Route
+				path="/register-company"
+				element={
+					<NotProtectedRoute isAuth={isAuth}>
+						<CompanySignup signup="signup" />
+					</NotProtectedRoute>
+				}
+			/>
+			<Route
+				path="/forgot-password"
+				element={
+					<NotProtectedRoute isAuth={isAuth}>
+						<ForgotPassword />
+					</NotProtectedRoute>
+				}
+			/>
+			<Route
+				path="/congrates"
+				element={
+					<NotProtectedRoute isAuth={isAuth}>
+						<Congratulatios />
+					</NotProtectedRoute>
+				}
+			/>
+			<Route
+				path="/reset-password"
+				element={
+					<NotProtectedRoute isAuth={isAuth}>
+						<ResetPassword />
+					</NotProtectedRoute>
+				}
+			/>
+		</Routes>
 		// </HashRouter>
 	);
 }

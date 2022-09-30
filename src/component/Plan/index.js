@@ -4,8 +4,9 @@ import { ProfileSideBarList } from '../dashboard/ProfileSideBar'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import HomeView from './home/HomeView'
 
-const PlanHome = ({ product, list, topup, payment, details }) => {
+const PlanHome = ({ product, list, topup, payment, details, children }) => {
   const [tabs, setTabs] = useState('profile')
   const navigate = useNavigate()
   const auth = useSelector((state) => state.auth)
@@ -27,7 +28,7 @@ const PlanHome = ({ product, list, topup, payment, details }) => {
         <ProfileSideBarList profile="profile" />
       </div>
       <div className="main-body">
-        <Outlet />
+        {children}
       </div>
     </Wrapper>
   )

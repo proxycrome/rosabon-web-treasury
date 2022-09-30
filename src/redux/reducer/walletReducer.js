@@ -1,5 +1,6 @@
 import {
   CLEAR_TRANSACTIONS,
+  CLEAR_WALLET_BALANCE,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -42,6 +43,14 @@ const wallet = (state = initialState, action) => {
         walletBalance: null,
         walletBalanceError: action.payload,
       };
+      break;
+
+    case CLEAR_WALLET_BALANCE:
+      state = {
+        ...state,
+        walletBalance: null,
+        walletBalanceError: null,
+      }
       break;
 
     case GET_WALLET_TRANSACTIONS_SUCCESS:

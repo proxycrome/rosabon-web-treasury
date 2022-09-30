@@ -92,7 +92,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                       className={({ isActive }) => {
                         isActive ? setTicket(true) : setTicket(false)
                       }}
-                      to="feedback-tickets"
+                      to="/feedback-tickets"
                     >
                       <li className={isTicket ? 'active-bg' : ''}>
                         <span>My Tickets</span>
@@ -103,7 +103,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                       className={({ isActive }) => {
                         isActive ? setIsOpenTicket(true) : setIsOpenTicket(false)
                       }}
-                      to="open-tickets"
+                      to="/open-tickets"
                     >
                       <li className={isOpenTicket ? ' active-bg' : ''}>
                         <span>My Open Tickets</span>
@@ -116,7 +116,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                           ? setIsCloseTicket(true)
                           : setIsCloseTicket(false)
                       }}
-                      to="close-tickets"
+                      to="/close-tickets"
                     >
                       <li className={isCloseTicket ? ' active-bg' : ''}>
                         <span>My Closed Tickets</span>

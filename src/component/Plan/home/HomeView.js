@@ -15,6 +15,20 @@ function HomeView() {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.user_profile);
   const { users } = profile;
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
+  
+
+  
+  
+
+  // useEffect(() => {
+  //   if(login){
+  //     navigate(0);
+  //   }
+  // }, []);
+
+  
 
   // const user =
   //   users && users.role == "COMPANY"

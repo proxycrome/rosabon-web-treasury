@@ -16,6 +16,7 @@ import { AvailableBalance, TransferCard } from "../Accesssories";
 import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
+import { CLEAR_WALLET_BALANCE } from "../../../redux/constant/walletActionTypes";
 
 const UserWallet = () => {
   const navigate = useNavigate();
@@ -51,6 +52,10 @@ const UserWallet = () => {
     setSidebar(false);
     setClosefooter(false);
   };
+
+  useEffect(() => {
+    dispatch({type: CLEAR_WALLET_BALANCE});
+  }, [])
 
   useEffect(() => {
     dispatch(getWalletBalance())

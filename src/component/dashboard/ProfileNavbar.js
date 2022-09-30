@@ -51,14 +51,14 @@ export function ProfileNavBar({ children }) {
   //     ? users.individualUser.firstName
   //     : ''
 
-  useEffect(() => {
-    if (users && !users.kyc && users.role === 'INDIVIDUAL_USER') {
-      navigate('/kyc/person');
-    }
-    if (users && !users.kyc && users.role === 'COMPANY') {
-      navigate('/kyc/company');
-    }
-  }, [users]);
+  // useEffect(() => {
+  //   if (users && !users.kyc && users.role === 'INDIVIDUAL_USER') {
+  //     navigate('/kyc/person');
+  //   }
+  //   if (users && !users.kyc && users.role === 'COMPANY') {
+  //     navigate('/kyc/company');
+  //   }
+  // }, [users]);
 
   return (
     <WrappeNavBar>
