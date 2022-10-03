@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { config } from '../../redux/config'
-import axios from 'axios'
-import { authHeader, headers } from '../../redux/headers'
 import styled from 'styled-components'
 import toast, { Toaster } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png'
 import { Link, useNavigate } from 'react-router-dom'
-import {
-  forgotPassword,
-  successMessage,
-} from '../../redux/actions/auth/SignupAction'
-import * as types from '../../redux/constant/auth'
+// import {
+//   successMessage,
+// } from '../../redux/actions/auth/SignupAction';
+// import * as types from '../../redux/constant/auth'
 import { Form, FormGroup, Input, Label, FormFeedback } from 'reactstrap'
+import { forgotPassword } from '../../store/actions'
 
 function ForgotPassword() {
   const dispatch = useDispatch()
@@ -55,54 +52,54 @@ function ForgotPassword() {
     e.preventDefault()
     setError(false)
     const { email } = formData
-    if (!isValidEmail(email)) {
+    if (!isValidEmail(email) || !email) {
       return setError(true)
     }
-    forgot_password(email)
-    dispatch({ type: types.USERS_EMAIL, payload: email })
+
+    dispatch(forgotPassword(email, navigate));
   }
 
-  const forgot_password = async (email) => {
-    try {
-      const mail = email.trim()
-      const response = await axios.post(
-        `${config.rosobon}users/${mail}/forgot-password`,
-        headers,
-      )
-      dispatch({
-        type: types.LOADING,
-        payload: true,
-      })
-      const formData = await response.data
-      navigate('/congrates', { state: 'forgotpassword' })
-      dispatch({ type: types.USERS_EMAIL, payload: email })
-      dispatch({
-        type: types.LOADING,
-        payload: false,
-      })
-      return { formData }
-    } catch (error) {
-      const message = error.response
-        ? error.response.data.message
-          ? error.response.data.message
-          : error.response.data.response_message
-          ? error.response.data.response_message
-          : 'Invalid Credentials'
-        : 'Network Error'
-      toast.error(message, {
-        position: 'top-right',
-      })
-      return { message }
-    }
-  }
+  // const forgot_password = async (email) => {
+  //   try {
+  //     const mail = email.trim()
+  //     const response = await axios.post(
+  //       `${config.rosobon}users/${mail}/forgot-password`,
+  //       headers,
+  //     )
+  //     dispatch({
+  //       type: types.LOADING,
+  //       payload: true,
+  //     })
+  //     const formData = await response.data
+  //     navigate('/congrates', { state: 'forgotpassword' })
+  //     dispatch({ type: types.USERS_EMAIL, payload: email })
+  //     dispatch({
+  //       type: types.LOADING,
+  //       payload: false,
+  //     })
+  //     return { formData }
+  //   } catch (error) {
+  //     const message = error.response
+  //       ? error.response.data.message
+  //         ? error.response.data.message
+  //         : error.response.data.response_message
+  //         ? error.response.data.response_message
+  //         : 'Invalid Credentials'
+  //       : 'Network Error'
+  //     toast.error(message, {
+  //       position: 'top-right',
+  //     })
+  //     return { message }
+  //   }
+  // }
 
   return (
     <WrapperContainer>
       <div className="view_content"></div>
       <Toaster
-        toastOptions={{
-          className: 'bg-danger text-white',
-        }}
+        // toastOptions={{
+        //   className: 'bg-danger text-white',
+        // }}
       />
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">

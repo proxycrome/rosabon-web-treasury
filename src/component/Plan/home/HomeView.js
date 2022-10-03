@@ -5,16 +5,30 @@ import { RightView } from "./RightView";
 import { LeftView } from "./LeftView";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import {
-  updateUserCompanyKYC,
-  getAuthUsers,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
+// import {
+//   updateUserCompanyKYC,
+//   getAuthUsers,
+// } from "../../../redux/actions/personalInfo/userProfile.actions";
 
 function HomeView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.user_profile);
   const { users } = profile;
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn } = auth;
+  
+
+  
+  
+
+  // useEffect(() => {
+  //   if(login){
+  //     navigate(0);
+  //   }
+  // }, []);
+
+  
 
   // const user =
   //   users && users.role == "COMPANY"
@@ -23,21 +37,21 @@ function HomeView() {
   //     ? users.individualUser.firstName
   //     : "";
 
-  useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
-    if (tokenString) {
-      dispatch(getAuthUsers(tokenString.token));
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const tokenString = JSON.parse(localStorage.getItem("token"));
+  //   if (tokenString) {
+  //     dispatch(getAuthUsers(tokenString.token));
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/kyc/person");
+      navigate("/kyc");
     }
     if (users && !users.kyc && users.role === "COMPANY") {
-      navigate("/kyc/company");
+      navigate("/kyc");
     }
   }, [users]);
 

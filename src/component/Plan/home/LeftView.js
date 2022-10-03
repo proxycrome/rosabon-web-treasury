@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Collapse } from 'reactstrap'
 
 export const LeftView = () => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+  // const auth = useSelector((state) => state.auth);
+  // const { login, isLoggedIn } = auth;
+
+  
+
   return (
     <LeftWrapper className="ms-4">
       <div className="calculatoe">

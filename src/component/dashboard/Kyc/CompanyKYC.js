@@ -5,10 +5,11 @@ import { ProfileSideBar } from '../ProfileSideBar';
 import { BVNConfirm } from '../../Accessories/BVNConfirm';
 import ModalComponent from '../../ModalComponent';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  updateUserCompanyKYC,
-  getAuthUsers,
-} from '../../../redux/actions/personalInfo/userProfile.actions';
+// import {
+//   // updateUserKYC,
+//   // getAuthUsers,
+// } from '../../../redux/actions/personalInfo/userProfile.actions';
+import { getAuthUsers, updateUserKyc } from '../../../store/actions';
 import moment from 'moment';
 
 const CompanyKYC = () => {
@@ -99,19 +100,18 @@ const CompanyKYC = () => {
       },
     };
 
-    const tokenString = JSON.parse(localStorage.getItem('token'));
     const pathCred = {
       navigate,
       route,
     };
     console.log(data);
-    dispatch(updateUserCompanyKYC(tokenString.token, data, pathCred));
+    dispatch(updateUserKyc(data, pathCred));
   };
 
   useEffect(() => {
     const tokenString = JSON.parse(localStorage.getItem('token'));
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString.token));
+      dispatch(getAuthUsers());
     } else {
       navigate('/login');
     }

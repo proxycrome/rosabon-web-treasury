@@ -6,7 +6,8 @@ import { PlanSummary, UserBankDetails } from '../Accesssories';
 import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 import { useDispatch, useSelector } from "react-redux";
-import { createPlan } from "../../../redux/actions/plan/planAction";
+// import { createPlan } from "../../../redux/actions/plan/planAction";
+import { createPlan } from '../../../store/actions';
 import { PlanContext } from "./PlanForm";
 
 

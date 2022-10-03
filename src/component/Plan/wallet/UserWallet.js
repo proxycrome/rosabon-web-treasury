@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch, connect } from "react-redux";
-import {
-  updateUserCompanyKYC,
-  getAuthUsers,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
-import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
+// import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
+import { getWalletBalance } from "../../../store/actions";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import halfEllipse from "../../../asset/halfEllipse.png";
 import Telephone from "../../../asset/telephone.png";

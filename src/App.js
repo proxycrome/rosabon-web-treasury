@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import PageRoutes from './PageRoutes'
 import { useSelector, useDispatch } from 'react-redux'
-import { RefreshUser } from './redux/actions/auth/SignupAction'
+import { refreshUser } from './store/actions'
 import Spinner from './component/common/loading'
 
 function App() {
-  const dispatch = useDispatch()
-  const { login, isAuth } = useSelector((state) => state.auth)
+  const dispatch = useDispatch();
+  const { login, isAuth } = useSelector((state) => state.auth);
+
   useEffect(() => {
-    dispatch(RefreshUser())
-  }, [RefreshUser])
+    dispatch(refreshUser());
+  }, [dispatch]);
+
   return (
     <div className="App">
       {isAuth !== null ? (

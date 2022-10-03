@@ -1,6 +1,5 @@
 {
   "name": "rosabon",
-  "homepage": "http://rosabon-treasury-admin.optisoft..com.ng/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -29,12 +28,13 @@
     "react-toastify": "^9.0.8",
     "react18-input-otp": "^1.1.0",
     "reactstrap": "^9.1.4",
-    "redux": "^4.2.0",
+    "redux": "^4.1.0",
     "redux-devtools": "^3.7.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.4.1",
+    "redux-saga": "^1.2.1",
+    "redux-thunk": "^2.3.0",
     "sass": "^1.54.4",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.0"
