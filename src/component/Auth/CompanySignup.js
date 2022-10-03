@@ -21,7 +21,7 @@ function CompanySignup() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const auth = useSelector((state) => state.auth)
-  const { isSignedup, login, isLoggedIn, isLoading } = auth
+  const { isSignedup, isLoading } = auth
   const user_profile = useSelector((state) => state.user_profile)
   const { users } = user_profile
 

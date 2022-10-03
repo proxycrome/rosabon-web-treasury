@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import * as types from '../../../redux/constant/auth';
+import { CLOSE_MODAL, CLEAR_MESSAGES } from '../../../store/profile/actionTypes';
 import styled from 'styled-components';
 import toast, { Toaster } from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,8 +9,9 @@ import { OTPVerify } from '../../Accessories/BVNConfirm';
 import FileDoc from '../../../asset/file.png';
 import User from '../../../asset/user.png';
 import Check from '../../../asset/checked.png';
-import { uploadPersonalDocument } from '../../../redux/actions/updateProfile/uploadDocument.action';
-import { sendOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
+// import { uploadPersonalDocument } from '../../../redux/actions/updateProfile/uploadDocument.action';
+// import { sendOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
+import { sendOtp, uploadPersonalDocument } from '../../../store/actions';
 
 const MyDocu = () => {
   const dispatch = useDispatch();
@@ -138,8 +139,8 @@ const MyDocu = () => {
   };
 
   const handleOTPModalClose = () => {
-    dispatch({ type: types.CLOSE_MODAL });
-    dispatch({ type: types.CLEAR_MESSAGES });
+    dispatch({ type: CLOSE_MODAL });
+    dispatch({ type: CLEAR_MESSAGES });
   };
 
   useEffect(() => {

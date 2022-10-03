@@ -4,8 +4,9 @@ import styled from "styled-components";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { Collapse } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
-import { getCatWithProducts } from "../../../redux/actions/product/productCategoriesAction";
-import { getSingleProduct } from "../../../redux/actions/product/productAction";
+// import { getCatWithProducts } from "../../../redux/actions/product/productCategoriesAction";
+// import { getSingleProduct } from "../../../redux/actions/product/productAction";
+import { getSingleProduct, getCatWithProducts } from "../../../store/actions";
 
 const CreatePlan = () => {
   const [open, setOpen] = useState(false);

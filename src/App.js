@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PageRoutes from './PageRoutes'
 import { useSelector, useDispatch } from 'react-redux'
-import { RefreshUser } from './redux/actions/auth/SignupAction'
+import { refreshUser } from './store/actions'
 import Spinner from './component/common/loading'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
   const { login, isAuth } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(RefreshUser());
+    dispatch(refreshUser());
   }, [dispatch]);
 
   return (

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import * as types from '../../../redux/constant/auth';
+import { CLOSE_MODAL, CLEAR_MESSAGES } from '../../../store/profile/actionTypes';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ModalComponent from '../../ModalComponent';
 import { BVNConfirm, OTPVerify } from '../../Accessories/BVNConfirm';
-import { personalBankDetails, verifyAccountNo } from '../../../redux/actions/updateProfile/bankDetails.action';
-import { getBanks, sendOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
+// import { personalBankDetails } from '../../../redux/actions/updateProfile/bankDetails.action';
+// import { getBanks } from '../../../redux/actions/personalInfo/userProfile.actions';
+import { sendOtp, getBanks, verifyAccountNo } from '../../../store/actions';
 
 const BankDetails = () => {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ const BankDetails = () => {
     const { acc_name, acc_no, bankType } = formData;
     let data = { acc_name, acc_no, bankType };
     console.log(data);
-    dispatch(personalBankDetails(data));
+    // dispatch(personalBankDetails(data));
   };
 
   const handleVerifyAccountNo = (e) => {
@@ -77,8 +78,8 @@ const BankDetails = () => {
   };
 
   const handleOTPModalClose = () => {
-    dispatch({ type: types.CLOSE_MODAL });
-    dispatch({ type: types.CLEAR_MESSAGES });
+    dispatch({ type: CLOSE_MODAL });
+    dispatch({ type: CLEAR_MESSAGES });
   };
 
   useEffect(() => {

@@ -13,10 +13,10 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import {
-  registerCompany,
-  registerUser,
-} from '../../redux/actions/auth/SignupAction'
+// import {
+//   registerCompany,
+//   registerUser,
+// } from '../../redux/actions/auth/SignupAction'
 import { SignupLeftView } from './loginLeftView'
 import { ValidateUserForm, validateUserInfo } from './validateForm'
 import Footer from '../dashboard/ProfileFooter'

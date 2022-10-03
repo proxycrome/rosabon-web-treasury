@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import storage from 'redux-persist/lib/storage';
-import { useSelector, useDispatch, connect } from 'react-redux';
+// import storage from 'redux-persist/lib/storage';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Dropdown,
@@ -9,12 +9,10 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import {
-  updateUserCompanyKYC,
-  getAuthUsers,
-} from '../../redux/actions/personalInfo/userProfile.actions';
-import { logOut } from '../../redux/actions/auth/SignupAction';
-import { CLEAR_USERS } from '../../redux/constant/auth';
+// import {
+//   getAuthUsers,
+// } from '../../redux/actions/personalInfo/userProfile.actions';
+import { getAuthUsers, logout } from '../../store/actions';
 import avatar from '../../asset/avi.jpg';
 
 export function ProfileNavBar({ children }) {
@@ -24,21 +22,21 @@ export function ProfileNavBar({ children }) {
 
   const profile = useSelector((state) => state.user_profile);
   const { users } = profile;
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
+  // const auth = useSelector((state) => state.auth);
+  // const { login, isLoggedIn } = auth;
 
   const toggle = () => {
     setMenu(!menu);
   };
 
-  const logout = (e) => {
-    dispatch(logOut(navigate));
+  const handleLogout = (e) => {
+    dispatch(logout(navigate));
   };
 
   useEffect(() => {
     const tokenString = JSON.parse(localStorage.getItem('token'));
     if (tokenString) {
-      dispatch(getAuthUsers(tokenString.token));
+      dispatch(getAuthUsers());
     } else {
       navigate('/login');
     }
@@ -108,7 +106,7 @@ export function ProfileNavBar({ children }) {
                   </DropdownItem>
                   <DropdownItem className="d-block">Settings</DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem className="text-danger" onClick={logout}>
+                  <DropdownItem className="text-danger" onClick={handleLogout}>
                     {/* <div className="d-flex align-items-center justify-content-between">
                     <i className="fa fa-sign-out mr-5 text-danger"></i>
                     <span style={{marginLeft: "20px"}}>Logout</span>

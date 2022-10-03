@@ -4,17 +4,26 @@ import Confetti from "../../asset/confetti.png";
 import Checked from "../../asset/checked.png";
 import Caneled from "../../asset/cnaceled.png";
 import OtpInput from "react18-input-otp";
+// import {
+// 	// sendOtp,
+// 	// updateUserKYC,
+// 	// validateOtp,
+// } from "../../redux/actions/personalInfo/userProfile.actions";
 import {
+	updateUserKyc,
 	sendOtp,
-	updateUserCompanyKYC,
 	validateOtp,
-} from "../../redux/actions/personalInfo/userProfile.actions";
+	sendCompanyOtp,
+	verifyPhone,
+	validatePhoneOtp
+} from "../../store/actions";
+
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useSelector, useDispatch, connect } from "react-redux";
-import {
-	validatePhoneOtp,
-	verifyPhone,
-} from "../../redux/actions/updateProfile/updateProfile.actions";
+// import {
+// 	// validatePhoneOtp,
+// 	// verifyPhone,
+// } from "../../redux/actions/updateProfile/updateProfile.actions";
 // import { REMOVE_FOOTER } from "../../redux/constant/auth";
 
 export function BVNConfirm({
@@ -35,9 +44,8 @@ export function BVNConfirm({
 		}
 	}, [nameMatch, director]);
 
-
 	const { success } = useSelector((state) => state.auth);
-	const { user } = useSelector((state) => state.user_profile);
+	const { kycData } = useSelector((state) => state.user_profile);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -52,19 +60,15 @@ export function BVNConfirm({
 			},
 		};
 
-		const tokenString = JSON.parse(localStorage.getItem("token"));
-
 		console.log(data);
-		dispatch(updateUserCompanyKYC(tokenString.token, data, null));
+		dispatch(updateUserKyc(data, null));
 	};
 
-	console.log(user);
-
 	useEffect(() => {
-		if (success && user) {
+		if (kycData) {
 			setComplete(true);
 		}
-	}, [success, user]);
+	}, [kycData]);
 
 	return !complete ? (
 		<ConfirmBVN>
@@ -327,11 +331,12 @@ export function OTPVerify({
 	toggleCont,
 	otpData,
 	secondPhone,
+	company,
 }) {
 	const [token, setToken] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
 	const dispatch = useDispatch();
-	const { otp, validateEmailOtp } = useSelector((state) => state.user_profile);
+	const { otp, validateOtpError } = useSelector((state) => state.user_profile);
 	const { phoneMsg, validatePhone } = useSelector(
 		(state) => state.updateProfile
 	);
@@ -340,12 +345,12 @@ export function OTPVerify({
 
 	const handleEmailOtpSubmit = async (e) => {
 		e.preventDefault();
-		if ((otpData && token === otpData) || (otp?.data && token === otp?.data)) {
+		// if ((otpData && token === otpData) || (otp?.data && token === otp?.data)) {
 			updateOtp(token);
 			dispatch(validateOtp(token));
 			// toggleCont();
 			// handleClose();
-		}
+		// }
 
 		if ((otpData && token !== otpData) || (otp?.data && token !== otp?.data)) {
 			setErrorMsg("Please enter a valid OTP");
@@ -370,7 +375,11 @@ export function OTPVerify({
 	};
 
 	const handleResendEmailOtp = () => {
-		dispatch(sendOtp());
+		if (company === "company") {
+			dispatch(sendCompanyOtp());
+		} else {
+			dispatch(sendOtp());
+		}
 	};
 
 	const handleResendPhoneOtp = () => {
@@ -413,9 +422,9 @@ export function OTPVerify({
 											numInputs={5}
 										/>
 									</div>
-									{errorMsg && (
+									{validateOtpError && (
 										<span className="text-center" style={{ color: "#FF0000" }}>
-											{errorMsg}
+											{validateOtpError?.message}
 										</span>
 									)}
 									<p className="text-center">

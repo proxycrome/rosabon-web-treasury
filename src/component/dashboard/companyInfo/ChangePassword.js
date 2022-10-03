@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import * as types from '../../../redux/constant/auth';
+import { CLEAR_MESSAGES, CLOSE_MODAL } from '../../../store/profile/actionTypes';
 import { Toaster } from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,9 +13,10 @@ import {
   InputGroupText,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { changePersonalPassword } from '../../../redux/actions/updateProfile/changePassword.action';
+// import { changePersonalPassword } from '../../../redux/actions/updateProfile/changePassword.action';
 // import { successMessage } from '../../../redux/actions/auth/SignupAction';
-import { sendCompanyOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
+// import { sendCompanyOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
+import { sendCompanyOtp, changeUserPassword } from '../../../store/actions';
 import ModalComponent from '../../ModalComponent';
 import { OTPVerify } from '../../Accessories/BVNConfirm';
 
@@ -118,7 +119,7 @@ const ChangePassword = () => {
         otp: token,
       };
       console.log(data);
-      dispatch(changePersonalPassword(data));
+      dispatch(changeUserPassword(data));
       setformData({
         ...formData,
         oldPassword: "",
@@ -129,8 +130,8 @@ const ChangePassword = () => {
   }, [errors]);
 
   const handleOTPModalClose = () => {
-    dispatch({ type: types.CLOSE_MODAL });
-    dispatch({ type: types.CLEAR_MESSAGES });
+    dispatch({ type: CLOSE_MODAL });
+    dispatch({ type: CLEAR_MESSAGES });
   };
 
   useEffect(() => {
@@ -290,7 +291,7 @@ const ChangePassword = () => {
           emailOtp={true}
           updateOtp={(otp) => createOtp(otp)}
           otpData={otp?.data}
-        />
+          company="company"        />
       </ModalComponent>
     </div>
   );

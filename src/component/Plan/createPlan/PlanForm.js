@@ -7,8 +7,9 @@ import { UncontrolledTooltip } from 'reactstrap';
 import PlanPay from "./PlanPay";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { getTenor } from "../../../redux/actions/plan/planAction";
-import { getExRates } from "../../../redux/actions/plan/exRatesAction";
+// import { getTenor } from "../../../redux/actions/plan/planAction";
+// import { getExRates } from "../../../redux/actions/plan/exRatesAction";
+import { getExRates, getTenor } from "../../../store/actions";
 
 export const PlanContext = createContext(null);
 

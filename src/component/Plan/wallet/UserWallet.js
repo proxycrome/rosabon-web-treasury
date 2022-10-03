@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch, connect } from "react-redux";
-import {
-  updateUserCompanyKYC,
-  getAuthUsers,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
-import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
+// import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
+import { getWalletBalance } from "../../../store/actions";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import halfEllipse from "../../../asset/halfEllipse.png";
 import Telephone from "../../../asset/telephone.png";
@@ -16,7 +13,6 @@ import { AvailableBalance, TransferCard } from "../Accesssories";
 import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
-import { CLEAR_WALLET_BALANCE } from "../../../redux/constant/walletActionTypes";
 
 const UserWallet = () => {
   const navigate = useNavigate();
@@ -52,10 +48,6 @@ const UserWallet = () => {
     setSidebar(false);
     setClosefooter(false);
   };
-
-  useEffect(() => {
-    dispatch({type: CLEAR_WALLET_BALANCE});
-  }, [])
 
   useEffect(() => {
     dispatch(getWalletBalance())

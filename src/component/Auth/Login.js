@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { loginUser } from '../../redux/actions/auth/SignupAction'
+import { loginUser } from '../../store/actions'
 import {
   Form,
   FormGroup,

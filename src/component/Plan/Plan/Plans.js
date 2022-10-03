@@ -11,8 +11,9 @@ import plus from "../../../asset/plus.svg";
 import Switch from "react-switch";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { getPlans } from "../../../redux/actions/plan/planAction";
-import { getProducts } from "../../../redux/actions/product/productAction";
+// import { getPlans } from "../../../redux/actions/plan/planAction";
+// import { getProducts } from "../../../redux/actions/product/productAction";
+import { getProducts, getPlans } from "../../../store/actions";
 
 export const Plans = () => {
   const dispatch = useDispatch();

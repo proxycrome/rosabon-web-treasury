@@ -13,15 +13,20 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent";
 import { Table } from "reactstrap";
 import { TransactionPreview } from "../Accessories/BVNConfirm";
-import { getWalletTransactions } from "../../redux/actions/wallet/walletAction";
+// import { getWalletTransactions } from "../../redux/actions/wallet/walletAction";
 import moment from "moment";
-import { CLEAR_TRANSACTIONS } from "../../redux/constant/walletActionTypes";
+// import {
+// 	getTickets,
+// 	getOpenTickets,
+// 	getClosedTickets,
+// } from "../../redux/actions/feedback/feedbackAction";
+import { PlanContext } from "./createPlan/PlanForm";
 import {
+	getWalletTransactions,
 	getTickets,
 	getOpenTickets,
 	getClosedTickets,
-} from "../../redux/actions/feedback/feedbackAction";
-import { PlanContext } from "./createPlan/PlanForm";
+} from "../../store/actions";
 
 export const NairaCard = () => {
 	return (
@@ -1254,10 +1259,6 @@ export const HistoryTable = () => {
 	useEffect(() => {
 		dispatch(getWalletTransactions());
 	}, [dispatch]);
-
-	useEffect(() => {
-		dispatch({ type: CLEAR_TRANSACTIONS });
-	}, []);
 
 	const { walletTransactions } = useSelector((state) => state.wallet);
 

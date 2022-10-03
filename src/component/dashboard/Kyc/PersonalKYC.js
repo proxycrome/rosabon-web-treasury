@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import * as types from "../../../redux/constant/auth";
-import { config } from "../../../redux/config";
-import { headers } from "../../../redux/headers";
-import axios from "axios";
+import { CLOSE_MODAL } from "../../../store/profile/actionTypes";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { BVNConfirm } from "../../Accessories/BVNConfirm";
@@ -10,11 +7,11 @@ import ModalComponent from "../../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import {
-	updateUserCompanyKYC,
+	updateUserKyc,
 	verifyBvn,
 	getCountries,
 	getStates,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
+} from "../../../store/actions";
 import moment from "moment";
 
 const PersonalKYC = () => {
@@ -119,14 +116,13 @@ const PersonalKYC = () => {
 			},
 		};
 
-		const tokenString = JSON.parse(localStorage.getItem("token"));
 		const pathCred = {
 			navigate,
 			route,
 		};
 		console.log(data);
 		// console.log(tokenString);
-		dispatch(updateUserCompanyKYC(tokenString.token, data, pathCred));
+		dispatch(updateUserKyc(data, pathCred));
 	};
 
 	const handleVerifyBVN = (e) => {
@@ -148,7 +144,7 @@ const PersonalKYC = () => {
 	};
 
 	const handleBVNModalClose = () => {
-		dispatch({ type: types.CLOSE_MODAL });
+		dispatch({ type: CLOSE_MODAL });
 	};
 
 	useEffect(() => {

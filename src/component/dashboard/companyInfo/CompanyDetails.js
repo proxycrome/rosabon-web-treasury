@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { updateCompanyDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
-import { getAuthUsers } from "../../../redux/actions/personalInfo/userProfile.actions";
+// import { updateCompanyDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
+// import { getAuthUsers } from "../../../redux/actions/personalInfo/userProfile.actions";
+import { getAuthUsers, updateCompanyDetails } from "../../../store/actions";
 
 const CompanyDetails = () => {
 	const dispatch = useDispatch();
@@ -111,11 +112,10 @@ const CompanyDetails = () => {
 		}
 	}, [errors, isSubmitted]);
 
-	const tokenObj = JSON.parse(localStorage.getItem("token"));
 
 	useEffect(() => {
 		if (!users) {
-			dispatch(getAuthUsers(tokenObj?.token));
+			dispatch(getAuthUsers());
 		}
 	}, [users]);
 

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  registerCompany,
-  registerUser,
-  resetPassword,
-} from "../../redux/actions/auth/SignupAction";
+// import {
+//   resetPassword,
+// } from "../../redux/actions/auth/SignupAction";
+import { registerUser, resetPassword } from "../../store/actions";
 
 export const ValidateCompanyForm = (
   validateInfo,
@@ -77,7 +76,7 @@ export const ValidateCompanyForm = (
         refferedBy,
       };
 
-      dispatch(registerCompany(data, navigate));
+      dispatch(registerUser(data, navigate));
     }
   }, [errors]);
 

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png'
 import { Link, useNavigate } from 'react-router-dom'
-import { resetPassword } from '../../redux/actions/auth/SignupAction'
+// import { resetPassword } from '../../redux/actions/auth/SignupAction'
 import { Input, InputGroup, InputGroupText } from 'reactstrap'
 import { ValidatePasswordForm, validatePassword } from './validateForm'
 

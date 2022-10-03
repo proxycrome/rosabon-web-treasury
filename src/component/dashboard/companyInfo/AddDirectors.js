@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import * as types from "../../../redux/constant/auth";
 import { UncontrolledTooltip, Alert } from "reactstrap";
 import styled from "styled-components";
 import { Collapse } from "reactstrap";
@@ -8,16 +7,18 @@ import { Link, useNavigate } from "react-router-dom";
 import User from "../../../asset/user.png";
 import FileDoc from "../../../asset/file.png";
 import Check from "../../../asset/checked.png";
-import { uploadPersonalDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
-import { successMessage } from "../../../redux/actions/auth/SignupAction";
+// import { uploadPersonalDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
+// import { successMessage } from "../../../redux/actions/auth/SignupAction";
 import plus from "../../../asset/plus.svg";
-import {
-	sendCompanyOtp,
-	verifyBvn,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
+// import {
+// 	// sendCompanyOtp,
+// 	// verifyBvn,
+// } from "../../../redux/actions/personalInfo/userProfile.actions";
+import { sendCompanyOtp } from "../../../store/actions";
+import { verifyBvn } from "../../../store/actions";
 import ModalComponent from "../../ModalComponent";
 import { BVNConfirm, OTPVerify } from "../../Accessories/BVNConfirm";
-import { CLEAR_OTP } from "../../../redux/constant/userActionTypes";
+import { CLEAR_OTP, CLOSE_MODAL, CLEAR_MESSAGES } from "../../../store/profile/actionTypes";
 
 const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
 	const dispatch = useDispatch();
@@ -250,12 +251,12 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
 	};
 
 	const handleBVNModalClose = () => {
-		dispatch({ type: types.CLOSE_MODAL });
+		dispatch({ type: CLOSE_MODAL });
 	};
 
 	const handleOTPModalClose = () => {
-		dispatch({ type: types.CLOSE_MODAL });
-		dispatch({ type: types.CLEAR_MESSAGES });
+		dispatch({ type: CLOSE_MODAL });
+		dispatch({ type: CLEAR_MESSAGES });
 		dispatch({ type: CLEAR_OTP });
 	};
 
@@ -340,6 +341,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
 									emailOtp={true}
 									updateOtp={(otp) => createOtp(otp)}
 									otpData={otp?.data}
+									company="company"
 								/>
 							</ModalComponent>
 						</div>

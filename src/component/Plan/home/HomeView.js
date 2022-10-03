@@ -5,10 +5,10 @@ import { RightView } from "./RightView";
 import { LeftView } from "./LeftView";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import {
-  updateUserCompanyKYC,
-  getAuthUsers,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
+// import {
+//   updateUserCompanyKYC,
+//   getAuthUsers,
+// } from "../../../redux/actions/personalInfo/userProfile.actions";
 
 function HomeView() {
   const navigate = useNavigate();

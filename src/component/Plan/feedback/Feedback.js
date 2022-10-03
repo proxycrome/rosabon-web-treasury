@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useSelector, useDispatch, connect } from "react-redux";
-import {
-  updateUserCompanyKYC,
-  getAuthUsers,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
+// import {
+//   updateUserCompanyKYC,
+//   getAuthUsers,
+// } from "../../../redux/actions/personalInfo/userProfile.actions";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import Checked from "../../../asset/checked.png";
 import ModalComponent from "../../ModalComponent";
 import { Input } from "reactstrap";
-import { postFeedback } from "../../../redux/actions/feedback/feedbackAction";
+// import { postFeedback } from "../../../redux/actions/feedback/feedbackAction";
+import { postFeedback } from "../../../store/actions";
 
 const initialForm = {
   categoryId: "",

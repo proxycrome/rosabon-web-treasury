@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import * as types from "../../../redux/constant/auth";
 import styled from "styled-components";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch, connect } from "react-redux";
@@ -9,13 +8,19 @@ import { OTPVerify } from "../../Accessories/BVNConfirm";
 import FileDoc from "../../../asset/file.png";
 import User from "../../../asset/user.png";
 import Check from "../../../asset/checked.png";
-import { uploadCompanyDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
+// import { uploadCompanyDocument } from "../../../redux/actions/updateProfile/uploadDocument.action";
+// import {
+// 	// getAuthUsers,
+// 	// getCompanyDocs,
+// 	// sendCompanyOtp,
+// } from "../../../redux/actions/personalInfo/userProfile.actions";
+import { CLEAR_OTP, CLOSE_MODAL, CLEAR_MESSAGES } from "../../../store/profile/actionTypes";
 import {
 	getAuthUsers,
-	getCompanyDocs,
 	sendCompanyOtp,
-} from "../../../redux/actions/personalInfo/userProfile.actions";
-import { CLEAR_OTP } from "../../../redux/constant/userActionTypes";
+	getCompanyDocs,
+	uploadCompanyDocument,
+} from "../../../store/actions";
 
 const CompanyDoc = ({
 	getAuthUsers,
@@ -159,8 +164,8 @@ const CompanyDoc = ({
 	};
 
 	const handleOTPModalClose = () => {
-		dispatch({ type: types.CLOSE_MODAL });
-		dispatch({ type: types.CLEAR_MESSAGES });
+		dispatch({ type: CLOSE_MODAL });
+		dispatch({ type: CLEAR_MESSAGES });
 		dispatch({ type: CLEAR_OTP });
 	};
 
@@ -188,13 +193,11 @@ const CompanyDoc = ({
 		});
 	};
 
-	const tokenObj = JSON.parse(localStorage.getItem("token"));
-
 	useEffect(() => {
 		if (!users) {
-			getAuthUsers(tokenObj?.token);
+			getAuthUsers();
 		}
-	}, [users, tokenObj.token]);
+	}, [users]);
 
 	useEffect(() => {
 		if (!companyDocs || companyDocMsg) {
@@ -256,13 +259,11 @@ const CompanyDoc = ({
 						{companyDocs?.contactPersonPhotographImage?.imageUrl ? (
 							<i
 								className="white-camera-font-awe position-absolute fa-solid fa-camera"
-								onClick={(e) => handleFileSelect(e, photoFileInputRef)}
-							></i>
+								onClick={(e) => handleFileSelect(e, photoFileInputRef)}></i>
 						) : (
 							<i
 								className="camera-font-awe position-absolute fa-solid fa-camera"
-								onClick={(e) => handleFileSelect(e, photoFileInputRef)}
-							></i>
+								onClick={(e) => handleFileSelect(e, photoFileInputRef)}></i>
 						)}
 					</div>
 					<div className="image-holder">
@@ -286,8 +287,7 @@ const CompanyDoc = ({
 											onClick={() => {
 												toggleEdit();
 												reset();
-											}}
-										>
+											}}>
 											Cancel
 										</button>
 									)}
@@ -296,14 +296,14 @@ const CompanyDoc = ({
 							<ModalComponent
 								show={showEmailOtpModal}
 								size={"md"}
-								handleClose={handleOTPModalClose}
-							>
+								handleClose={handleOTPModalClose}>
 								<OTPVerify
 									show={showEmailOtpModal}
 									handleClose={handleOTPModalClose}
 									emailOtp={true}
 									updateOtp={(otp) => createOtp(otp)}
 									otpData={otp?.data}
+									company="company"
 								/>
 							</ModalComponent>
 						</div>
@@ -317,8 +317,7 @@ const CompanyDoc = ({
 								name="idType"
 								value={formData.idType}
 								onChange={handleChange}
-								disabled={showEdit}
-							>
+								disabled={showEdit}>
 								<option value="">Select ID Type...</option>
 								<option value="NATIONAL_ID_CARD">National ID card</option>
 								<option value=" DRIVERS_LICENSE">Driver's License </option>
@@ -371,12 +370,10 @@ const CompanyDoc = ({
 											<a
 												href={companyDocs?.contactPersonIdImage?.imageUrl}
 												target="_blank"
-												rel="noreferrer"
-											>
+												rel="noreferrer">
 												<button
 													type="button"
-													className="normal-btn grey-button"
-												>
+													className="normal-btn grey-button">
 													View
 												</button>
 											</a>
@@ -413,8 +410,7 @@ const CompanyDoc = ({
 													disabled={showEdit}
 													onClick={(e) =>
 														handleFileSelect(e, frontFileInputRef)
-													}
-												>
+													}>
 													Choose file
 												</button>
 											</div>
@@ -437,8 +433,7 @@ const CompanyDoc = ({
 																	...base64File,
 																	frontEncodedString: "",
 																})
-															}
-														>
+															}>
 															<i className="fa-solid fa-xmark"></i>
 														</span>
 													</h5>
@@ -449,8 +444,7 @@ const CompanyDoc = ({
 															style={{ width: "75%" }}
 															aria-valuenow="25"
 															aria-valuemin="0"
-															aria-valuemax="100"
-														></div>
+															aria-valuemax="100"></div>
 													</div>
 												</div>
 											</div>
@@ -469,8 +463,7 @@ const CompanyDoc = ({
 													disabled={showEdit}
 													onClick={(e) =>
 														handleFileSelect(e, frontFileInputRef)
-													}
-												>
+													}>
 													Choose file
 												</button>
 											</div>
@@ -504,12 +497,10 @@ const CompanyDoc = ({
 											<a
 												href={companyDocs?.certificateOfIncoImage?.imageUrl}
 												target="_blank"
-												rel="noreferrer"
-											>
+												rel="noreferrer">
 												<button
 													type="button"
-													className="normal-btn grey-button"
-												>
+													className="normal-btn grey-button">
 													View
 												</button>
 											</a>
@@ -548,8 +539,7 @@ const CompanyDoc = ({
 													disabled={showEdit}
 													onClick={(e) =>
 														handleFileSelect(e, certOfIncoFileInputRef)
-													}
-												>
+													}>
 													Choose file
 												</button>
 											</div>
@@ -572,8 +562,7 @@ const CompanyDoc = ({
 																	...base64File,
 																	backEncodedString: "",
 																})
-															}
-														>
+															}>
 															<i className="fa-solid fa-xmark"></i>
 														</span>
 													</h5>
@@ -584,8 +573,7 @@ const CompanyDoc = ({
 															style={{ width: "75%" }}
 															aria-valuenow="25"
 															aria-valuemin="0"
-															aria-valuemax="100"
-														></div>
+															aria-valuemax="100"></div>
 													</div>
 												</div>
 											</div>
@@ -604,8 +592,7 @@ const CompanyDoc = ({
 													disabled={showEdit}
 													onClick={(e) =>
 														handleFileSelect(e, certOfIncoFileInputRef)
-													}
-												>
+													}>
 													Choose file
 												</button>
 											</div>
@@ -642,12 +629,10 @@ const CompanyDoc = ({
 													<a
 														href={companyDocs?.cacImage?.imageUrl}
 														target="_blank"
-														rel="noreferrer"
-													>
+														rel="noreferrer">
 														<button
 															type="button"
-															className="normal-btn grey-button"
-														>
+															className="normal-btn grey-button">
 															View
 														</button>
 													</a>
@@ -684,8 +669,7 @@ const CompanyDoc = ({
 															disabled={showEdit}
 															onClick={(e) =>
 																handleFileSelect(e, cacFileInputRef)
-															}
-														>
+															}>
 															Choose file
 														</button>
 													</div>
@@ -708,23 +692,20 @@ const CompanyDoc = ({
 																			...base64File,
 																			backEncodedString: "",
 																		})
-																	}
-																>
+																	}>
 																	<i className="fa-solid fa-xmark"></i>
 																</span>
 															</h5>
 															<div
 																className="progress"
-																style={{ height: "3px" }}
-															>
+																style={{ height: "3px" }}>
 																<div
 																	className="progress-bar"
 																	role="progressbar"
 																	style={{ width: "75%" }}
 																	aria-valuenow="25"
 																	aria-valuemin="0"
-																	aria-valuemax="100"
-																></div>
+																	aria-valuemax="100"></div>
 															</div>
 														</div>
 													</div>
@@ -743,8 +724,7 @@ const CompanyDoc = ({
 															disabled={showEdit}
 															onClick={(e) =>
 																handleFileSelect(e, cacFileInputRef)
-															}
-														>
+															}>
 															Choose file
 														</button>
 													</div>
@@ -778,12 +758,10 @@ const CompanyDoc = ({
 													<a
 														href={companyDocs?.moaImage?.imageUrl}
 														target="_blank"
-														rel="noreferrer"
-													>
+														rel="noreferrer">
 														<button
 															type="button"
-															className="normal-btn grey-button"
-														>
+															className="normal-btn grey-button">
 															View
 														</button>
 													</a>
@@ -822,8 +800,7 @@ const CompanyDoc = ({
 															disabled={showEdit}
 															onClick={(e) =>
 																handleFileSelect(e, moaFileInputRef)
-															}
-														>
+															}>
 															Choose file
 														</button>
 													</div>
@@ -846,23 +823,20 @@ const CompanyDoc = ({
 																			...base64File,
 																			backEncodedString: "",
 																		})
-																	}
-																>
+																	}>
 																	<i className="fa-solid fa-xmark"></i>
 																</span>
 															</h5>
 															<div
 																className="progress"
-																style={{ height: "3px" }}
-															>
+																style={{ height: "3px" }}>
 																<div
 																	className="progress-bar"
 																	role="progressbar"
 																	style={{ width: "75%" }}
 																	aria-valuenow="25"
 																	aria-valuemin="0"
-																	aria-valuemax="100"
-																></div>
+																	aria-valuemax="100"></div>
 															</div>
 														</div>
 													</div>
@@ -881,8 +855,7 @@ const CompanyDoc = ({
 															disabled={showEdit}
 															onClick={(e) =>
 																handleFileSelect(e, moaFileInputRef)
-															}
-														>
+															}>
 															Choose file
 														</button>
 													</div>
@@ -918,12 +891,10 @@ const CompanyDoc = ({
 											<a
 												href={companyDocs?.utilityBillImage?.imageUrl}
 												target="_blank"
-												rel="noreferrer"
-											>
+												rel="noreferrer">
 												<button
 													type="button"
-													className="normal-btn grey-button"
-												>
+													className="normal-btn grey-button">
 													View
 												</button>
 											</a>
@@ -960,8 +931,7 @@ const CompanyDoc = ({
 													disabled={showEdit}
 													onClick={(e) =>
 														handleFileSelect(e, utilityFileInputRef)
-													}
-												>
+													}>
 													Choose file
 												</button>
 											</div>
@@ -984,8 +954,7 @@ const CompanyDoc = ({
 																	...base64File,
 																	utilityEncodedString: "",
 																})
-															}
-														>
+															}>
 															<i className="fa-solid fa-xmark"></i>
 														</span>
 													</h5>
@@ -996,8 +965,7 @@ const CompanyDoc = ({
 															style={{ width: "75%" }}
 															aria-valuenow="25"
 															aria-valuemin="0"
-															aria-valuemax="100"
-														></div>
+															aria-valuemax="100"></div>
 													</div>
 												</div>
 											</div>
@@ -1016,8 +984,7 @@ const CompanyDoc = ({
 													disabled={showEdit}
 													onClick={(e) =>
 														handleFileSelect(e, utilityFileInputRef)
-													}
-												>
+													}>
 													Choose file
 												</button>
 											</div>

@@ -5,9 +5,9 @@ import Confetti from "../../asset/confetti-cake.png";
 import { useLocation } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import * as types from "../../redux/constant/auth";
-import { successMessage } from "../../redux/actions/auth/SignupAction";
-import { getAuthUsers } from "../../redux/actions/personalInfo/userProfile.actions";
+// import * as types from "../../redux/constant/auth";
+// import { successMessage } from "../../redux/actions/auth/SignupAction";
+// import { getAuthUsers } from "../../redux/actions/personalInfo/userProfile.actions";
 
 function Congratulatios(props) {
   const dispatch = useDispatch();
