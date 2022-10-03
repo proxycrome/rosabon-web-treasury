@@ -15,6 +15,7 @@ import { getPlans } from "../../../redux/actions/plan/planAction";
 import { getProducts } from "../../../redux/actions/product/productAction";
 
 export const Plans = () => {
+  const [more, setMore] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { plans } = useSelector((state) => state.plan);
@@ -22,6 +23,7 @@ export const Plans = () => {
   const userPlans = plans?.data.body ? plans?.data.body : [];
   const planStatus = plans?.statusCode;
   const product = products?.data.body ? products?.data.body : []
+  const currentPlans = more ? userPlans : userPlans.slice(0, 6);
 
   useEffect(() => {
     dispatch(getPlans());
@@ -80,7 +82,7 @@ export const Plans = () => {
       </div>
       <div className="plan-content">
         {
-          planStatus === "OK" && userPlans.map((item) => (
+          planStatus === "OK" && currentPlans.map((item) => (
             <div className="plan" key={item.id} >
               <div className="plan-top h-50 p-4">
                 <div className="d-flex align-items-center justify-content-between">
@@ -128,9 +130,9 @@ export const Plans = () => {
           ))
         }
       </div>
-      <div className="row">
+      <div className="row" style={{display: more ? "none":"auto"}} >
         <div className="d-flex justify-content-center my-5">
-          <button className="btn-view">View all</button>
+          <button className="btn-view" onClick={()=>setMore(true)} >View all</button>
         </div>  
       </div> 
     </Wrapper>
