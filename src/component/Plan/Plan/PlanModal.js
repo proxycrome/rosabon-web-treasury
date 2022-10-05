@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
+import Switch from "react-switch";
 import { getProducts, getTenor } from "../../../store/actions";
 
 const PlanModal = ({ handleClose }) => {
@@ -133,7 +134,15 @@ const PlanModal = ({ handleClose }) => {
               <div className='right' >
                 <p className='p-light' >Auto Renewal</p>
                 <p className='p-dark' >
-                  {plan.autoRenew}
+                  <Switch
+                    className="mr-2 mt-1"
+                    onColor="#111E6C"
+                    offColor="#E0E0E0"
+                    checked={plan.autoRenew}
+                    uncheckedIcon={false}
+                    width={35}
+                    height={18}
+                  />
                 </p>
               </div>
             </div>
