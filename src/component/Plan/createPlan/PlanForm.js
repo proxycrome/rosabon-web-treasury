@@ -7,8 +7,6 @@ import { UncontrolledTooltip } from 'reactstrap';
 import PlanPay from "./PlanPay";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-// import { getTenor } from "../../../redux/actions/plan/planAction";
-// import { getExRates } from "../../../redux/actions/plan/exRatesAction";
 import { getExRates, getTenor } from "../../../store/actions";
 
 export const PlanContext = createContext(null);
@@ -73,7 +71,9 @@ const PlanForm = () => {
     dispatch(getExRates())
     setFormData({
       ...formData,
-      // amount: formData.targetAmount !== null ? null : formData.amount,
+      amount: product.hasTargetAmount !== null ? null : formData.amount,
+      productId: product.id,
+      productCategoryId: product.productCategoryId,
       contributionValue: formData.contributionValue,
       tenorId: Number(formData.tenorId),
       planSummary: summary,
@@ -167,33 +167,21 @@ const PlanForm = () => {
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, 'days')?._d
     // calculate principal
     let principal;
-    // if (product?.properties?.hasTargetAmount !== null) {
-    //   switch(formData.savingFrequency) {
-    //     case "DAILY":
-    //       principal = formData.contributionValue * selectedTenor?.tenorDays
-    //       break;
-    //     case "WEEKLY":
-    //       principal = formData.contributionValue * selectedTenor?.tenorWeeks
-    //       break;
-    //     case "MONTHLY":
-    //       principal = formData.contributionValue * selectedTenor?.tenorMonths
-    //       break;
-    //     default: break;
-    //   }
-    // } else if(product?.properties?.hasTargetAmount === null) {
-    //   principal = formData.amount
-    // }
-    switch(formData.savingFrequency) {
-      case "DAILY":
-        principal = formData.contributionValue * selectedTenor?.tenorDays
-        break;
-      case "WEEKLY":
-        principal = formData.contributionValue * selectedTenor?.tenorWeeks
-        break;
-      case "MONTHLY":
-        principal = formData.contributionValue * selectedTenor?.tenorMonths
-        break;
-      default: break;
+    if (product?.properties?.hasTargetAmount !== null) {
+      switch(formData.savingFrequency) {
+        case "DAILY":
+          principal = formData.contributionValue * selectedTenor?.tenorDays
+          break;
+        case "WEEKLY":
+          principal = formData.contributionValue * selectedTenor?.tenorWeeks
+          break;
+        case "MONTHLY":
+          principal = formData.contributionValue * selectedTenor?.tenorMonths
+          break;
+        default: break;
+      }
+    } else if(product?.properties?.hasTargetAmount === null) {
+      principal = formData.amount
     }
     setSummary({
       planName: formData.planName,
@@ -297,18 +285,9 @@ const PlanForm = () => {
   const calculateMinAllowTargetVal = (targetValue) => {
     if(targetValue !== null) {
       if(formData.tenorId !== "") {
-        const tV = parseInt(targetValue)
         let selectedTenor = tenor?.filter(item => item.id === parseInt(formData.tenorId))[0]
-        if(tV < product?.minTransactionLimit * selectedTenor?.tenorMonths){
-          return {
-            minTarget: product?.minTransactionLimit * selectedTenor?.tenorMonths,
-            isLesser: true
-          }
-        }
+        return product?.minTransactionLimit * selectedTenor?.tenorMonths
       }
-    }
-    return {
-      isLesser: false
     }
   }
 
@@ -316,7 +295,6 @@ const PlanForm = () => {
   const calculateMinContribVal = (contribVal) => {
     if(contribVal !== null) {
       if(formData.tenorId !== "") {
-        const cV = parseInt(contribVal)
         let selectedTenor = tenor?.filter(item => item.id === parseInt(formData.tenorId))[0]
         let minContrib;
         switch(formData.savingFrequency) {
@@ -337,16 +315,8 @@ const PlanForm = () => {
 
           default: break;
         }
-        if(cV < minContrib) {
-          return {
-            minContrib,
-            isLesser: true
-          }
-        }
+        return minContrib
       }
-    }
-    return {
-      isLesser: false
     }
   }
 
@@ -548,8 +518,7 @@ const PlanForm = () => {
                   name="amount"
                   placeholder="" 
                   type="number" 
-                  // disabled={product?.properties?.hasTargetAmount===null?false:true}
-                  disabled={true}
+                  disabled={product?.properties?.hasTargetAmount===null?false:true}
                   value={formData.amount}
                   onChange={handleChange}
                 />
@@ -564,22 +533,15 @@ const PlanForm = () => {
                   className="form-control" 
                   name="targetAmount"
                   placeholder="" 
-                  // disabled={product?.properties?.hasTargetAmount===null?true:false}
+                  disabled={product?.properties?.hasTargetAmount===null?true:false}
                   type="number" 
                   value={formData.targetAmount}
                   onChange={handleChange}
                 />
               </div>
-              {/* {
-                (calculateMinAllowTargetVal(formData.targetAmount).isLesser &&
-                product?.properties?.hasTargetAmount!==null) ? (
-                  <small>
-                    Target value cannot be below {product?.minTransactionLimit}
-                  </small>
-                ) : (<></>)
-              } */}
               {
-                formData.targetAmount < product?.minTransactionLimit ? (
+                (product?.properties?.hasTargetAmount !== null) &&
+                (formData.targetAmount < calculateMinAllowTargetVal(formData.targetAmount)) ? (
                   <small style={{color:"red"}} >
                     Target value cannot be below {product?.minTransactionLimit}
                   </small>
@@ -588,16 +550,6 @@ const PlanForm = () => {
             </div>
             <div className="col-md-6">
               <label>Tenor</label>
-              {/* <div className="input-group mb-4">
-                <input 
-                  className="form-control"
-                  name="tenorId" 
-                  placeholder="" 
-                  type="number" 
-                  value={formData.tenorId}
-                  onChange={handleChange}
-                />
-              </div> */}
               <select 
                 className="form-select form-select-md mb-3" 
                 name="tenorId" 
@@ -675,14 +627,6 @@ const PlanForm = () => {
             <div className="col-md-6">
               <label>Interest Reciept Option</label>
               <div className="input-group mb-4">
-                {/* <input 
-                  className="form-control" 
-                  name="interestReceiptOption"
-                  placeholder="" 
-                  type="number" 
-                  value={formData.interestReceiptOption}
-                  onChange={handleChange}
-                /> */}
                 <select 
                   className="form-select form-select-md mb-3" 
                   name="interestReceiptOption" 
@@ -729,8 +673,8 @@ const PlanForm = () => {
                 />
               </div>
               {
-                (calculateMinAllowTargetVal(formData.targetAmount).isLesser &&
-                product?.properties?.hasTargetAmount!==null) ? (
+                (formData.contributionValue < calculateMinContribVal(formData.contributionValue) 
+                && product?.properties?.hasTargetAmount!==null) ? (
                   <small>
                     Target value cannot be below {product?.minTransactionLimit}
                   </small>

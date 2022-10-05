@@ -30,7 +30,7 @@ export const getPlansService = () => {
 
 export const getSinglePlanService = (id) => {
     const http = new HttpService();
-    const url = `auth/user/trcreate-plan/${id}`;
+    const url = `auth/trcreate-plan/${id}`;
 
     return http.getData(url)
 }
