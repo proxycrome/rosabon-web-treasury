@@ -10,13 +10,15 @@ import { Link, useNavigate } from "react-router-dom";
 import plus from "../../../asset/plus.svg";
 import Switch from "react-switch";
 import moment from "moment";
+import ModalComponent from "../../ModalComponent";
+import PlanModal from "./PlanModal";
 import { useDispatch, useSelector } from "react-redux";
-// import { getPlans } from "../../../redux/actions/plan/planAction";
-// import { getProducts } from "../../../redux/actions/product/productAction";
-import { getProducts, getPlans } from "../../../store/actions";
+import { getProducts, getPlans, getSinglePlan } from "../../../store/actions";
+import EmptyPlan from "./EmptyPlan";
 
 export const Plans = () => {
   const [more, setMore] = useState(false);
+  const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { plans } = useSelector((state) => state.plan);
@@ -30,44 +32,23 @@ export const Plans = () => {
     dispatch(getPlans());
     dispatch(getProducts());
   },[])
+
+  const handlePlanModal = async (id) => {
+    await dispatch(getSinglePlan(id))
+    setShow(true);
+  }
+
   return (
     <Wrapper>
-      <div className="row">
-        <div className="col-md-6 col-sm-12">
-          <label>Choose Investment Category</label>
-          <div className="input-group mb-4">
-            <input
-              className="form-control"
-              placeholder="First Name"
-              type="text"
-            />
-          </div>
-        </div>
-        <div className="col-md-6 col-sm-12">
-          <div className="row">
-            <div className="col-md-6 col-sm-12">
-              <label>Middle Name</label>
-              <div className="input-group mb-4">
-                <input
-                  className="form-control"
-                  placeholder="Middle Name"
-                  type="text"
-                />
-              </div>
-            </div>
-            <div className="col-md-6 col-sm-12">
-              <label>Last Name</label>
-              <div className="input-group mb-5">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Last Name"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ModalComponent
+        show={show}
+        size={'md'}
+        handleClose={() => setShow(false)}
+      >
+        <PlanModal 
+          handleClose={() => setShow(false)}
+        />
+      </ModalComponent>
       <div className="row">
         <div className="d-flex justify-content-between mb-3">
           <h4>Here are your investments at a glance</h4>
@@ -81,67 +62,77 @@ export const Plans = () => {
           </div>
         </div>
       </div>
-      <div className="plan-content">
-        {
-          planStatus === "OK" && currentPlans.map((item) => (
-            <div className="plan" key={item.id} >
-              <div className="plan-top h-50 p-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>{item.planName} </h4>
-                    <p className="p-0 m-0">
-                      {product?.find((product)=>product.id===item.productId)?.productName}
-                    </p>
-                  </div>
-                  <h4 className="Active" >{item.planStatus} </h4>
-                </div>
-                <div className="d-flex align-items-center justify-content-between pt-4">
-                  <div>
-                    <h4>Start date</h4>
-                    <p className="p-0 m-0">
-                      {moment(item.planSummary.startDate).format("DD/MM/YYYY")} 
-                    </p>
-                  </div>
-                  <div>
-                    <h4>End date</h4>
-                    <p className="p-0 m-0">
-                      {moment(item.planSummary.endDate).format("DD/MM/YYYY")} 
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex position-relative horizontal-line">
-                <div className="position-absolute horizontal-circle-left"></div>
-                <hr className="dotted" />
-                <div className="position-absolute end-0 horizontal-circle-right"></div>
-              </div>
+      {
+        userPlans.length > 0 ? (
+          <>
+            <div className="plan-content">
+              {
+                planStatus === "OK" && currentPlans.map((item) => (
+                  <div className="plan" key={item.id} >
+                    <div className="plan-top h-50 p-4" onClick={() => handlePlanModal(item.id)} >
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{item.planName} </h4>
+                          <p className="p-0 m-0">
+                            {product?.find((product)=>product.id===item.productId)?.productName}
+                          </p>
+                        </div>
+                        <h4 className="Active" >{item.planStatus} </h4>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between pt-4">
+                        <div>
+                          <h4>Start date</h4>
+                          <p className="p-0 m-0">
+                            {moment(item.planSummary.startDate).format("DD/MM/YYYY")} 
+                          </p>
+                        </div>
+                        <div>
+                          <h4>End date</h4>
+                          <p className="p-0 m-0">
+                            {moment(item.planSummary.endDate).format("DD/MM/YYYY")} 
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex position-relative horizontal-line">
+                      <div className="position-absolute horizontal-circle-left"></div>
+                      <hr className="dotted" />
+                      <div className="position-absolute end-0 horizontal-circle-right"></div>
+                    </div>
 
-              <div className="plan-top h-50 py-1 px-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>{item.planName} </h4>
-                    <p className="p-0 m-0">
-                      {product.find((product)=>product.id===item.productId)?.productName}
-                    </p>
+                    <div className=" h-50 py-1 px-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{item.planName} </h4>
+                          <p className="p-0 m-0">
+                            {product.find((product)=>product.id===item.productId)?.productName}
+                          </p>
+                        </div>
+                        <DropDown status="Active" />
+                      </div>
+                    </div>
                   </div>
-                  <DropDown status="Active" />
-                </div>
-              </div>
+                ))
+              }
             </div>
-          ))
-        }
-      </div>
-      <div className="row" style={{display: more ? "none":"auto"}} >
-        <div className="d-flex justify-content-center my-5">
-          <button className="btn-view" onClick={()=>setMore(true)} >View all</button>
-        </div>  
-      </div> 
+            <div className="row" style={{display: more ? "none":"auto"}} >
+              <div className="d-flex justify-content-center my-5">
+                <button className="btn-view" onClick={()=>setMore(true)} >View all</button>
+              </div>  
+            </div> 
+          </>
+        ) : 
+        <EmptyPlan />
+      }
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
   padding: 40px;
+  .plan-top {
+    cursor: pointer;
+  }
   .plan-content {
     display: grid;
     gap: 30px;

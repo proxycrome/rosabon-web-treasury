@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Verve from '../../../asset/master-card-logo.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
@@ -7,17 +8,25 @@ import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 import { useDispatch, useSelector } from "react-redux";
 // import { createPlan } from "../../../redux/actions/plan/planAction";
-import { createPlan } from '../../../store/actions';
+import { createPlan, initPayment } from '../../../store/actions';
 import { PlanContext } from "./PlanForm";
 
 const PlanCardPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
+  const navigate = useNavigate();
   const { form } = useContext(PlanContext);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.plan);
+  const { paySuccess } = useSelector((state) => state.paystack);
 
-  const handleSubmit = () => {
-    dispatch(createPlan(form, setShow));
+  const handleSubmit = async () => {
+    // dispatch(createPlan(form, setShow));
+    const formData = {
+      amount: "20000",
+      email: "anosikefidelis@gmail.com" 
+    }
+    await dispatch(initPayment(formData))
+    await console.log("show pay", paySuccess)
   }
 
   return (
