@@ -257,80 +257,80 @@ const RightWrapper = styled.div`
 `;
 
 export const MakePayment = ({ setPaymentType }) => {
-  const [card, setCard] = useState("");
-  const [bank, setBank] = useState("");
-  const { form, setForm } = useContext(PlanContext);
-  const directDebit = form.directDebit;
+	const [card, setCard] = useState("");
+	const [bank, setBank] = useState("");
+	const { form, setForm } = useContext(PlanContext);
+	const directDebit = form.directDebit;
 
-  const handleClick = (e) => {
-    if (e.target.value === "card") {
-      setForm({
-        ...form,
-        paymentType: "DEBIT_CARD",
-      });
-      setCard("card");
-      setBank("");
-    }
-    if (e.target.value === "bank") {
-      setForm({
-        ...form,
-        paymentType: "BANK_TRANSFER",
-      });
-      setBank("bank");
-      setCard("");
-    }
-  };
+	const handleClick = (e) => {
+		if (e.target.value === "card") {
+			setForm({
+				...form,
+				paymentMethod: "DEBIT_CARD",
+			});
+			setCard("card");
+			setBank("");
+		}
+		if (e.target.value === "bank") {
+			setForm({
+				...form,
+				paymentMethod: "BANK_TRANSFER",
+			});
+			setBank("bank");
+			setCard("");
+		}
+	};
 
-  useEffect(() => {
-    const values = {
-      bank,
-      card,
-    };
-    setPaymentType(values);
-  }, [card, bank, setPaymentType]);
+	useEffect(() => {
+		const values = {
+			bank,
+			card,
+		};
+		setPaymentType(values);
+	}, [card, bank, setPaymentType]);
 
-  return (
-    <PaymentTypeWrapper>
-      <h4 className="pb-4">Choose Payment Type</h4>
-      <div className="plan-payment">
-        <div className="pb-3">
-          <div className="d-flex align-items-center justify-content-between py-4">
-            <div className="d-flex align-items-center">
-              <img className="verve-card" src={Verve} alt="Verve" />
-              <p className="p-0 m-0">Debit Card</p>
-            </div>
-            <input
-              type="radio"
-              id="card"
-              name="paymentType"
-              value="card"
-              onClick={handleClick}
-            />
-          </div>
-        </div>
-        <div className="pb-5">
-          <div className="d-flex align-items-center justify-content-between">
-            <div className="d-flex align-items-center">
-              <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-              <p className="p-0 m-0">Bank Transfer</p>
-            </div>
-            <input
-              type="radio"
-              id="bank"
-              name="paymentType"
-              disabled={directDebit === true ? true : false}
-              value="bank"
-              onClick={handleClick}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="py-5 check-box-bank">
-        <input type="checkbox" id="scales" name="scales" />
-        <label htmlFor="scales">I agree to the Terms and Condition</label>
-      </div>
-    </PaymentTypeWrapper>
-  );
+	return (
+		<PaymentTypeWrapper>
+			<h4 className="pb-4">Choose Payment Type</h4>
+			<div className="plan-payment">
+				<div className="pb-3">
+					<div className="d-flex align-items-center justify-content-between py-4">
+						<div className="d-flex align-items-center">
+							<img className="verve-card" src={Verve} alt="Verve" />
+							<p className="p-0 m-0">Debit Card</p>
+						</div>
+						<input
+							type="radio"
+							id="card"
+							name="paymentType"
+							value="card"
+							onClick={handleClick}
+						/>
+					</div>
+				</div>
+				<div className="pb-5">
+					<div className="d-flex align-items-center justify-content-between">
+						<div className="d-flex align-items-center">
+							<img className="verve-card" src={MOneyTransfer} alt="Verve" />
+							<p className="p-0 m-0">Bank Transfer</p>
+						</div>
+						<input
+							type="radio"
+							id="bank"
+							name="paymentType"
+							disabled={directDebit === true ? true : false}
+							value="bank"
+							onClick={handleClick}
+						/>
+					</div>
+				</div>
+			</div>
+			<div className="py-5 check-box-bank">
+				<input type="checkbox" id="scales" name="scales" />
+				<label htmlFor="scales">I agree to the Terms and Condition</label>
+			</div>
+		</PaymentTypeWrapper>
+	);
 };
 
 const PaymentTypeWrapper = styled.div`
@@ -781,116 +781,142 @@ export const WithdrawalSummary = () => {
   );
 };
 
+// handles currency icon
+export const getCurrIcon = (currency) => {
+    switch (currency) {
+      	case 1:
+        	return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#165;</p>)
+      	default:
+        	return (<p></p>)
+    }
+} 
+
 export const PlanSummary = ({ planPay }) => {
-  const { form } = useContext(PlanContext);
-  console.log("gg");
-  let planData = form;
-  return (
-    <div>
-      <PlanSummaryWrapper>
-        {planPay && <h4 className="">Plan Summary</h4>}
-        <div className="plan-content">
-          <div className="rollover">
-            <div className="plan-top h-50 p-4">
-              {/* <h4>Plan 1</h4> */}
-              <h4>{planData.planSummary.planName} </h4>
-              <div className="d-flex align-items-center justify-content-between pt-3">
-                <div>
-                  <p className="p-0 m-0">Start date </p>
-                  {/* <h4>24/06/2023</h4> */}
-                  <h4>{planData.planSummary.startDate}</h4>
-                </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">End date </p>
-                  {/* <h4>24/06/2023</h4> */}
-                  <h4>{planData.planSummary.endDate}</h4>
-                </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">Principal </p>
-                  {/* <h4> ₦2,500,000</h4> */}
-                  <h4>{planData.planSummary.principal}</h4>
-                </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">Interest Rate </p>
-                  {/* <h4>20.00 %</h4> */}
-                  <h4>{planData.planSummary.interestRate} %</h4>
-                </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">
-                    Interest Payment <br /> frequency{" "}
-                  </p>
-                  {/* <h4 className="">Daily</h4> */}
-                  <h4>{planData.planSummary.interestPaymentFrequency}</h4>
-                </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">Calculated Interest </p>
-                  {/* <h4>₦200,000</h4> */}
-                  <h4>₦{planData.planSummary.calculatedInterest} </h4>
-                </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">Withholding Tax</p>
-                  {/* <h4 className="">₦2,000</h4> */}
-                  <h4>₦{planData.planSummary.withholdingTax}</h4>
-                </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">Payment at Maturity</p>
-                  {/* <h4>₦2,700,000</h4> */}
-                  <h4>₦{planData.planSummary.paymentMaturity} </h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </PlanSummaryWrapper>
-    </div>
-  );
+	const { form } = useContext(PlanContext);
+	console.log("gg");
+	let planData = form;
+	return (
+		<div>
+			<PlanSummaryWrapper>
+				{planPay && <h4 className="">Plan Summary</h4>}
+				<div className="plan-content">
+					<div className="rollover">
+						<div className="plan-top h-50 p-4">
+							{/* <h4>Plan 1</h4> */}
+							<h4>{planData.planSummary.planName} </h4>
+							<div className="d-flex align-items-center justify-content-between pt-3">
+								<div>
+									<p className="p-0 m-0">Start date </p>
+									{/* <h4>24/06/2023</h4> */}
+									<h4>{planData.planSummary.startDate}</h4>
+								</div>
+								<div className="rollover-text-left">
+									<p className="p-0 m-0">End date </p>
+									{/* <h4>24/06/2023</h4> */}
+									<h4>{planData.planSummary.endDate}</h4>
+								</div>
+							</div>
+							<div className="d-flex align-items-center justify-content-between pt-4">
+								<div>
+									<p className="p-0 m-0">Principal </p>
+									{/* <h4> ₦2,500,000</h4> */}
+									<h4 className="flex" >
+										{getCurrIcon(planData?.currency)}{" "} 
+										{planData.planSummary.principal}
+									</h4>
+								</div>
+								<div className="rollover-text-left">
+									<p className="p-0 m-0">Interest Rate </p>
+									{/* <h4>20.00 %</h4> */}
+									<h4>{planData.planSummary.interestRate} %</h4>
+								</div>
+							</div>
+							<div className="d-flex align-items-center justify-content-between pt-4">
+								<div>
+									<p className="p-0 m-0">
+										Interest Payment <br /> frequency{" "}
+									</p>
+									{/* <h4 className="">Daily</h4> */}
+									<h4>{planData.planSummary.interestReceiptOption}</h4>
+								</div>
+								<div className="rollover-text-left">
+									<p className="p-0 m-0">Calculated Interest </p>
+									{/* <h4>₦200,000</h4> */}
+									<h4 className="flex justify-content-end">
+										{getCurrIcon(planData?.currency)}{" "}
+										{planData.planSummary.calculatedInterest} 
+									</h4>
+								</div>
+							</div>
+							<div className="d-flex align-items-center justify-content-between pt-4">
+								<div>
+									<p className="p-0 m-0">Withholding Tax</p>
+									{/* <h4 className="">₦2,000</h4> */}
+									<h4 className="flex">
+										{getCurrIcon(planData?.currency)}{" "}
+										{planData.planSummary.withholdingTax}
+									</h4>
+								</div>
+								<div className="rollover-text-left">
+									<p className="p-0 m-0">Payment at Maturity</p>
+									{/* <h4>₦2,700,000</h4> */}
+									<h4 className="flex justify-content-end">
+										{getCurrIcon(planData?.currency)}{" "}
+										{planData.planSummary.paymentMaturity} 
+									</h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</PlanSummaryWrapper>
+		</div>
+	);
 };
 
 const PlanSummaryWrapper = styled.div`
-  p {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 17px;
-    letter-spacing: -0.01em;
-    color: #242424;
-  }
-  h4 {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 17px;
-    line-height: 20px;
-    letter-spacing: -0.03em;
-    color: #242424;
-  }
-  .plan-content {
-    background-color: #ffffff;
-    margin-top: 40px;
-  }
-  .rollover {
-    h4 {
-      font-weight: 700;
-      font-size: 13px;
-      line-height: 18px;
-      margin-top: -30px;
-    }
-    .rollover-text-left {
-      text-align: right;
-    }
-    label {
-      font-weight: 400;
-      font-size: 11px;
-      line-height: 13px;
-      letter-spacing: -0.01em;
-      color: #6d6d6d;
-      padding-left: 10px;
-    }
-  }
+	p {
+		font-weight: 400;
+		font-size: 14px;
+		line-height: 17px;
+		letter-spacing: -0.01em;
+		color: #242424;
+	}
+	h4 {
+		font-style: normal;
+		font-weight: 600;
+		font-size: 17px;
+		line-height: 20px;
+		letter-spacing: -0.03em;
+		color: #242424;
+	}
+	.plan-content {
+		background-color: #ffffff;
+		margin-top: 40px;
+	}
+	.rollover {
+		h4 {
+			font-weight: 700;
+			font-size: 13px;
+			line-height: 18px;
+			margin-top: -30px;
+		}
+		.rollover-text-left {
+			text-align: right;
+		}
+		label {
+			font-weight: 400;
+			font-size: 11px;
+			line-height: 13px;
+			letter-spacing: -0.01em;
+			color: #6d6d6d;
+			padding-left: 10px;
+		}
+	}
+	.flex {
+		display: flex;
+		gap: 4px;
+	}
 `;
 
 export const WithdrawalBank = () => {

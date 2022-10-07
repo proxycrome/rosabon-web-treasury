@@ -3,10 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { Collapse } from "reactstrap";
-import { Link, NavLink } from "react-router-dom";
-// import { getCatWithProducts } from "../../../redux/actions/product/productCategoriesAction";
-// import { getSingleProduct } from "../../../redux/actions/product/productAction";
-import { getSingleProduct, getCatWithProducts } from "../../../store/actions";
+import { Link } from "react-router-dom";
+import { 
+  getCatWithProducts, 
+  getCurrencies,
+  getExRates,
+  getSingleProduct,
+  getTenor
+} from "../../../store/actions";
 import Spinner from "../../common/loading";
 
 const CreatePlan = () => {
@@ -18,7 +22,10 @@ const CreatePlan = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getExRates());
     dispatch(getCatWithProducts());
+    dispatch(getCurrencies());
+    dispatch(getTenor());
   }, [])
 
   const handleSingleProduct = (id) => {

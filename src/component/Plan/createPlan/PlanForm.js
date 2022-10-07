@@ -1,25 +1,26 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { UncontrolledTooltip } from 'reactstrap';
 import PlanPay from "./PlanPay";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { getExRates, getTenor } from "../../../store/actions";
+import { getCurrIcon } from "../Accesssories";
 
 export const PlanContext = createContext(null);
 
 const PlanForm = () => {
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { singleProduct  } = useSelector((state) => state.product)
-  const { tenors, exRates  } = useSelector((state) => state.plan)
+
+  const { singleProduct  } = useSelector((state) => state.product);
+  const { exRates  } = useSelector((state) => state.plan);
+  // const { currencies } = useSelector((state) => state.currencies);
+
   const productStatus = singleProduct?.statusCode
   const product = singleProduct?.data.body ? singleProduct?.data.body : {}
-  const tenor = tenors?.data.body ? tenors?.data.body : []
   const ex_rates = exRates?.data.body ? exRates?.data.body : []
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
@@ -27,57 +28,59 @@ const PlanForm = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [confirmPeriodicPay, setConfirmperiodicPay] = useState(false);
   const [formData, setFormData] = useState({
-    productId: product.id,
-    productCategoryId: product.productCategoryId,
+    product: product.id,
+    productCategory: product.productCategory?.id,
     planName: "",
     currency: "",
     exchangeRate: 0.00,
     amount: 0.00,
     targetAmount: 0.00,
-    tenorId: 1,
+    tenor: 1,
     planDate: recentDate,
     savingFrequency: "DAILY",
     weeklyContributionDay: "MONDAY",
-    monthlyContributionDay: 0,
-    interestReceiptOption: 0,
+    monthlyContributionDay: 1,
+    interestReceiptOption: "",
     planStatus: "ACTIVE",
     contributionValue: 0.00,
     directDebit: false,
-    interestRate: 0.00,
-    paymentType: "DEBIT_CARD",
+    interestRate: 1000.00,
+    acceptPeriodicContribution: true,
+    actualMaturityDate: "",
+    autoRollOver: true,
     numberOfTickets: 0,
     autoRenew: false,
     dateCreated: recentDate,
     allowsLiquidation: true,
     planSummary: null,
     paymentMethod: "DEBIT_CARD"
-  })
+  });
 
   const [summary, setSummary] = useState({
     planName: "",
     startDate: "",
     endDate: "",
     principal: 0.00,
-    interestRate: 0.00,
-    interestPaymentFrequency: "DAILY",
+    interestRate: 0,
+    interestReceiptOption: "DAILY",
     calculatedInterest: 0.00,
-    withholdingTax: 0.00,
-    paymentMaturity: 0.00
+    withholdingTax: 1200.00,
+    paymentMaturity: 2100.00
   });
   const [autoCompute, setAutoCompute] = useState(true);
 
   useEffect(() => {
-    dispatch(getTenor())
-    dispatch(getExRates())
+    let selectedTenor = product?.tenors?.find(item => item.id === parseInt(formData.tenor))
+    let endDate = moment(recentDate).add(selectedTenor?.tenorDays, 'days')?._d
     setFormData({
       ...formData,
-      amount: product.hasTargetAmount !== null ? null : formData.amount,
-      productId: product.id,
-      productCategoryId: product.productCategoryId,
+      // amount: product.hasTargetAmount !== null ? null : formData.amount,
+      product: product.id,
+      productCategory: product.productCategory?.id,
+      actualMaturityDate:moment(endDate).format("YYYY-MM-DD"),
       contributionValue: formData.contributionValue,
-      tenorId: Number(formData.tenorId),
+      numberOfTickets: updateNumOfTickets(formData.targetAmount),
       planSummary: summary,
-      interestReceiptOption: 0,
       directDebit: formData.directDebit === "true" || 
       formData.directDebit === true ? true : false,
       autoRenew: formData.autoRenew === "true" || 
@@ -89,7 +92,7 @@ const PlanForm = () => {
 
   // function to get the auto computed contribution value
   const contribValue = () => {
-    const selectedTenor = tenor?.filter(item => item.id === parseInt(formData.tenorId))[0]
+    const selectedTenor = product.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
     if(autoCompute===true) {
       let computedValue;
       switch(formData.savingFrequency) {
@@ -98,7 +101,7 @@ const PlanForm = () => {
           break;
 
         case "WEEKLY":
-          computedValue = formData.targetAmount / (selectedTenor?.tenorDays / 4)
+          computedValue = formData.targetAmount / (selectedTenor?.tenorWeeks)
           break;
 
         case "MONTHLY":
@@ -137,7 +140,7 @@ const PlanForm = () => {
 
 
   useEffect(() => {
-    const currency = ex_rates?.filter(item => item.name === formData.currency)[0]
+    const currency = ex_rates?.filter(item => item.id === formData.currency)[0]
     
     if(formData.currency === "NGN"){
       setFormData({
@@ -157,111 +160,103 @@ const PlanForm = () => {
     contribValue();
   }, [
     formData.savingFrequency, 
-    formData.tenorId, 
+    formData.tenor, 
     formData.targetAmount, 
     formData.contributionValue
   ])
 
+  // calculate simple interest
+  const calculateSI = (principal, rate, time) => {
+    const SI = (principal*rate*time) / 100
+    return Number(parseFloat(SI).toFixed(2))
+  }
+
   useEffect(() => {
-    let selectedTenor = tenor?.find(item => item.id === parseInt(formData.tenorId))
+    let selectedTenor = product?.tenors?.find(item => item.id === parseInt(formData.tenor))
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, 'days')?._d
     // calculate principal
-    let principal;
-    if (product?.properties?.hasTargetAmount !== null) {
-      switch(formData.savingFrequency) {
-        case "DAILY":
-          principal = formData.contributionValue * selectedTenor?.tenorDays
-          break;
-        case "WEEKLY":
-          principal = formData.contributionValue * selectedTenor?.tenorWeeks
-          break;
-        case "MONTHLY":
-          principal = formData.contributionValue * selectedTenor?.tenorMonths
-          break;
-        default: break;
-      }
-    } else if(product?.properties?.hasTargetAmount === null) {
-      principal = formData.amount
-    }
+    
+    // }
     setSummary({
+      ...summary,
       planName: formData.planName,
       startDate: formData.dateCreated,
       endDate: moment(endDate).format("YYYY-MM-DD"),
-      principal: Number(parseFloat(principal).toFixed(2)),
-      interestRate: 10.00,
+      interestRate: formData.interestRate,
+      principal: formData.targetAmount,
       // interestPaymentFrequency: formData.interestReceiptOption,
-      interestPaymentFrequency: 0,
-      calculatedInterest: 10.00,
-      withholdingTax: 0.00,
-      paymentMaturity: 0.00
+      interestReceiptOption: formData.interestReceiptOption,
+      calculatedInterest: calculateSI(
+          formData.targetAmount, 
+          formData.interestRate,
+          selectedTenor?.tenorDays
+        ),
     });
   },[
     formData.planName,
     formData.savingFrequency,
-    formData.tenorId,
+    formData.tenor,
     formData.interestRate,
     formData.interestReceiptOption,
     formData.targetAmount,
     formData.amount
   ])
 
-  useEffect(() => {
+  const updateNumOfTickets = (value) => {
     let ticketNo;
     if (product?.properties?.allowsMonthlyDraw) {
-      if(product?.properties?.hasTargetAmount !== null) {
-        ticketNo = formData.targetAmount / product?.minTransactionLimit
-      } else {
-        ticketNo = formData.amount / product?.minTransactionLimit
-      }
-      setFormData({
-        ...formData,
-        numberOfTickets: Math.floor(ticketNo)
-      })
+      // if(product?.properties?.hasTargetAmount !== null) {
+      //   ticketNo = formData.targetAmount / product?.minTransactionLimit
+      // } else {
+      //   ticketNo = formData.amount / product?.minTransactionLimit
+      // }
+      ticketNo = value / product?.minTransactionLimit
+      return Math.floor(ticketNo);
     }
-  }, [formData.amount])
+  }
 
   // function to match names with interest receipt options
   const labelIntRecOpt = useCallback((value) => {
     let label;
     switch(value) {
       case "hasUpfrontInterestRate":
-        label = "Upfront";
+        label = "UPFRONT";
         break
 
       case "hasMonthlyInterestRate":
-        label = "Monthly";
+        label = "MONTHLY";
         break;
 
       case "hasQuarterlyInterestRate":
-        label = "Quarterly";
+        label = "QUARTERLY";
         break;
 
       case "hasBiAnnualInterestRate":
-        label = "BiAnnual";
+        label = "BI_ANNUAL";
         break;
 
-      case "hasMaturityInterestRate":
-        label = "At Maturity";
+      case "hasMaturityRate":
+        label = "MATURITY";
         break;
 
       case "hasBackendUpfrontInterestRate":
-        label = "Backend Upfront";
+        label = "BACKEND_UPFRONT";
         break;
 
       case "hasBackendMonthlyInterestRate":
-        label = "Backend Monthly";
+        label = "BACKEND_MONTHLY";
         break;
 
       case "hasBackendQuarterlyInterestRate":
-        label = "Backend Quarterly";
+        label = "BACKEND_QUARTERLY";
         break;
 
       case "hasBackendBiAnnualInterestRate":
-        label = "Backend BiAnnual";
+        label = "BACKEND_BI_ANNUAL";
         break;
       
-      case "hasBackendMaturityInterestRate":
-        label = "Backend At Maturity";
+      case "hasBackendMaturityRate":
+        label = "BACKEND_MATURITY";
         break;
       default: break;
     }
@@ -284,8 +279,8 @@ const PlanForm = () => {
   // function to get the minimum allowed target value for target amount
   const calculateMinAllowTargetVal = (targetValue) => {
     if(targetValue !== null) {
-      if(formData.tenorId !== "") {
-        let selectedTenor = tenor?.filter(item => item.id === parseInt(formData.tenorId))[0]
+      if(formData.tenor !== "") {
+        let selectedTenor = product?.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
         return product?.minTransactionLimit * selectedTenor?.tenorMonths
       }
     }
@@ -294,8 +289,8 @@ const PlanForm = () => {
   // function to calculate the minimum allowed contribution value
   const calculateMinContribVal = (contribVal) => {
     if(contribVal !== null) {
-      if(formData.tenorId !== "") {
-        let selectedTenor = tenor?.filter(item => item.id === parseInt(formData.tenorId))[0]
+      if(formData.tenor !== "") {
+        let selectedTenor = product?.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
         let minContrib;
         switch(formData.savingFrequency) {
           case "DAILY":
@@ -322,7 +317,7 @@ const PlanForm = () => {
 
   // function to calculate the interest rate value
   const interestRateVal = () => {
-    const selectedTenor = tenor?.filter(item => item.id === parseInt(formData.tenorId))[0]
+    const selectedTenor = product?.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
     if(formData.targetAmount!==null) {
       const interestRate = selectedTenor?.tenorMonths * product?.minTransactionLimit
       setFormData({
@@ -352,8 +347,10 @@ const PlanForm = () => {
     }
   }
 
+
   // handle changes on all inputs
   const handleChange = (e) => {
+    console.log(formData)
     interestRateVal();
     if(e.target.type === "number") {
       setFormData({
@@ -361,10 +358,23 @@ const PlanForm = () => {
         [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
       })
     }else {
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-      })
+      if(e.target.name === "currency") {
+        setFormData({
+          ...formData,
+          [e.target.name]: Number(e.target.value)
+        })
+      }
+      else if(e.target.name === "tenor") {
+        setFormData({
+          ...formData,
+          [e.target.name]: Number(e.target.value)
+        })
+      } else {
+        setFormData({
+          ...formData,
+          [e.target.name]: e.target.value
+        })
+      }
     }
   }
 
@@ -372,7 +382,7 @@ const PlanForm = () => {
   // submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(product?.properties?.hasSavingFrequency === null) {
+    if(!(product?.properties?.hasSavingFrequency)) {
       setIsClicked(true);
     } else {
         if(confirmPeriodicPay) {
@@ -488,7 +498,7 @@ const PlanForm = () => {
                   <option value="" disabled hidden selected >Select investment currency</option>
                   {
                     product?.currency?.map((item, id) => (
-                      <option key={id} value={item} >{item} </option>
+                      <option key={id} value={item.id} >{item.name} </option>
                     ))
                   }
                 </select>
@@ -499,8 +509,11 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Exchange rate</label>
               <div className="input-group mb-4">
+                <div className=" input-group-prepend curr-icon" >
+                  {getCurrIcon(formData.currency)}
+                </div>
                 <input 
-                  className="form-control" 
+                  className={`form-control ${ formData.currency !== "" && "curr-input"}`}
                   name="exchangeRate"
                   placeholder="" 
                   disabled={formData.currency === "NGN"}
@@ -513,12 +526,16 @@ const PlanForm = () => {
             <div className="col-md-6">
               <label>Amount to be placed</label>
               <div className="input-group mb-4">
+                <div className="input-group-prepend curr-icon" >
+                  {getCurrIcon(formData.currency)}
+                </div>
                 <input 
-                  className="form-control" 
+                  className={`form-control ${ formData.currency !== "" && "curr-input"}`}
                   name="amount"
                   placeholder="" 
                   type="number" 
-                  disabled={product?.properties?.hasTargetAmount===null?false:true}
+                  // disabled={product?.properties?.hasTargetAmount===null?false:true}
+                  disabled={true}
                   value={formData.amount}
                   onChange={handleChange}
                 />
@@ -529,20 +546,23 @@ const PlanForm = () => {
             <div className="col-md-6 mb-4">
               <label>Target amount</label>
               <div className="input-group">
+                <div className="input-group-prepend curr-icon" >
+                  {getCurrIcon(formData.currency)}
+                </div>
                 <input 
-                  className="form-control" 
+                  className={`form-control ${ formData.currency !== "" && "curr-input"}`}
                   name="targetAmount"
                   placeholder="" 
-                  disabled={product?.properties?.hasTargetAmount===null?true:false}
+                  // disabled={product?.properties?.hasTargetAmount===null?true:false}
                   type="number" 
                   value={formData.targetAmount}
                   onChange={handleChange}
                 />
               </div>
               {
-                (product?.properties?.hasTargetAmount !== null) &&
+                // (product?.properties?.hasTargetAmount !== null) &&
                 (formData.targetAmount < calculateMinAllowTargetVal(formData.targetAmount)) ? (
-                  <small style={{color:"red"}} >
+                  <small className="helper-text" >
                     Target value cannot be below {product?.minTransactionLimit}
                   </small>
                 ) : (<></>)
@@ -552,13 +572,13 @@ const PlanForm = () => {
               <label>Tenor</label>
               <select 
                 className="form-select form-select-md mb-3" 
-                name="tenorId" 
+                name="tenor" 
                 onChange={handleChange}
-                value={formData.tenorId}
+                value={formData.tenor}
               >
                 <option value="" disabled hidden selected >Select tenor</option>
                 {
-                  tenor?.map(item => (
+                  product?.tenors?.map(item => (
                     <option key={item.id} value={item.id} >{item.tenorName} </option>
                   ))
                 }
@@ -636,7 +656,7 @@ const PlanForm = () => {
                 >
                   <option value="" disabled hidden selected >Select interest receipt option</option>
                   {
-                    productStatus==="OK" && Object.entries(product?.properties?.interestOption).map(([key, value]) =>
+                    productStatus==="OK" && Object.entries(product?.properties?.interestOptions).map(([key, value]) =>
                       value === true && (
                         <option key={key} value={labelIntRecOpt(key)} >
                           {labelIntRecOpt(key)}
@@ -655,7 +675,7 @@ const PlanForm = () => {
                 <button
                   className={`btn btn-sm ${autoCompute ? "btn-light" : "btn-info"}`}
                   onClick={handleContribBtn}
-                  disabled={product?.properties?.hasTargetAmount===null?true:false}
+                  // disabled={product?.properties?.hasTargetAmount===null?true:false}
                   type="button"
                 >
                   AutoCompute
@@ -672,6 +692,21 @@ const PlanForm = () => {
                   disabled={autoCompute}
                 />
               </div>
+              {
+                product?.properties?.hasSavingFrequency && (
+                  <div className=" d-flex align-content-center" style={{gap:8}} >
+                    <label className="helper-text" >Kindly confirm periodic payment</label>
+                    <input 
+                      type="checkbox"
+                      style={{width:14, height:14, marginTop:4, cursor:"pointer"}}
+                      name="confirmPeriodicPay"
+                      value={confirmPeriodicPay}
+                      checked={confirmPeriodicPay}
+                      onChange={() => setConfirmperiodicPay(!confirmPeriodicPay)}
+                    />
+                  </div>
+                )
+              }
               {
                 (formData.contributionValue < calculateMinContribVal(formData.contributionValue) 
                 && product?.properties?.hasTargetAmount!==null) ? (
@@ -720,8 +755,8 @@ const PlanForm = () => {
                   name="numberOfTickets"
                   placeholder="" 
                   type="number"
-                  disabled={true}
-                  value={formData.numberOfTickets} 
+                  disabled={product?.properties?.allowsMonthlyDraw ? false : true}
+                  value={updateNumOfTickets(formData.targetAmount)} 
                   onChange={handleChange}
                 />
               </div>
@@ -762,21 +797,6 @@ const PlanForm = () => {
               </div>
             </div>
           </div>
-          {
-            product?.properties?.hasSavingFrequency !== null && (
-              <div className=" d-flex justify-content-center align-content-center" style={{gap:12}} >
-                <label>Kindly confirm periodic payment</label>
-                <input 
-                  type="checkbox"
-                  style={{width:22, height:22}}
-                  name="confirmPeriodicPay"
-                  value={confirmPeriodicPay}
-                  checked={confirmPeriodicPay}
-                  onChange={() => setConfirmperiodicPay(!confirmPeriodicPay)}
-                />
-              </div>
-            )
-          }
         </div>
       </Wrapper>
       <WrapperFooter>
@@ -895,6 +915,18 @@ const Wrapper = styled.div`
 
   select {
     height: 54px;
+  }
+  .curr-icon {
+    position: absolute;
+    margin-top: 17px;
+    margin-left: 20px;
+    z-index: 10;
+  }
+  .curr-input {
+    padding-left: 34px;
+  }
+  .helper-text {
+    font-size: 11px;
   }
 `;
 

@@ -1,6 +1,7 @@
 import { all } from "redux-saga/effects";
 
 import AuthSaga from "./auth/saga";
+import CurrencySaga from "./currency/saga";
 import FeedbackSaga from "./feedback/saga";
 import PaystackSaga from "./paystack/saga";
 import ProfileSaga from "./profile/saga";
@@ -19,5 +20,6 @@ export default function* rootSaga() {
         ProductSaga(),
         PlanSaga(),
         PaystackSaga(),
+        CurrencySaga(),
     ]);
 }

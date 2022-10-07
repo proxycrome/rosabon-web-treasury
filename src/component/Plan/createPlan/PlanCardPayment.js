@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Verve from '../../../asset/master-card-logo.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
@@ -13,19 +12,19 @@ import { PlanContext } from "./PlanForm";
 
 const PlanCardPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
-  const navigate = useNavigate();
   const { form } = useContext(PlanContext);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.plan);
+  const { users } = useSelector((state) => state.user_profile);
   const { paySuccess } = useSelector((state) => state.paystack);
 
   const handleSubmit = async () => {
-    // dispatch(createPlan(form, setShow));
     const formData = {
-      amount: "20000",
-      email: "anosikefidelis@gmail.com" 
+      amount: JSON.stringify(form?.targetAmount),
+      email: users?.email, 
     }
-    await dispatch(initPayment(formData))
+    await dispatch(initPayment(formData));
+    await dispatch(createPlan(form, setShow));
     await console.log("show pay", paySuccess)
   }
 

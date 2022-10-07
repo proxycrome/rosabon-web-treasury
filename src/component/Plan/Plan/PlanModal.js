@@ -81,7 +81,7 @@ const PlanModal = ({ handleClose }) => {
               <div className='right'>
                 <p className='p-light' >Tenor</p>
                 <p className='p-dark' >
-                  {tenor?.find((tenor)=>tenor.id===parseInt(plan.tenorId))?.tenorName}
+                  {tenor?.find((tenor)=>tenor.id===parseInt(plan.tenor))?.tenorName}
                 </p>
               </div>
             </div>
@@ -93,7 +93,7 @@ const PlanModal = ({ handleClose }) => {
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
               <div >
                 <p className='p-light' >Interest rate</p>
-                <p className='p-dark' >{plan.planSummary.interestRate} </p>
+                <p className='p-dark' >{plan.interestRate} </p>
               </div>
               <div className='right' >
                 <p className='p-light' >Interest earned</p>
@@ -104,8 +104,8 @@ const PlanModal = ({ handleClose }) => {
             </div>
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
               <div >
-                <p className='p-light' >Interest payment frequenct</p>
-                <p className='p-dark' >{plan.planSummary.interestPaymentFrequency} </p>
+                <p className='p-light' >Interest payment frequency</p>
+                <p className='p-dark' >{plan.planSummary.interestReceiptOption} </p>
               </div>
               <div className='right' >
                 <p className='p-light' >Current balance</p>
