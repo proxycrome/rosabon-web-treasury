@@ -61,7 +61,7 @@ const PlanForm = () => {
     startDate: "",
     endDate: "",
     principal: 0.00,
-    interestRate: formData.interestRate,
+    interestRate: 0,
     interestReceiptOption: "DAILY",
     calculatedInterest: 0.00,
     withholdingTax: 1200.00,
@@ -79,6 +79,7 @@ const PlanForm = () => {
       productCategory: product.productCategory?.id,
       actualMaturityDate:moment(endDate).format("YYYY-MM-DD"),
       contributionValue: formData.contributionValue,
+      numberOfTickets: updateNumOfTickets(formData.targetAmount),
       planSummary: summary,
       directDebit: formData.directDebit === "true" || 
       formData.directDebit === true ? true : false,
@@ -181,6 +182,7 @@ const PlanForm = () => {
       planName: formData.planName,
       startDate: formData.dateCreated,
       endDate: moment(endDate).format("YYYY-MM-DD"),
+      interestRate: formData.interestRate,
       principal: formData.targetAmount,
       // interestPaymentFrequency: formData.interestReceiptOption,
       interestReceiptOption: formData.interestReceiptOption,
@@ -200,20 +202,18 @@ const PlanForm = () => {
     formData.amount
   ])
 
-  useEffect(() => {
+  const updateNumOfTickets = (value) => {
     let ticketNo;
     if (product?.properties?.allowsMonthlyDraw) {
-      if(product?.properties?.hasTargetAmount !== null) {
-        ticketNo = formData.targetAmount / product?.minTransactionLimit
-      } else {
-        ticketNo = formData.amount / product?.minTransactionLimit
-      }
-      setFormData({
-        ...formData,
-        numberOfTickets: Math.floor(ticketNo)
-      })
+      // if(product?.properties?.hasTargetAmount !== null) {
+      //   ticketNo = formData.targetAmount / product?.minTransactionLimit
+      // } else {
+      //   ticketNo = formData.amount / product?.minTransactionLimit
+      // }
+      ticketNo = value / product?.minTransactionLimit
+      return Math.floor(ticketNo);
     }
-  }, [formData.amount])
+  }
 
   // function to match names with interest receipt options
   const labelIntRecOpt = useCallback((value) => {
@@ -755,8 +755,8 @@ const PlanForm = () => {
                   name="numberOfTickets"
                   placeholder="" 
                   type="number"
-                  disabled={true}
-                  value={formData.numberOfTickets} 
+                  disabled={product?.properties?.allowsMonthlyDraw ? false : true}
+                  value={updateNumOfTickets(formData.targetAmount)} 
                   onChange={handleChange}
                 />
               </div>
