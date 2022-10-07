@@ -13,7 +13,8 @@ const PlanPay = ({ goBack }) => {
   const [isCard, setIsCard] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
-  const { singlePlan } = useSelector((state) => state.plan)
+  const { singleProduct } = useSelector((state) => state.product);
+  const product = singleProduct?.data.body ? singleProduct?.data.body : {}
 
   const checkDetails = (values) => {
     const { bank, card } = values;
@@ -59,11 +60,11 @@ const PlanPay = ({ goBack }) => {
       <Wrapper>
         <LeftView>
           <div className="choose-plan">
-            <h5>Product 1</h5>
+            <h5>{product.productName} </h5>
             <div className="d-flex align-items-center justify-content-between">
               <img
                 className="image-holder"
-                src={ChoosePlanHolder}
+                src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
                 alt="ChoosePlanHolder"
               />
               <div>

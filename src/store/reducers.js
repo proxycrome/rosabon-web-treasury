@@ -1,6 +1,7 @@
 import { combineReducers  } from 'redux';
 
 import authReducer from './auth/reducer';
+import currencies from './currency/reducer';
 import feedback from './feedback/reducer';
 import userProfileReducer from './profile/reducer';
 import paystack from './paystack/reducer';
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     product,
     plan,
     paystack,
+    currencies,
 });
 
 export default rootReducer;

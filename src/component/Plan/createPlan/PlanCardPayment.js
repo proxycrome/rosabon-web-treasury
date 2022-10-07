@@ -20,13 +20,13 @@ const PlanCardPayment = ({goBack}) => {
   const { paySuccess } = useSelector((state) => state.paystack);
 
   const handleSubmit = async () => {
-    // dispatch(createPlan(form, setShow));
-    const formData = {
-      amount: "20000",
-      email: "anosikefidelis@gmail.com" 
-    }
-    await dispatch(initPayment(formData))
-    await console.log("show pay", paySuccess)
+    dispatch(createPlan(form, setShow));
+    // const formData = {
+    //   amount: "20000",
+    //   email: "anosikefidelis@gmail.com" 
+    // }
+    // await dispatch(initPayment(formData))
+    // await console.log("show pay", paySuccess)
   }
 
   return (
