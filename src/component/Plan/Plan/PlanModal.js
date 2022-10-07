@@ -99,8 +99,8 @@ const PlanModal = ({ handleClose }) => {
             </div>
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
               <div >
-                <p className='p-light' >Interest payment frequenct</p>
-                <p className='p-dark' >{plan.planSummary.interestPaymentFrequency} </p>
+                <p className='p-light' >Interest payment frequency</p>
+                <p className='p-dark' >{plan.planSummary.interestReceiptOption} </p>
               </div>
               <div className='right' >
                 <p className='p-light' >Current balance</p>

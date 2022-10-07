@@ -271,7 +271,7 @@ export const MakePayment = ({ setPaymentType }) => {
 		if (e.target.value === "card") {
 			setForm({
 				...form,
-				paymentType: "DEBIT_CARD",
+				paymentMethod: "DEBIT_CARD",
 			});
 			setCard("card");
 			setBank("");
@@ -279,7 +279,7 @@ export const MakePayment = ({ setPaymentType }) => {
 		if (e.target.value === "bank") {
 			setForm({
 				...form,
-				paymentType: "BANK_TRANSFER",
+				paymentMethod: "BANK_TRANSFER",
 			});
 			setBank("bank");
 			setCard("");
@@ -785,6 +785,16 @@ export const WithdrawalSummary = () => {
 	);
 };
 
+// handles currency icon
+export const getCurrIcon = (currency) => {
+    switch (currency) {
+      	case 1:
+        	return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#165;</p>)
+      	default:
+        	return (<p></p>)
+    }
+} 
+
 export const PlanSummary = ({ planPay }) => {
 	const { form } = useContext(PlanContext);
 	console.log("gg");
@@ -814,7 +824,10 @@ export const PlanSummary = ({ planPay }) => {
 								<div>
 									<p className="p-0 m-0">Principal </p>
 									{/* <h4> ₦2,500,000</h4> */}
-									<h4>{planData.planSummary.principal}</h4>
+									<h4 className="flex" >
+										{getCurrIcon(planData?.currency)}{" "} 
+										{planData.planSummary.principal}
+									</h4>
 								</div>
 								<div className="rollover-text-left">
 									<p className="p-0 m-0">Interest Rate </p>
@@ -828,24 +841,33 @@ export const PlanSummary = ({ planPay }) => {
 										Interest Payment <br /> frequency{" "}
 									</p>
 									{/* <h4 className="">Daily</h4> */}
-									<h4>{planData.planSummary.interestPaymentFrequency}</h4>
+									<h4>{planData.planSummary.interestReceiptOption}</h4>
 								</div>
 								<div className="rollover-text-left">
 									<p className="p-0 m-0">Calculated Interest </p>
 									{/* <h4>₦200,000</h4> */}
-									<h4>₦{planData.planSummary.calculatedInterest} </h4>
+									<h4 className="flex justify-content-end">
+										{getCurrIcon(planData?.currency)}{" "}
+										{planData.planSummary.calculatedInterest} 
+									</h4>
 								</div>
 							</div>
 							<div className="d-flex align-items-center justify-content-between pt-4">
 								<div>
 									<p className="p-0 m-0">Withholding Tax</p>
 									{/* <h4 className="">₦2,000</h4> */}
-									<h4>₦{planData.planSummary.withholdingTax}</h4>
+									<h4 className="flex">
+										{getCurrIcon(planData?.currency)}{" "}
+										{planData.planSummary.withholdingTax}
+									</h4>
 								</div>
 								<div className="rollover-text-left">
 									<p className="p-0 m-0">Payment at Maturity</p>
 									{/* <h4>₦2,700,000</h4> */}
-									<h4>₦{planData.planSummary.paymentMaturity} </h4>
+									<h4 className="flex justify-content-end">
+										{getCurrIcon(planData?.currency)}{" "}
+										{planData.planSummary.paymentMaturity} 
+									</h4>
 								</div>
 							</div>
 						</div>
@@ -894,6 +916,10 @@ const PlanSummaryWrapper = styled.div`
 			color: #6d6d6d;
 			padding-left: 10px;
 		}
+	}
+	.flex {
+		display: flex;
+		gap: 4px;
 	}
 `;
 
@@ -2195,7 +2221,7 @@ export const FeedbackTickets = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{tickets?.map((item) => (
+							{tickets.length > 0 ? tickets?.map((item) => (
 								<tr key={item.id}>
 									<td>NO_{item.id} </td>
 									<td>{item.title} </td>
@@ -2231,7 +2257,8 @@ export const FeedbackTickets = () => {
 										</button>
 									</td>
 								</tr>
-							))}
+							)) : 
+							<h4 style={{alignText:"center"}} >No Tickets Available</h4>}
 							{/* <tr>
                 <td>N0_1947034</td>
                 <td>The passage is attributed to an..</td>
@@ -2450,7 +2477,7 @@ export const FeedbackOpenTickets = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{open_tickets?.map((item) => (
+							{openedTickets.length > 0 ? openedTickets?.map((item) => (
 								<tr key={item.id}>
 									<td className="ticket-row">N0_{item.id} </td>
 									<td>{item.title} </td>
@@ -2486,7 +2513,8 @@ export const FeedbackOpenTickets = () => {
 										</button>
 									</td>
 								</tr>
-							))}
+							)) :
+							<h4 style={{textAlign:"center"}} >No Open Tickets Available</h4>}
 							{/* <tr style={{ background: '#F8F8F8' }}>
                 <td className="ticket-row">N0_1947034</td>
                 <td>The passage is attributed to an..</td>
@@ -2647,7 +2675,7 @@ export const FeedbackCloseTickets = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{closedTickets?.map((item) => (
+							{closedTickets.length > 0 ? closedTickets?.map((item) => (
 								<tr key={item.id}>
 									<td className="ticket-row">N0_{item.id} </td>
 									<td>{item.title} </td>
@@ -2683,7 +2711,8 @@ export const FeedbackCloseTickets = () => {
 										</button>
 									</td>
 								</tr>
-							))}
+							)) :
+							<h4 style={{textAlign:"center"}} >No Closed Tickets Available</h4>}
 							{/* <tr
                 class="separator"
                 style={{ background: '#F8F8F8', padding: '30px' }}

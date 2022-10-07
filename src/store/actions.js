@@ -6,3 +6,4 @@ export * from "./feedback/actions";
 export * from "./product/actions";
 export * from "./plan/actions";
 export * from "./paystack/actions";
+export * from "./currency/actions";

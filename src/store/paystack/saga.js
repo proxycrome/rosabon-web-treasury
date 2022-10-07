@@ -1,5 +1,4 @@
 import { takeEvery, fork, put, all, call } from "redux-saga/effects";
-import { Navigate, useNavigate } from "react-router-dom";
 
 import {
   INITIALIZE_PAYMENT,
