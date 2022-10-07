@@ -374,7 +374,7 @@ export const DropDown = ({ status }) => {
         id="page-header-user-dropdown"
       >
         <div style={{ width: '100%', height: '100%' }}>
-          <i class="fa-solid fa-ellipsis"></i>
+          <i className="fa-solid fa-ellipsis"></i>
         </div>
       </DropdownToggle>
       <DropdownMenu right className="mt-1">

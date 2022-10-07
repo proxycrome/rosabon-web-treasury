@@ -91,7 +91,7 @@ const Rollover = () => {
                     <h4>Balance</h4>
                     <p className="p-0 m-0">2,000,000</p>
                   </div>
-                  {/* <i class="fa-solid fa-ellipsis"></i> */}
+                  {/* <i className"fa-solid fa-ellipsis"></i> */}
                 </div>
               </div>
             </div>
@@ -127,11 +127,11 @@ const Rollover = () => {
               </div>
             </div>
             <div className="row my-4">
-              <div class="col ">
+              <div className="col ">
                 <label>Input amount</label>
-                <div class="input-group">
+                <div className="input-group">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="₦ 2,500,000"
                     type="text"
                   />
@@ -156,11 +156,11 @@ const Rollover = () => {
               </div>
             </div>
             <div className="row my-4">
-              <div class="col ">
+              <div className="col ">
                 <label>Calculate Interest Rate (%)</label>
-                <div class="input-group">
+                <div className="input-group">
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="text"
                   />
                 </div>

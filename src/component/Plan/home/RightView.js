@@ -347,6 +347,7 @@ const RightWrapper = styled.div`
     color: danger;
   }
   @media (max-width: 899px) {
+    padding-top: 50px;
     width: 90% !important;
     display: flex;
     flex-direction: column;

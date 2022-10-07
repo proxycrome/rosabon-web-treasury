@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Switch from "react-switch";
 import { getProducts, getTenor } from "../../../store/actions";
+import Spinner from '../../../component/common/loading'
 
 const PlanModal = ({ handleClose }) => {
   const dispatch = useDispatch();
-  const { singlePlan, tenors } = useSelector((state) => state.plan);
+  const { singlePlan, tenors, loading } = useSelector((state) => state.plan);
   const { products } = useSelector((state) => state.product);
   const product = products?.data.body ? products?.data.body : []
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
@@ -20,7 +21,11 @@ const PlanModal = ({ handleClose }) => {
 
   return (
     <Wrapper>
-      {
+      { loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : 
         planStatus === "OK" && (
           <div style={{width: "fit-content"}}>
             <div 

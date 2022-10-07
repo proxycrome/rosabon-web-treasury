@@ -7,11 +7,12 @@ import { Link, NavLink } from "react-router-dom";
 // import { getCatWithProducts } from "../../../redux/actions/product/productCategoriesAction";
 // import { getSingleProduct } from "../../../redux/actions/product/productAction";
 import { getSingleProduct, getCatWithProducts } from "../../../store/actions";
+import Spinner from "../../common/loading";
 
 const CreatePlan = () => {
   const [open, setOpen] = useState(false);
 
-  const { catWithProducts, catWithProductsError } = useSelector((state) => state.product)
+  const { catWithProducts, catWithProductsError, loading } = useSelector((state) => state.product)
   const productStatus = catWithProducts?.statusCode
   const products = catWithProducts?.data.body ? catWithProducts?.data.body : []
 
@@ -27,7 +28,11 @@ const CreatePlan = () => {
   // console.log(open)
   return (
     <Wrapper>
-      {
+      {loading ? (
+          <div className="vh-100 w-100">
+            <Spinner />
+          </div>
+        ) : 
         productStatus === "OK" ? 
          products.map((item) => (
           <div className=" pb-5" key={item.productCategoryId} >
