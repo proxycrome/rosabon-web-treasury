@@ -1,11 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import MOneyTransfer from '../../../asset/money-transfer.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { PlanSummary, UserBankDetails } from '../Accesssories';
 import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 import { useDispatch, useSelector } from "react-redux";
+import { Toaster } from "react-hot-toast";
 // import { createPlan } from "../../../redux/actions/plan/planAction";
 import { createPlan } from '../../../store/actions';
 import { PlanContext } from "./PlanForm";
@@ -14,10 +16,17 @@ import { PlanContext } from "./PlanForm";
 const PlanBankPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
   const { form } = useContext(PlanContext);
+  const [modalCount, setModalCount] = useState(0);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.plan);
+  const navigate = useNavigate();
 
-  console.log("bank here", form)
+  useEffect(() => {
+    setModalCount(modalCount+1);
+    if(modalCount >= 2){
+      navigate("/plan-product")
+    }
+  },[show])
 
   const handleSubmit = () => {
     dispatch(createPlan(form, setShow));
@@ -32,6 +41,7 @@ const PlanBankPayment = ({goBack}) => {
           </NavTitle>
         </ProfileNavBar>
       <Wrapper>
+        <Toaster />
         <LeftView>
           <h6>Kindly confirm your transaction details below</h6>
           <div className="choose-plan mt-5">

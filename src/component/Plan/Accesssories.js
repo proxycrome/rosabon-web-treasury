@@ -790,6 +790,8 @@ export const getCurrIcon = (currency) => {
     switch (currency) {
       	case 1:
         	return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#165;</p>)
+		case 2:
+			return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#36;</p>)
       	default:
         	return (<p></p>)
     }
