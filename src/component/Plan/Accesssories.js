@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { MDBDataTable } from "mdbreact";
 import { Input, Label } from "reactstrap";
@@ -26,6 +27,7 @@ import {
 	getTickets,
 	getOpenTickets,
 	getClosedTickets,
+	getSingleTicket,
 } from "../../store/actions";
 
 export const NairaCard = () => {
@@ -2191,12 +2193,18 @@ const SpecialEarningsWarapper = styled.div`
 
 export const FeedbackTickets = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { my_tickets } = useSelector((state) => state.feedback);
 	const tickets = my_tickets ? my_tickets : [];
 
 	useEffect(() => {
 		dispatch(getTickets());
 	}, []);
+
+	const viewTicket = async (id) => {
+		await dispatch(getSingleTicket(id));
+		navigate("/admin-message");
+	};
 	return (
 		<div>
 			<ProfileNavBar>
@@ -2254,7 +2262,9 @@ export const FeedbackTickets = () => {
 												padding: "10px 25px",
 												background: "#111E6C",
 												borderRadius: "5px",
-											}}>
+											}}
+											onClick={() => viewTicket(item.id)}
+										>
 											View
 										</button>
 									</td>
@@ -2447,12 +2457,18 @@ const FeedbackticketWarapper = styled.div`
 
 export const FeedbackOpenTickets = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { open_tickets } = useSelector((state) => state.feedback);
 	const openedTickets = open_tickets ? open_tickets : [];
 
 	useEffect(() => {
 		dispatch(getOpenTickets());
 	}, []);
+
+	const viewTicket = async (id) => {
+		await dispatch(getSingleTicket(id));
+		navigate("/admin-message");
+	};
 	return (
 		<div>
 			<ProfileNavBar>
@@ -2510,7 +2526,9 @@ export const FeedbackOpenTickets = () => {
 												padding: "10px 25px",
 												background: "#111E6C",
 												borderRadius: "5px",
-											}}>
+											}}
+											onClick={() => viewTicket(item.id)}
+										>
 											View
 										</button>
 									</td>
@@ -2649,12 +2667,18 @@ export const FeedbackOpenTickets = () => {
 
 export const FeedbackCloseTickets = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { closed_tickets } = useSelector((state) => state.feedback);
 	const closedTickets = closed_tickets ? closed_tickets : [];
 
 	useEffect(() => {
 		dispatch(getClosedTickets());
 	}, []);
+
+	const viewTicket = async (id) => {
+		await dispatch(getSingleTicket(id));
+		navigate("/admin-message");
+	};
 	return (
 		<div>
 			<ProfileNavBar>
@@ -2708,7 +2732,9 @@ export const FeedbackCloseTickets = () => {
 												padding: "10px 25px",
 												background: "#111E6C",
 												borderRadius: "5px",
-											}}>
+											}}
+											onClick={()=>viewTicket(item.id)}
+										>
 											View
 										</button>
 									</td>

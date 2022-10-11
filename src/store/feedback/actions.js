@@ -5,6 +5,9 @@ import {
     GET_OPEN_TICKETS,
     GET_OPEN_TICKETS_ERROR,
     GET_OPEN_TICKETS_SUCCESS,
+    GET_SINGLE_TICKET,
+    GET_SINGLE_TICKET_ERROR,
+    GET_SINGLE_TICKET_SUCCESS,
     GET_TICKETS,
 	GET_TICKETS_ERROR,
 	GET_TICKETS_SUCCESS,
@@ -51,6 +54,27 @@ export const getTicketsSuccess = (data) => {
 export const getTicketsError = (error) => {
     return {
         type: GET_TICKETS_ERROR,
+        payload: error
+    }
+}
+
+export const getSingleTicket = (id) => {
+    return {
+        type: GET_SINGLE_TICKET,
+        payload: {id}
+    }
+}
+
+export const getSingleTicketSuccess = (data) => {
+    return {
+        type: GET_SINGLE_TICKET_SUCCESS,
+        payload: data,
+    }
+}
+
+export const getSingleTicketError = (error) => {
+    return {
+        type: GET_SINGLE_TICKET_ERROR,
         payload: error
     }
 }
