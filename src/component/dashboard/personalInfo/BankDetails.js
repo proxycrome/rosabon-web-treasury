@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { CLOSE_MODAL, CLEAR_MESSAGES } from '../../../store/profile/actionTypes';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import ModalComponent from '../../ModalComponent';
-import { BVNConfirm, OTPVerify } from '../../Accessories/BVNConfirm';
+import React, { useState, useEffect } from "react";
+import {
+  CLOSE_MODAL,
+  CLEAR_MESSAGES,
+} from "../../../store/profile/actionTypes";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import ModalComponent from "../../ModalComponent";
+import { BVNConfirm, OTPVerify } from "../../Accessories/BVNConfirm";
 // import { personalBankDetails } from '../../../redux/actions/updateProfile/bankDetails.action';
 // import { getBanks } from '../../../redux/actions/personalInfo/userProfile.actions';
-import { sendOtp, getBanks, verifyAccountNo } from '../../../store/actions';
+import { sendOtp, getBanks, verifyAccountNo } from "../../../store/actions";
 
 const BankDetails = () => {
   const dispatch = useDispatch();
@@ -19,16 +22,13 @@ const BankDetails = () => {
     setShowEdit(!showEdit);
   };
 
-  const { users, showEmailOtpModal, otp, banks, otpError, validateEmailOtp } = useSelector(
-    (state) => state.user_profile
+  const { users, showEmailOtpModal, otp, banks, otpError, validateEmailOtp } =
+    useSelector((state) => state.user_profile);
+
+  const { accountDetail, accountDetailError } = useSelector(
+    (state) => state.updateProfile
   );
 
-  const {
-    accountDetail,
-    accountDetailError
-  } = useSelector((state) => state.updateProfile);
-
-  console.log(banks);
 
   console.log(accountDetail);
   console.log(accountDetailError);
@@ -38,9 +38,9 @@ const BankDetails = () => {
   };
 
   const data = {
-    accountName: '',
-    accountNumber: '',
-    bankCode: '',
+    accountName: "",
+    accountNumber: "",
+    bankCode: "",
   };
 
   const [formData, setformData] = useState(data);
@@ -66,11 +66,11 @@ const BankDetails = () => {
     const data = {
       accountNumber: formData.accountNumber,
       bankCode: formData.bankCode,
-      isSubjectConsent: true,
-    }
+    };
 
+    console.log(data);
     dispatch(verifyAccountNo(data));
-  }
+  };
 
   const handleSendOtp = (e) => {
     e.preventDefault();
@@ -84,7 +84,7 @@ const BankDetails = () => {
 
   useEffect(() => {
     dispatch(getBanks());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     if (validateEmailOtp) {
@@ -105,18 +105,26 @@ const BankDetails = () => {
                   <div>
                     <div>
                       {showEdit ? (
-                        <button type="button" className="btn_bg_blue" onClick={handleSendOtp}>
+                        <button
+                          type="button"
+                          className="btn_bg_blue"
+                          onClick={handleSendOtp}
+                        >
                           Edit
                         </button>
                       ) : (
-                        <button type="button" className="grey-button" onClick={toggleEdit}>
+                        <button
+                          type="button"
+                          className="grey-button"
+                          onClick={toggleEdit}
+                        >
                           Cancel
                         </button>
                       )}
                     </div>
                     <ModalComponent
                       show={showEmailOtpModal}
-                      size={'md'}
+                      size={"md"}
                       handleClose={handleOTPModalClose}
                     >
                       <OTPVerify
@@ -142,11 +150,11 @@ const BankDetails = () => {
                     name="bankCode"
                     disabled={showEdit}
                   >
-                    <option value="">
-                      Please choose an option
-                    </option>
-                    {banks?.data?.map(bank => (
-                      <option key={bank.id} value={bank.code}>{bank.name}</option>
+                    <option value="">Please choose an option</option>
+                    {banks?.data?.map((bank) => (
+                      <option key={bank.id} value={bank.code}>
+                        {bank.name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -177,8 +185,8 @@ const BankDetails = () => {
                         disabled={showEdit}
                         className={
                           showEdit
-                            ? ' btn_bg_grey profile_vify_btn'
-                            : 'btn_bg_blue profile_vify_btn'
+                            ? " btn_bg_grey profile_vify_btn"
+                            : "btn_bg_blue profile_vify_btn"
                         }
                       >
                         Verify
@@ -186,7 +194,7 @@ const BankDetails = () => {
                     </div>
                     <ModalComponent
                       show={show}
-                      size={'md'}
+                      size={"md"}
                       handleClose={() => setShow(false)}
                     >
                       <BVNConfirm

@@ -7,7 +7,7 @@ import { BVNConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import Spinner from "../../common/loading"
+import Spinner from "../../common/loading";
 import {
   updateUserKyc,
   verifyBvn,
@@ -134,9 +134,11 @@ const PersonalKYC = () => {
 
     const objData = {
       firstName: firstName
-        ? firstName
-        : user_details?.individualUser?.firstName,
-      lastName: lastName ? lastName : user_details?.individualUser?.lastName,
+        ? firstName.toUpperCase()
+        : user_details?.individualUser?.firstName.toUpperCase(),
+      lastName: lastName.toUpperCase()
+        ? lastName
+        : user_details?.individualUser?.lastName.toUpperCase(),
       id: bvn ? bvn : user_details.individualUser.bvn,
       isSubjectConsent: true,
       phoneNumber: phone ? phone : user_details && user_details?.phone,
@@ -201,8 +203,9 @@ const PersonalKYC = () => {
                                   "Enter first name"
                                 }
                                 name="firstName"
-                                value={user_details?.individualUser?.firstName}
+                                value={formData.firstName}
                                 onChange={handleChange}
+                                // disabled
                               />
                             </div>
                           </div>
@@ -233,8 +236,9 @@ const PersonalKYC = () => {
                                   "Enter last name"
                                 }
                                 name="lastName"
-                                value={user_details?.individualUser?.lastName}
+                                value={formData.lastName}
                                 onChange={handleChange}
+                                // disabled
                               />
                             </div>
                           </div>
@@ -344,7 +348,8 @@ const PersonalKYC = () => {
                                 <BVNConfirm
                                   show={showBvnModal}
                                   handleClose={handleBVNModalClose}
-                                  name={`${bvnMessage?.data?.firstName} ${bvnMessage?.data?.lastName}`}
+                                  firstName={bvnMessage?.data?.firstName}
+                                  lastName={bvnMessage?.data?.lastName}
                                   bvn={
                                     formData.bvn ||
                                     user_details?.individualUser?.bvn
@@ -372,6 +377,7 @@ const PersonalKYC = () => {
                                 onChange={handleChange}
                                 name="email"
                                 value={user_details?.email}
+                                disabled
                               />
                             </div>
                           </div>
@@ -492,7 +498,7 @@ const PersonalKYC = () => {
                 <div className="footer-body">
                   <div className="d-flex align-items-center justify-content-between footer-content">
                     <div>
-					{(formData.firstName ||
+                      {(formData.firstName ||
                         user_details?.individualUser?.firstName) &&
                       (formData.lastName ||
                         user_details?.individualUser?.lastName) &&
