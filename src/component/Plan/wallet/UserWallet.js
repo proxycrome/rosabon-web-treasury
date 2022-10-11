@@ -13,6 +13,7 @@ import { AvailableBalance, TransferCard } from "../Accesssories";
 import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
+import Spinner from "../../common/loading";
 
 const UserWallet = () => {
   const navigate = useNavigate();
@@ -50,10 +51,10 @@ const UserWallet = () => {
   };
 
   useEffect(() => {
-    dispatch(getWalletBalance())
-  }, [dispatch])
+    dispatch(getWalletBalance());
+  }, [dispatch]);
 
-  const {walletBalance} = useSelector(state => state.wallet);
+  const { walletBalance, loading } = useSelector((state) => state.wallet);
 
   return (
     <div>
@@ -63,132 +64,148 @@ const UserWallet = () => {
             <span className="fw-bold">Wallet</span>
           </NavTitle>
         </ProfileNavBar>
-        <Wrapper>
-          <LeftView>
-            <div className="naira-card position-relative">
-              <div className="naira-card-content">
-                <img
-                  className="position-absolute eclips-image image-fluid"
-                  src={halfEllipse}
-                  alt="halfEllipse"
-                />
-                {/* <img
+        {loading ? (
+          <div className="vh-100 w-100">
+            <Spinner />
+          </div>
+        ) : (
+          <Wrapper>
+            <LeftView>
+              <div className="naira-card position-relative">
+                <div className="naira-card-content">
+                  <img
+                    className="position-absolute eclips-image image-fluid"
+                    src={halfEllipse}
+                    alt="halfEllipse"
+                  />
+                  {/* <img
                   className="position-absolute set-yellow-background image-fluid"
                   src={YelloBackgroud}
                   alt="YelloBackgroud"
                 /> */}
-                <div className="d-flex align-center justify-content-between ">
-                  <p className="p-0 m-0">Nuban Account Number</p>
-                  <div className="sqr-box">
-                    <p className="p-0 m-0">₦</p>
+                  <div className="d-flex align-center justify-content-between ">
+                    <p className="p-0 m-0">Nuban Account Number</p>
+                    <div className="sqr-box">
+                      <p className="p-0 m-0">₦</p>
+                    </div>
+                  </div>
+                  <h3 className="pt-1 pb-3">2200 - 1234 - 5678</h3>
+                  <div className="down-button pt-4">
+                    <p className="p-0 m-0">Balance</p>
+                    <h5>
+                      ₦{" "}
+                      {walletBalance?.amount
+                        ? walletBalance?.amount.toFixed(2)
+                        : 0}
+                    </h5>
                   </div>
                 </div>
-                <h3 className="pt-1 pb-3">2200 - 1234 - 5678</h3>
-                <div className="down-button pt-4">
-                  <p className="p-0 m-0">Balance</p>
-                  <h5>₦ {walletBalance?.amount ? walletBalance?.amount.toFixed(2) : 0}</h5>
-                </div>
+                <div className="grey-background"></div>
+                <div className="yellow-background"></div>
               </div>
-              <div className="grey-background"></div>
-              <div className="yellow-background"></div>
-            </div>
-            {/* </div> */}
-            <div className="py-5">
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="text-center">
-                  <div
-                    onClick={() => {
-                      handleClick("withdraw");
-                    }}
-                    className="d-flex box-image justify-content-center align-items-center">
-                    <img
-                      // onClick={() => handleClick("withdraw")}
-                      className=" image-fluid"
-                      src={Telephone}
-                      alt="Telephone"
-                    />
-                  </div>
-                  <p className="pt-3">Withdraw</p>
-                </div>
-
-                <div>
-                  <div
-                    value="transfer"
-                    onClick={() => {
-                      handleClick("transfer");
-                      setClosefooter(true);
-                    }}
-                    className="d-flex box-image justify-content-center align-items-center">
-                    <img
-                      value="transfer"
-                      // onClick={() => handleClick("transter")}
-                      className=" image-fluid"
-                      src={TransferImg}
-                      alt="TransferImg"
-                    />
-                  </div>
-                  <p className="pt-3">Transfer</p>
-                </div>
-                <div>
-                  <NavLink to="/wallet-history">
-                    <div className="d-flex box-image justify-content-center align-items-center">
+              {/* </div> */}
+              <div className="py-5">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="text-center">
+                    <div
+                      onClick={() => {
+                        handleClick("withdraw");
+                      }}
+                      className="d-flex box-image justify-content-center align-items-center"
+                    >
                       <img
+                        // onClick={() => handleClick("withdraw")}
                         className=" image-fluid"
-                        src={HistoryImag}
-                        alt="HistoryImag"
+                        src={Telephone}
+                        alt="Telephone"
                       />
                     </div>
-                  </NavLink>
-                  <p className="pt-3">History</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <NavLink className="style-wallet-link" to="/referral-table">
-                <h3>My Referrals</h3>
-              </NavLink>
-              <NavLink className="style-wallet-link" to="/referral-table/bonus">
-                <h3>My Referral Bonus</h3>
-              </NavLink>
-              <NavLink className="style-wallet-link" to="/deposit-table">
-                <h3>My Deposits</h3>
-              </NavLink>
-              <NavLink className="style-wallet-link" to="/special-earnings">
-                <h3>Rosabon Special Earnings</h3>
-              </NavLink>
-            </div>
-          </LeftView>
-          <RightView>
-            {sidebar ? (
-              <>
-                {isTransfer ? (
-                  <>
-                    <div className="bank-details">
-                      <div className="bank-detail-content">
-                        {" "}
-                        <AvailableBalance
-                          role={user_details && user_details.role}
+                    <p className="pt-3">Withdraw</p>
+                  </div>
+
+                  <div>
+                    <div
+                      value="transfer"
+                      onClick={() => {
+                        handleClick("transfer");
+                        setClosefooter(true);
+                      }}
+                      className="d-flex box-image justify-content-center align-items-center"
+                    >
+                      <img
+                        value="transfer"
+                        // onClick={() => handleClick("transter")}
+                        className=" image-fluid"
+                        src={TransferImg}
+                        alt="TransferImg"
+                      />
+                    </div>
+                    <p className="pt-3">Transfer</p>
+                  </div>
+                  <div>
+                    <NavLink to="/wallet-history">
+                      <div className="d-flex box-image justify-content-center align-items-center">
+                        <img
+                          className=" image-fluid"
+                          src={HistoryImag}
+                          alt="HistoryImag"
                         />
                       </div>
-                    </div>
-                  </>
-                ) : IsWithDraw ? (
-                  <>
-                    <div className="bank-details">
-                      <div className="bank-detail-content">
-                        <TransferCard />
+                    </NavLink>
+                    <p className="pt-3">History</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <NavLink className="style-wallet-link" to="/referral-table">
+                  <h3>My Referrals</h3>
+                </NavLink>
+                <NavLink
+                  className="style-wallet-link"
+                  to="/referral-table/bonus"
+                >
+                  <h3>My Referral Bonus</h3>
+                </NavLink>
+                <NavLink className="style-wallet-link" to="/deposit-table">
+                  <h3>My Deposits</h3>
+                </NavLink>
+                <NavLink className="style-wallet-link" to="/special-earnings">
+                  <h3>Rosabon Special Earnings</h3>
+                </NavLink>
+              </div>
+            </LeftView>
+            <RightView>
+              {sidebar ? (
+                <>
+                  {isTransfer ? (
+                    <>
+                      <div className="bank-details">
+                        <div className="bank-detail-content">
+                          {" "}
+                          <AvailableBalance
+                            role={user_details?.role}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-              </>
-            ) : (
-              <></>
-            )}
-          </RightView>
-        </Wrapper>
+                    </>
+                  ) : IsWithDraw ? (
+                    <>
+                      <div className="bank-details">
+                        <div className="bank-detail-content">
+                          <TransferCard />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </>
+              ) : (
+                <></>
+              )}
+            </RightView>
+          </Wrapper>
+        )}
         {closeFooter && modalValue ? (
           <WrapperFooter>
             <div className="footer-body">
@@ -196,7 +213,8 @@ const UserWallet = () => {
                 <div>
                   <button
                     style={{ color: "#111E6C", width: "300px" }}
-                    onClick={togleSidebar}>
+                    onClick={togleSidebar}
+                  >
                     Cancel
                   </button>
                 </div>
@@ -211,7 +229,8 @@ const UserWallet = () => {
                       setShow(true);
                       setSidebar(false);
                       // setClosefooter(false)
-                    }}>
+                    }}
+                  >
                     Submit
                   </button>
                   <ModalComponent
@@ -220,7 +239,8 @@ const UserWallet = () => {
                     handleClose={() => {
                       setShow(false);
                       setClosefooter(false);
-                    }}>
+                    }}
+                  >
                     <div className="">
                       <div className="container">
                         <div className="row">
@@ -259,7 +279,8 @@ const UserWallet = () => {
                                   borderRadius: "10px",
                                   padding: "8px 80px",
                                 }}
-                                className="verify_congrates_btn">
+                                className="verify_congrates_btn"
+                              >
                                 Continue
                               </button>
                             </div>
@@ -319,7 +340,7 @@ const LeftView = styled.div`
     right: 1.5%;
     width: 97.3%;
     height: 186px;
-    background: #F2F2F2;
+    background: #f2f2f2;
     box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
     border-radius: 20px;
     z-index: -2;
@@ -342,7 +363,7 @@ const LeftView = styled.div`
     bottom: 0;
     width: 88.7%;
     height: 170px;
-    background: #F3A712;
+    background: #f3a712;
     box-shadow: 0px 4px 18px rgba(196, 204, 221, 0.25);
     border-radius: 20px;
     z-index: -5;
@@ -431,10 +452,10 @@ const LeftView = styled.div`
       color: #ffffff !important;
     }
   }
-  
+
   .naira-card {
     width: 513px;
-    height: 221px;  
+    height: 221px;
   }
 
   .eclips-image {

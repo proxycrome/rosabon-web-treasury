@@ -55,8 +55,8 @@ export function BVNConfirm({
 			usage: "TREASURY",
 			individualUser: {
 				bvn,
-				firstName: name.split(" ")[0],
-				lastName: name.split(" ")[1],
+				firstName: name.split(" ")[0].slice(0, 1).toUpperCase() + name.split(" ")[0].slice(1).toLowerCase(),
+				lastName: name.split(" ")[1].slice(0, 1).toUpperCase() + name.split(" ")[1].slice(1).toLowerCase(),
 			},
 		};
 

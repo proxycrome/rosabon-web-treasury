@@ -58,7 +58,7 @@ export const sendOtpService = () => {
 export const validateOtpService = (otp) => {
     const http = new HttpService();
     const url = `auth/validate-otp/${otp}`;
-    return http.putData(null, url);
+    return http.postDataWithToken(null, url);
 }
 
 export const sendCompanyOtpService = () => {

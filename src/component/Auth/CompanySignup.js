@@ -150,8 +150,10 @@ function CompanySignup() {
                           <Input
                             type="text"
                             className="form-control"
+                            placeholder="+234"
                             onChange={handleValueChange}
                             name="phone"
+                            maxLength="14"
                             value={values.phone}
                           />
                         </div>

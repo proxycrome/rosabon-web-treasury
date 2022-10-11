@@ -56,7 +56,7 @@ const Transfer = () => {
                     <h4>Balance</h4>
                     <p className="p-0 m-0">2,000,000</p>
                   </div>
-                  {/* <i class="fa-solid fa-ellipsis"></i> */}
+                  {/* <i className="fa-solid fa-ellipsis"></i> */}
                 </div>
               </div>
             </div>
@@ -79,11 +79,11 @@ const Transfer = () => {
               </div>
             </div>
             <div className="row my-4">
-              <div class="col ">
+              <div className="col ">
                 <label>Amount to Send</label>
-                <div class="input-group">
+                <div className="input-group">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="₦ 1,000,000"
                     type="text"
                   />

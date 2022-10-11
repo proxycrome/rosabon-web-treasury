@@ -56,7 +56,7 @@ const PartRollover = ({goBack}) => {
                     <h4>Balance</h4>
                     <p className="p-0 m-0">2,000,000</p>
                   </div>
-                  {/* <i class="fa-solid fa-ellipsis"></i> */}
+                  {/* <i className="fa-solid fa-ellipsis"></i> */}
                 </div>
               </div>
             </div>
