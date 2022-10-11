@@ -25,17 +25,18 @@ const PlanForm = () => {
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
+
   const [isClicked, setIsClicked] = useState(false);
   const [confirmPeriodicPay, setConfirmperiodicPay] = useState(false);
   const [formData, setFormData] = useState({
-    product: product.id,
-    productCategory: product.productCategory?.id,
+    product: product?.id,
+    productCategory: product?.productCategory?.id,
     planName: "",
     currency: "",
     exchangeRate: 0.00,
     amount: 0.00,
     targetAmount: 0.00,
-    tenor: 1,
+    tenor: 0,
     planDate: recentDate,
     savingFrequency: "DAILY",
     weeklyContributionDay: "MONDAY",
@@ -55,6 +56,14 @@ const PlanForm = () => {
     planSummary: null,
     paymentMethod: "DEBIT_CARD"
   });
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      product: product?.id,
+      productCategory: product?.productCategory?.id
+    })
+  }, [productStatus])
 
   const [summary, setSummary] = useState({
     planName: "",
@@ -93,6 +102,7 @@ const PlanForm = () => {
   // function to get the auto computed contribution value
   const contribValue = () => {
     const selectedTenor = product.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
+    console.log("dddg", selectedTenor)
     if(autoCompute===true) {
       let computedValue;
       switch(formData.savingFrequency) {
@@ -101,7 +111,7 @@ const PlanForm = () => {
           break;
 
         case "WEEKLY":
-          computedValue = formData.targetAmount / (selectedTenor?.tenorWeeks)
+          computedValue = formData.targetAmount / selectedTenor?.tenorWeeks
           break;
 
         case "MONTHLY":
@@ -110,9 +120,11 @@ const PlanForm = () => {
         
         default: break;
       }
+      console.log("dddit", computedValue)
       setFormData({
         ...formData,
-        contributionValue: Number(parseFloat(computedValue).toFixed(2))
+        // contributionValue: Number(parseFloat(computedValue).toFixed(2))
+        contributionValue: Number(parseInt(computedValue))
       })
     } else {
       let computedValue;
@@ -131,9 +143,11 @@ const PlanForm = () => {
         
         default: break;
       }
+      console.log("dddisst", computedValue)
       setFormData({
         ...formData,
-        targetAmount: Number(parseFloat(computedValue).toFixed(2))
+        // targetAmount: Number(parseFloat(computedValue).toFixed(2))
+        targetAmount: Number(parseInt(computedValue))
       })
     }
   }
@@ -212,6 +226,8 @@ const PlanForm = () => {
       // }
       ticketNo = value / product?.minTransactionLimit
       return Math.floor(ticketNo);
+    } else {
+      return 0
     }
   }
 
@@ -365,6 +381,12 @@ const PlanForm = () => {
         })
       }
       else if(e.target.name === "tenor") {
+        setFormData({
+          ...formData,
+          [e.target.name]: Number(e.target.value)
+        })
+      }
+      else if(e.target.name === "monthlyContributionDay") {
         setFormData({
           ...formData,
           [e.target.name]: Number(e.target.value)
@@ -561,9 +583,19 @@ const PlanForm = () => {
               </div>
               {
                 // (product?.properties?.hasTargetAmount !== null) &&
-                (formData.targetAmount < calculateMinAllowTargetVal(formData.targetAmount)) ? (
+                // (formData.targetAmount < calculateMinAllowTargetVal(formData.targetAmount)) ? \
+                ( formData.targetAmount < product?.minTransactionLimit) ?
+                (
                   <small className="helper-text" >
                     Target value cannot be below {product?.minTransactionLimit}
+                  </small>
+                ) : (<></>)
+              }
+              {
+                ( formData.targetAmount > product?.maxTransactionLimit) ?
+                (
+                  <small className="helper-text" >
+                    Target value cannot be above {product?.maxTransactionLimit}
                   </small>
                 ) : (<></>)
               }
@@ -576,7 +608,7 @@ const PlanForm = () => {
                 onChange={handleChange}
                 value={formData.tenor}
               >
-                <option value="" disabled hidden selected >Select tenor</option>
+                <option value={0} disabled hidden selected >Select tenor</option>
                 {
                   product?.tenors?.map(item => (
                     <option key={item.id} value={item.id} >{item.tenorName} </option>

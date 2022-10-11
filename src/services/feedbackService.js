@@ -14,6 +14,13 @@ export const getTicketsService = () => {
     return http.getData(url);
 }
 
+export const getSingleTicketService = (id) => {
+    const http = new HttpService();
+    const url = `auth/feedback/${id}`;
+
+    return http.getData(url);
+}
+
 export const getOpenTicketsService = () => {
     const http = new HttpService();
     const url = `auth/feedback/open-tickets`;

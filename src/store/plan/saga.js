@@ -1,4 +1,5 @@
 import { takeEvery, fork, put, all, call } from "redux-saga/effects";
+import toast from "react-hot-toast";
 
 import {
 	CREATE_PLAN,
@@ -65,7 +66,15 @@ function* createPlan({ payload: { formData, setShow } }) {
 		}
 	} catch (error) {
 		console.log(error?.response?.data);
+		const message = error?.response?.data ? error?.response?.data?.message : 
+		"Unable to create plan"
+		
 		yield put(createPlanError(error?.response?.data));
+		if (message) {
+			toast.error(message, {
+				position: "top-right",
+			});
+		}
 	}
 }
 

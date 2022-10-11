@@ -3,6 +3,7 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects";
 import {
 	GET_CLOSED_TICKETS,
 	GET_OPEN_TICKETS,
+	GET_SINGLE_TICKET,
 	GET_TICKETS,
 	POST_FEEDBACK,
 } from "./actionTypes";
@@ -12,6 +13,8 @@ import {
 	getClosedTicketsSuccess,
 	getOpenTicketsError,
 	getOpenTicketsSuccess,
+	getSingleTicketError,
+	getSingleTicketSuccess,
 	getTicketsError,
 	getTicketsSuccess,
 	postFeedbackError,
@@ -21,6 +24,7 @@ import {
 import {
 	getClosedTicketsService,
 	getOpenTicketsService,
+	getSingleTicketService,
 	getTicketsService,
 	postFeedbackService,
 } from "../../services/feedbackService";
@@ -72,6 +76,17 @@ function* getClosedTickets() {
 	}
 }
 
+function* getSingleTicket({ payload: { id } }) {
+	try {
+		const response = yield call(getSingleTicketService, id);
+		console.log(response.data);
+		yield put(getSingleTicketSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getSingleTicketError(error?.response?.data));
+	}
+}
+
 export function* watchPostFeedback() {
 	yield takeEvery(POST_FEEDBACK, postFeedback);
 }
@@ -88,12 +103,17 @@ export function* watchGetClosedTickets() {
 	yield takeEvery(GET_CLOSED_TICKETS, getClosedTickets);
 }
 
+export function* watchGetSingleTicket() {
+	yield takeEvery(GET_SINGLE_TICKET, getSingleTicket);
+}
+
 function* FeedbackSaga() {
 	yield all([
 		fork(watchPostFeedback),
 		fork(watchGetTickets),
 		fork(watchGetOpenTickets),
-        fork(watchGetClosedTickets)
+        fork(watchGetClosedTickets),
+		fork(watchGetSingleTicket),
 	]);
 }
 
