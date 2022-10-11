@@ -2,8 +2,11 @@ import React from "react";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import styled from "styled-components";
 import { Input } from "reactstrap";
+import { useSelector } from "react-redux";
 
 const AdminMessage = () => {
+  const { single_ticket } = useSelector((state) => state.feedback)
+  const ticket = single_ticket ? single_ticket : {}
   return (
     <div>
       <WrapperBody>
@@ -13,14 +16,15 @@ const AdminMessage = () => {
           </NavTitle>
         </ProfileNavBar>
         <Wrapper>
-          <h4 className="title">Title</h4>
-          <p className="p-0 m-0">Unauthorized Transfer</p>
+          <h4 className="title">Title </h4>
+          <p className="p-0 m-0">{ticket?.title} </p>
           <h4 className="pt-4">Message</h4>
-          <p className="p-0 m-0">
+          {/* <p className="p-0 m-0">
             The passage experienced a surge in popularity during the 1960s when
             Letraset used it on their dry-transfer sheets, and again during the
             90s as desktop publishers bundled the text with their software.{" "}
-          </p>
+          </p> */}
+          <p className="p-0 m-0">{ticket?.message} {" "}</p>
           <div className="message pt-4">
             <h4>Admin</h4>
             <p className="p-0 m-0">

@@ -1,22 +1,32 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import Verve from '../../../asset/master-card-logo.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
 import { PlanSummary } from '../Accesssories';
 import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 import { useDispatch, useSelector } from "react-redux";
-// import { createPlan } from "../../../redux/actions/plan/planAction";
+import { Toaster } from "react-hot-toast";
 import { createPlan, initPayment } from '../../../store/actions';
 import { PlanContext } from "./PlanForm";
 
 const PlanCardPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
+  const [modalCount, setModalCount] = useState(0);
   const { form } = useContext(PlanContext);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.plan);
   const { users } = useSelector((state) => state.user_profile);
   const { paySuccess } = useSelector((state) => state.paystack);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setModalCount(modalCount+1);
+    if(modalCount >= 2){
+      navigate("/plan-product")
+    }
+  },[show])
 
   const handleSubmit = async () => {
     const formData = {
@@ -36,6 +46,7 @@ const PlanCardPayment = ({goBack}) => {
           </NavTitle>
         </ProfileNavBar>
       <Wrapper>
+        <Toaster />
         <LeftView>
           <h6>Kindly confirm your transaction details below</h6>
           <div className="choose-plan mt-5">
