@@ -9,21 +9,26 @@ import {
   getCurrencies,
   getExRates,
   getSingleProduct,
-  getTenor
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
 
 const CreatePlan = () => {
   const [open, setOpen] = useState(false);
 
-  const { catWithProducts, catWithProductsError, loading } = useSelector((state) => state.product)
+  const { catWithProducts, loading } = useSelector((state) => state.product)
   const productStatus = catWithProducts?.statusCode
   const products = catWithProducts?.data.body ? catWithProducts?.data.body : []
+
+
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCatWithProducts());
   }, [])
+
+  const handleProduct = (id) => {
+    dispatch(getSingleProduct(id))
+  }
 
   // console.log(open)
   return (
@@ -33,23 +38,12 @@ const CreatePlan = () => {
             <Spinner />
           </div>
         ) : 
-        productStatus === "OK" ? 
-         products.map((item) => (
+        productStatus === "OK" ?
+         products.map((item) => item?.products.length > 0 && (
           <div className=" pb-5" key={item.productCategoryId} >
             <div>
               <div className="d-flex align-items-center justify-content-between savins-drop">
                 <h5>{item.productCategoryName} </h5>
-                <div>
-                  {open ? (
-                    <i
-                      onClick={() => setOpen(!open)}
-                      className="fa-solid fa-chevron-up"></i>
-                  ) : (
-                    <i
-                      onClick={() => setOpen(!open)}
-                      className="fa-solid fa-chevron-down"></i>
-                  )}
-                </div>
               </div>
               <p className="para-header">
                 Choose from a {item.productCategoryName} plan
@@ -92,7 +86,7 @@ const CreatePlan = () => {
                       </div>
                     </div>
                   </div>
-                  <Link to={`/create-plan/${product.id}`} >
+                  <Link to={`/create-plan/${product.id}`} onClick={()=>handleProduct(product.id)} >
                     <button>Create Plan</button>
                   </Link>
                 </div>
