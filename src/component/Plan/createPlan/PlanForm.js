@@ -7,11 +7,12 @@ import { UncontrolledTooltip, Input } from 'reactstrap';
 import PlanPay from "./PlanPay";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import { getCurrIcon, paymentAtMaturity, fetchIntRate } from "../Accesssories";
+import { getCurrIcon, paymentAtMaturity } from "../Accesssories";
 import { 
   getCurrencies,
   getExRates,
   getInvestmentRates,
+  getProducts,
   getSingleProduct,
   getTenor,
   getWithholdingTax
@@ -24,12 +25,13 @@ const PlanForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { singleProduct  } = useSelector((state) => state.product);
+  const { products  } = useSelector((state) => state.product);
   const { exRates, investment_rates,withholding_tax  } = useSelector((state) => state.plan);
   // const { currencies } = useSelector((state) => state.currencies);
 
-  const productStatus = singleProduct?.statusCode
-  const product = singleProduct?.data.body ? singleProduct?.data.body : {}
+  const productStatus = products?.statusCode
+  const product = products?.data?.body ? 
+  products?.data?.body.find(item => item.id === parseInt(id)) : {}
   const ex_rates = exRates?.data.body ? exRates?.data.body : []
   const withhold_tax = withholding_tax?.data.body ? withholding_tax?.data.body : []
   const inv_rates = investment_rates?.data.body ? investment_rates?.data.body: []
@@ -41,6 +43,7 @@ const PlanForm = () => {
     dispatch(getCurrencies());
     dispatch(getTenor());
     dispatch(getSingleProduct(parseInt(id)));
+    dispatch(getProducts());
     dispatch(getWithholdingTax());
     dispatch(getInvestmentRates());
   }, [])
@@ -83,7 +86,7 @@ const PlanForm = () => {
       product: product?.id,
       productCategory: product?.productCategory?.id
     })
-  }, [productStatus])
+  }, [id])
 
   const [summary, setSummary] = useState({
     planName: "",
@@ -116,7 +119,10 @@ const PlanForm = () => {
       autoRenew: formData.autoRenew === "true" || 
       formData.autoRenew === true ? true : false,
       allowsLiquidation: formData.allowsLiquidation === "true" || 
-      formData.allowsLiquidation === true ? true : false
+      formData.allowsLiquidation === true ? true : false,
+      interestRate: fetchIntRate(
+        formData.interestReceiptOption
+      )
     })
   },[isClicked])
 
@@ -199,6 +205,7 @@ const PlanForm = () => {
     formData.contributionValue
   ])
 
+
   // calculate simple interest
   const calculateSI = (principal, rate, time) => {
     const SI = (principal*rate*(time/365)) / 100
@@ -212,14 +219,6 @@ const PlanForm = () => {
     // calculate principal
     
     // }
-    setFormData({
-      ...formData,
-      interestRate: fetchIntRate(
-        formData.product,
-        formData.interestReceiptOption,
-        inv_rates
-      )
-    })
     setSummary({
       ...summary,
       planName: formData.planName,
@@ -256,6 +255,58 @@ const PlanForm = () => {
     formData.targetAmount,
     formData.amount
   ])
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      interestRate: fetchIntRate(
+        formData.interestReceiptOption,
+      )
+    })
+  }, [formData.interestReceiptOption, product])
+
+// function to get investment rate
+const fetchIntRate = (intRecOption) => {
+	console.log("ss", formData.product, intRecOption)
+    let interestRate;
+    let rate =  inv_rates?.find((item => item.product === formData.product))
+	console.log("rere", rate)
+    if(rate !== undefined) {
+      	switch(intRecOption) {
+        	case "MONTHLY":
+				interestRate = rate?.monthlyInterestRate
+				break;
+        
+			case "UPFRONT":
+				interestRate = rate?.upfrontInterestRate
+				break;
+
+			case "QUARTERLY":
+				interestRate = rate?.quarterlyInterestRate
+				break;
+
+			case "BI_ANNUAL":
+				interestRate = rate?.biAnnualInterestRate
+				break;
+
+			case "MATURITY":
+				interestRate = rate?.maturityRate
+				break;
+
+			default:
+				interestRate = 1;
+				break;
+      	}
+		if (interestRate === null) {
+			return 1
+		} else {
+			return interestRate
+		}
+    } else {
+		interestRate = 1;
+		return interestRate
+    }
+};
 
   const updateNumOfTickets = (value) => {
     let ticketNo;
