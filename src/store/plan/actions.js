@@ -8,6 +8,9 @@ import {
 	GET_EX_RATES,
 	GET_EX_RATES_ERROR,
 	GET_EX_RATES_SUCCESS,
+    GET_INVESTMENT_RATES,
+    GET_INVESTMENT_RATES_ERROR,
+    GET_INVESTMENT_RATES_SUCCESS,
     GET_PLANS,
     GET_PLANS_ERROR,
     GET_PLANS_SUCCESS,
@@ -17,6 +20,9 @@ import {
     GET_TENOR,
     GET_TENOR_ERROR,
     GET_TENOR_SUCCESS,
+    GET_WITHHOLDING_TAX,
+    GET_WITHHOLDING_TAX_ERROR,
+    GET_WITHHOLDING_TAX_SUCCESS
 } from "./actionTypes";
 
 export const getContribVal = () => {
@@ -80,6 +86,26 @@ export const createPlanError = (error) => {
 	};
 };
 
+export const getInvestmentRates = () => {
+    return {
+        type: GET_INVESTMENT_RATES
+    }
+}
+
+export const getInvestmentRatesSuccess = (data) => {
+    return {
+        type: GET_INVESTMENT_RATES_SUCCESS,
+        payload: data
+    }
+}
+
+export const getInvestmentRatesError = (error) => {
+    return {
+        type: GET_INVESTMENT_RATES_ERROR,
+        payload: error
+    }
+}
+
 export const getPlans = () => {
     return {
         type: GET_PLANS
@@ -138,6 +164,26 @@ export const getTenorSuccess = (data) => {
 export const getTenorError = (error) => {
     return {
         type: GET_TENOR_ERROR,
+        payload: error
+    }
+}
+
+export const getWithholdingTax = () => {
+    return {
+        type: GET_WITHHOLDING_TAX
+    }
+}
+
+export const getWithholdingTaxSuccess = (data) => {
+    return {
+        type: GET_WITHHOLDING_TAX_SUCCESS,
+        payload: data
+    }
+}
+
+export const getWithholdingTaxError = (error) => {
+    return {
+        type: GET_WITHHOLDING_TAX_ERROR,
         payload: error
     }
 }
