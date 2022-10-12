@@ -176,6 +176,52 @@ const PlanForm = () => {
     }
   }
 
+  // function to get investment rate
+const fetchIntRate = (intRecOption) => {
+	console.log("ss", formData.product, intRecOption, formData.targetAmount)
+    let interestRate;
+    let rate =  inv_rates?.find((
+      item => { return (item.product.id === formData.product) && 
+      (formData.targetAmount >= item.minimumAmount) && (formData.targetAmount <= item.maximumAmount)}
+    ))
+	console.log("rere", rate)
+    if(rate !== undefined) {
+      	switch(intRecOption) {
+        	case "MONTHLY":
+				interestRate = rate?.monthlyInterestRate
+				break;
+        
+			case "UPFRONT":
+				interestRate = rate?.upfrontInterestRate
+				break;
+
+			case "QUARTERLY":
+				interestRate = rate?.quarterlyInterestRate
+				break;
+
+			case "BI_ANNUAL":
+				interestRate = rate?.biAnnualInterestRate
+				break;
+
+			case "MATURITY":
+				interestRate = rate?.maturityRate
+				break;
+
+			default:
+				interestRate = 1;
+				break;
+      	}
+		if (interestRate === null) {
+			return 1
+		} else {
+			return interestRate
+		}
+    } else {
+		interestRate = 1;
+		return interestRate
+    }
+};
+
 
   // side effect updates exchange rates
   useEffect(() => {
@@ -263,50 +309,7 @@ const PlanForm = () => {
         formData.interestReceiptOption,
       )
     })
-  }, [formData.interestReceiptOption, product])
-
-// function to get investment rate
-const fetchIntRate = (intRecOption) => {
-	console.log("ss", formData.product, intRecOption)
-    let interestRate;
-    let rate =  inv_rates?.find((item => item.product === formData.product))
-	console.log("rere", rate)
-    if(rate !== undefined) {
-      	switch(intRecOption) {
-        	case "MONTHLY":
-				interestRate = rate?.monthlyInterestRate
-				break;
-        
-			case "UPFRONT":
-				interestRate = rate?.upfrontInterestRate
-				break;
-
-			case "QUARTERLY":
-				interestRate = rate?.quarterlyInterestRate
-				break;
-
-			case "BI_ANNUAL":
-				interestRate = rate?.biAnnualInterestRate
-				break;
-
-			case "MATURITY":
-				interestRate = rate?.maturityRate
-				break;
-
-			default:
-				interestRate = 1;
-				break;
-      	}
-		if (interestRate === null) {
-			return 1
-		} else {
-			return interestRate
-		}
-    } else {
-		interestRate = 1;
-		return interestRate
-    }
-};
+  }, [formData.interestReceiptOption, id, formData.targetAmount])
 
   const updateNumOfTickets = (value) => {
     let ticketNo;
