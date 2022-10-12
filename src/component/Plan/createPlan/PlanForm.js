@@ -7,7 +7,7 @@ import { UncontrolledTooltip, Input } from 'reactstrap';
 import PlanPay from "./PlanPay";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import { getCurrIcon, paymentAtMaturity } from "../Accesssories";
+import { getCurrIcon, paymentAtMaturity, fetchIntRate } from "../Accesssories";
 import { 
   getCurrencies,
   getExRates,
@@ -212,6 +212,14 @@ const PlanForm = () => {
     // calculate principal
     
     // }
+    setFormData({
+      ...formData,
+      interestRate: fetchIntRate(
+        formData.product,
+        formData.interestReceiptOption,
+        inv_rates
+      )
+    })
     setSummary({
       ...summary,
       planName: formData.planName,
