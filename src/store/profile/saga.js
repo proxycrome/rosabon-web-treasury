@@ -101,6 +101,7 @@ function* updateUserKyc({ payload: { formData, pathCred } }) {
 	} catch (error) {
 		console.log(error?.response?.data);
 		yield put(updateUserKycError(error?.response?.data));
+		toast.error(error?.response?.data?.message);
 	}
 }
 

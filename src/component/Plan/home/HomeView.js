@@ -90,7 +90,7 @@ const Wrapper = styled.div`
 
   width: 100%;
 
-  @media (min-width: 900px) {
+  @media (min-width: 950px) {
     flex-direction: row;
     .right-content {
       width: 60%;
@@ -100,7 +100,7 @@ const Wrapper = styled.div`
     }
   }
 
-  @media (max-width: 899px) {
+  @media (max-width: 949px) {
     flex-direction: column;
     align-items: center;
     justify-content: center;

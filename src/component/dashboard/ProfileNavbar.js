@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 // import storage from 'redux-persist/lib/storage';
-import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from "reactstrap";
 // import {
 //   getAuthUsers,
 // } from '../../redux/actions/personalInfo/userProfile.actions';
-import { getAuthUsers, logout } from '../../store/actions';
-import avatar from '../../asset/avi.jpg';
+import { getAuthUsers, logout } from "../../store/actions";
+import arrow from "../../asset/Arrow.png";
+import avatar from "../../asset/avi.jpg";
 
 export function ProfileNavBar({ children }) {
   const [menu, setMenu] = useState(false);
@@ -34,11 +35,11 @@ export function ProfileNavBar({ children }) {
   };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem('token'));
+    const tokenString = JSON.parse(localStorage.getItem("token"));
     if (tokenString) {
       dispatch(getAuthUsers());
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   }, []);
 
@@ -65,9 +66,7 @@ export function ProfileNavBar({ children }) {
           <div className="page-title mx-3">{children}</div>
           <ul>
             <li className="profile_nav_bel">
-              <span className="nav-bell">
-                <i className="fas fa-bell"></i>
-              </span>
+              <DropDown />
             </li>
             <li>
               <Dropdown
@@ -81,11 +80,11 @@ export function ProfileNavBar({ children }) {
                   id="page-header-user-dropdown"
                 >
                   <span className="d-none d-xl-inline-block ml-1 text-transform me-2">
-                    {users && users.role === 'COMPANY'
+                    {users && users.role === "COMPANY"
                       ? users.company.name
-                      : users && users.role === 'INDIVIDUAL_USER'
+                      : users && users.role === "INDIVIDUAL_USER"
                       ? users.individualUser.firstName
-                      : ''}
+                      : ""}
                   </span>
                   <img
                     className="rounded-circle header-profile-user mr-3"
@@ -99,7 +98,7 @@ export function ProfileNavBar({ children }) {
                   <DropdownItem>
                     <NavLink className="nav_link" to="/profile">
                       <div>
-                        <i className="ri-user-line align-middle mr-1"></i>{' '}
+                        <i className="ri-user-line align-middle mr-1"></i>{" "}
                         Profile
                       </div>
                     </NavLink>
@@ -111,7 +110,7 @@ export function ProfileNavBar({ children }) {
                     <i className="fa fa-sign-out mr-5 text-danger"></i>
                     <span style={{marginLeft: "20px"}}>Logout</span>
                    </div> */}
-                    <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{' '}
+                    <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{" "}
                     Logout
                   </DropdownItem>
                 </DropdownMenu>
@@ -164,3 +163,54 @@ const WrappeNavBar = styled.div`
     font-size: 16px;
   }
 `;
+
+const Notification = styled.div`
+  width: 360px;
+  header {
+    padding: 20px;
+  }
+`;
+
+export const DropDown = ({ status }) => {
+  const [menu, setMenu] = useState(false);
+  const { users } = useSelector((state) => state.user_profile);
+
+  const toggle = () => {
+    setMenu(!menu);
+  };
+
+  return (
+    <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
+      <DropdownToggle
+        tag="button"
+        className="btn waves-effect outline-0 border-0"
+        id="page-header-user-dropdown"
+      >
+        <span className="nav-bell">
+          <i className="fas fa-bell"></i>
+        </span>
+      </DropdownToggle>
+      <DropdownMenu end className="mt-1">
+        <Notification>
+          <header>
+            <div>
+              <img src={arrow} alt="arrow" onClick={() => setMenu(false)} />
+            </div>
+          </header>
+          <hr />
+          <div style={{ padding: "20px 30px" }}>
+            <h6 className="pb-3" style={{fontWeight: "600"}}>
+              Dear{" "}
+              {users && users.role === "COMPANY"
+                ? users.company.name
+                : users && users.role === "INDIVIDUAL_USER"
+                ? users.individualUser.firstName
+                : ""}{","}
+            </h6>
+            <p className="pb-3">You have successfully topped up your Plan1 plan with ₦ 300,000</p>
+          </div>
+        </Notification>
+      </DropdownMenu>
+    </Dropdown>
+  );
+};

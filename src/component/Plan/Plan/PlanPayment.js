@@ -89,7 +89,7 @@ const PlanPayment = () => {
                     <h4>Balance</h4>
                     <p className="p-0 m-0">2,000,000</p>
                   </div>
-                  {/* <i class="fa-solid fa-ellipsis"></i> */}
+                  {/* <i className="fa-solid fa-ellipsis"></i> */}
                 </div>
               </div>
             </div>
@@ -97,11 +97,11 @@ const PlanPayment = () => {
           <h4 className="pt-5">Choose Payment Type</h4>
           <div className="plan-payment">
             <div className="row">
-              <div class="col ">
+              <div className="col ">
                 <label>Input amout to Top-up</label>
-                <div class="input-group mb-4">
+                <div className="input-group mb-4">
                   <input
-                    class="form-control"
+                    className="form-control"
                     placeholder="N  0.00"
                     type="text"
                   />

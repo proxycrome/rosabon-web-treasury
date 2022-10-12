@@ -15,13 +15,14 @@ import PlanModal from "./PlanModal";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts, getPlans, getSinglePlan } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
+import Spinner from "../../common/loading";
 
 export const Plans = () => {
   const [more, setMore] = useState(false);
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { plans } = useSelector((state) => state.plan);
+  const { plans, loading } = useSelector((state) => state.plan);
   const { products  } = useSelector((state) => state.product)
   const userPlans = plans?.data.body ? plans?.data.body : [];
   const planStatus = plans?.statusCode;
@@ -254,15 +255,14 @@ export const DropDown = ({status}) => {
     >
       <DropdownToggle
         tag="button"
-        outline
         className="btn header-item waves-effect"
         id="page-header-user-dropdown"
       >
         <div style={{width: "100%", height: "100%"}}>
-          <i class="fa-solid fa-ellipsis"></i>
+          <i className="fa-solid fa-ellipsis"></i>
         </div>  
       </DropdownToggle>
-      <DropdownMenu right className="mt-1">
+      <DropdownMenu end className="mt-1">
         {status === "Active" ? (
           <>
             <DropdownItem tag={Link} to="/plan-topup">Topup</DropdownItem>

@@ -45,6 +45,7 @@ function* loginUser({ payload: { formData, navigate } }) {
 				navigate("/kyc");
 			}
 		}
+		console.log(response.data);
 	} catch (error) {
 		yield put(loginUserError("User not authorized or wrong details"));
 		console.log(error?.response?.data?.message);

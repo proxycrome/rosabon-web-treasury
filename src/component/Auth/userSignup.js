@@ -142,9 +142,11 @@ function UserSignup() {
                           </select>
                           <Input
                             type="text"
+                            placeholder="+234"
                             className="form-control"
                             onChange={handleValueChange}
                             name="phone"
+                            maxLength="14"
                             value={values.phone}
                           />  
                         </div>
