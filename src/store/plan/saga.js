@@ -5,9 +5,11 @@ import {
 	CREATE_PLAN,
 	GET_CONTRIB_VAL,
 	GET_EX_RATES,
+	GET_INVESTMENT_RATES,
 	GET_PLANS,
     GET_SINGLE_PLAN,
     GET_TENOR,
+	GET_WITHHOLDING_TAX
 } from "./actionTypes";
 
 import {
@@ -17,21 +19,27 @@ import {
 	getContribValSuccess,
 	getExRatesError,
 	getExRatesSuccess,
+	getInvestmentRatesError,
+	getInvestmentRatesSuccess,
 	getPlansError,
 	getPlansSuccess,
 	getSinglePlanError,
 	getSinglePlanSuccess,
     getTenorError,
     getTenorSuccess,
+	getWithholdingTaxError,
+	getWithholdingTaxSuccess
 } from "./actions";
 
 import {
 	createPlanService,
 	getContribValService,
 	getExRatesService,
+	getInvestmentRatesService,
 	getPlansService,
 	getSinglePlanService,
     getTenorService,
+	getWithholdingTaxService
 } from "../../services/planService";
 
 function* getContribVal() {
@@ -111,6 +119,28 @@ function* getTenor({ payload: { formData } }) {
 	}
 }
 
+function* getWithholdingTax() {
+	try {
+		const response = yield call(getWithholdingTaxService);
+		console.log(response.data);
+		yield put(getWithholdingTaxSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getWithholdingTaxError(error?.response?.data));
+	}
+}
+
+function* getInvestmentRates() {
+	try {
+		const response = yield call(getInvestmentRatesService);
+		console.log(response.data);
+		yield put(getInvestmentRatesSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getInvestmentRatesError(error?.response?.data));
+	}
+}
+
 export function* watchGetContribVal() {
 	yield takeEvery(GET_CONTRIB_VAL, getContribVal);
 }
@@ -135,6 +165,14 @@ export function* watchGetTenor() {
 	yield takeEvery(GET_TENOR, getTenor);
 }
 
+export function* watchGetWithholdingTax() {
+	yield takeEvery(GET_WITHHOLDING_TAX, getWithholdingTax);
+}
+
+export function* watchGetInvestmentRates() {
+	yield takeEvery(GET_INVESTMENT_RATES, getInvestmentRates);
+}
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -143,6 +181,8 @@ function* PlanSaga() {
 		fork(watchGetPlans),
 		fork(watchGetSinglePlan),
 		fork(watchGetTenor),
+		fork(watchGetWithholdingTax),
+		fork(watchGetInvestmentRates)
 	]);
 }
 

@@ -785,19 +785,20 @@ export const WithdrawalSummary = () => {
 
 // handles currency icon
 export const getCurrIcon = (currency) => {
-  switch (currency) {
-    case 1:
-      return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
-          &#165;
-        </p>
-      );
-    case 2:
-      return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
-      );
-    default:
-      return <p></p>;
+
+	switch (currency) {
+		case 1:
+		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#165;</p>)
+	  case 2:
+		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#36;</p>)
+	  case 3:
+		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#36;</p>)
+	  case 4:
+		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#8358;</p>)
+	  case 5:
+		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#163;</p>)
+		default:
+		  return (<p></p>)
   }
 };
 
@@ -910,7 +911,7 @@ const PlanSummaryWrapper = styled.div`
       font-size: 13px;
       line-height: 18px;
       margin-top: -30px;
-    }
+    
     .rollover-text-left {
       text-align: right;
     }
@@ -2589,3 +2590,84 @@ const NavTitle = styled.div`
     }
   }
 `;
+
+export const paymentAtMaturity = (
+	intRecOption,
+	principal,
+	withholdingTax,
+	tenorMonths,
+	calculatedInterest
+) => {
+	let result = 0;
+	const interestMonthly = calculatedInterest/tenorMonths;
+	const interestQuaterly = calculatedInterest/(tenorMonths/3);
+	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
+	switch(intRecOption) {
+		case "MATURITY":
+			result = principal + calculatedInterest - withholdingTax
+			break;
+
+		case "UPFRONT":
+			result = principal;
+			break;
+
+		case "MONTHLY":
+			result = principal + interestMonthly - (withholdingTax*interestMonthly)
+			break;
+
+		case "QUARTERLY":
+			result = principal + interestQuaterly - (withholdingTax*interestQuaterly)
+			break;
+
+		case "BI_ANNUAL":
+			result = principal + interestBiAnnual - (withholdingTax*interestBiAnnual)
+			break;
+
+		default: break;
+	}
+	return Number(parseFloat(result).toFixed(2));
+};
+
+// function to get investment rate
+export const fetchIntRate = (product, intRecOption, inv_rates) => {
+	console.log("ss", product, intRecOption)
+    let interestRate;
+    let rate =  inv_rates?.find((item => item.product === product))
+    if(rate !== null) {
+      	switch(intRecOption) {
+        	case "MONTHLY":
+				interestRate = rate?.monthlyInterestRate
+				interestRate = interestRate === null ? 1 : interestRate
+				break;
+        
+			case "UPFRONT":
+				interestRate = rate?.upfrontInterestRate
+				interestRate = interestRate === null ? 1 : interestRate
+				break;
+
+			case "QUARTERLY":
+				interestRate = rate?.quarterlyInterestRate
+				interestRate = interestRate === null ? 1 : interestRate
+				break;
+
+			case "BI_ANNUAL":
+				interestRate = rate?.biAnnualInterestRate
+				interestRate = interestRate === null ? 1 : interestRate
+				break;
+
+			case "MATURITY":
+				interestRate = rate?.maturityRate
+				interestRate = interestRate === null ? 1 : interestRate
+				break;
+
+			default:
+				interestRate = 1;
+				break;
+      	}
+	console.log("rate work", interestRate)
+    return interestRate;
+    } else {
+		interestRate = 0;
+		return interestRate
+    }
+};
