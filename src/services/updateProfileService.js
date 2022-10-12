@@ -78,6 +78,12 @@ export const getDirectorDetailsService = () => {
 
 export const deleteDirectorService = (id) => {
   const http = new HttpService();
-  const url = `/auth/company/director-details/${id}`;
+  const url = `auth/company/director-details/${id}`;
   return http.deleteData(url);
+};
+
+export const updateBankDetailsService = (formData) => {
+  const http = new HttpService();
+  const url = `auth/individual-user/bank-account`;
+  return http.putData(formData, url);
 };

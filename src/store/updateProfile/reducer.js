@@ -20,6 +20,9 @@ import {
   PUT_PERSONAL_INFO,
   PUT_PERSONAL_INFO_ERROR,
   PUT_PERSONAL_INFO_SUCCESS,
+  UPDATE_BANK_DETAILS,
+  UPDATE_BANK_DETAILS_ERROR,
+  UPDATE_BANK_DETAILS_SUCCESS,
   UPDATE_COMPANY_DOCS,
   UPDATE_COMPANY_DOCS_ERROR,
   UPDATE_COMPANY_DOCS_SUCCESS,
@@ -69,6 +72,8 @@ const initialState = {
   directorsError: null,
   deleteDirectorMsg: null,
   deleteDirectorError: null,
+  bankUpdateMsg: null,
+  bankUpdateError: null,
 };
 
 const updateProfile = (state = initialState, action) => {
@@ -197,6 +202,8 @@ const updateProfile = (state = initialState, action) => {
         infoSuccess: false,
         contactMsg: null,
         contactMsgError: null,
+		accountDetailError: null,
+		accountDetail: null,
       };
       break;
 
@@ -414,6 +421,33 @@ const updateProfile = (state = initialState, action) => {
         loading: false,
         deleteDirectorMsg: null,
         deleteDirectorError: action.payload,
+      };
+      break;
+
+    case UPDATE_BANK_DETAILS:
+      state = {
+        ...state,
+        loading: true,
+        bankUpdateMsg: null,
+        bankUpdateError: null,
+      };
+      break;
+
+    case UPDATE_BANK_DETAILS_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        bankUpdateMsg: action.payload,
+        bankUpdateError: null,
+      };
+      break;
+
+    case UPDATE_BANK_DETAILS_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        bankUpdateMsg: null,
+        bankUpdateError: action.payload,
       };
       break;
 

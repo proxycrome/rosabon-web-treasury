@@ -7,6 +7,7 @@ import {
   PUT_CONTACT_DETAILS,
   PUT_PERSONAL_DOCUMENTS,
   PUT_PERSONAL_INFO,
+  UPDATE_BANK_DETAILS,
   UPDATE_COMPANY_DOCS,
   UPDATE_COMPANY_INFO,
   UPDATE_DIRECTOR_DETAILS,
@@ -22,6 +23,8 @@ import {
   deleteDirectorSuccess,
   getDirectorDetailsError,
   getDirectorDetailsSuccess,
+  updateBankDetailsError,
+  updateBankDetailsSuccess,
   updateCompanyDetailsError,
   updateCompanyDetailsSuccess,
   updateContactDetailsError,
@@ -46,6 +49,7 @@ import {
   changeUserPasswordService,
   deleteDirectorService,
   getDirectorDetailsService,
+  updateBankDetailsService,
   updateCompanyDetailsService,
   updateCompanyDocsService,
   updateContactDetailsService,
@@ -240,6 +244,27 @@ function* deleteDirector({ payload: { id, setShowModal } }) {
   }
 }
 
+function* updateBankDetails({ payload: { formData } }) {
+	try {
+	  const response = yield call(updateBankDetailsService, formData);
+	  console.log(response.data);
+	  yield put(updateBankDetailsSuccess(response.data));
+	  if (response) {
+		setTimeout(() => {
+		  toast.success("Your bank details have been updated");
+		}, 1000);
+	  }
+	} catch (error) {
+	  console.log(error?.response?.data);
+	  yield put(updateBankDetailsError(error?.response?.data));
+	  if (error?.response) {
+		setTimeout(() => {
+		  toast.error(error?.response?.data?.message);
+		}, 1000);
+	  }
+	}
+  }
+
 export function* watchVerifyAccountNo() {
   yield takeEvery(VERIFY_ACCOUNT_NO, verifyAccountNo);
 }
@@ -288,6 +313,10 @@ export function* watchDeleteDirector() {
   yield takeEvery(DELETE_DIRECTOR, deleteDirector);
 }
 
+export function* watchUpdateBankDetails() {
+	yield takeEvery(UPDATE_BANK_DETAILS, updateBankDetails);
+  }
+
 function* UpdateProfileSaga() {
   yield all([
     fork(watchVerifyAccountNo),
@@ -302,6 +331,7 @@ function* UpdateProfileSaga() {
     fork(watchUpdatePersonalDocument),
     fork(watchGetDirectorDetails),
     fork(watchDeleteDirector),
+    fork(watchUpdateBankDetails),
   ]);
 }
 

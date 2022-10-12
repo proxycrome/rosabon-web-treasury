@@ -140,22 +140,29 @@ function CompanySignup() {
                       </div>
                       <div className="mb-4">
                         <label>Contact Person Number</label>
-                        <div className="input-group">
+                        <div className="d-flex">
                           <select
                             className="form-select-md select-field"
-                            style={{border: "1.5px solid #E0E0E0", outline: "none"}}
+                            style={{
+                              border: "1.5px solid #E0E0E0",
+                              outline: "none",
+                            }}
                           >
                             <option>NGN</option>
                           </select>
-                          <Input
-                            type="text"
-                            className="form-control"
-                            placeholder="+234"
-                            onChange={handleValueChange}
-                            name="phone"
-                            maxLength="14"
-                            value={values.phone}
-                          />
+                          <div className="input-group">
+                            <div className="input-group-prepend phone-code">
+                              +234
+                            </div>
+                            <Input
+                              type="text"
+                              className="form-control phone-input"
+                              onChange={handleValueChange}
+                              name="phone"
+                              maxLength="10"
+                              value={values.phone}
+                            />
+                          </div>
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
@@ -477,6 +484,18 @@ const LoginInput = styled.div`
     font-size: 16px;
     line-height: 20px;
     color: #6d6d6d;
+  }
+
+  .phone-code {
+    position: absolute;
+    margin-top: 16px;
+    margin-left: 20px;
+    z-index: 10;
+    font-weight: 500;
+  }
+
+  .phone-input {
+    padding-left: 60px !important;
   }
 `
 const LoginButton = styled.div`

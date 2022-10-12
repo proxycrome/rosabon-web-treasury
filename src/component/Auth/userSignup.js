@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   Form,
   FormGroup,
@@ -7,43 +7,43 @@ import {
   FormFeedback,
   InputGroup,
   InputGroupText,
-} from 'reactstrap'
-import { useSelector, useDispatch, connect } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { Toaster } from 'react-hot-toast'
+} from "reactstrap";
+import { useSelector, useDispatch, connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 // import {
 //   registerCompany,
 //   registerUser,
 // } from '../../redux/actions/auth/SignupAction'
-import { SignupLeftView } from './loginLeftView'
-import { ValidateUserForm, validateUserInfo } from './validateForm'
-import Footer from '../dashboard/ProfileFooter'
+import { SignupLeftView } from "./loginLeftView";
+import { ValidateUserForm, validateUserInfo } from "./validateForm";
+import Footer from "../dashboard/ProfileFooter";
 
 function UserSignup() {
-  const navigate = useNavigate()
-  const auth = useSelector((state) => state.auth)
-  const { isSignedup, login, isLoggedIn, isLoading } = auth
-  const user_profile = useSelector((state) => state.user_profile)
-  const { users } = user_profile
-  const [passwordShown1, setPasswordShown1] = useState(false)
-  const [passwordShown2, setPasswordShown2] = useState(false)
-  const [isUserNewsLetters, setisUserNewsLetters] = useState(false)
-  const [isUserTerms, setIsUserTerms] = useState(false)
+  const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+  const { isSignedup, login, isLoggedIn, isLoading } = auth;
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
+  const [passwordShown1, setPasswordShown1] = useState(false);
+  const [passwordShown2, setPasswordShown2] = useState(false);
+  const [isUserNewsLetters, setisUserNewsLetters] = useState(false);
+  const [isUserTerms, setIsUserTerms] = useState(false);
 
   const { handleValueChange, values, handleSubmit, errors } = ValidateUserForm(
     validateUserInfo,
     isUserNewsLetters,
-    isUserTerms,
-  )
+    isUserTerms
+  );
 
   const togglePassword1 = () => {
-    setPasswordShown1(!passwordShown1)
-  }
+    setPasswordShown1(!passwordShown1);
+  };
   const togglePassword2 = () => {
-    setPasswordShown2(!passwordShown2)
-  }
+    setPasswordShown2(!passwordShown2);
+  };
 
   // useEffect(() => {
   //   if (isSignedup) {
@@ -56,7 +56,7 @@ function UserSignup() {
       <div>
         <Toaster
           toastOptions={{
-            className: 'bg-danger text-white',
+            className: "bg-danger text-white",
           }}
         />
       </div>
@@ -64,8 +64,8 @@ function UserSignup() {
       <Wrapper>
         <div
           style={{
-            height: '100vh',
-            overflow: 'hidden',
+            height: "100vh",
+            overflow: "hidden",
           }}
           className="content"
         >
@@ -74,7 +74,7 @@ function UserSignup() {
           </div>
 
           <div
-            style={{ overflowY: 'auto', gridTemplateColumns: 'auto' }}
+            style={{ overflowY: "auto", gridTemplateColumns: "auto" }}
             className="login-right-view"
           >
             <div className="">
@@ -98,7 +98,7 @@ function UserSignup() {
                             </div>
                             <div>
                               {errors.firstName && <h3>{errors.firstName}</h3>}
-                            </div>  
+                            </div>
                           </div>
                           <div className="col-md-6 ps-2 mb-4">
                             <label>Last Name</label>
@@ -114,7 +114,7 @@ function UserSignup() {
                             </div>
                             <div>
                               {errors.lastName && <h3>{errors.lastName}</h3>}
-                            </div>  
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -133,22 +133,29 @@ function UserSignup() {
                       </div>
                       <div className="mb-4">
                         <label>Mobile Number</label>
-                        <div className="input-group">
+                        <div className="d-flex">
                           <select
                             className="form-select-md select-field"
-                            style={{border: "1.5px solid #E0E0E0", outline: "none"}}
+                            style={{
+                              border: "1.5px solid #E0E0E0",
+                              outline: "none",
+                            }}
                           >
                             <option>NGN</option>
                           </select>
-                          <Input
-                            type="text"
-                            placeholder="+234"
-                            className="form-control"
-                            onChange={handleValueChange}
-                            name="phone"
-                            maxLength="14"
-                            value={values.phone}
-                          />  
+                          <div className="input-group">
+                            <div className="input-group-prepend phone-code">
+                              +234
+                            </div>
+                            <Input
+                              type="text"
+                              className="form-control phone-input"
+                              onChange={handleValueChange}
+                              name="phone"
+                              maxLength="10"
+                              value={values.phone}
+                            />
+                          </div>
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
@@ -157,7 +164,7 @@ function UserSignup() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown1 ? 'text' : 'password'}
+                              type={passwordShown1 ? "text" : "password"}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="password"
@@ -166,11 +173,11 @@ function UserSignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword1}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                                 className={
                                   passwordShown1
-                                    ? 'far fa-eye'
-                                    : 'far fa-eye-slash'
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
                                 }
                               ></i>
                             </InputGroupText>
@@ -183,7 +190,7 @@ function UserSignup() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown2 ? 'text' : 'password'}
+                              type={passwordShown2 ? "text" : "password"}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="c_password"
@@ -192,11 +199,11 @@ function UserSignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword2}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                                 className={
                                   passwordShown2
-                                    ? 'far fa-eye'
-                                    : 'far fa-eye-slash'
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
                                 }
                               ></i>
                             </InputGroupText>
@@ -225,7 +232,7 @@ function UserSignup() {
                       </div>
                       <div className="referal-link pb-5">
                         <div className="input-group">
-                          {values.source === 'OTHER' ? (
+                          {values.source === "OTHER" ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -234,7 +241,7 @@ function UserSignup() {
                               name="sourceOthers"
                               value={values.sourceOthers}
                             />
-                          ) : values.source === 'ANOTHER_USER' ? (
+                          ) : values.source === "ANOTHER_USER" ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -243,7 +250,7 @@ function UserSignup() {
                               name="refferedBy"
                               value={values.refferedBy}
                             />
-                          ) : values.source === 'ROSABON_SALES' ? (
+                          ) : values.source === "ROSABON_SALES" ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -308,24 +315,24 @@ function UserSignup() {
                             className="form-check-label"
                             htmlFor="checkTerms"
                           >
-                            I agree to the{' '}
+                            I agree to the{" "}
                             <span
                               style={{
-                                color: 'rgba(17, 30, 108, 1)',
-                                fontWeight: '500',
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
                               }}
                             >
                               Terms
-                            </span>{' '}
-                            and{' '}
+                            </span>{" "}
+                            and{" "}
                             <span
                               style={{
-                                color: 'rgba(17, 30, 108, 1)',
-                                fontWeight: '500',
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
                               }}
                             >
                               Privacy
-                            </span>{' '}
+                            </span>{" "}
                             Policy
                           </label>
                         </div>
@@ -339,10 +346,10 @@ function UserSignup() {
                           className="btn btn-primary px-5 mb-2"
                           disabled={isLoading}
                         >
-                          {isLoading ? 'Signing up...' : 'Sign up'}
+                          {isLoading ? "Signing up..." : "Sign up"}
                         </button>
                         <p className="text-center">
-                          Already have an account?{' '}
+                          Already have an account?{" "}
                           <span className="">
                             <Link to="/login">Sign in </Link>
                           </span>
@@ -357,10 +364,10 @@ function UserSignup() {
         </div>
       </Wrapper>
     </div>
-  )
+  );
 }
 
-export default UserSignup
+export default UserSignup;
 
 const Wrapper = styled.div`
   .content {
@@ -369,7 +376,7 @@ const Wrapper = styled.div`
       grid-template-columns: 1fr 1fr;
     }
   }
-`
+`;
 
 const RightWrapper = styled.section`
   background: #ffffff;
@@ -396,9 +403,9 @@ const RightWrapper = styled.section`
   }
   .login_input {
   }
-  input[type='text'],
-  input[type='email'],
-  input[type='password'] {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
     height: 54px;
     padding: 15px;
     border: 1.5px solid #e0e0e0;
@@ -413,7 +420,7 @@ const RightWrapper = styled.section`
   }
   .select-field {
     height: 54px;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 500;
     font-size: 17px;
@@ -433,7 +440,7 @@ const RightWrapper = styled.section`
     padding-left: 10px;
   }
   h3 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
@@ -444,7 +451,7 @@ const RightWrapper = styled.section`
     color: #e20d0d;
     padding-top: 12px;
   }
-`
+`;
 
 const LoginInput = styled.div`
   label,
@@ -467,7 +474,20 @@ const LoginInput = styled.div`
     line-height: 20px;
     color: #6d6d6d;
   }
-`
+
+  .phone-code {
+    position: absolute;
+    margin-top: 16px;
+    margin-left: 20px;
+    z-index: 10;
+    font-weight: 500;
+  }
+
+  .phone-input {
+    padding-left: 60px !important;
+  }
+
+`;
 const LoginButton = styled.div`
   display: flex;
   align-items: center;
@@ -485,4 +505,4 @@ const LoginButton = styled.div`
   span {
     color: rgba(28, 68, 141, 1);
   }
-`
+`;

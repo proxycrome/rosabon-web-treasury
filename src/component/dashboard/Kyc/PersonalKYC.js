@@ -203,9 +203,9 @@ const PersonalKYC = () => {
                                   "Enter first name"
                                 }
                                 name="firstName"
-                                value={formData.firstName}
+                                value={user_details?.individualUser?.firstName}
                                 onChange={handleChange}
-                                // disabled
+                                disabled
                               />
                             </div>
                           </div>
@@ -236,9 +236,9 @@ const PersonalKYC = () => {
                                   "Enter last name"
                                 }
                                 name="lastName"
-                                value={formData.lastName}
+                                value={user_details?.individualUser?.lastName}
                                 onChange={handleChange}
-                                // disabled
+                                disabled
                               />
                             </div>
                           </div>

@@ -4,11 +4,6 @@ import Confetti from "../../asset/confetti.png";
 import Checked from "../../asset/checked.png";
 import Caneled from "../../asset/cnaceled.png";
 import OtpInput from "react18-input-otp";
-// import {
-// 	// sendOtp,
-// 	// updateUserKYC,
-// 	// validateOtp,
-// } from "../../redux/actions/personalInfo/userProfile.actions";
 import {
   updateUserKyc,
   sendOtp,
@@ -20,11 +15,7 @@ import {
 
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useSelector, useDispatch, connect } from "react-redux";
-// import {
-// 	// validatePhoneOtp,
-// 	// verifyPhone,
-// } from "../../redux/actions/updateProfile/updateProfile.actions";
-// import { REMOVE_FOOTER } from "../../redux/constant/auth";
+import { CLEAR_MESSAGES } from "../../store/updateProfile/actionTypes";
 
 export function BVNConfirm({
   bank,
@@ -536,7 +527,13 @@ export function SuccessOTP() {
   );
 }
 
-export function Unsuccessful() {
+export function Unsuccessful({handleClose}) {
+  const dispatch = useDispatch();
+  const handleCloseModal = () => {
+	dispatch({type: CLEAR_MESSAGES});
+	handleClose();
+  }
+
   return (
     <div>
       <Wrapper>
@@ -553,11 +550,11 @@ export function Unsuccessful() {
                     />
                   </div>
                   <p className="pt-5">
-                    Unable to complete, please provied a bank <br /> account
+                    Unable to complete, please provide a bank <br /> account
                     tied to your BVN
                   </p>
                   <div className="pt-5 ">
-                    <button type="button" className="btn verify_congrates_btn">
+                    <button type="button" className="btn verify_congrates_btn" onClick={handleCloseModal}>
                       Continue
                     </button>
                   </div>

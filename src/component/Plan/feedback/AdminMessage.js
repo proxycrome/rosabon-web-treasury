@@ -39,8 +39,8 @@ const AdminMessage = () => {
               <div className="input-group">
                 <Input type="text" className="form-control" />
               </div>
-              <div className="input-group">
-                <button>Submit</button>
+              <div className="ml-2">
+                <button className="grey_btn">Submit</button>
               </div>
             </div>
           </div>
@@ -117,5 +117,15 @@ const Wrapper = styled.div`
   .message {
     padding-left: 50px;
     padding-bottom: 100px;
+  }
+
+  .grey_btn {
+    font-size: 14px;
+    width: 120px;
+    height: 41px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    color: #111e6c;
+    margin-right: 2rem;
   }
 `;

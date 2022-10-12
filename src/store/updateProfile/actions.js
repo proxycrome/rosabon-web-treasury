@@ -17,6 +17,9 @@ import {
   PUT_PERSONAL_INFO,
   PUT_PERSONAL_INFO_ERROR,
   PUT_PERSONAL_INFO_SUCCESS,
+  UPDATE_BANK_DETAILS,
+  UPDATE_BANK_DETAILS_ERROR,
+  UPDATE_BANK_DETAILS_SUCCESS,
   UPDATE_COMPANY_DOCS,
   UPDATE_COMPANY_DOCS_ERROR,
   UPDATE_COMPANY_DOCS_SUCCESS,
@@ -40,7 +43,7 @@ import {
 export const verifyAccountNo = (formData) => {
   return {
     type: VERIFY_ACCOUNT_NO,
-    payload: formData,
+    payload: {formData},
   };
 };
 
@@ -287,3 +290,24 @@ export const deleteDirectorError = (error) => {
     payload: error,
   };
 };
+
+export const updateBankDetails = (formData) => {
+    return {
+        type: UPDATE_BANK_DETAILS,
+        payload: {formData},
+    }
+}
+
+export const updateBankDetailsSuccess = (data) => {
+    return {
+        type: UPDATE_BANK_DETAILS_SUCCESS,
+        payload: data,
+    }
+}
+
+export const updateBankDetailsError = (error) => {
+    return {
+        type: UPDATE_BANK_DETAILS_ERROR,
+        payload: error,
+    }
+}
