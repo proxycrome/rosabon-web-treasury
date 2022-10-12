@@ -794,6 +794,12 @@ export const getCurrIcon = (currency) => {
         	return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#165;</p>)
 		case 2:
 			return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#36;</p>)
+		case 3:
+			return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#36;</p>)
+		case 4:
+			return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#8358;</p>)
+		case 5:
+			return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#163;</p>)
       	default:
         	return (<p></p>)
     }
@@ -2856,3 +2862,40 @@ const NavTitle = styled.div`
 		}
 	}
 `;
+
+export const paymentAtMaturity = (
+	intRecOption,
+	principal,
+	withholdingTax,
+	tenorMonths,
+	calculatedInterest
+) => {
+	let result = 0;
+	const interestMonthly = calculatedInterest/tenorMonths;
+	const interestQuaterly = calculatedInterest/(tenorMonths/3);
+	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
+	switch(intRecOption) {
+		case "MATURITY":
+			result = principal + calculatedInterest - withholdingTax
+			break;
+
+		case "UPFRONT":
+			result = principal;
+			break;
+
+		case "MONTHLY":
+			result = principal + interestMonthly - (withholdingTax*interestMonthly)
+			break;
+
+		case "QUARTERLY":
+			result = principal + interestQuaterly - (withholdingTax*interestQuaterly)
+			break;
+
+		case "BI_ANNUAL":
+			result = principal + interestBiAnnual - (withholdingTax*interestBiAnnual)
+			break;
+
+		default: break;
+	}
+	return Number(parseFloat(result).toFixed(2));
+}

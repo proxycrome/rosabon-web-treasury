@@ -21,6 +21,13 @@ export const createPlanService = (formData) => {
     return http.postDataWithToken(formData, url)
 }
 
+export const getInvestmentRatesService = () => {
+    const http = new HttpService();
+    const url = `auth/trinvestment-rates`;
+
+    return http.getData(url)
+}
+
 export const getPlansService = () => {
     const http = new HttpService();
     const url = `auth/trcreate-plan`;
@@ -38,6 +45,13 @@ export const getSinglePlanService = (id) => {
 export const getTenorService = () => {
     const http = new HttpService();
     const url = `auth/trtenor`;
+
+    return http.getData(url)
+}
+
+export const getWithholdingTaxService = () => {
+    const http = new HttpService();
+    const url = `auth/trwithholding-tax`;
 
     return http.getData(url)
 }

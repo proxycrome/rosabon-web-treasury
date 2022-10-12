@@ -1,29 +1,49 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
-import { UncontrolledTooltip } from 'reactstrap';
+import { UncontrolledTooltip, Input } from 'reactstrap';
 import PlanPay from "./PlanPay";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import { getCurrIcon } from "../Accesssories";
+import { getCurrIcon, paymentAtMaturity } from "../Accesssories";
+import { 
+  getCurrencies,
+  getExRates,
+  getInvestmentRates,
+  getSingleProduct,
+  getTenor,
+  getWithholdingTax
+} from "../../../store/actions";
 
 export const PlanContext = createContext(null);
 
 const PlanForm = () => {
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { id } = useParams();
   const { singleProduct  } = useSelector((state) => state.product);
-  const { exRates  } = useSelector((state) => state.plan);
+  const { exRates, investment_rates,withholding_tax  } = useSelector((state) => state.plan);
   // const { currencies } = useSelector((state) => state.currencies);
 
   const productStatus = singleProduct?.statusCode
   const product = singleProduct?.data.body ? singleProduct?.data.body : {}
   const ex_rates = exRates?.data.body ? exRates?.data.body : []
+  const withhold_tax = withholding_tax?.data.body ? withholding_tax?.data.body : []
+  const inv_rates = investment_rates?.data.body ? investment_rates?.data.body: []
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
+
+  useEffect(() => {
+    dispatch(getExRates());
+    dispatch(getCurrencies());
+    dispatch(getTenor());
+    dispatch(getSingleProduct(parseInt(id)));
+    dispatch(getWithholdingTax());
+    dispatch(getInvestmentRates());
+  }, [])
 
 
   const [isClicked, setIsClicked] = useState(false);
@@ -45,14 +65,14 @@ const PlanForm = () => {
     planStatus: "ACTIVE",
     contributionValue: 0.00,
     directDebit: false,
-    interestRate: 1000.00,
+    interestRate: 10.00,
     acceptPeriodicContribution: true,
     actualMaturityDate: "",
-    autoRollOver: true,
+    autoRollOver: false,
     numberOfTickets: 0,
     autoRenew: false,
     dateCreated: recentDate,
-    allowsLiquidation: true,
+    allowsLiquidation: false,
     planSummary: null,
     paymentMethod: "DEBIT_CARD"
   });
@@ -73,11 +93,12 @@ const PlanForm = () => {
     interestRate: 0,
     interestReceiptOption: "DAILY",
     calculatedInterest: 0.00,
-    withholdingTax: 1200.00,
+    withholdingTax: 0,
     paymentMaturity: 2100.00
   });
   const [autoCompute, setAutoCompute] = useState(true);
 
+  // final update on the user plan details before switching to next screen
   useEffect(() => {
     let selectedTenor = product?.tenors?.find(item => item.id === parseInt(formData.tenor))
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, 'days')?._d
@@ -102,7 +123,6 @@ const PlanForm = () => {
   // function to get the auto computed contribution value
   const contribValue = () => {
     const selectedTenor = product.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
-    console.log("dddg", selectedTenor)
     if(autoCompute===true) {
       let computedValue;
       switch(formData.savingFrequency) {
@@ -120,7 +140,6 @@ const PlanForm = () => {
         
         default: break;
       }
-      console.log("dddit", computedValue)
       setFormData({
         ...formData,
         // contributionValue: Number(parseFloat(computedValue).toFixed(2))
@@ -143,16 +162,16 @@ const PlanForm = () => {
         
         default: break;
       }
-      console.log("dddisst", computedValue)
       setFormData({
         ...formData,
-        // targetAmount: Number(parseFloat(computedValue).toFixed(2))
-        targetAmount: Number(parseInt(computedValue))
+        targetAmount: Number(parseFloat(computedValue).toFixed(2))
+        // targetAmount: Number(parseInt(computedValue))
       })
     }
   }
 
 
+  // side effect updates exchange rates
   useEffect(() => {
     const currency = ex_rates?.filter(item => item.id === formData.currency)[0]
     
@@ -170,6 +189,7 @@ const PlanForm = () => {
 
   }, [formData.currency])
 
+  // side effect updates the contribution value or target amount
   useEffect(() => {
     contribValue();
   }, [
@@ -181,10 +201,11 @@ const PlanForm = () => {
 
   // calculate simple interest
   const calculateSI = (principal, rate, time) => {
-    const SI = (principal*rate*time) / 100
+    const SI = (principal*rate*(time/365)) / 100
     return Number(parseFloat(SI).toFixed(2))
   }
 
+  // Update user plan summary
   useEffect(() => {
     let selectedTenor = product?.tenors?.find(item => item.id === parseInt(formData.tenor))
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, 'days')?._d
@@ -198,6 +219,7 @@ const PlanForm = () => {
       endDate: moment(endDate).format("YYYY-MM-DD"),
       interestRate: formData.interestRate,
       principal: formData.targetAmount,
+      withholdingTax: withhold_tax[0]?.rate,
       // interestPaymentFrequency: formData.interestReceiptOption,
       interestReceiptOption: formData.interestReceiptOption,
       calculatedInterest: calculateSI(
@@ -205,6 +227,17 @@ const PlanForm = () => {
           formData.interestRate,
           selectedTenor?.tenorDays
         ),
+      paymentMaturity: paymentAtMaturity(
+        formData.interestReceiptOption,
+        formData.targetAmount,
+        withhold_tax[0]?.rate,
+        selectedTenor?.tenorMonths,
+        calculateSI(
+          formData.targetAmount, 
+          formData.interestRate,
+          selectedTenor?.tenorDays
+        )
+      )
     });
   },[
     formData.planName,
@@ -286,6 +319,24 @@ const PlanForm = () => {
       </PlanContext.Provider>
     );
   }
+
+  // calculate minimum and maximum tenor
+  let minTenor = {tenorDays: 999999}
+  let maxTenor = {tenorDays: 0}
+  if(product?.tenors) {
+    if (product.tenors?.length > 1) {
+      product.tenors?.forEach(
+        item => item.tenorDays < minTenor.tenorDays ? minTenor = item : null
+      ) 
+      product.tenors?.forEach(
+        item => item.tenorDays > maxTenor.tenorDays ? maxTenor = item : null
+      ) 
+    } else {
+      minTenor = product?.tenors[0]
+      maxTenor = product?.tenors[0]
+    }
+  }
+  console.log("minTens", minTenor, "maxTens", maxTenor)
 
   const back = () => {
     navigate("/plan-product");
@@ -436,18 +487,24 @@ const PlanForm = () => {
         your bank account at zero cost
       </UncontrolledTooltip>
       {/*Auto renew UncontrolledTooltip */}
-      <UncontrolledTooltip 
-        placement="top" 
-        target="autoRenew" 
-      >
-        Allows for fund to be automatically rolled over at maturity
-      </UncontrolledTooltip>
-      <UncontrolledTooltip 
-        placement="top" 
-        target="allowLiquidation" 
-      >
-        Allows for you to withdraw before maturity
-      </UncontrolledTooltip>
+      {
+        product?.properties?.acceptsRollover && 
+        <UncontrolledTooltip 
+          placement="top" 
+          target="autoRenew" 
+        >
+          Allows for fund to be automatically rolled over at maturity
+        </UncontrolledTooltip>
+      }
+      {
+        product?.properties?.allowsLiquidation && 
+        <UncontrolledTooltip 
+          placement="top" 
+          target="allowLiquidation" 
+        >
+          Allows for you to withdraw before maturity
+        </UncontrolledTooltip>
+      }
       <Wrapper>
         {
           productStatus === "OK" ? (
@@ -498,7 +555,7 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Plan Name</label>
               <div className="input-group mb-4">
-                <input
+                <Input
                   className="form-control"
                   name="planName"
                   placeholder="Enter a plan name"
@@ -511,8 +568,9 @@ const PlanForm = () => {
             <div className="col-md-6">
               <label>Currency</label>
               <div className="input-group mb-4">
-                <select
+                <Input
                   className="form-select form-select-md"
+                  type="select"
                   onChange={handleChange}
                   name="currency"
                   value={formData.currency}
@@ -523,7 +581,7 @@ const PlanForm = () => {
                       <option key={id} value={item.id} >{item.name} </option>
                     ))
                   }
-                </select>
+                </Input>
               </div>
             </div>
           </div>
@@ -534,7 +592,7 @@ const PlanForm = () => {
                 <div className=" input-group-prepend curr-icon" >
                   {getCurrIcon(formData.currency)}
                 </div>
-                <input 
+                <Input 
                   className={`form-control ${ formData.currency !== "" && "curr-input"}`}
                   name="exchangeRate"
                   placeholder="" 
@@ -551,7 +609,7 @@ const PlanForm = () => {
                 <div className="input-group-prepend curr-icon" >
                   {getCurrIcon(formData.currency)}
                 </div>
-                <input 
+                <Input 
                   className={`form-control ${ formData.currency !== "" && "curr-input"}`}
                   name="amount"
                   placeholder="" 
@@ -571,7 +629,7 @@ const PlanForm = () => {
                 <div className="input-group-prepend curr-icon" >
                   {getCurrIcon(formData.currency)}
                 </div>
-                <input 
+                <Input 
                   className={`form-control ${ formData.currency !== "" && "curr-input"}`}
                   name="targetAmount"
                   placeholder="" 
@@ -602,8 +660,9 @@ const PlanForm = () => {
             </div>
             <div className="col-md-6">
               <label>Tenor</label>
-              <select 
-                className="form-select form-select-md mb-3" 
+              <Input 
+                className="form-select form-select-md mb-3"
+                type="select" 
                 name="tenor" 
                 onChange={handleChange}
                 value={formData.tenor}
@@ -614,7 +673,7 @@ const PlanForm = () => {
                     <option key={item.id} value={item.id} >{item.tenorName} </option>
                   ))
                 }
-              </select>
+              </Input>
             </div>
           </div>
           <div className="row">
@@ -625,8 +684,9 @@ const PlanForm = () => {
                 formData.savingFrequency==="MONTHLY" ? "d-lg-flex" : ""}`}
                 style={{gap: 14}}
               >
-                <select 
+                <Input 
                   className="form-select form-select-md mb-3" 
+                  type="select"
                   name="savingFrequency" 
                   onChange={handleChange}
                   value={formData.savingFrequency}
@@ -637,12 +697,16 @@ const PlanForm = () => {
                   </option>
                   <option value="WEEKLY">Weekly</option>
                   <option value="MONTHLY">Monthly</option>
-                </select>
+                  <option value="CUSTOMIZE" hidden={!(product?.allowCustomization)} >
+                    Customize Tenor
+                  </option>
+                </Input>
                 {
                   formData.savingFrequency === "WEEKLY" && (
-                    <select 
+                    <Input 
                       className="form-select form-select-md option-select mb-3" 
                       name="weeklyContributionDay" 
+                      type="select"
                       onChange={handleChange}
                       value={formData.weeklyContributionDay}
                     >
@@ -654,14 +718,15 @@ const PlanForm = () => {
                       <option value="FRIDAY">FRIDAY</option>
                       <option value="SATURDAY">SATURDAY</option>
                       <option value="SUNDAY">SUNDAY</option>
-                    </select>
+                    </Input>
                   )
                 }
                 {
                   formData.savingFrequency === "MONTHLY" && (
-                    <select 
+                    <Input 
                       className="form-select form-select-md option-select mb-3" 
                       name="monthlyContributionDay" 
+                      type="select"
                       onChange={handleChange}
                       value={formData.monthlyContributionDay}
                     >
@@ -671,7 +736,7 @@ const PlanForm = () => {
                           <option key={item+1} value={item+1}>{item+1} </option>
                         ))
                       }
-                    </select>
+                    </Input>
                   )
                 }
               </div>
@@ -679,9 +744,10 @@ const PlanForm = () => {
             <div className="col-md-6">
               <label>Interest Reciept Option</label>
               <div className="input-group mb-4">
-                <select 
+                <Input 
                   className="form-select form-select-md mb-3" 
                   name="interestReceiptOption" 
+                  type="select"
                   onChange={handleChange}
                   id="intRecOpt"
                   value={formData.interestReceiptOption}
@@ -690,13 +756,13 @@ const PlanForm = () => {
                   {
                     productStatus==="OK" && Object.entries(product?.properties?.interestOptions).map(([key, value]) =>
                       value === true && (
-                        <option key={key} value={labelIntRecOpt(key)} >
-                          {labelIntRecOpt(key)}
+                        <option key={key} value={labelIntRecOpt(key)} style={{textTransform:"capitalize"}} >
+                          {labelIntRecOpt(key).toLowerCase()}
                         </option>
                       )
                     )
                   }
-                </select>
+                </Input>
               </div>
             </div>
           </div>
@@ -714,7 +780,7 @@ const PlanForm = () => {
                 </button>
               </div>
               <div className="input-group mb-4">
-                <input 
+                <Input 
                   className="form-control" 
                   name="contributionValue"
                   placeholder="" 
@@ -751,9 +817,10 @@ const PlanForm = () => {
             <div className="col-md-6">
               <label>Direct Debit</label>
               <div className="input-group mb-4">
-                <select
+                <Input
                   className="form-select form-select-md"
                   placeholder="Setup Direct Debit"
+                  type="select"
                   onChange={handleChange}
                   name="directDebit"
                   id="directDebit"
@@ -761,7 +828,7 @@ const PlanForm = () => {
                 >
                   <option value={true} selected >Yes</option>
                   <option value={false} >No</option>
-                </select>
+                </Input>
               </div>
             </div>
           </div>
@@ -769,7 +836,7 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Calculate interest rate</label>
               <div className="input-group mb-4">
-                <input 
+                <Input 
                   className="form-control" 
                   name="interestRate"
                   placeholder="" 
@@ -782,12 +849,12 @@ const PlanForm = () => {
             <div className="col-md-6">
               <label>Number of tickets</label>
               <div className="input-group mb-4">
-                <input 
+                <Input 
                   className="form-control" 
                   name="numberOfTickets"
                   placeholder="" 
                   type="number"
-                  disabled={product?.properties?.allowsMonthlyDraw ? false : true}
+                  disabled={!(product?.properties?.allowsMonthlyDraw)}
                   value={updateNumOfTickets(formData.targetAmount)} 
                   onChange={handleChange}
                 />
@@ -798,9 +865,11 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <label>Auto renew</label>
               <div className="input-group mb-4">
-                <select 
+                <Input 
                   className="form-select form-select-md" 
+                  type="select"
                   placeholder=""
+                  disabled={!(product?.properties?.acceptsRollover)}
                   name="autoRenew"
                   onChange={handleChange}
                   id="autoRenew"
@@ -809,23 +878,25 @@ const PlanForm = () => {
                   <option value="" disabled hidden selected >Setup an option</option>
                   <option value={true} >Yes</option>
                   <option value={false} >No</option>
-                </select>
+                </Input>
               </div>
             </div>
             <div className="col-md-6">
               <label>Allow liquidation</label>
               <div className="input-group mb-4">
-                <select 
+                <Input 
                   className="form-select form-select-md" 
+                  type="select"
                   placeholder=""
                   name="allowsLiquidation"
+                  disabled={!(product?.properties?.allowsLiquidation)}
                   id="allowLiquidation"
                   onChange={handleChange}
                   value={formData.allowsLiquidation}
                 >
                   <option value={true} >Yes</option>
                   <option value={false} >No</option>
-                </select>
+                </Input>
               </div>
             </div>
           </div>

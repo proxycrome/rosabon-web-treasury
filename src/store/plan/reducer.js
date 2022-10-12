@@ -16,7 +16,13 @@ import {
     GET_CONTRIB_VAL_ERROR,
     GET_PLANS,
     GET_PLANS_SUCCESS,
-    GET_PLANS_ERROR
+    GET_PLANS_ERROR,
+    GET_WITHHOLDING_TAX,
+    GET_WITHHOLDING_TAX_SUCCESS,
+    GET_WITHHOLDING_TAX_ERROR,
+    GET_INVESTMENT_RATES,
+    GET_INVESTMENT_RATES_SUCCESS,
+    GET_INVESTMENT_RATES_ERROR
   } from './actionTypes';
   
   const initialState = {
@@ -32,7 +38,11 @@ import {
     exRates: null,
     exRatesError: null,
     contribVal: null,
-    contribValErr: null
+    contribValErr: null,
+    withholding_tax: null,
+    withholding_tax_error: null,
+    investment_rates: null,
+    investment_rates_err: null,
   }
   
   const plan = ( state=initialState, action ) => {
@@ -43,6 +53,8 @@ import {
       case GET_EX_RATES:
       case GET_CONTRIB_VAL:
       case GET_PLANS:
+      case GET_WITHHOLDING_TAX:
+      case GET_INVESTMENT_RATES:
         state = {
           ...state,
           loading: true
@@ -153,6 +165,42 @@ import {
           contribVal: null,
           contribValErr: action.payload
         }
+        break;
+
+      case GET_WITHHOLDING_TAX_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          withholding_tax: action.payload,
+          withholding_tax_error: null
+        };
+        break;
+
+      case GET_WITHHOLDING_TAX_ERROR:
+        state = {
+          ...state, 
+          loading: false,
+          withholding_tax: null,
+          withholding_tax_error: action.payload
+        };
+        break;
+
+      case GET_INVESTMENT_RATES_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          investment_rates: action.payload,
+          investment_rates_err: null
+        };
+        break;
+
+      case GET_INVESTMENT_RATES_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          investment_rates: null,
+          investment_rates_err: action.payload
+        };
         break;
   
       default:

@@ -99,7 +99,7 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
-				path="/create-plan"
+				path="/create-plan/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>

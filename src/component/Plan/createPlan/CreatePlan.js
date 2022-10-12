@@ -21,15 +21,8 @@ const CreatePlan = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getExRates());
     dispatch(getCatWithProducts());
-    dispatch(getCurrencies());
-    dispatch(getTenor());
   }, [])
-
-  const handleSingleProduct = (id) => {
-    dispatch(getSingleProduct(id));
-  }
 
   // console.log(open)
   return (
@@ -94,7 +87,7 @@ const CreatePlan = () => {
                       </div>
                     </div>
                   </div>
-                  <Link to="/create-plan" onClick={() => handleSingleProduct(product.id)} >
+                  <Link to={`/create-plan/${product.id}`} >
                     <button>Create Plan</button>
                   </Link>
                 </div>
