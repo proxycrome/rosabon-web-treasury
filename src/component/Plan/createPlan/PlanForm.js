@@ -242,7 +242,7 @@ const PlanForm = () => {
     }
   }, [formData.currency])
 
-  const calcContribValue = useMemo((valueType) => contribValue(valueType),[
+  const calcContribValue = useMemo(() => contribValue(),[
     formData.savingFrequency, 
     formData.tenor, 
     formData.targetAmount, 
