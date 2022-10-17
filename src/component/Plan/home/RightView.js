@@ -6,11 +6,35 @@ import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png'
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
 import { Collapse } from 'reactstrap'
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux';
+import { getCatWithProducts, getSingleProduct } from '../../../store/actions';
 
 export const RightView = () => {
+  const dispatch = useDispatch();
   const [openFixSavings, setFixSavingsOpen] = useState(false)
   const [openTargetSavings, setTargetSavingsOpen] = useState(false)
   const [openTargetIncome, setTargetIncomeOpen] = useState(false)
+  const [categoryDropdown, setCategoryDropdown] = useState(0);
+
+  const { catWithProducts  } = useSelector((state) => state.product);
+  const cat_products = catWithProducts?.data?.body;
+  const cat_products_status = catWithProducts?.statusCode;
+
+  useEffect(() => {
+    dispatch(getCatWithProducts());
+  }, []);
+
+  const handleProduct = (id) => {
+    dispatch(getSingleProduct(id))
+  }
+
+  const handleDropdown = (id) => {
+    if(categoryDropdown === id) {
+      setCategoryDropdown(0);
+    } else {
+      setCategoryDropdown(id);
+    }
+  };
 
   return (
     <RightWrapper className="border-end border-light">
@@ -41,7 +65,7 @@ export const RightView = () => {
                 </div>
                 <p className="p-0 m-0">Active Plans</p>
               </div>
-              <Link to="/create-plan">
+              <Link to="/plan-product">
                 <button className="dashboard">
                   <span className="pr-3">+</span>Add Plan
                 </button>
@@ -55,259 +79,72 @@ export const RightView = () => {
       <div className="home-body">
         <div className="">
           <h5 className="mb-2 fw-bold">Categories</h5>
-          <div className="shadow-sm p-3 mb-2 rounded">
-            <div
-              className="d-flex align-items-center justify-content-between savins-drop "
-              onClick={() => setFixSavingsOpen(!openFixSavings)}
-            >
-              <h6 className="mb-1">Fix Savings </h6>
-              <div>
-                {openFixSavings ? (
-                  <i className="fa-solid fa-chevron-up"></i>
-                ) : (
-                  <i className="fa-solid fa-chevron-down"></i>
-                )}
-              </div>
-            </div>
-            <span className="text-muted">Choose from a fixed savings plan</span>
-          </div>
-          <Collapse isOpen={openFixSavings} className="border rounded p-4 mb-2">
-            <div className="choose-plan shadow-sm mb-2">
-              <div className="row">
-                <div className="d-none d-sm-block col-sm-3">
-                  <img
-                    className=""
-                    src={ChoosePlanHolder}
-                    alt="ChoosePlanHolder"
-                  />
-                </div>
-                <div className="col-sm-9">
-                  <h5>Product 1</h5>
-                  <div>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {' '}
-                      printing and typesetting industry.
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
+          {
+            cat_products_status === "OK" && cat_products.map((category) =>
+              category.products.length > 0 && (
+              <div id={category.productCategoryId}>
+                <div className="shadow-sm p-3 mb-2 rounded">
+                  <div
+                    className="d-flex align-items-center justify-content-between savins-drop "
+                    onClick={() => handleDropdown(category.productCategoryId)}
+                  >
+                    <h6 className="mb-1">{category.productCategoryName} </h6>
+                    <div>
+                      {categoryDropdown === category.productCategoryId ? (
+                        <i className="fa-solid fa-chevron-up"></i>
+                      ) : (
+                        <i className="fa-solid fa-chevron-down"></i>
+                      )}
+                    </div>
                   </div>
+                  <span 
+                    className="text-muted"
+                  >
+                    Choose from a{" "}
+                    <span className='cat-name' >{category.productCategoryName}</span>{" "} 
+                    plan</span>
                 </div>
+                <Collapse 
+                  isOpen={categoryDropdown === category.productCategoryId} 
+                  className="border rounded p-4 mb-2"
+                >
+                  {
+                    category.products.map((product) => (
+                      <div className="choose-plan shadow-sm mb-2">
+                        <div className="row">
+                          <div className="d-none d-sm-block col-sm-3">
+                            <img
+                              className=""
+                              src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
+                              alt="ChoosePlanHolder"
+                            />
+                          </div>
+                          <div className="col-sm-9">
+                            <h5>{product.productName} </h5>
+                            <div>
+                              {
+                                product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
+                                  <p key={id} className="p-0 m-0 pb-2" >{item} </p>
+                                ))
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="d-none d-sm-block col-sm-3"></div>
+                          <div className="col-sm-9">
+                          <Link to={`/create-plan/${product.id}`} onClick={()=>handleProduct(product.id)} >
+                            <button>Create Plan</button>
+                          </Link>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </Collapse>
               </div>
-              <div className="row">
-                <div className="d-none d-sm-block col-sm-3"></div>
-                <div className="col-sm-9">
-                  <Link to="/create-plan">
-                    <button>Create Plan</button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="choose-plan shadow-sm mb-2">
-              <div className="d-flex align-items-center justify-content-around">
-                <img
-                  className=""
-                  src={ChoosePlanHolder}
-                  alt="ChoosePlanHolder"
-                />
-                <div>
-                  <h5>Product 1</h5>
-                  <div>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {' '}
-                      printing and typesetting industry.
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-around">
-                <div></div>
-                <Link to="/create-plan">
-                  <button>Create Plan</button>
-                </Link>
-              </div>
-            </div>
-          </Collapse>
-
-          <div className="shadow-sm p-3 mb-2 rounded">
-            <div
-              className="d-flex align-items-center justify-content-between savins-drop"
-              onClick={() => setTargetSavingsOpen(!openTargetSavings)}
-            >
-              <h6 className="mb-1">Target Savings</h6>
-              <div>
-                {openTargetSavings ? (
-                  <i className="fa-solid fa-chevron-up"></i>
-                ) : (
-                  <i className="fa-solid fa-chevron-down"></i>
-                )}
-              </div>
-            </div>
-            <span className="text-muted">Choose from a fixed savings plan</span>
-          </div>
-          <Collapse
-            isOpen={openTargetSavings}
-            className="border rounded p-4 mb-2"
-          >
-            <div className="choose-plan shadow-sm mb-2">
-              <div className="row">
-                <div className="d-none d-sm-block col-sm-3">
-                  <img
-                    className=""
-                    src={ChoosePlanHolder}
-                    alt="ChoosePlanHolder"
-                  />
-                </div>
-                <div className="col-sm-9">
-                  <h5>Product 1</h5>
-                  <div>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {' '}
-                      printing and typesetting industry.
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="d-none d-sm-block col-sm-3"></div>
-                <div className="col-sm-9">
-                  <Link to="/create-plan">
-                    <button>Create Plan</button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="choose-plan shadow-sm mb-2">
-              <div className="d-flex align-items-center justify-content-around">
-                <img
-                  className=""
-                  src={ChoosePlanHolder}
-                  alt="ChoosePlanHolder"
-                />
-                <div>
-                  <h5>Product 1</h5>
-                  <div>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {' '}
-                      printing and typesetting industry.
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-around">
-                <div></div>
-                <Link to="/create-plan">
-                  <button>Create Plan</button>
-                </Link>
-              </div>
-            </div>
-          </Collapse>
-          <div className="shadow-sm p-3 mb-2 rounded">
-            <div
-              className="d-flex align-items-center justify-content-between savins-drop"
-              onClick={() => setTargetIncomeOpen(!openTargetIncome)}
-            >
-              <h6 className="mb-1 card-title">Target Income</h6>
-              <div>
-                {openTargetIncome ? (
-                  <i className="fa-solid fa-chevron-up"></i>
-                ) : (
-                  <i className="fa-solid fa-chevron-down"></i>
-                )}
-              </div>
-            </div>
-            <span className="text-muted">Choose from a fixed savings plan</span>
-          </div>
-          <Collapse
-            isOpen={openTargetIncome}
-            className="border rounded p-4 mb-2"
-          >
-            <div className="choose-plan shadow-sm mb-2">
-              <div className="row">
-                <div className="d-none d-sm-block col-sm-3">
-                  <img
-                    className=""
-                    src={ChoosePlanHolder}
-                    alt="ChoosePlanHolder"
-                  />
-                </div>
-                <div className="col-sm-9">
-                  <h5>Product 1</h5>
-                  <div>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {' '}
-                      printing and typesetting industry.
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="d-none d-sm-block col-sm-3"></div>
-                <div className="col-sm-9">
-                  <Link to="/create-plan">
-                    <button>Create Plan</button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="choose-plan shadow-sm mb-2">
-              <div className="d-flex align-items-center justify-content-around">
-                <img
-                  className=""
-                  src={ChoosePlanHolder}
-                  alt="ChoosePlanHolder"
-                />
-                <div>
-                  <h5>Product 1</h5>
-                  <div>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {' '}
-                      printing and typesetting industry.
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{' '}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-around">
-                <div></div>
-                <Link to="/create-plan">
-                  <button>Create Plan</button>
-                </Link>
-              </div>
-            </div>
-          </Collapse>
+            ))
+          }
         </div>
       </div>
     </RightWrapper>
@@ -477,5 +314,8 @@ const RightWrapper = styled.div`
       padding-right: 3px;
       font-size: 11px;
     }
+  }
+  .cat-name {
+    text-transform: lowercase;
   }
 `

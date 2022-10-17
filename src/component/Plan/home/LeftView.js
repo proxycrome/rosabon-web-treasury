@@ -1,13 +1,95 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { Collapse } from 'reactstrap'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import styled from 'styled-components';
+import { Collapse, Input } from 'reactstrap';
+import { useSelector, useDispatch } from 'react-redux';
+import { 
+  getProducts, 
+  getCatWithProducts,
+  getInvestmentRates,
+  getWithholdingTax
+} from '../../../store/actions';
+import { paymentAtMaturity } from '../Accesssories';
 
 export const LeftView = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState({
+    product: 0,
+    amount: null,
+    tenor: 0,
+  });
+  const [result, setResult] = useState();
+  const { products  } = useSelector((state) => state.product);
+  const { investment_rates,withholding_tax  } = useSelector((state) => state.plan);
+
+  const productList = products?.data?.body;
+  const productStatus = products?.statusCode;
+  const withhold_tax = withholding_tax?.data.body ? withholding_tax?.data.body : []
+  const inv_rates = investment_rates?.data.body ? investment_rates?.data.body: []
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
 
-  
+  // fetch interest rate
+  const interest_rate = useMemo(() => {
+    let rate =  inv_rates?.find((
+      item => { return (item.product.id === data.product) && 
+      (data.amount >= item.minimumAmount) && (data.amount <= item.maximumAmount)}
+    ))
+    if(rate !== undefined) {
+      return rate?.maturityRate
+    } else {
+      return 1;
+    }
+  }, [data.product])
+
+  const calculateSI = (principal, rate, time) => {
+    const SI = (principal*rate*(time/365)) / 100
+    return Number(parseFloat(SI).toFixed(2))
+  }
+
+  useEffect(() => {
+    dispatch(getProducts());
+    dispatch(getCatWithProducts());
+    dispatch(getInvestmentRates());
+    dispatch(getWithholdingTax());
+  },[]);
+
+  const tenors = useMemo(() => {
+    if(productStatus === "OK") {
+      let tenorList = productList.find(item => item.id === data.product)?.tenors
+      return tenorList
+    }
+  }, [data.product])
+
+  const handleChange = (e) => {
+    if(e.target.name === "amount") {
+      setData({
+        ...data,
+        [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
+      })
+    } else {
+      setData({
+        ...data,
+        [e.target.name]: Number(e.target.value)
+      })
+    }
+  };
+
+  const calculate = () => {
+    setResult(
+      paymentAtMaturity(
+        "MATURITY",
+        data.amount,
+        withhold_tax[0]?.rate,
+        0,
+        calculateSI(
+          data.amount, 
+          interest_rate,
+          data.tenor
+        )
+      )
+    )
+  }
 
   return (
     <LeftWrapper className="ms-4">
@@ -29,11 +111,23 @@ export const LeftView = () => {
               <div className="mt-2">
                 <label>Select Product</label>
                 <div className="input-group mb-2">
-                  <input
+                  <Input
                     className="form-control"
                     placeholder="Select Product"
-                    type="text"
-                  />
+                    type='select'
+                    name="product"
+                    value={data.product}
+                    onChange={handleChange}
+                  >
+                    <option hidden selected disabled value={0} >Select Product</option>
+                    {
+                      productStatus === "OK" && productList.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.productName}
+                        </option>
+                      ))
+                    }
+                  </Input>
                 </div>
               </div>
             </div>
@@ -41,10 +135,13 @@ export const LeftView = () => {
               <div className=" ">
                 <label>Enter Amount</label>
                 <div className="input-group mb-2">
-                  <input
+                  <Input
                     className="form-control"
                     placeholder="N  0.00"
-                    type="text"
+                    name="amount"
+                    value={data.amount}
+                    onChange={handleChange}
+                    type="number"
                   />
                 </div>
               </div>
@@ -53,16 +150,29 @@ export const LeftView = () => {
               <div className=" ">
                 <label>Tenor</label>
                 <div className="input-group mb-4">
-                  <input
+                  <Input
                     className="form-control"
-                    placeholder="N  0.00"
-                    type="text"
-                  />
+                    type="select"
+                    name="tenor"
+                    value={data.tenor}
+                    onChange={handleChange}
+                  >
+                    <option hidden value={0} disabled>Select Tenor</option>
+                    {
+                      productStatus === "OK" && tenors?.map(item => (
+                        <option key={item.id} value={item.tenorDays} >
+                          {item.tenorName}
+                        </option>
+                      ))
+                    }
+                  </Input>
                 </div>
               </div>
             </div>
             <div className="text-center calc-mty">
-              <button>Calculate Amount at maturity</button>
+              <button onClick={calculate} >
+                Calculate Amount at maturity
+              </button>
             </div>
             <div className="row pt-4">
               <div className=" ">
@@ -71,6 +181,7 @@ export const LeftView = () => {
                     className="form-control"
                     placeholder="N  0.00"
                     type="text"
+                    value={result}
                   />
                 </div>
               </div>

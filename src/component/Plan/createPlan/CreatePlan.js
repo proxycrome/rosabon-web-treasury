@@ -6,8 +6,6 @@ import { Collapse } from "reactstrap";
 import { Link } from "react-router-dom";
 import { 
   getCatWithProducts, 
-  getCurrencies,
-  getExRates,
   getSingleProduct,
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
@@ -71,18 +69,11 @@ const CreatePlan = () => {
                         <p className="p-0 m-0 pb-2">
                           Lorem Ipsum is simply dummy text of the{" "}
                         </p> */}
-                        <p className="p-0 m-0 pb-2">
-                          {" "}
-                          {product.productDescription}
-                        </p>
-                        <p className="p-0 m-0 pb-2">
-                          {" "}
-                          {product.productDescription}
-                        </p>
-                        <p className="p-0 m-0 pb-2">
-                          {" "}
-                          {product.productDescription}
-                        </p>
+                        {
+                          product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
+                            <p key={id} className="p-0 m-0 pb-2" >{item} </p>
+                          ))
+                        }
                       </div>
                     </div>
                   </div>

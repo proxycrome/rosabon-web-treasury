@@ -17,6 +17,7 @@ import {
   getTenor,
   getWithholdingTax
 } from "../../../store/actions";
+import { useMemo } from "react";
 
 export const PlanContext = createContext(null);
 
@@ -68,7 +69,7 @@ const PlanForm = () => {
     planStatus: "ACTIVE",
     contributionValue: 0.00,
     directDebit: false,
-    interestRate: 10.00,
+    interestRate: 0.00,
     acceptPeriodicContribution: true,
     actualMaturityDate: "",
     autoRollOver: false,
@@ -97,7 +98,7 @@ const PlanForm = () => {
     interestReceiptOption: "DAILY",
     calculatedInterest: 0.00,
     withholdingTax: 0,
-    paymentMaturity: 2100.00
+    paymentMaturity: 0.00
   });
   const [autoCompute, setAutoCompute] = useState(true);
 
@@ -137,7 +138,7 @@ const PlanForm = () => {
           break;
 
         case "WEEKLY":
-          computedValue = formData.targetAmount / selectedTenor?.tenorWeeks
+          computedValue = formData.targetAmount / (selectedTenor?.tenorDays/7)
           break;
 
         case "MONTHLY":
@@ -149,7 +150,7 @@ const PlanForm = () => {
       setFormData({
         ...formData,
         // contributionValue: Number(parseFloat(computedValue).toFixed(2))
-        contributionValue: Number(parseInt(computedValue))
+        contributionValue: Number(parseFloat(computedValue).toFixed(2))
       })
     } else {
       let computedValue;
@@ -159,7 +160,7 @@ const PlanForm = () => {
           break;
 
         case "WEEKLY":
-          computedValue = formData.contributionValue * (selectedTenor?.tenorWeeks)
+          computedValue = formData.contributionValue * (selectedTenor?.tenorDays/7)
           break;
 
         case "MONTHLY":
@@ -175,6 +176,52 @@ const PlanForm = () => {
       })
     }
   }
+
+  // function to get investment rate
+  const fetchIntRate = (intRecOption) => {
+    console.log("ss", formData.product, intRecOption, formData.targetAmount)
+    let interestRate;
+    let rate =  inv_rates?.find((
+      item => { return (item.product.id === formData.product) && 
+      (formData.targetAmount >= item.minimumAmount) && (formData.targetAmount <= item.maximumAmount)}
+    ))
+    console.log("rere", rate)
+      if(rate !== undefined) {
+          switch(intRecOption) {
+            case "MONTHLY":
+          interestRate = rate?.monthlyInterestRate
+          break;
+          
+        case "UPFRONT":
+          interestRate = rate?.upfrontInterestRate
+          break;
+
+        case "QUARTERLY":
+          interestRate = rate?.quarterlyInterestRate
+          break;
+
+        case "BI_ANNUAL":
+          interestRate = rate?.biAnnualInterestRate
+          break;
+
+        case "MATURITY":
+          interestRate = rate?.maturityRate
+          break;
+
+        default:
+          interestRate = 1;
+          break;
+          }
+      if (interestRate === null) {
+        return 1
+      } else {
+        return interestRate
+      }
+      } else {
+      interestRate = 1;
+      return interestRate
+      }
+  };
 
 
   // side effect updates exchange rates
@@ -195,15 +242,22 @@ const PlanForm = () => {
 
   }, [formData.currency])
 
-  // side effect updates the contribution value or target amount
-  useEffect(() => {
-    contribValue();
-  }, [
+  const calcContribValue = useMemo(() => contribValue(),[
     formData.savingFrequency, 
     formData.tenor, 
     formData.targetAmount, 
     formData.contributionValue
   ])
+
+  // side effect updates the contribution value or target amount
+  // useEffect(() => {
+  //   contribValue();
+  // }, [
+  //   formData.savingFrequency, 
+  //   formData.tenor, 
+  //   formData.targetAmount, 
+  //   formData.contributionValue
+  // ])
 
 
   // calculate simple interest
@@ -263,50 +317,7 @@ const PlanForm = () => {
         formData.interestReceiptOption,
       )
     })
-  }, [formData.interestReceiptOption, product])
-
-// function to get investment rate
-const fetchIntRate = (intRecOption) => {
-	console.log("ss", formData.product, intRecOption)
-    let interestRate;
-    let rate =  inv_rates?.find((item => item.product === formData.product))
-	console.log("rere", rate)
-    if(rate !== undefined) {
-      	switch(intRecOption) {
-        	case "MONTHLY":
-				interestRate = rate?.monthlyInterestRate
-				break;
-        
-			case "UPFRONT":
-				interestRate = rate?.upfrontInterestRate
-				break;
-
-			case "QUARTERLY":
-				interestRate = rate?.quarterlyInterestRate
-				break;
-
-			case "BI_ANNUAL":
-				interestRate = rate?.biAnnualInterestRate
-				break;
-
-			case "MATURITY":
-				interestRate = rate?.maturityRate
-				break;
-
-			default:
-				interestRate = 1;
-				break;
-      	}
-		if (interestRate === null) {
-			return 1
-		} else {
-			return interestRate
-		}
-    } else {
-		interestRate = 1;
-		return interestRate
-    }
-};
+  }, [formData.interestReceiptOption, id, formData.targetAmount])
 
   const updateNumOfTickets = (value) => {
     let ticketNo;
@@ -441,26 +452,6 @@ const fetchIntRate = (intRecOption) => {
     }
   }
 
-  // function to calculate the interest rate value
-  const interestRateVal = () => {
-    const selectedTenor = product?.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
-    if(formData.targetAmount!==null) {
-      const interestRate = selectedTenor?.tenorMonths * product?.minTransactionLimit
-      setFormData({
-        ...formData,
-        interestRate: interestRate
-      })
-      return interestRate
-    } else if(formData.targetAmount===null) {
-      const interestRate = selectedTenor?.tenorMonths * formData.amount
-      setFormData({
-        ...formData,
-        interestRate: interestRate
-      })
-      return interestRate
-    }
-  }
-
   // handle the toggle of auto computing the contribution value
   const handleContribBtn = () => {
     if(autoCompute) {
@@ -477,7 +468,6 @@ const fetchIntRate = (intRecOption) => {
   // handle changes on all inputs
   const handleChange = (e) => {
     console.log(formData)
-    interestRateVal();
     if(e.target.type === "number") {
       setFormData({
         ...formData,
@@ -525,6 +515,7 @@ const fetchIntRate = (intRecOption) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {calcContribValue}
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Choose Plan</span>
@@ -587,18 +578,15 @@ const fetchIntRate = (intRecOption) => {
                     <p className="p-0 m-0 pb-2">
                       Lorem Ipsum is simply dummy text of the{" "}
                     </p> */}
-                    <p className="p-0 m-0 pb-2">
+                    {/* <p className="p-0 m-0 pb-2">
                       {" "}
                       {product.productDescription}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {" "}
-                      {product.productDescription}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {" "}
-                      {product.productDescription}
-                    </p>
+                    </p> */}
+                    {
+                      product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
+                        <p key={id} className="p-0 m-0 pb-2" >{item} </p>
+                      ))
+                    }
                   </div>
                 </div>
               </div>
@@ -882,6 +870,7 @@ const fetchIntRate = (intRecOption) => {
                   type="select"
                   onChange={handleChange}
                   name="directDebit"
+                  disabled={!(product?.properties?.hasDirectDebit)}
                   id="directDebit"
                   value={formData.directDebit}
                 >
