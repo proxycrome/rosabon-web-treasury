@@ -1,46 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { CLOSE_MODAL, CLEAR_MESSAGES } from '../../../store/profile/actionTypes';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import ModalComponent from '../../ModalComponent';
-import { BVNConfirm, OTPVerify } from '../../Accessories/BVNConfirm';
+import React, { useState, useEffect } from "react";
+import {
+  CLOSE_MODAL,
+  CLEAR_MESSAGES,
+} from "../../../store/profile/actionTypes";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import ModalComponent from "../../ModalComponent";
+import { Toaster } from "react-hot-toast";
+import {
+  BVNConfirm,
+  OTPVerify,
+  Unsuccessful,
+} from "../../Accessories/BVNConfirm";
 // import { personalBankDetails } from '../../../redux/actions/updateProfile/bankDetails.action';
 // import { getBanks } from '../../../redux/actions/personalInfo/userProfile.actions';
-import { sendOtp, getBanks, verifyAccountNo } from '../../../store/actions';
+import {
+  sendOtp,
+  getBanks,
+  verifyAccountNo,
+  updateBankDetails,
+  getAuthUsers,
+  verifyBvn,
+  resetPassword,
+} from "../../../store/actions";
+import { useCallback } from "react";
 
 const BankDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [token, setToken] = useState("");
+  const [accountName, setAccountName] = useState("");
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(true);
   const toggleEdit = (e) => {
     setShowEdit(!showEdit);
   };
 
-  const { users, showEmailOtpModal, otp, banks, otpError, validateEmailOtp } = useSelector(
-    (state) => state.user_profile
-  );
-
   const {
-    accountDetail,
-    accountDetailError
-  } = useSelector((state) => state.updateProfile);
+    users,
+    showEmailOtpModal,
+    otp,
+    banks,
+    otpError,
+    bvnMessage,
+    validateEmailOtp,
+  } = useSelector((state) => state.user_profile);
 
-  console.log(banks);
+  const { accountDetail, accountDetailError } = useSelector(
+    (state) => state.updateProfile
+  );
 
   console.log(accountDetail);
   console.log(accountDetailError);
+
+  useEffect(() => {
+    if (accountDetailError) {
+      setShow(true);
+    }
+  }, [accountDetailError]);
 
   const createOtp = (otp) => {
     setToken(otp);
   };
 
   const data = {
-    accountName: '',
-    accountNumber: '',
-    bankCode: '',
+    accountNumber: "",
+    bankCode: "",
   };
 
   const [formData, setformData] = useState(data);
@@ -55,10 +81,10 @@ const BankDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { acc_name, acc_no, bankType } = formData;
-    let data = { acc_name, acc_no, bankType };
+    const { accountNumber, bankCode } = formData;
+    let data = { accountName, accountNumber, bankCode };
     console.log(data);
-    // dispatch(personalBankDetails(data));
+    dispatch(updateBankDetails(data));
   };
 
   const handleVerifyAccountNo = (e) => {
@@ -66,11 +92,11 @@ const BankDetails = () => {
     const data = {
       accountNumber: formData.accountNumber,
       bankCode: formData.bankCode,
-      isSubjectConsent: true,
-    }
+    };
 
+    console.log(data);
     dispatch(verifyAccountNo(data));
-  }
+  };
 
   const handleSendOtp = (e) => {
     e.preventDefault();
@@ -84,7 +110,7 @@ const BankDetails = () => {
 
   useEffect(() => {
     dispatch(getBanks());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     if (validateEmailOtp) {
@@ -93,11 +119,63 @@ const BankDetails = () => {
     }
   }, [validateEmailOtp]);
 
+  useEffect(() => {
+    dispatch(getAuthUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (users) {
+      const objData = {
+        firstName: users?.individualUser?.firstName.toUpperCase(),
+        lastName: users?.individualUser?.lastName.toUpperCase(),
+        id: users?.individualUser?.bvn,
+        isSubjectConsent: true,
+        phoneNumber: users?.phone,
+      };
+
+      console.log(objData);
+      dispatch(verifyBvn(objData));
+    }
+  }, [users, dispatch]);
+
+  const familiarityCheck = useCallback(() => {
+    if (
+      accountDetail?.data?.account_name?.includes(
+        bvnMessage?.data?.firstName
+      ) &&
+      accountDetail?.data?.account_name?.includes(bvnMessage?.data?.lastName)
+    ) {
+      return accountDetail?.data?.account_name;
+    } else {
+      return "";
+    }
+  }, [accountDetail, bvnMessage]);
+
+  useEffect(() => {
+    if (accountDetail) {
+      setAccountName(familiarityCheck());
+      if (familiarityCheck() === "") {
+        setShow(true);
+      }
+    }
+  }, [accountDetail]);
+
+  const reset = () => {
+    setformData({
+      ...formData,
+      accountName: "",
+      accountNumber: "",
+      bankCode: "",
+    });
+    setAccountName("");
+  };
+
   return (
     <div>
-      <WrapperBody>
-        <div className="container-fluid">
-          <form autoComplete="off" onSubmit={handleSubmit}>
+      <Toaster />
+      <form autoComplete="off" onSubmit={handleSubmit}>
+        <WrapperBody>
+          <div className="container-fluid">
             <div>
               <div className="row">
                 <div className="d-flex justify-content-between mt-2">
@@ -105,18 +183,29 @@ const BankDetails = () => {
                   <div>
                     <div>
                       {showEdit ? (
-                        <button type="button" className="btn_bg_blue" onClick={handleSendOtp}>
+                        <button
+                          type="button"
+                          className="btn_bg_blue"
+                          onClick={handleSendOtp}
+                        >
                           Edit
                         </button>
                       ) : (
-                        <button type="button" className="grey-button" onClick={toggleEdit}>
+                        <button
+                          type="button"
+                          className="grey-button"
+                          onClick={() => {
+                            toggleEdit();
+                            reset();
+                          }}
+                        >
                           Cancel
                         </button>
                       )}
                     </div>
                     <ModalComponent
                       show={showEmailOtpModal}
-                      size={'md'}
+                      size={"md"}
                       handleClose={handleOTPModalClose}
                     >
                       <OTPVerify
@@ -142,11 +231,11 @@ const BankDetails = () => {
                     name="bankCode"
                     disabled={showEdit}
                   >
-                    <option value="">
-                      Please choose an option
-                    </option>
-                    {banks?.data?.map(bank => (
-                      <option key={bank.id} value={bank.code}>{bank.name}</option>
+                    <option value="">Please choose an option</option>
+                    {banks?.data?.map((bank) => (
+                      <option key={bank.id} value={bank.code}>
+                        {bank.name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -177,8 +266,8 @@ const BankDetails = () => {
                         disabled={showEdit}
                         className={
                           showEdit
-                            ? ' btn_bg_grey profile_vify_btn'
-                            : 'btn_bg_blue profile_vify_btn'
+                            ? " btn_bg_grey profile_vify_btn"
+                            : "btn_bg_blue profile_vify_btn"
                         }
                       >
                         Verify
@@ -186,14 +275,10 @@ const BankDetails = () => {
                     </div>
                     <ModalComponent
                       show={show}
-                      size={'md'}
+                      size={"md"}
                       handleClose={() => setShow(false)}
                     >
-                      <BVNConfirm
-                        bank="bank"
-                        show={show}
-                        handleClose={() => setShow(false)}
-                      />
+                      <Unsuccessful handleClose={() => setShow(false)} />
                     </ModalComponent>
                   </div>
                 </div>
@@ -208,24 +293,26 @@ const BankDetails = () => {
                       disabled={showEdit}
                       onChange={handleChange}
                       name="accountName"
-                      value={formData.accountName}
+                      value={accountName}
                     />
                   </div>
                 </div>
               </div>
             </div>
-          </form>
-        </div>
-      </WrapperBody>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-end footer-content">
-            <div>
-              <button className="blue-btn">Save</button>
+          </div>
+        </WrapperBody>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-end footer-content">
+              <div>
+                <button className="blue-btn" disabled={!familiarityCheck()}>
+                  Save
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </div>
   );
 };
@@ -361,6 +448,9 @@ const WrapperFooter = styled.div`
     outline: none;
     border: none;
     padding: 10px 15px;
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
   .blue-btn {
     color: #f2f2f2;

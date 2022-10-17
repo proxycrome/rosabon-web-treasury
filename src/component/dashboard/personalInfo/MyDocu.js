@@ -1,44 +1,46 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { CLOSE_MODAL, CLEAR_MESSAGES } from '../../../store/profile/actionTypes';
-import styled from 'styled-components';
-import toast, { Toaster } from 'react-hot-toast';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import ModalComponent from '../../ModalComponent';
-import { OTPVerify } from '../../Accessories/BVNConfirm';
-import FileDoc from '../../../asset/file.png';
-import User from '../../../asset/user.png';
-import Check from '../../../asset/checked.png';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  CLOSE_MODAL,
+  CLEAR_MESSAGES,
+} from "../../../store/profile/actionTypes";
+import styled from "styled-components";
+import toast, { Toaster } from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import ModalComponent from "../../ModalComponent";
+import { OTPVerify } from "../../Accessories/BVNConfirm";
+import FileDoc from "../../../asset/file.png";
+import User from "../../../asset/user.png";
+import Check from "../../../asset/checked.png";
 // import { uploadPersonalDocument } from '../../../redux/actions/updateProfile/uploadDocument.action';
 // import { sendOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
-import { sendOtp, uploadPersonalDocument } from '../../../store/actions';
+import { sendOtp, uploadPersonalDocument } from "../../../store/actions";
 
 const MyDocu = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
   const [showEdit, setShowEdit] = useState(true);
   const [base64File, setBase64File] = useState({
-    frontEncodedString: '',
+    frontEncodedString: "",
     // backEncodedString: '',
-    utilityEncodedString: '',
-    photoEncodedString: '',
+    utilityEncodedString: "",
+    photoEncodedString: "",
   });
   const photoFileInputRef = useRef();
   const frontFileInputRef = useRef();
   // const backFileInputRef = useRef();
   const utilityFileInputRef = useRef();
 
-  const { users, showEmailOtpModal, otp, otpError, validateEmailOtp } = useSelector(
-    (state) => state.user_profile
-  );
+  const { users, showEmailOtpModal, otp, otpError, validateEmailOtp } =
+    useSelector((state) => state.user_profile);
 
   const toggleEdit = (e) => {
     setShowEdit(!showEdit);
   };
   const data = {
-    idNumber: '',
-    idType: '',
+    idNumber: "",
+    idType: "",
   };
   const [formData, setformData] = useState(data);
 
@@ -66,18 +68,19 @@ const MyDocu = () => {
         reader.onload = () => {
           setBase64File({
             ...base64File,
-            [name]: reader.result.split('base64,')[1],
+            [name]: reader.result.split("base64,")[1],
           });
         };
+        console.log(reader);
         reader.onerror = (error) => {
-          console.log('error', error);
+          console.log("error", error);
         };
       }
     };
 
     if (
       files[0]?.size <= 2000000 &&
-      (files[0]?.type === 'image/jpeg' || files[0]?.type === 'application/pdf')
+      (files[0]?.type === "image/jpeg" || files[0]?.type === "application/pdf")
     ) {
       encodedFileBase64(files[0]);
     }
@@ -87,26 +90,19 @@ const MyDocu = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      frontEncodedString,
-      photoEncodedString,
-      utilityEncodedString,
-    } = base64File;
+    const { frontEncodedString, photoEncodedString, utilityEncodedString } =
+      base64File;
 
-    const {
-      idType,
-      idNumber,
-    } = formData;
+    const { idType, idNumber } = formData;
 
-
-    if(!frontEncodedString && !idType){
-      toast.error("Please Select and Upload your ID")
+    if (!frontEncodedString && !idType) {
+      toast.error("Please Select and Upload your ID");
       return;
-    }else if(!frontEncodedString){
-      toast.error("Please Upload ID")
+    } else if (!frontEncodedString) {
+      toast.error("Please Upload ID");
       return;
-    }else if(!idType) {
-      toast.error("Please Select ID Type")
+    } else if (!idType) {
+      toast.error("Please Select ID Type");
       return;
     }
 
@@ -121,8 +117,7 @@ const MyDocu = () => {
       },
       utilityBillImage: {
         encodedUpload: utilityEncodedString,
-      }
-
+      },
     };
     console.log(data);
     dispatch(uploadPersonalDocument(data));
@@ -158,7 +153,18 @@ const MyDocu = () => {
           <div className="banner position-relative">
             <div className="position-absolute user-image">
               <div className="">
-                <img className="image-fluid" src={User} alt="User" />
+                <img
+                  className="image-frame"
+                  style={{ borderRadius: "50%", border: "2px solid #FFFFFF" }}
+                  src={
+                    base64File.photoEncodedString
+                      ? `data:image/jpeg;base64,${base64File.photoEncodedString}`
+                      : User
+                  }
+                  alt="User"
+                  width="125"
+                  height="125"
+                />
                 {base64File.photoEncodedString ? (
                   <img
                     className="image-fluid position-absolute"
@@ -175,7 +181,7 @@ const MyDocu = () => {
               className="file"
               accept="image/jpeg"
               ref={photoFileInputRef}
-              onChange={(e) => handleFileChange(e, 'photoEncodedString')}
+              onChange={(e) => handleFileChange(e, "photoEncodedString")}
             />
             <i
               className="camera-font-awe position-absolute fa-solid fa-camera"
@@ -209,7 +215,7 @@ const MyDocu = () => {
               </div>
               <ModalComponent
                 show={showEmailOtpModal}
-                size={'md'}
+                size={"md"}
                 handleClose={handleOTPModalClose}
               >
                 <OTPVerify
@@ -236,7 +242,9 @@ const MyDocu = () => {
                 <option value="">Select ID Type...</option>
                 <option value="NATIONAL_ID_CARD">National ID card</option>
                 <option value=" DRIVERS_LICENSE">Driver's License </option>
-                <option value="INTERNATIONAL_PASSPORT">International Passport</option>
+                <option value="INTERNATIONAL_PASSPORT">
+                  International Passport
+                </option>
                 <option value="VOTERS_CARD">Voter's Card </option>
               </select>
             </div>
@@ -277,7 +285,7 @@ const MyDocu = () => {
                         className="file"
                         ref={frontFileInputRef}
                         onChange={(e) =>
-                          handleFileChange(e, 'frontEncodedString')
+                          handleFileChange(e, "frontEncodedString")
                         }
                       />
                       <button
@@ -300,24 +308,24 @@ const MyDocu = () => {
                       />
                       <div className="progress-bar-style">
                         <h5 className="position-relative">
-                          ID Card {' '}
+                          ID Card{" "}
                           <span
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: "pointer" }}
                             onClick={() =>
                               setBase64File({
                                 ...base64File,
-                                frontEncodedString: '',
+                                frontEncodedString: "",
                               })
                             }
                           >
                             <i className="fa-solid fa-xmark"></i>
                           </span>
                         </h5>
-                        <div className="progress" style={{ height: '3px' }}>
+                        <div className="progress" style={{ height: "3px" }}>
                           <div
                             className="progress-bar"
                             role="progressbar"
-                            style={{ width: '75%' }}
+                            style={{ width: "75%" }}
                             aria-valuenow="25"
                             aria-valuemin="0"
                             aria-valuemax="100"
@@ -331,7 +339,7 @@ const MyDocu = () => {
                         className="file"
                         ref={frontFileInputRef}
                         onChange={(e) =>
-                          handleFileChange(e, 'frontEncodedString')
+                          handleFileChange(e, "frontEncodedString")
                         }
                       />
                       <button
@@ -456,7 +464,7 @@ const MyDocu = () => {
                         className="file"
                         ref={utilityFileInputRef}
                         onChange={(e) =>
-                          handleFileChange(e, 'utilityEncodedString')
+                          handleFileChange(e, "utilityEncodedString")
                         }
                       />
                       <button
@@ -481,24 +489,24 @@ const MyDocu = () => {
                       />
                       <div className="progress-bar-style">
                         <h5 className="position-relative">
-                          Utility Bill{' '}
+                          Utility Bill{" "}
                           <span
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: "pointer" }}
                             onClick={() =>
                               setBase64File({
                                 ...base64File,
-                                utilityEncodedString: '',
+                                utilityEncodedString: "",
                               })
                             }
                           >
                             <i className="fa-solid fa-xmark"></i>
                           </span>
                         </h5>
-                        <div className="progress" style={{ height: '3px' }}>
+                        <div className="progress" style={{ height: "3px" }}>
                           <div
                             className="progress-bar"
                             role="progressbar"
-                            style={{ width: '75%' }}
+                            style={{ width: "75%" }}
                             aria-valuenow="25"
                             aria-valuemin="0"
                             aria-valuemax="100"
@@ -512,7 +520,7 @@ const MyDocu = () => {
                         className="file"
                         ref={utilityFileInputRef}
                         onChange={(e) =>
-                          handleFileChange(e, 'utilityEncodedString')
+                          handleFileChange(e, "utilityEncodedString")
                         }
                       />
                       <button
@@ -598,8 +606,8 @@ const WrapperBody = styled.div`
     padding-top: 20px;
   }
   .camera-font-awe {
-    bottom: -95px;
-    left: 47px;
+    bottom: -90px;
+    left: 53px;
     font-size: 20px;
     color: #252525;
     width: 44px;
