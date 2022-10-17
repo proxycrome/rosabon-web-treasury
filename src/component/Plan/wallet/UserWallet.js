@@ -21,6 +21,7 @@ import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
+import { Toaster } from "react-hot-toast";
 
 const UserWallet = () => {
   const [show, setShow] = useState(false);
@@ -179,6 +180,7 @@ const UserWallet = () => {
             <span className="fw-bold">Wallet</span>
           </NavTitle>
         </ProfileNavBar>
+        <Toaster/>
         {loading ? (
           <div className="vh-100 w-100">
             <Spinner />
