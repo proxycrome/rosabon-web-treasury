@@ -274,12 +274,13 @@ export function SuccessConfirm({
 													className="grey_btn">
 													Check my investments
 												</button>
-												<button
-													onClick={handleClose}
-													type="button"
-													className="blue_btn">
-													Invest more
-												</button>
+												<NavLink to="/plan-list" >
+													<button
+														type="button"
+														className="blue_btn">
+														Invest more
+													</button>
+												</NavLink>
 											</div>
 										</>
 									) : createPlan === "paid" ? (

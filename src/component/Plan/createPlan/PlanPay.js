@@ -61,7 +61,7 @@ const PlanPay = ({ goBack }) => {
         <LeftView>
           <div className="choose-plan">
             <h5>{product.productName} </h5>
-            <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center" style={{gap:16}}>
               <img
                 className="image-holder"
                 src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
@@ -69,7 +69,7 @@ const PlanPay = ({ goBack }) => {
               />
               <div>
                 <div>
-                  <p className="p-0 m-0 pb-2">
+                  {/* <p className="p-0 m-0 pb-2">
                     Lorem Ipsum is simply dummy text of the{" "}
                   </p>
                   <p className="p-0 m-0 pb-2">
@@ -78,7 +78,12 @@ const PlanPay = ({ goBack }) => {
                   </p>
                   <p className="p-0 m-0 pb-2">
                     Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
+                  </p> */}
+                  {
+                    product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
+                      <p key={id} className="p-0 m-0 pb-2" >{item} </p>
+                    ))
+                  }
                 </div>
               </div>
             </div>
