@@ -64,7 +64,7 @@ const PlanPay = ({ goBack }) => {
             <div className="d-flex align-items-center" style={{gap:16}}>
               <img
                 className="image-holder"
-                src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
+                src={product?.imageUrl?.length > 10 ? product?.imageUrl : ChoosePlanHolder}
                 alt="ChoosePlanHolder"
               />
               <div>
@@ -132,6 +132,10 @@ export default PlanPay;
 
 const LeftView = styled.div`
   padding: 60px;
+  .image-holder {
+    width: 95px;
+    height: 93px;
+  }
   @media (max-width: 570px) {
     padding: 20px !important;
     .image-holder {
