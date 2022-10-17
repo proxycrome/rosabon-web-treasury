@@ -2748,33 +2748,42 @@ export const paymentAtMaturity = (
   tenorMonths,
   calculatedInterest
 ) => {
-  let result = 0;
-  const interestMonthly = calculatedInterest / tenorMonths;
-  const interestQuaterly = calculatedInterest / (tenorMonths / 3);
-  const interestBiAnnual = calculatedInterest / (tenorMonths / 24);
-  switch (intRecOption) {
-    case "MATURITY":
-      result = principal + calculatedInterest - withholdingTax;
-      break;
+	let result = 0;
+	const interestMonthly = calculatedInterest/tenorMonths;
+	const interestQuaterly = calculatedInterest/(tenorMonths/3);
+	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
+	switch(intRecOption) {
+		case "MATURITY":
+			result = Number(parseFloat(
+				principal + calculatedInterest - withholdingTax
+				).toFixed(2));
+			break;
 
-    case "UPFRONT":
-      result = principal;
-      break;
+		case "UPFRONT":
+			result = Number(parseFloat(
+				principal
+				).toFixed(2));
+			break;
 
-    case "MONTHLY":
-      result = principal + interestMonthly - withholdingTax * interestMonthly;
-      break;
+		case "MONTHLY":
+			result = Number(parseFloat(
+				principal + interestMonthly - (withholdingTax*interestMonthly)
+				).toFixed(2));
+			break;
 
-    case "QUARTERLY":
-      result = principal + interestQuaterly - withholdingTax * interestQuaterly;
-      break;
+		case "QUARTERLY":
+			result = Number(parseFloat(
+				principal + interestQuaterly - (withholdingTax*interestQuaterly)
+				).toFixed(2));
+			break;
 
-    case "BI_ANNUAL":
-      result = principal + interestBiAnnual - withholdingTax * interestBiAnnual;
-      break;
+		case "BI_ANNUAL":
+			result = Number(parseFloat(
+				principal + interestBiAnnual - (withholdingTax*interestBiAnnual)
+				).toFixed(2));
+			break;
 
-    default:
-      break;
-  }
-  return Number(parseFloat(result).toFixed(2));
+		default: break;
+	}
+	return result;
 };

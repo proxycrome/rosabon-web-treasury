@@ -266,20 +266,21 @@ export function SuccessConfirm({
                     <>
                       <p className="py-5">Your Payment was successful</p>
                       <div className="d-flex justify-content-between">
-                        <button
-                          onClick={handleClose}
-                          type="button"
-                          className="grey_btn"
-                        >
-                          Check my investments
-                        </button>
-                        <button
-                          onClick={handleClose}
-                          type="button"
-                          className="blue_btn"
-                        >
-                          Invest more
-                        </button>
+					  <NavLink to="/plan-list" >
+							<button
+								type="button"
+								className="grey_btn"
+							>
+								Check my investments
+							</button>
+						</NavLink>
+						<button
+							onClick={handleClose}
+							type="button"
+							className="blue_btn"
+						>
+							Invest more
+						</button>
                       </div>
                     </>
                   ) : createPlan === "paid" ? (
