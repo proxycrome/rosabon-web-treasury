@@ -53,7 +53,7 @@ const CreatePlan = () => {
                   <div className="d-flex align-items-center " style={{gap:16}}>
                     <img
                       className="image-holder"
-                      src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
+                      src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
                       alt="ChoosePlanHolder"
                     />
                     <div>
@@ -468,6 +468,10 @@ const Wrapper = styled.div`
   padding-top: 60px;
   width: 90%;
   padding-left: 30px;
+  .image-holder {
+    width: 95px;
+    height: 93px;
+  }
   @media (max-width: 1200px) {
     padding-left: 20px;
     padding-right: 20px;

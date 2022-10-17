@@ -2604,9 +2604,10 @@ export const paymentAtMaturity = (
 	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
 	switch(intRecOption) {
 		case "MATURITY":
-			result = Number(parseFloat(
-				principal + calculatedInterest - withholdingTax
-				).toFixed(2));
+			// result = Number(parseFloat(
+			// 	principal + calculatedInterest - withholdingTax
+			// 	).toFixed(2));
+      result = ((principal + calculatedInterest - withholdingTax) * 100 + Number.EPSILON) / 100
 			break;
 
 		case "UPFRONT":
