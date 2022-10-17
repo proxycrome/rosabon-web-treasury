@@ -135,6 +135,7 @@ const PlanForm = () => {
       switch(formData.savingFrequency) {
         case "DAILY":
           computedValue = formData.targetAmount / selectedTenor?.tenorDays
+          // computedValue = return (SI * 100 + Number.EPSILON) / 100
           break;
 
         case "WEEKLY":
@@ -239,7 +240,6 @@ const PlanForm = () => {
         exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
       })
     }
-
   }, [formData.currency])
 
   const calcContribValue = useMemo(() => contribValue(),[
@@ -263,7 +263,7 @@ const PlanForm = () => {
   // calculate simple interest
   const calculateSI = (principal, rate, time) => {
     const SI = (principal*rate*(time/365)) / 100
-    return Number(parseFloat(SI).toFixed(2))
+    return (SI * 100 + Number.EPSILON) / 100
   }
 
   // Update user plan summary
@@ -467,7 +467,6 @@ const PlanForm = () => {
 
   // handle changes on all inputs
   const handleChange = (e) => {
-    console.log(formData)
     if(e.target.type === "number") {
       setFormData({
         ...formData,
@@ -563,7 +562,7 @@ const PlanForm = () => {
               <div className="d-flex align-items-center" style={{gap:16}} >
                 <img
                   className="image-holder"
-                  src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
+                  src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
                   alt="ChoosePlanHolder"
                 />
                 <div>
@@ -607,6 +606,7 @@ const PlanForm = () => {
                   name="planName"
                   placeholder="Enter a plan name"
                   type="text"
+                  required
                   value={formData.planName}
                   onChange={handleChange}
                 />
@@ -620,6 +620,7 @@ const PlanForm = () => {
                   type="select"
                   onChange={handleChange}
                   name="currency"
+                  required
                   value={formData.currency}
                 >
                   <option value="" disabled hidden selected >Select investment currency</option>
@@ -682,6 +683,7 @@ const PlanForm = () => {
                   placeholder="" 
                   // disabled={product?.properties?.hasTargetAmount===null?true:false}
                   type="number" 
+                  required
                   value={formData.targetAmount}
                   onChange={handleChange}
                 />
@@ -710,7 +712,8 @@ const PlanForm = () => {
               <Input 
                 className="form-select form-select-md mb-3"
                 type="select" 
-                name="tenor" 
+                name="tenor"
+                required
                 onChange={handleChange}
                 value={formData.tenor}
               >
@@ -735,6 +738,7 @@ const PlanForm = () => {
                   className="form-select form-select-md mb-3" 
                   type="select"
                   name="savingFrequency" 
+                  required
                   onChange={handleChange}
                   value={formData.savingFrequency}
                 >
@@ -795,6 +799,7 @@ const PlanForm = () => {
                   className="form-select form-select-md mb-3" 
                   name="interestReceiptOption" 
                   type="select"
+                  required
                   onChange={handleChange}
                   id="intRecOpt"
                   value={formData.interestReceiptOption}
@@ -823,7 +828,7 @@ const PlanForm = () => {
                   // disabled={product?.properties?.hasTargetAmount===null?true:false}
                   type="button"
                 >
-                  AutoCompute
+                  Change Contribution Value
                 </button>
               </div>
               <div className="input-group mb-4">
@@ -847,6 +852,7 @@ const PlanForm = () => {
                       name="confirmPeriodicPay"
                       value={confirmPeriodicPay}
                       checked={confirmPeriodicPay}
+                      required={product?.properties?.hasSavingFrequency}
                       onChange={() => setConfirmperiodicPay(!confirmPeriodicPay)}
                     />
                   </div>
@@ -983,6 +989,10 @@ export default PlanForm;
 
 const Wrapper = styled.div`
   padding: 60px;
+  .image-holder {
+    width: 95px;
+    height: 93px;
+  }
   @media (max-width: 570px) {
     padding: 20px !important;
     .image-holder {

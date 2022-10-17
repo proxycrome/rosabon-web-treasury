@@ -43,8 +43,9 @@ export const LeftView = () => {
   }, [data.product])
 
   const calculateSI = (principal, rate, time) => {
-    const SI = (principal*rate*(time/365)) / 100
+    const SI = (principal*rate*(((time/365) * 100 + Number.EPSILON) / 100)) / 100
     return Number(parseFloat(SI).toFixed(2))
+    // return Number((SI * 100 + Number.EPSILON) / 100).toFixed(2)
   }
 
   useEffect(() => {
@@ -53,6 +54,14 @@ export const LeftView = () => {
     dispatch(getInvestmentRates());
     dispatch(getWithholdingTax());
   },[]);
+
+  // useEffect(() => {},[data.tenor])
+  useEffect(() => {
+    setData({
+      ...data,
+      tenor: 0
+    })
+  },[data.product])
 
   const tenors = useMemo(() => {
     if(productStatus === "OK") {
@@ -137,7 +146,6 @@ export const LeftView = () => {
                 <div className="input-group mb-2">
                   <Input
                     className="form-control"
-                    placeholder="N  0.00"
                     name="amount"
                     value={data.amount}
                     onChange={handleChange}
@@ -343,5 +351,13 @@ const LeftWrapper = styled.div`
       letter-spacing: -0.03em;
       color: #111e6c;
     }
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 `
