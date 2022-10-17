@@ -3,12 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { UncontrolledTooltip, Alert } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-// import { successMessage } from '../../../redux/actions/auth/SignupAction';
-// import // getCountries,
-// // getStates,
-// // getlgas,
-// // getAuthUsers,
-// "../../../redux/actions/personalInfo/userProfile.actions";
 import {
   getAuthUsers,
   getCountries,
@@ -19,14 +13,8 @@ import {
   verifyPhone,
   updatePersonalInfo,
 } from "../../../store/actions";
-// import {
-// 	// updateContactDetails,
-// 	// updatePersonalInfo,
-// 	// verifyPhone,
-// } from "../../../redux/actions/updateProfile/updateProfile.actions";
 import ModalComponent from "../../ModalComponent";
 import { OTPVerify } from "../../Accessories/BVNConfirm";
-// import { CLEAR_OTP } from "../../../redux/constant/userActionTypes";
 import {
   CLEAR_OTP,
   CLOSE_MODAL,
@@ -41,6 +29,7 @@ const PersonalInfo = () => {
   const [showEditCont, setShowEditCont] = useState(true);
   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
   const [showEditNOK, setShowEditNOK] = useState(true);
+  const [validateInfo, setValldateInfo] = useState(null);
 
   const {
     users,
@@ -62,10 +51,13 @@ const PersonalInfo = () => {
     personalInfoMsg,
     personalInfoMsgError,
     infoSuccess,
+    validatePhone,
   } = useSelector((state) => state.updateProfile);
 
   // console.log('otp.....', otp);
   // console.log(otpError);
+
+  console.log(validatePhone);
 
   console.log(users);
 
@@ -200,6 +192,9 @@ const PersonalInfo = () => {
   useEffect(() => {
     if (contactMsg || personalInfoMsg) {
       dispatch(getAuthUsers());
+      setShowEditCont(true);
+      setShowEditEmpoy(true);
+      setShowEditNOK(true);
     }
   }, [contactMsg, personalInfoMsg]);
 
@@ -223,6 +218,10 @@ const PersonalInfo = () => {
     );
   };
 
+  const handlePhoneData = (data) => {
+    setValldateInfo(data);
+  }
+
   const handleOTPModalClose = () => {
     dispatch({ type: CLOSE_MODAL });
     dispatch({ type: CLEAR_MESSAGES });
@@ -239,7 +238,7 @@ const PersonalInfo = () => {
   useEffect(() => {
     dispatch(getCountries());
     dispatch(getStates(formData.countryId));
-  }, [formData.countryId]);
+  }, [dispatch, formData.countryId]);
 
   const sId = states?.find(
     (state) => state.name === users?.individualUser?.state
@@ -247,7 +246,7 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     dispatch(getLgas(formData.stateId || sId));
-  }, [formData.stateId, sId]);
+  }, [dispatch, formData.stateId, sId]);
 
   return (
     <div>
@@ -265,13 +264,13 @@ const PersonalInfo = () => {
                 <div className="d-flex justify-content-between mt-2">
                   <h4>Personal Details</h4>
                   <div>
-                    {showEditProf ? (
-                      <button onClick={toggleProf}>Edit</button>
+                    {/* {showEditProf ? (
+                      <button onClick={toggleProf} disabled>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleProf}>
                         Cancel
                       </button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -283,7 +282,7 @@ const PersonalInfo = () => {
                       className="form-control"
                       type="text"
                       value={users?.individualUser?.firstName}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -294,7 +293,7 @@ const PersonalInfo = () => {
                       className="form-control"
                       type="text"
                       value={users?.individualUser?.middleName}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -305,7 +304,7 @@ const PersonalInfo = () => {
                       type="text"
                       className="form-control"
                       value={users?.individualUser?.lastName}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -318,7 +317,7 @@ const PersonalInfo = () => {
                       type="text"
                       className="form-control text-capitalize"
                       value={users?.individualUser?.gender?.toLowerCase()}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -330,13 +329,13 @@ const PersonalInfo = () => {
                       placeholder="dd-mm-yyyy"
                       type="text"
                       value={users?.individualUser?.dateOfBirth}
-                      disabled={showEditProf}
+                      disabled
                     />
-                    {showEditProf && (
+                    {/* {showEditProf && (
                       <span className="input-font-awe">
                         <i className="fa-solid fa-calendar"></i>
                       </span>
-                    )}
+                    )} */}
                   </div>
                 </div>
                 <div className="col-md-8 col-lg-4 pb-md-4 mb-4">
@@ -346,7 +345,7 @@ const PersonalInfo = () => {
                       type="tel"
                       className="form-control"
                       value={users?.phone}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -359,7 +358,7 @@ const PersonalInfo = () => {
                       className="form-control"
                       type="text"
                       value={users?.email}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -370,7 +369,7 @@ const PersonalInfo = () => {
                       type="text"
                       className="form-control"
                       value={users?.individualUser?.bvn}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -384,7 +383,7 @@ const PersonalInfo = () => {
                       placeholder="Customer ID Number"
                       type="text"
                       value={users?.id}
-                      disabled={showEditProf}
+                      disabled
                     />
                   </div>
                 </div>
@@ -467,7 +466,7 @@ const PersonalInfo = () => {
                     </div>
                     <div className="mx-2">
                       <button
-                        className="profile_vify_btn"
+                        className={validateInfo?.data?.secondaryPhoneVerified ? "grey-button" : "profile_vify_btn"}
                         disabled={showEditCont}
                         onClick={handleVerify}
                       >
@@ -484,6 +483,7 @@ const PersonalInfo = () => {
                         handleClose={handleOTPModalClose}
                         otpData={phoneMsg?.data?.otp}
                         secondPhone={formData.secondaryPhoneNumber}
+                        phoneData={(data) => handlePhoneData(data)}
                       />
                     </ModalComponent>
                   </div>
@@ -538,7 +538,7 @@ const PersonalInfo = () => {
                       ))}
                     </select>
                   </div>
-                  <div className="col-md-6 col-lg-4 ">
+                  <div className="col-md-6 col-lg-4">
                     <label>City</label>
                     <select
                       className="form-select form-select-md mb-4"
@@ -563,7 +563,7 @@ const PersonalInfo = () => {
                       ))}
                     </select>
                   </div>
-                  <div className="col-md-6 col-lg-6 pb-md-4">
+                  <div className="col-md-6 col-lg-4 pb-md-4">
                     <label>Nationality</label>
                     <div className="input-group">
                       <select
@@ -824,10 +824,20 @@ const WrapperBody = styled.div`
       cursor: not-allowed;
     }
   }
+
   .grey-button {
+    padding: 10px 10px;
+    margin-top: 40px;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 21px;
+    text-align: right;
     background: #f2f2f2;
     color: #111e6c;
   }
+
   .input-font-awe {
     position: absolute;
     top: 8px;

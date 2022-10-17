@@ -35,6 +35,8 @@ const MyDocu = () => {
   const { users, showEmailOtpModal, otp, otpError, validateEmailOtp } =
     useSelector((state) => state.user_profile);
 
+  const { docMsg } = useSelector((state) => state.updateProfile);
+
   const toggleEdit = (e) => {
     setShowEdit(!showEdit);
   };
@@ -84,6 +86,7 @@ const MyDocu = () => {
     ) {
       encodedFileBase64(files[0]);
     }
+    e.target.value = null;
   };
 
   console.log(base64File);
@@ -145,6 +148,23 @@ const MyDocu = () => {
     }
   }, [validateEmailOtp]);
 
+  useEffect(() => {
+    if (docMsg) {
+      setShowEdit(true);
+      setformData({
+        ...formData,
+        idNumber: "",
+        idType: "",
+      });
+      setBase64File({
+        ...base64File,
+        frontEncodedString: "",
+        utilityEncodedString: "",
+        photoEncodedString: "",
+      });
+    }
+  }, [docMsg]);
+
   return (
     <div>
       <Toaster />
@@ -182,11 +202,14 @@ const MyDocu = () => {
               accept="image/jpeg"
               ref={photoFileInputRef}
               onChange={(e) => handleFileChange(e, "photoEncodedString")}
+              disabled={showEdit}
             />
-            <i
-              className="camera-font-awe position-absolute fa-solid fa-camera"
-              onClick={(e) => handleFileSelect(e, photoFileInputRef)}
-            ></i>
+            <div>
+              <i
+                className="camera-font-awe position-absolute fa-solid fa-camera"
+                onClick={(e) => handleFileSelect(e, photoFileInputRef)}
+              ></i>
+            </div>
           </div>
           <div className="image-holder">
             <div className="row">
@@ -287,6 +310,7 @@ const MyDocu = () => {
                         onChange={(e) =>
                           handleFileChange(e, "frontEncodedString")
                         }
+                        accept="application/pdf, image/jpeg"
                       />
                       <button
                         type="button"
@@ -466,6 +490,7 @@ const MyDocu = () => {
                         onChange={(e) =>
                           handleFileChange(e, "utilityEncodedString")
                         }
+                        accept="image/jpeg, application/pdf"
                       />
                       <button
                         type="button"
@@ -544,7 +569,12 @@ const MyDocu = () => {
           <div className="footer-body">
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
-                <button className="blue-btn">Save</button>
+                <button
+                  className={showEdit ? "grey-button" : "blue-btn"}
+                  disabled={showEdit}
+                >
+                  Save
+                </button>
               </div>
             </div>
           </div>
@@ -557,10 +587,6 @@ const MyDocu = () => {
 export default MyDocu;
 
 const WrapperBody = styled.div`
-  .grey-button {
-    background: #f2f2f2;
-    color: #111e6c;
-  }
   padding: 0 2rem 7rem 1rem;
   .style-attachment {
     .font-awe-btn {
@@ -750,6 +776,9 @@ const WrapperFooter = styled.div`
     }
     button {
       margin: 10px 0;
+      &:disabled {
+        cursor: not-allowed;
+      }
     }
   }
   button {
@@ -759,75 +788,17 @@ const WrapperFooter = styled.div`
     outline: none;
     border: none;
     padding: 10px 15px;
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
   }
+
+  .grey-button {
+    background: #f2f2f2;
+    color: #828282;
+  }
 `;
-
-// // <div>
-//         //   <div className="content-detail">
-//         //     <div className="row pb-4">
-//         //       <div className="d-flex align-items-center justify-content-between w-100">
-//         //         <div className="progress-bar-style d-flex align-items-center justify-content-start">
-//         //           <img
-//         //             className="file-image image-fluid"
-//         //             src={FileDoc}
-//         //             alt="FileDoc"
-//         //           />
-//         //           <div className="progress-bar-style">
-//         //             <h5 className="position-relative">
-//         //               Upload ID (front){" "}
-//         //               <span className="">
-//         //                 <i className="fa-solid fa-xmark"></i>
-//         //               </span>
-//         //             </h5>
-//         //             <div className="progress" style={{ height: "3px" }}>
-//         //               <div
-//         //                 className="progress-bar"
-//         //                 role="progressbar"
-//         //                 style={{ width: "75%" }}
-//         //                 aria-valuenow="25"
-//         //                 aria-valuemin="0"
-//         //                 aria-valuemax="100"></div>
-
-//         <div>
-//         <div className="content-doc">
-//           <div className="row pb-4">
-//             <div className="d-flex align-items-center justify-content-between w-100">
-//               <div className="progress-bar-style d-flex align-items-center justify-content-start">
-//                 <img
-//                   className="file-image image-fluid"
-//                   src={FileDoc}
-//                   alt="FileDoc"
-//                 />
-//                 <div className="progress-bar-style">
-//                   <h5 className="position-relative">
-//                     Upload ID (front){" "}
-//                     <span className="">
-//                       <i className="fa-solid fa-xmark"></i>
-//                     </span>
-//                   </h5>
-//                   <div className="progress" style={{ height: "3px" }}>
-//                     <div
-//                       className="progress-bar"
-//                       role="progressbar"
-//                       style={{ width: "75%" }}
-//                       aria-valuenow="25"
-//                       aria-valuemin="0"
-//                       aria-valuemax="100"
-//                     ></div>
-//                   </div>
-//                 </div>
-//               </div>
-//               <div className="w-30 style-attachment">
-//                 <button className="font-awe-btn grey-button">
-//                   <i className="fa-solid fa-paperclip"></i>
-//                 </button>
-//                 <button className="normal-btn grey-button">
-//                   Choose file
-//                 </button>
-//               </div>
-//             </div>
-//           </div>

@@ -78,7 +78,7 @@ function Congratulatios(props) {
                       Your account was created successfully. Please take a
                       moment to verify your <br /> email address. We sent an
                       email with a verification link to{" "}
-                      {register && register?.email} <br />if you did not
+                      {email} <br />if you did not
                       receive this in your inbox, please check your spam folder.
                     </p>
                   </>

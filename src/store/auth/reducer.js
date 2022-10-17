@@ -52,6 +52,7 @@ const authReducer = (state = initialState, action) => {
 				isLoading: false,
 				register: action.payload,
 				isSignedup: true,
+				email: action.payload?.data?.email,
 			};
 			break;
 

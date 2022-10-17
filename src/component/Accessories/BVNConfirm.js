@@ -335,6 +335,7 @@ export function OTPVerify({
   otpData,
   secondPhone,
   company,
+  phoneData
 }) {
   const [token, setToken] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -399,6 +400,7 @@ export function OTPVerify({
   useEffect(() => {
     if (validatePhone) {
       handleClose();
+      phoneData(validatePhone);
     }
   }, [validatePhone]);
 
@@ -423,6 +425,7 @@ export function OTPVerify({
                       inputStyle="inputField"
                       containerStyle="enclose"
                       numInputs={5}
+                      isInputNum={true}
                     />
                   </div>
                   {validateOtpError && (

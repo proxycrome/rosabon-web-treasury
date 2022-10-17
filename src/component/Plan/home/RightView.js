@@ -41,7 +41,7 @@ export const RightView = () => {
                 </div>
                 <p className="p-0 m-0">Active Plans</p>
               </div>
-              <Link to="/create-plan">
+              <Link to="/plan-product">
                 <button className="dashboard">
                   <span className="pr-3">+</span>Add Plan
                 </button>

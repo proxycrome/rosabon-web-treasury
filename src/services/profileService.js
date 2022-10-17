@@ -78,3 +78,15 @@ export const getCompanyDocsService = () => {
     const url = `auth/company/company-document`;
     return http.getData(url);
 }
+
+export const getBankDetailsService = () => {
+    const http = new HttpService();
+    const url = `auth/individual-user/bank-account`;
+    return http.getData(url);
+}
+
+export const getWithdrawReasonService = () => {
+    const http = new HttpService();
+    const url = `auth/trwithdrawal`;
+    return http.getData(url);
+}

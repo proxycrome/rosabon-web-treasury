@@ -1,10 +1,9 @@
-import { CLOSE_MODAL } from "../profile/actionTypes";
-
 import {
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_ERROR,
   CHANGE_PASSWORD_SUCCESS,
   CLEAR_MESSAGES,
+  CLOSE_MODAL,
   DELETE_DIRECTOR,
   DELETE_DIRECTOR_ERROR,
   DELETE_DIRECTOR_SUCCESS,
@@ -202,8 +201,8 @@ const updateProfile = (state = initialState, action) => {
         infoSuccess: false,
         contactMsg: null,
         contactMsgError: null,
-		accountDetailError: null,
-		accountDetail: null,
+        accountDetailError: null,
+        accountDetail: null,
       };
       break;
 
