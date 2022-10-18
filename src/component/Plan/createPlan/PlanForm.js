@@ -151,7 +151,7 @@ const PlanForm = () => {
       setFormData({
         ...formData,
         // contributionValue: Number(parseFloat(computedValue).toFixed(2))
-        contributionValue: Number(parseFloat(computedValue).toFixed(2))
+        contributionValue: Math.round(computedValue * 100 + Number.EPSILON) / 100
       })
     } else {
       let computedValue;
@@ -172,7 +172,7 @@ const PlanForm = () => {
       }
       setFormData({
         ...formData,
-        targetAmount: Number(parseFloat(computedValue).toFixed(2))
+        targetAmount: Math.round(computedValue * 100 + Number.EPSILON) / 100
         // targetAmount: Number(parseInt(computedValue))
       })
     }
@@ -180,16 +180,15 @@ const PlanForm = () => {
 
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
-    console.log("ss", formData.product, intRecOption, formData.targetAmount)
     let interestRate;
     let rate =  inv_rates?.find((
       item => { return (item.product.id === formData.product) && 
       (formData.targetAmount >= item.minimumAmount) && (formData.targetAmount <= item.maximumAmount)}
     ))
-    console.log("rere", rate)
-      if(rate !== undefined) {
-          switch(intRecOption) {
-            case "MONTHLY":
+    let directDebitRate = rate?.percentDirectDebit ? rate?.percentDirectDebit : 0;
+    if(rate !== undefined) {
+      switch(intRecOption) {
+        case "MONTHLY":
           interestRate = rate?.monthlyInterestRate
           break;
           
@@ -212,16 +211,18 @@ const PlanForm = () => {
         default:
           interestRate = 1;
           break;
-          }
+      }
       if (interestRate === null) {
-        return 1
+        interestRate = formData.directDebit ? 1 + directDebitRate : 1
+        return interestRate
       } else {
+        interestRate = formData.directDebit === "true"? interestRate + directDebitRate : interestRate
         return interestRate
       }
-      } else {
+    } else {
       interestRate = 1;
       return interestRate
-      }
+    }
   };
 
 
@@ -249,21 +250,11 @@ const PlanForm = () => {
     formData.contributionValue
   ])
 
-  // side effect updates the contribution value or target amount
-  // useEffect(() => {
-  //   contribValue();
-  // }, [
-  //   formData.savingFrequency, 
-  //   formData.tenor, 
-  //   formData.targetAmount, 
-  //   formData.contributionValue
-  // ])
-
 
   // calculate simple interest
   const calculateSI = (principal, rate, time) => {
     const SI = (principal*rate*(time/365)) / 100
-    return (SI * 100 + Number.EPSILON) / 100
+    return Math.round((SI * 100) + Number.EPSILON) / 100
   }
 
   // Update user plan summary
@@ -317,7 +308,12 @@ const PlanForm = () => {
         formData.interestReceiptOption,
       )
     })
-  }, [formData.interestReceiptOption, id, formData.targetAmount])
+  }, [
+    formData.interestReceiptOption, 
+    id, 
+    formData.targetAmount,
+    formData.directDebit
+  ])
 
   const updateNumOfTickets = (value) => {
     let ticketNo;
@@ -1003,10 +999,10 @@ const Wrapper = styled.div`
     }
   }
   .choose-plan {
-    width: 448px;
+    width: 100%;
     height: 213px;
     background: #ffffff;
-    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+    border-bottom: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 30px;
     p {

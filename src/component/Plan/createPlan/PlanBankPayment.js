@@ -197,7 +197,7 @@ const RightView = styled.div`
     width: 100% !important;
   }
   .bank-details {
-    padding: 40px;
+    padding: 40px 40px 93px 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;

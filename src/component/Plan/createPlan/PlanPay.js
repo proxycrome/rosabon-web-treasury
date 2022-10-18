@@ -88,7 +88,9 @@ const PlanPay = ({ goBack }) => {
               </div>
             </div>
           </div>
-          <PlanSummary planPay="planPay" />
+          <div className="summary">
+            <PlanSummary planPay="planPay" />
+          </div>
         </LeftView>
         <RightView>
           <div className="bank-details">
@@ -131,7 +133,7 @@ const PlanPay = ({ goBack }) => {
 export default PlanPay;
 
 const LeftView = styled.div`
-  padding: 60px;
+  padding: 60px 0 60px 60px;
   .image-holder {
     width: 95px;
     height: 93px;
@@ -146,10 +148,10 @@ const LeftView = styled.div`
     }
   }
   .choose-plan {
-    width: 448px;
+    width: 508px;
     height: 213px;
     background: #ffffff;
-    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+    border-bottom: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 30px;
     p {
@@ -191,6 +193,9 @@ const LeftView = styled.div`
     padding-bottom: 15px;
     padding-left: 10px;
   }
+  .summary {
+    padding-right: 60px;
+  }
 `;
 
 const WrapperFooter = styled.div`
@@ -231,7 +236,7 @@ const RightView = styled.div`
     width: 100% !important;
   }
   .bank-details {
-    padding: 40px;
+    padding: 40px 40px 128px 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
