@@ -5,10 +5,12 @@ import {
 	GET_AUTH_USER,
 	GET_AUTH_USERS,
 	GET_BANKS,
+	GET_BANK_DETAILS,
 	GET_COMPANY_DOCS,
 	GET_COUNTRY,
 	GET_LGA,
 	GET_STATE,
+	GET_WITHDRAW_REASON,
 	SEND_COMPANY_OTP,
 	SEND_OTP,
 	UPDATE_USER_KYC,
@@ -21,6 +23,8 @@ import {
 	getAuthUsersError,
 	getAuthUsersSuccess,
 	getAuthUserSuccess,
+	getBankDetailsError,
+	getBankDetailsSuccess,
 	getBanksError,
 	getBanksSuccess,
 	getCompanyDocsError,
@@ -31,6 +35,8 @@ import {
 	getLgasSuccess,
 	getStatesError,
 	getStatesSuccess,
+	getWithdrawReasonError,
+	getWithdrawReasonSuccess,
 	sendCompanyOtpError,
 	sendCompanyOtpSuccess,
 	sendOtpError,
@@ -46,11 +52,13 @@ import {
 import {
 	getAuthUserService,
 	getAuthUsersService,
+	getBankDetailsService,
 	getBanksService,
 	getCompanyDocsService,
 	getCountriesService,
 	getLgasService,
 	getStatesService,
+	getWithdrawReasonService,
 	sendCompanyOtpService,
 	sendOtpService,
 	updateUserKycService,
@@ -204,6 +212,28 @@ function* getCompanyDocs() {
 	}
 }
 
+function* getBankDetails() {
+	try {
+		const response = yield call(getBankDetailsService);
+		console.log(response.data);
+		yield put(getBankDetailsSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getBankDetailsError(error?.response?.data));
+	}
+}
+
+function* getWithdrawReason() {
+	try {
+		const response = yield call(getWithdrawReasonService);
+		console.log(response.data);
+		yield put(getWithdrawReasonSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getWithdrawReasonError(error?.response?.data));
+	}
+}
+
 export function* watchGetAuthUsers() {
 	yield takeEvery(GET_AUTH_USERS, getAuthUsers);
 }
@@ -252,6 +282,14 @@ export function* watchGetCompanyDocs() {
 	yield takeEvery(GET_COMPANY_DOCS, getCompanyDocs);
 }
 
+export function* watchGetBankDetails() {
+	yield takeEvery(GET_BANK_DETAILS, getBankDetails);
+}
+
+export function* watchGetWithdrawReason() {
+	yield takeEvery(GET_WITHDRAW_REASON, getWithdrawReason);
+}
+
 function* ProfileSaga() {
 	yield all([
 		fork(watchGetAuthUsers),
@@ -266,6 +304,8 @@ function* ProfileSaga() {
         fork(watchSendCompanyOtp),
         fork(watchGetBanks),
         fork(watchGetCompanyDocs),
+        fork(watchGetBankDetails),
+        fork(watchGetWithdrawReason),
 	]);
 }
 

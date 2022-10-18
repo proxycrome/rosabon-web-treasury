@@ -324,7 +324,12 @@ const PersonalKYC = () => {
                             <button
                               type="button"
                               onClick={handleVerifyBVN}
-                              className="profile_vify_btn"
+                              className={
+                                bvnMessage?.isNameMatched
+                                  ? "grey-button"
+                                  : "profile_vify_btn"
+                              }
+                              disabled={bvnMessage?.isNameMatched}
                             >
                               Verify
                             </button>
@@ -695,5 +700,30 @@ const WrapperBody = styled.div`
     line-height: 21px;
     text-align: right;
     color: #ffffff;
+  }
+
+  button {
+    background: #f2f2f2;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .grey-button {
+    padding: 10px 10px;
+    margin-top: 40px;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 21px;
+    text-align: right;
+    background: #f2f2f2;
+    color: #111e6c;
   }
 `;

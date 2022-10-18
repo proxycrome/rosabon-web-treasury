@@ -3,7 +3,14 @@ import styled from "styled-components";
 import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch, connect } from "react-redux";
 // import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
-import { getWalletBalance } from "../../../store/actions";
+import {
+  getAuthUsers,
+  getBankDetails,
+  getWalletBalance,
+  getWalletBalanceSuccess,
+  getWithdrawReason,
+  requestWithdrawal,
+} from "../../../store/actions";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import halfEllipse from "../../../asset/halfEllipse.png";
 import Telephone from "../../../asset/telephone.png";
@@ -16,17 +23,22 @@ import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
 
 const UserWallet = () => {
+  const [show, setShow] = useState(false);
+  const [sidebar, setSidebar] = useState(false);
+  const [modalValue, setModalvalue] = useState("");
+  const [closeFooter, setClosefooter] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
-  const user_details = useSelector((state) => state.user_profile.users);
-
-  const [show, setShow] = useState(false);
-  const [sidebar, setSidebar] = useState(false);
-  const [modalValue, setModalvalue] = useState("");
-  const [closeFooter, setClosefooter] = useState(false);
+  const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
+    (state) => state.user_profile
+  );
+  const { walletBalance, loading } = useSelector((state) => state.wallet);
 
   const handleClick = (value) => {
     if (value === "transfer") {
@@ -50,11 +62,114 @@ const UserWallet = () => {
     setClosefooter(false);
   };
 
+  const handleFormData = (data) => {
+    setFormData(data);
+  };
+
+  const validateFormData = (values) => {
+    let errors = {};
+    if (users.role !== "COMPANY") {
+      if (!values.bankAccountId) {
+        errors.bankAccountId = "Bank account is required";
+      }
+
+      if (!values.withdrawalAmount) {
+        errors.withdrawalAmount = "Withdrawal amount is required";
+      }
+
+      if (!values.withdrawalReasonId) {
+        errors.withdrawalReasonId = "Select a withdrawal reason";
+      }
+
+      if (
+        values.withdrawalReasonId === "others" &&
+        !values.withdrawalReasonOthers
+      ) {
+        errors.withdrawalReasonOthers = "Withdrawal Reason is required";
+      }
+    }
+
+    if (users?.role === "COMPANY") {
+      if (!values.withdrawalAmount) {
+        errors.withdrawalAmount = "Withdrawal amount is required";
+      }
+
+      if (!values.withdrawalReasonId) {
+        errors.withdrawalReasonId = "Select a withdrawal reason";
+      }
+
+      if (
+        values.withdrawalReasonId === "others" &&
+        !values.withdrawalReasonOthers
+      ) {
+        errors.withdrawalReasonOthers = "Withdrawal Reason is required";
+      }
+
+      if (Object.keys(values.withdrawalInstructionImage).length === 0) {
+        errors.withdrawalInstructionImage =
+          "Upload a withdrawal instruction document";
+      }
+
+      if (Object.keys(values.withdrawalMandateLetterImage).length === 0) {
+        errors.withdrawalMandateLetterImage =
+          "Upload a withdrawal mandate Letter";
+      }
+    }
+    return errors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors(validateFormData(formData));
+    setIsSubmitted(true);
+  };
+
+  useEffect(() => {
+    if (
+      Object.keys(errors).length === 0 &&
+      isSubmitted &&
+      users?.role !== "COMPANY"
+    ) {
+      const { withdrawalReasonId, withdrawalReasonOthers } = formData;
+
+      const data = {
+        ...formData,
+        withdrawalReasonId:
+          withdrawalReasonId === "others" ? null : Number(withdrawalReasonId),
+        withdrawalReasonOthers:
+          withdrawalReasonId === "others" ? withdrawalReasonOthers : null,
+      };
+      console.log(data);
+      dispatch(requestWithdrawal(data));
+    }
+
+    if (
+      Object.keys(errors).length === 0 &&
+      isSubmitted &&
+      users?.role === "COMPANY"
+    ) {
+      const { withdrawalReasonId, withdrawalReasonOthers } = formData;
+
+      const data = {
+        ...formData,
+        withdrawalReasonId:
+          withdrawalReasonId === "others" ? 0 : Number(withdrawalReasonId),
+        withdrawalReasonOthers:
+          withdrawalReasonId === "others" ? withdrawalReasonOthers : "",
+      };
+      console.log(data);
+      dispatch(requestWithdrawal(data));
+    }
+  }, [errors]);
+
   useEffect(() => {
     dispatch(getWalletBalance());
+    dispatch(getAuthUsers());
+    dispatch(getWithdrawReason());
+    if (users?.role !== "COMPANY") {
+      dispatch(getBankDetails());
+    }
   }, [dispatch]);
-
-  const { walletBalance, loading } = useSelector((state) => state.wallet);
 
   return (
     <div>
@@ -183,7 +298,12 @@ const UserWallet = () => {
                         <div className="bank-detail-content">
                           {" "}
                           <AvailableBalance
-                            role={user_details?.role}
+                            role={users?.role}
+                            bankDetails={bankDetails}
+                            bankDetailsError={bankDetailsError?.message}
+                            withdrawReasons={withdrawReasons?.data?.body}
+                            withdrawData={(data) => handleFormData(data)}
+                            errors={errors}
                           />
                         </div>
                       </div>
@@ -225,10 +345,11 @@ const UserWallet = () => {
                       color: "#FFFFFF",
                       width: "300px",
                     }}
-                    onClick={() => {
-                      setShow(true);
-                      setSidebar(false);
+                    onClick={(e) => {
+                      // setShow(true);
+                      // setSidebar(false);
                       // setClosefooter(false)
+                      handleSubmit(e);
                     }}
                   >
                     Submit
@@ -252,7 +373,7 @@ const UserWallet = () => {
                                 alt="Checked"
                               />
                             </div>
-                            {modalValue == "transter" ? (
+                            {modalValue === "transter" ? (
                               <>
                                 <p className="pt-5">
                                   Your Transfer was successful

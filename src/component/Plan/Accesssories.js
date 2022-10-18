@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { MDBDataTable } from "mdbreact";
-import { Input, Label } from "reactstrap";
+import { Input, Label, UncontrolledTooltip } from "reactstrap";
 import halfEllipse from "../../asset/halfEllipse.png";
 import ChoosePlanHolder from "../../asset/chooseplaneHolder.png";
 import Verve from "../../asset/master-card-logo.png";
@@ -24,6 +24,7 @@ import {
   getSingleTicket,
 } from "../../store/actions";
 import Spinner from "../common/loading";
+import FileUpload from "../common/fileUpload";
 
 export const NairaCard = () => {
   return (
@@ -785,20 +786,35 @@ export const WithdrawalSummary = () => {
 
 // handles currency icon
 export const getCurrIcon = (currency) => {
-
-	switch (currency) {
-		case 1:
-		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#165;</p>)
-	  case 2:
-		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#36;</p>)
-	  case 3:
-		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#36;</p>)
-	  case 4:
-		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#8358;</p>)
-	  case 5:
-		  return (<p style={{fontSize:14,color:"#535353",fontWeight:600}} >&#163;</p>)
-		default:
-		  return (<p></p>)
+  switch (currency) {
+    case 1:
+      return (
+        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+          &#165;
+        </p>
+      );
+    case 2:
+      return (
+        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
+      );
+    case 3:
+      return (
+        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
+      );
+    case 4:
+      return (
+        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+          &#8358;
+        </p>
+      );
+    case 5:
+      return (
+        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+          &#163;
+        </p>
+      );
+    default:
+      return <p></p>;
   }
 };
 
@@ -1087,9 +1103,67 @@ const BeneficiaryWrapper = styled.div`
   }
 `;
 
-export const AvailableBalance = ({ role }) => {
+export const AvailableBalance = ({
+  role,
+  bankDetails,
+  bankDetailsError,
+  withdrawReasons,
+  withdrawData,
+  errors,
+}) => {
   const [showTextArea, setShowTextArea] = useState(false);
+  const [withdrawMandateImage, setWithdrawMandateImage] = useState({});
+  const [withdrawInstructionImage, setWithdrawInstructionImage] = useState({});
   const { walletBalance } = useSelector((state) => state.wallet);
+
+  const data = {
+    withdrawalAmount: "",
+    bankAccountId: 0,
+    withdrawalReasonId: "",
+    withdrawalReasonOthers: "",
+  };
+
+  const [formData, setFormData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    if (role !== "COMPANY") {
+      const {
+        withdrawalAmount,
+        bankAccountId,
+        withdrawalReasonId,
+        withdrawalReasonOthers,
+      } = formData;
+
+      const data = {
+        bankAccountId: Number(bankAccountId),
+        withdrawalAmount: Number(withdrawalAmount),
+        withdrawalReasonId,
+        withdrawalReasonOthers,
+      };
+      withdrawData(data);
+    }
+    if (role === "COMPANY") {
+      const { withdrawalAmount, withdrawalReasonId, withdrawalReasonOthers } =
+        formData;
+
+      const data = {
+        withdrawalAmount: Number(withdrawalAmount),
+        withdrawalReasonId,
+        withdrawalReasonOthers,
+        withdrawalInstructionImage: withdrawInstructionImage,
+        withdrawalMandateLetterImage: withdrawMandateImage,
+      };
+      withdrawData(data);
+    }
+  }, [formData]);
 
   const handleOnclick = (e) => {
     if (e.target.value === "others") {
@@ -1097,99 +1171,157 @@ export const AvailableBalance = ({ role }) => {
     }
   };
 
+  const handleFileSelect = (e, reference) => {
+    e.preventDefault();
+    reference.current.click();
+  };
+
+  console.log(withdrawReasons);
+  console.log(bankDetails);
   return (
     <AvailableBalanceWapper>
+      {role === "COMPANY" && (
+        <UncontrolledTooltip placement="bottom" target="mandate">
+          Letter must be on a company's letter head and also carry bank account
+          details
+        </UncontrolledTooltip>
+      )}
+      <h3>Withdraw to Bank</h3>
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
           ₦ {walletBalance?.amount ? walletBalance?.amount.toFixed(2) : 0}
         </h4>
       </div>
+      {role !== "COMPANY" &&
+        bankDetailsError === "Bank Account not available for this user" && (
+          <span className="text-danger">
+            No Registered Bank Account Details
+          </span>
+        )}
       <div className="pt-3">
-        <div className=" ">
+        <div className="mb-4">
           <label>Withdrawal Amount</label>
-          <div className="input-group mb-4">
+          <div className="input-group">
             <input
+              type="number"
               className="form-control"
               placeholder="N 1,500,000"
-              type="text"
+              name="withdrawalAmount"
+              value={formData.withdrawalAmount}
+              onChange={handleChange}
             />
           </div>
+          {errors.withdrawalAmount && (
+            <small className="text-danger">{errors.withdrawalAmount}</small>
+          )}
         </div>
       </div>
-      <div className="pt-1">
-        <div className=" ">
+      <div className="pt-1 mb-3">
+        <div className="mb-4">
           <label>Beneficiary Account</label>
-          <div className="input-group mb-4">
-            <input
-              className="form-control"
-              placeholder="Zenith Bank - 2210347577"
-              type="text"
-            />
+          <div className="input-group">
+            <select
+              className="form-select form-select-md select-field"
+              aria-label=".form-select-md"
+              name="bankAccountId"
+              value={formData.bankAccountId}
+              onChange={handleChange}
+            >
+              {role === "COMPANY" ? (
+                <option value={0}>To Bank</option>
+              ) : (
+                <>
+                  <option value={0}>Please select your account</option>
+                  <option value={bankDetails?.id}>
+                    {bankDetails?.bank?.name} - {bankDetails?.accountNumber}
+                  </option>
+                </>
+              )}
+            </select>
           </div>
+          {errors.bankAccountId && (
+            <small className="text-danger">{errors.bankAccountId}</small>
+          )}
         </div>
       </div>
-      {role && role === "Company" ? (
+      {role === "COMPANY" ? (
         <>
-          <div className="row pb-4">
-            <div className="d-flex align-items-center justify-content-between w-100">
-              <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                <img
-                  className="file-image image-fluid"
-                  src={FileDoc}
-                  alt="FileDoc"
-                />
-                <div className="progress-bar-style">
-                  <h5 className="position-relative">
-                    Upload withdrawal mandate <br /> instruction
-                  </h5>
-                  <p className="p-0 m-0">jpg, png. PDF 2 MB</p>
-                </div>
-              </div>
-              <div className="w-30 style-attachment">
-                <button className="normal-btn grey-button">Choose file</button>
-              </div>
-            </div>
+          <div className="mb-4">
+            <FileUpload
+              fileName="withdrawal mandate instruction letter"
+              setFile={(file) => setWithdrawMandateImage(file)}
+              id="mandate"
+            />
+            {errors.withdrawalMandateLetterImage && (
+              <small className="text-danger">
+                {errors.withdrawalMandateLetterImage}
+              </small>
+            )}
           </div>
-          <h5 className="py-3">
-            Letter must be on a company’s letter head and also carry bank
-            account details
-          </h5>
+          <div className="mb-4">
+            <FileUpload
+              fileName="withdrawal instruction document"
+              setFile={(file) => setWithdrawInstructionImage(file)}
+              id="mandate"
+            />
+            {errors.withdrawalInstructionImage && (
+              <small className="text-danger">
+                {errors.withdrawalInstructionImage}
+              </small>
+            )}
+          </div>
         </>
       ) : (
         <></>
       )}
 
-      <div className="pt-1">
-        <div className=" ">
+      <div className="pt-1 mb-3">
+        <div className="mb-4">
           <label>Reason for Withdrawal</label>
-          <div className="input-group mb-4">
+          <div className="input-group">
             <select
-              className="form-select form-select-lg mb-3 select-field"
-              aria-label=".form-select-lg"
+              className="form-select form-select-md select-field"
+              aria-label=".form-select-md"
               onClick={handleOnclick}
-              name="companyType"
+              name="withdrawalReasonId"
+              value={formData.withdrawalReasonId}
+              onChange={handleChange}
             >
-              <option value=""></option>
-              <option value="">I want to close the account</option>
+              <option value="">Please select reason for withdrawal</option>
+              {withdrawReasons?.map((data) => (
+                <option key={data.id} value={`${data.id}`}>
+                  {data.reason}
+                </option>
+              ))}
               <option value="others">Others</option>
             </select>
           </div>
+          {errors.withdrawalReasonId && (
+            <small className="text-danger">{errors.withdrawalReasonId}</small>
+          )}
         </div>
       </div>
       {showTextArea ? (
         <>
           <div className="pb-4">
-            <div className=" ">
-              <div className="input-group mb-4">
+            <div className="mb-4">
+              <div className="input-group">
                 <textarea
                   rows="5"
                   cols="60"
                   placeholder="Please provide reason for withdrawal"
                   className="form-control select-field"
-                  name="description"
+                  name="withdrawalReasonOthers"
+                  value={formData.withdrawalReasonOthers}
+                  onChange={handleChange}
                 ></textarea>
               </div>
+              {errors.withdrawalReasonOthers && (
+                <small className="text-danger">
+                  {errors.withdrawalReasonOthers}
+                </small>
+              )}
             </div>
           </div>
         </>
@@ -1201,11 +1333,16 @@ export const AvailableBalance = ({ role }) => {
 };
 
 export const TransferCard = () => {
+  const { walletBalance } = useSelector((state) => state.wallet);
+
   return (
     <AvailableBalanceWapper>
+      <h3>Withdraw to Bank</h3>
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
-        <h4 className="pt-3">₦ 1,500,000</h4>
+        <h4 className="pt-3">
+          ₦ {walletBalance?.amount ? walletBalance?.amount.toFixed(2) : 0}
+        </h4>
       </div>
       <div className="pt-3">
         <div className=" ">
@@ -1269,6 +1406,11 @@ const AvailableBalanceWapper = styled.div`
     color: #242424;
     padding: 15px;
   }
+
+  small {
+    font-size: 12px;
+  }
+
   h5 {
     font-style: normal;
     font-weight: 400;
@@ -1292,6 +1434,14 @@ const AvailableBalanceWapper = styled.div`
     background: #f2f2f2;
     border-radius: 5px;
     color: #828282;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
 `;
 
@@ -2595,11 +2745,11 @@ const NavTitle = styled.div`
 `;
 
 export const paymentAtMaturity = (
-	intRecOption,
-	principal,
-	withholdingTax,
-	tenorMonths,
-	calculatedInterest
+  intRecOption,
+  principal,
+  withholdingTax,
+  tenorMonths,
+  calculatedInterest
 ) => {
 	let result = 0;
 	const interestMonthly = calculatedInterest/tenorMonths;
@@ -2641,4 +2791,3 @@ export const paymentAtMaturity = (
 	}
 	return result;
 };
-

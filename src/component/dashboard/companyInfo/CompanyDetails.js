@@ -214,6 +214,7 @@ const CompanyDetails = () => {
                         placeholder=""
                         type="text"
                         disabled={showEditDetail}
+                        value={users?.id}
                       />
                       {/* <span className=" input-font-awe">
                         <i className="fa-solid fa-angle-down"></i>

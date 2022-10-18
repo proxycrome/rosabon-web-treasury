@@ -23,6 +23,7 @@ import {
   getAuthUsers,
   verifyBvn,
   resetPassword,
+  getBankDetails,
 } from "../../../store/actions";
 import { useCallback } from "react";
 
@@ -45,9 +46,10 @@ const BankDetails = () => {
     otpError,
     bvnMessage,
     validateEmailOtp,
+    bankUpdateMsg,
   } = useSelector((state) => state.user_profile);
 
-  const { accountDetail, accountDetailError } = useSelector(
+  const { accountDetail, accountDetailError, bankDetails } = useSelector(
     (state) => state.updateProfile
   );
 
@@ -170,6 +172,12 @@ const BankDetails = () => {
     setAccountName("");
   };
 
+  // useEffect(() => {
+  //   if(!bankDetails || bankUpdateMsg){
+  //     dispatch(getBankDetails());
+  //   }
+  // }, [bankDetails, bankUpdateMsg])
+
   return (
     <div>
       <Toaster />
@@ -230,6 +238,7 @@ const BankDetails = () => {
                     onChange={handleChange}
                     name="bankCode"
                     disabled={showEdit}
+                    value={formData.bankCode}
                   >
                     <option value="">Please choose an option</option>
                     {banks?.data?.map((bank) => (

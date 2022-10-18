@@ -1,44 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
-import { ProfileSideBar } from '../ProfileSideBar';
-import { BVNConfirm } from '../../Accessories/BVNConfirm';
-import ModalComponent from '../../ModalComponent';
-import { Link, useNavigate } from 'react-router-dom';
-// import {
-//   // updateUserKYC,
-//   // getAuthUsers,
-// } from '../../../redux/actions/personalInfo/userProfile.actions';
-import { getAuthUsers, updateUserKyc } from '../../../store/actions';
-import moment from 'moment';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuthUsers, updateUserKyc } from "../../../store/actions";
+import moment from "moment";
+import Spinner from "../../common/loading";
 
 const CompanyKYC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const company_details = useSelector((state) => state.user_profile.users);
+  const { users, loading } = useSelector((state) => state.user_profile);
   const auth = useSelector((state) => state.auth);
   const { login, isLoggedIn } = auth;
 
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  console.log(users);
 
-  console.log(company_details);
-
-  const data = {
-    rcNumber: '',
-    natureOfBusiness: '',
-    companyType: '',
-    dateOfInco: '',
-    companyAddress: '',
-    name: '',
-    contactFirstName: '',
-    contactLastName: '',
-    email: '',
-    phone: '',
-  };
-
-  const [formData, setformData] = useState(data);
+  const [formData, setformData] = useState({
+    rcNumber: "",
+    natureOfBusiness: "",
+    companyType: "",
+    dateOfInco: "",
+    companyAddress: "",
+    name: "",
+    contactFirstName: "",
+    contactLastName: "",
+    email: "",
+    phone: "",
+  });
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -65,38 +54,34 @@ const CompanyKYC = () => {
     } = formData;
 
     let data = {
-      email: email ? email : company_details?.email,
-      isAssited: company_details && company_details?.assited,
-      isNewsLetters: company_details && company_details?.newsLetters,
-      phone: phone ? phone : company_details?.phone,
-      source: company_details?.source,
-      sourceOthers: company_details?.sourceOthers,
-      role: 'COMPANY',
-      usage: 'TREASURY',
+      email: email ? email : users?.email,
+      isAssited: users && users?.assited,
+      isNewsLetters: users && users?.newsLetters,
+      phone: phone ? phone : users?.phone,
+      source: users?.source,
+      sourceOthers: users?.sourceOthers,
+      role: "COMPANY",
+      usage: "TREASURY",
       isKyc: true,
-      status: company_details?.status,
+      status: users?.status,
       company: {
-        rcNumber: rcNumber ? rcNumber : company_details?.company?.rcNumber,
+        rcNumber: rcNumber ? rcNumber : users?.company?.rcNumber,
         natureOfBusiness: natureOfBusiness
           ? natureOfBusiness
-          : company_details?.company?.natureOfBusiness,
-        companyType: companyType
-          ? companyType
-          : company_details?.company?.companyType,
-        dateOfInco: dateOfInco
-          ? dateOfInco
-          : company_details?.company?.dateOfInco,
+          : users?.company?.natureOfBusiness,
+        companyType: companyType ? companyType : users?.company?.companyType,
+        dateOfInco: dateOfInco ? dateOfInco : users?.company?.dateOfInco,
         companyAddress: companyAddress
           ? companyAddress
-          : company_details?.company?.companyAddress,
+          : users?.company?.companyAddress,
         contactFirstName: contactFirstName
           ? contactFirstName
-          : company_details?.company?.contactFirstName,
+          : users?.company?.contactFirstName,
         contactLastName: contactLastName
           ? contactLastName
-          : company_details.company.contactLastName,
-        contactMiddleName: company_details?.company?.contactMiddleName,
-        name: name ? name : company_details?.company?.name,
+          : users.company.contactLastName,
+        contactMiddleName: users?.company?.contactMiddleName,
+        name: name ? name : users?.company?.name,
       },
     };
 
@@ -109,11 +94,11 @@ const CompanyKYC = () => {
   };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem('token'));
+    const tokenString = JSON.parse(localStorage.getItem("token"));
     if (tokenString) {
       dispatch(getAuthUsers());
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   }, []);
 
@@ -121,285 +106,275 @@ const CompanyKYC = () => {
     <div>
       <div className="">
         <div>
-          <form autoComplete="off">
-            <div className="">
-              <WrapperBody>
-                <div>
+          {loading ? (
+            <div className="vh-100 w-100">
+              <Spinner />
+            </div>
+          ) : (
+            <form autoComplete="off">
+              <div className="">
+                <WrapperBody>
                   <div>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h3>
-                        Hello{' '}
-                        {company_details && company_details?.company?.name},
-                      </h3>
-                      {/* <Link to="/">
+                    <div>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <h3>Hello {users && users?.company?.name},</h3>
+                        {/* <Link to="/">
                         <button className="dashboard">Dashboard</button>
                       </Link> */}
+                      </div>
+
+                      <p>
+                        Kindly update your profile, it will only take a few
+                        minutes
+                      </p>
+
+                      <h4>Company Details</h4>
+                      <div>
+                        <div className="row">
+                          <div className="col-md-8">
+                            <label>Company Name</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={
+                                  users &&
+                                  users?.company?.name
+                                }
+                                type="text"
+                                name="name"
+                                onChange={handleChange}
+                                value={formData.name}
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row d-flex align-items-baseline">
+                          <div className="col-sm-6 col-lg-4 ">
+                            <label>Company RC number</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={
+                                  (users && users?.company?.rcNumber) ||
+                                  "Company RC number"
+                                }
+                                type="text"
+                                onChange={handleChange}
+                                name="rcNumber"
+                                value={formData.rcNumber}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-sm-6 col-lg-4 ">
+                            <label>Company Registration Date</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={
+                                  users?.company?.dateOfInco || "DD-MM-YYYY"
+                                }
+                                type="text"
+                                onChange={handleChange}
+                                name="dateOfInco"
+                                value={formData.dateOfInco}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="mb-4">
+                            <label>Company Address</label>
+                            <div className="input-group">
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder={
+                                  users?.company?.companyAddress ||
+                                  "Company Address"
+                                }
+                                onChange={handleChange}
+                                name="companyAddress"
+                                value={formData.companyAddress}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-8 ">
+                            <label>Nature of Business</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={
+                                  users?.company?.natureOfBusiness ||
+                                  "Nature of Business"
+                                }
+                                type="text"
+                                onChange={handleChange}
+                                name="natureOfBusiness"
+                                value={formData.natureOfBusiness}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-4 ">
+                            <label>Company Type</label>
+                            <select
+                              className="form-select form-select-lg mb-3 select-field"
+                              aria-label=".form-select-lg"
+                              onChange={handleChange}
+                              value={
+                                formData.companyType ||
+                                users?.company?.companyType
+                              }
+                              name="companyType"
+                            >
+                              <option value="">
+                                Company Type...
+                              </option>
+                              <option value="SOLE_PROPRIETORSHIP">
+                                Sole proprietorship
+                              </option>
+                              <option value="PARTNERSHIP">Partnership</option>
+                              <option value="CORPORATE_LIMITED">
+                                Corporate Limited
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <h4 className="pt-5">Contact Person Details</h4>
+                      <div>
+                        <div className="row">
+                          <div className="col-md-4 ">
+                            <label>Contact Person First Name</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={
+                                  users?.company?.contactFirstName ||
+                                  'First name'
+                                }
+                                type="text"
+                                name="contactFirstName"
+                                onChange={handleChange}
+                                value={formData.contactFirstName}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-4 ">
+                            <label>Contact Person Last Name</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={
+                                  users?.company?.contactLastName ||
+                                  'Last Name'
+                                }
+                                type="text"
+                                name="contactLastName"
+                                onChange={handleChange}
+                                value={formData.contactLastName}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-8 ">
+                            <label>Contact Person Email Address</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={users?.email || "Email Address"}
+                                type="text"
+                                name="email"
+                                onChange={handleChange}
+                                value={formData.email}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-4 ">
+                            <label>Contact Person Number</label>
+                            <div className="input-group mb-4">
+                              <input
+                                className="form-control"
+                                placeholder={users?.phone || "phone number"}
+                                type="text"
+                                name="phone"
+                                onChange={handleChange}
+                                value={formData.phone}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
-                    <p>
-                      Kindly update your profile, it will only take a few
-                      minutes
-                    </p>
-
-                    <h4>Company Details</h4>
-                    <div>
-                      <div className="row">
-                        <div className="col-md-8">
-                          <label>Company Name</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                company_details &&
-                                company_details?.company?.name
-                              }
-                              type="text"
-                              name="name"
-                              onChange={handleChange}
-                              value={formData.name}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row d-flex align-items-baseline">
-                        <div className="col-sm-6 col-lg-4 ">
-                          <label>Company RC number</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                (company_details &&
-                                  company_details?.company?.rcNumber) ||
-                                'Company RC number'
-                              }
-                              type="text"
-                              onChange={handleChange}
-                              name="rcNumber"
-                              value={formData.rcNumber}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-sm-6 col-lg-4 ">
-                          <label>Company Registration Date</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                 company_details?.company?.dateOfInco ||
-                                'DD-MM-YYYY'
-                              }
-                              type="text"
-                              onChange={handleChange}
-                              name="dateOfInco"
-                              value={formData.dateOfInco}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="mb-4">
-                          <label>Company Address</label>
-                          <div className="input-group">
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder={
-                                company_details?.company?.companyAddress ||
-                                'Company Address'
-                              }
-                              onChange={handleChange}
-                              name="companyAddress"
-                              value={formData.companyAddress}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-md-8 ">
-                          <label>Nature of Business</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                company_details?.company?.natureOfBusiness ||
-                                'Nature of Business'
-                              }
-                              type="text"
-                              onChange={handleChange}
-                              name="natureOfBusiness"
-                              value={formData.natureOfBusiness}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-4 ">
-                          <label>Company Type</label>
-                          <select
-                            className="form-select form-select-lg mb-3 select-field"
-                            aria-label=".form-select-lg"
-                            onChange={handleChange}
-                            value={
-                              formData.companyType ||
-                              company_details?.company?.companyType
-                            }
-                            name="companyType"
+                  </div>
+                </WrapperBody>
+                <WrapperFooter>
+                  <div className="footer-body">
+                    <div className="d-flex align-items-center justify-content-between btn-style  footer-content">
+                      <div>
+                        {(formData.rcNumber || users?.company?.rcNumber) &&
+                        (formData.natureOfBusiness ||
+                          users?.company?.natureOfBusiness) &&
+                        (formData.companyType || users?.company?.companyType) &&
+                        (formData.dateOfInco || users?.company?.dateOfInco) &&
+                        (formData.companyAddress ||
+                          users?.company?.companyAddress) &&
+                        (formData.name || users?.company?.name) &&
+                        (formData.contactFirstName ||
+                          users?.company?.contactFirstName) &&
+                        (formData.contactLastName ||
+                          users?.company?.contactLastName) &&
+                        (formData.email || users?.email) &&
+                        (formData.phone || users?.phone) ? (
+                          <button
+                            className=""
+                            onClick={(e) => handleSubmit(e, "/profile")}
                           >
-                            <option value="" disabled>
-                              Company Type...
-                            </option>
-                            <option value="Sole proprietorship">
-                              Sole proprietorship
-                            </option>
-                            <option value="Partnership">
-                              Partnership
-                            </option>
-                            <option value="Corporate Limited">
-                              Corporate Limited
-                            </option>
-                          </select>
-                        </div>
+                            Save and Continue
+                          </button>
+                        ) : (
+                          <button className="" disabled>
+                            Save and Continue
+                          </button>
+                        )}
                       </div>
-                    </div>
-
-                    <h4 className="pt-5">Contact Person Details</h4>
-                    <div>
-                      <div className="row">
-                        <div className="col-md-4 ">
-                          <label>Contact Person First Name</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                company_details?.company?.contactFirstName ||
-                                'First name'
-                              }
-                              type="text"
-                              name="contactFirstName"
-                              onChange={handleChange}
-                              value={formData.contactFirstName}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-4 ">
-                          <label>Contact Person Last Name</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                company_details?.company?.contactLastName ||
-                                'Last Name'
-                              }
-                              type="text"
-                              name="contactLastName"
-                              onChange={handleChange}
-                              value={formData.contactLastName}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-md-8 ">
-                          <label>Contact Person Email Address</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                company_details?.email || 'Email Address'
-                              }
-                              type="text"
-                              name="email"
-                              onChange={handleChange}
-                              value={formData.email}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-4 ">
-                          <label>Contact Person Number</label>
-                          <div className="input-group mb-4">
-                            <input
-                              className="form-control"
-                              placeholder={
-                                company_details?.phone || 'phone number'
-                              }
-                              type="text"
-                              name="phone"
-                              onChange={handleChange}
-                              value={formData.phone}
-                            />
-                          </div>
-                        </div>
+                      <div>
+                        {(formData.rcNumber || users?.company?.rcNumber) &&
+                        (formData.natureOfBusiness ||
+                          users?.company?.natureOfBusiness) &&
+                        (formData.companyType || users?.company?.companyType) &&
+                        (formData.dateOfInco || users?.company?.dateOfInco) &&
+                        (formData.companyAddress ||
+                          users?.company?.companyAddress) &&
+                        (formData.name || users?.company?.name) &&
+                        (formData.contactFirstName ||
+                          users?.company?.contactFirstName) &&
+                        (formData.contactLastName ||
+                          users?.company?.contactLastName) &&
+                        (formData.email || users?.email) &&
+                        (formData.phone || users?.phone) ? (
+                          <button
+                            className="blue-btn"
+                            onClick={(e) => handleSubmit(e, "/plan-product")}
+                          >
+                            Save and Invest Now
+                          </button>
+                        ) : (
+                          <button className="" disabled>
+                            Save and Invest Now
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              </WrapperBody>
-              <WrapperFooter>
-                <div className="footer-body">
-                  <div className="d-flex align-items-center justify-content-between btn-style  footer-content">
-                    <div>
-                      {(formData.rcNumber ||
-                        company_details?.company?.rcNumber) &&
-                      (formData.natureOfBusiness ||
-                        company_details?.company?.natureOfBusiness) &&
-                      (formData.companyType ||
-                        company_details?.company?.companyType) &&
-                      (formData.dateOfInco ||
-                        company_details?.company?.dateOfInco) &&
-                      (formData.companyAddress ||
-                        company_details?.company?.companyAddress) &&
-                      (formData.name || company_details?.company?.name) &&
-                      (formData.contactFirstName ||
-                        company_details?.company?.contactFirstName) &&
-                      (formData.contactLastName ||
-                        company_details?.company?.contactLastName) &&
-                      (formData.email || company_details?.email) &&
-                      (formData.phone || company_details?.phone) ? (
-                        <button
-                          className=""
-                          onClick={(e) => handleSubmit(e, '/profile')}
-                        >
-                          Save and Continue
-                        </button>
-                      ) : (
-                        <button className="" disabled>
-                          Save and Continue
-                        </button>
-                      )}
-                    </div>
-                    <div>
-                      {(formData.rcNumber ||
-                        company_details?.company?.rcNumber) &&
-                      (formData.natureOfBusiness ||
-                        company_details?.company?.natureOfBusiness) &&
-                      (formData.companyType ||
-                        company_details?.company?.companyType) &&
-                      (formData.dateOfInco ||
-                        company_details?.company?.dateOfInco) &&
-                      (formData.companyAddress ||
-                        company_details?.company?.companyAddress) &&
-                      (formData.name || company_details?.company?.name) &&
-                      (formData.contactFirstName ||
-                        company_details?.company?.contactFirstName) &&
-                      (formData.contactLastName ||
-                        company_details?.company?.contactLastName) &&
-                      (formData.email || company_details?.email) &&
-                      (formData.phone || company_details?.phone) ? (
-                        <button
-                          className="blue-btn"
-                          onClick={(e) => handleSubmit(e, '/plan-product')}
-                        >
-                          Save and Invest Now
-                        </button>
-                      ) : (
-                        <button className="" disabled>
-                          Save and Invest Now
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </WrapperFooter>
-            </div>
-          </form>
+                </WrapperFooter>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
@@ -447,7 +422,7 @@ const WrapperBody = styled.div`
     padding: 6rem 3rem;
   }
   .select-field {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
