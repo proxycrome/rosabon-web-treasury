@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { 
   getCatWithProducts, 
   getSingleProduct,
+  getInvestmentRates
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
 
@@ -22,6 +23,7 @@ const CreatePlan = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCatWithProducts());
+    dispatch(getInvestmentRates());
   }, [])
 
   const handleProduct = (id) => {
