@@ -820,7 +820,7 @@ export const getCurrIcon = (currency) => {
 
 export const PlanSummary = ({ planPay }) => {
   const { form } = useContext(PlanContext);
-  console.log("gg");
+  // console.log("gg", form);
   let planData = form;
   return (
     <div>
