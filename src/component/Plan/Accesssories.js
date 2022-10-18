@@ -855,7 +855,9 @@ export const PlanSummary = ({ planPay }) => {
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Interest Rate </p>
                   {/* <h4>20.00 %</h4> */}
-                  <h4>{planData.planSummary.interestRate} %</h4>
+                  <h4 className="flex justify-content-end" >
+                    {planData.planSummary.interestRate} %
+                  </h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
@@ -880,8 +882,7 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Withholding Tax</p>
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
-                    {getCurrIcon(planData?.currency)}{" "}
-                    {planData.planSummary.withholdingTax}
+                    {planData.planSummary.withholdingTax}%
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -920,6 +921,8 @@ const PlanSummaryWrapper = styled.div`
   .plan-content {
     background-color: #ffffff;
     margin-top: 40px;
+    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+    border-radius: 8px;
   }
   .rollover {
     h4 {
@@ -2754,34 +2757,34 @@ export const paymentAtMaturity = (
 	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
 	switch(intRecOption) {
 		case "MATURITY":
-			// result = Number(parseFloat(
-			// 	principal + calculatedInterest - withholdingTax
-			// 	).toFixed(2));
-      result = ((principal + calculatedInterest - withholdingTax) * 100 + Number.EPSILON) / 100
+      result = Math.round(
+        (principal + calculatedInterest - (withholdingTax/100)) 
+        * 100 + Number.EPSILON) / 100
 			break;
 
 		case "UPFRONT":
-			result = Number(parseFloat(
-				principal
-				).toFixed(2));
+			result = Math.round((principal * 100) + Number.EPSILON) / 100;
 			break;
 
 		case "MONTHLY":
-			result = Number(parseFloat(
-				principal + interestMonthly - (withholdingTax*interestMonthly)
-				).toFixed(2));
+			result = Math.round(
+				(principal + interestMonthly - ((withholdingTax/100)*interestMonthly))
+         * 100 + Number.EPSILON
+				) / 100;
 			break;
 
 		case "QUARTERLY":
-			result = Number(parseFloat(
-				principal + interestQuaterly - (withholdingTax*interestQuaterly)
-				).toFixed(2));
+			result = Math.round(
+				(principal + interestQuaterly - ((withholdingTax/100)*interestQuaterly))
+        * 100 + Number.EPSILON
+				) / 100;
 			break;
 
 		case "BI_ANNUAL":
-			result = Number(parseFloat(
-				principal + interestBiAnnual - (withholdingTax*interestBiAnnual)
-				).toFixed(2));
+			result = Math.round(
+				(principal + interestBiAnnual - ((withholdingTax/100)*interestBiAnnual))
+        * 100 + Number.EPSILON
+				) / 100;
 			break;
 
 		default: break;
