@@ -7,7 +7,10 @@ import {
     GET_SINGLE_PRODUCT_ERROR,
     GET_CATEGORIES_WITH_PRODUCTS,
     GET_CATEGORIES_WITH_PRODUCTS_SUCCESS,
-    GET_CATEGORIES_WITH_PRODUCTS_ERROR
+    GET_CATEGORIES_WITH_PRODUCTS_ERROR,
+    GET_PRODUCT_CATEGORIES,
+    GET_PRODUCT_CATEGORIES_SUCCESS,
+    GET_PRODUCT_CATEGORIES_ERROR
   } from './actionTypes';
   
   const initialState = {
@@ -17,7 +20,9 @@ import {
     singleProduct: null,
     singleProductError: null,
     catWithProducts: null,
-    catWithProductsError: null
+    catWithProductsError: null,
+    categories: null,
+    categoriesError: null
   };
   
   const product = ( state=initialState, action ) => {
@@ -25,6 +30,7 @@ import {
       case GET_PRODUCTS:
       case GET_SINGLE_PRODUCT:
       case GET_CATEGORIES_WITH_PRODUCTS:
+      case GET_PRODUCT_CATEGORIES:
         state = {
           ...state,
           loading: true
@@ -83,6 +89,24 @@ import {
           catWithProducts: null,
           catWithProductsError: action.payload
         }
+        break;
+
+      case GET_PRODUCT_CATEGORIES_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          categories: action.payload,
+          categoriesError: null
+        };
+        break;
+
+      case GET_PRODUCT_CATEGORIES_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          categories: null,
+          categoriesError: action.payload
+        };
         break;
   
       default:

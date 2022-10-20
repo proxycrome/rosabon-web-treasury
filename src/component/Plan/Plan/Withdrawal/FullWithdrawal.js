@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import moment from 'moment';
 import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
@@ -7,6 +9,8 @@ import { WithdrawalSummary } from "../../Accesssories";
 
 const FullWithdrawal = ({ goBack }) => {
   const [modalState, setModalState] = useState(false);
+  const { singlePlan } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
 
   return (
     <>
@@ -23,19 +27,23 @@ const FullWithdrawal = ({ goBack }) => {
               <div className="plan-top h-50 p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h4>Plan 3</h4>
-                    <p className="p-0 m-0">Product 1</p>
+                    <h4>{plan.planName}</h4>
+                    <p className="p-0 m-0">{plan?.product.productName}</p>
                   </div>
-                  <h4 className="Active">Active</h4>
+                  <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
                 </div>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
                     <h4>Start date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
+                    <p className="p-0 m-0">
+                      {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
+                    </p>
                   </div>
                   <div>
                     <h4>End date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
+                    <p className="p-0 m-0">
+                      {moment(plan.planSummary.endDate).format("DD/MM/YYYY")} 
+                    </p>
                   </div>
                 </div>
               </div>
@@ -132,6 +140,7 @@ const LeftView = styled.div`
     font-size: 13px;
     line-height: 16px;
     letter-spacing: -0.01em;
+    text-transform: capitalize;
   }
   .Active {
     color: #219653;

@@ -717,6 +717,8 @@ export const RolloverWithdrawMethod = () => {
 };
 
 export const WithdrawalSummary = () => {
+  const { singlePlan } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
   return (
     <div>
       <RolloverSummaryWrapper>
@@ -724,15 +726,15 @@ export const WithdrawalSummary = () => {
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
-              <h4>Plan 1</h4>
+              <h4>{plan.planName}</h4>
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Start date </p>
-                  <h4>24/06/2023</h4>
+                  <h4>{moment(plan.planSummary.startDate).format("DD/MM/YYYY")}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">End date </p>
-                  <h4>24/06/2023</h4>
+                  <h4>{moment(plan.planSummary.endDate).format("DD/MM/YYYY")}</h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
@@ -2758,8 +2760,8 @@ export const paymentAtMaturity = (
 	switch(intRecOption) {
 		case "MATURITY":
       result = Math.round(
-        (principal + calculatedInterest - (withholdingTax/100)) 
-        * 100 + Number.EPSILON) / 100
+        ((principal + calculatedInterest) - (withholdingTax/100)) 
+        * 100) / 100
 			break;
 
 		case "UPFRONT":
@@ -2768,8 +2770,8 @@ export const paymentAtMaturity = (
 
 		case "MONTHLY":
 			result = Math.round(
-				(principal + interestMonthly - ((withholdingTax/100)*interestMonthly))
-         * 100 + Number.EPSILON
+				(((principal + interestMonthly) - ((withholdingTax/100)*interestMonthly))
+         * 100) + Number.EPSILON
 				) / 100;
 			break;
 
@@ -2782,8 +2784,8 @@ export const paymentAtMaturity = (
 
 		case "BI_ANNUAL":
 			result = Math.round(
-				(principal + interestBiAnnual - ((withholdingTax/100)*interestBiAnnual))
-        * 100 + Number.EPSILON
+				(((principal + interestBiAnnual) - ((withholdingTax/100)*interestBiAnnual))
+        * 100) + Number.EPSILON
 				) / 100;
 			break;
 

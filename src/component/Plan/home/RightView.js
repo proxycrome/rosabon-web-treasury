@@ -7,7 +7,11 @@ import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
 import { Collapse } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
-import { getCatWithProducts, getSingleProduct } from '../../../store/actions';
+import { 
+  getCatWithProducts, 
+  getSingleProduct,
+  getPlans
+} from '../../../store/actions';
 
 export const RightView = () => {
   const dispatch = useDispatch();
@@ -17,11 +21,14 @@ export const RightView = () => {
   const [categoryDropdown, setCategoryDropdown] = useState(0);
 
   const { catWithProducts  } = useSelector((state) => state.product);
+  const { plans  } = useSelector((state) => state.plan);
   const cat_products = catWithProducts?.data?.body;
   const cat_products_status = catWithProducts?.statusCode;
+  const planList = plans?.data?.body ? plans?.data?.body : [];
 
   useEffect(() => {
     dispatch(getCatWithProducts());
+    dispatch(getPlans());
   }, []);
 
   const handleProduct = (id) => {
@@ -61,7 +68,7 @@ export const RightView = () => {
             <div className="d-flex justify-content-between">
               <div className="d-flex  align-items-center justify-content-between active-box">
                 <div className="sqr-box">
-                  <p className="p-0 m-0">05</p>
+                  <p className="p-0 m-0">{planList.length.toString().padStart(2,"0")}</p>
                 </div>
                 <p className="p-0 m-0">Active Plans</p>
               </div>
@@ -114,8 +121,8 @@ export const RightView = () => {
                         <div className="row">
                           <div className="d-none d-sm-block col-sm-3">
                             <img
-                              className=""
-                              src={product.imgUrl === "" ? product.imgUrl : ChoosePlanHolder}
+                              className="image-holder"
+                              src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
                               alt="ChoosePlanHolder"
                             />
                           </div>
@@ -154,6 +161,10 @@ export const RightView = () => {
 const RightWrapper = styled.div`
   @media (min-width: 900px) {
     padding: 50px;
+  }
+  .image-holder {
+    width: 95px;
+    height: 93px;
   }
 
   .grey-background {
