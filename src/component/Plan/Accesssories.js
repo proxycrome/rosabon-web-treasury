@@ -15,6 +15,7 @@ import ModalComponent from "../ModalComponent";
 import { Table } from "reactstrap";
 import { TransactionPreview } from "../Accessories/BVNConfirm";
 import moment from "moment";
+import { usePaystackPayment } from 'react-paystack';
 import { PlanContext } from "./createPlan/PlanForm";
 import {
   getWalletTransactions,
@@ -22,6 +23,8 @@ import {
   getOpenTickets,
   getClosedTickets,
   getSingleTicket,
+  verifyPaystack,
+  createPlan
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -789,27 +792,27 @@ export const WithdrawalSummary = () => {
 // handles currency icon
 export const getCurrIcon = (currency) => {
   switch (currency) {
-    case 1:
+    case "YEN":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#165;
         </p>
       );
-    case 2:
+    case "USD":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
       );
-    case 3:
+    case "CAD":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
       );
-    case 4:
+    case "NGN":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#8358;
         </p>
       );
-    case 5:
+    case "EURO":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#163;
@@ -2792,4 +2795,47 @@ export const paymentAtMaturity = (
 		default: break;
 	}
 	return result;
+};
+
+export const PayWithCard = ({ email, amount, setShow }) => {
+  const config = {
+    reference: (new Date()).getTime().toString(),
+    email: email,
+    amount: amount,
+    publicKey: process.env.REACT_APP_PAYSTACK_PK,
+  };
+  const dispatch = useDispatch();
+  const { form } = useContext(PlanContext);
+  const { loading } = useSelector((state) => state.plan);
+  console.log("here", process.env.REACT_APP_PAYSTACK_PK);
+
+  // you can call this function anything
+  const onSuccess = (reference) => {
+    // Implementation for whatever you want to do with reference and after success call.
+    console.log(reference);
+    // dispatch(verifyPaystack("PAYSTACK","trans"+reference.trans));
+    dispatch(createPlan(form, setShow));
+  };
+
+  // you can call this function anything
+  const onClose = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    console.log('closed')
+  }
+
+  const initializePayment = usePaystackPayment(config);
+  return (
+    <button
+      style={{
+        backgroundColor: '#111E6C',
+        color: '#FFFFFF',
+        width: '300px',
+      }}
+      // onClick={() => setShow(true)}
+      // onClick={handleSubmit}
+      onClick={() => {initializePayment(onSuccess, onClose)}}
+    >
+      {loading ? 'LOADING...' : 'Pay'}
+    </button>
+  )
 };

@@ -28,6 +28,7 @@ const PlanForm = () => {
   const { id } = useParams();
   const [conValue, setConValue] = useState("targetAmount");
   const { products  } = useSelector((state) => state.product);
+  const { currencies  } = useSelector((state) => state.currencies);
   const { exRates, investment_rates,withholding_tax  } = useSelector((state) => state.plan);
   // const { currencies } = useSelector((state) => state.currencies);
   // handle validation
@@ -39,6 +40,7 @@ const PlanForm = () => {
   const ex_rates = exRates?.data.body ? exRates?.data.body : []
   const withhold_tax = withholding_tax?.data.body ? withholding_tax?.data.body : []
   const inv_rates = investment_rates?.data.body ? investment_rates?.data.body: []
+  const currencies_list = currencies?.data.body ? currencies?.data.body: []
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
@@ -113,6 +115,7 @@ const PlanForm = () => {
       // amount: product.hasTargetAmount !== null ? null : formData.amount,
       product: product.id,
       productCategory: product.productCategory?.id,
+      currency: currencies_list.find(item => item.name===formData.currency)?.id,
       actualMaturityDate: formData.actualMaturityDate==="" ? 
       moment(endDate).format("YYYY-MM-DD") : formData.actualMaturityDate,
       contributionValue: formData.contributionValue,
@@ -188,9 +191,10 @@ const PlanForm = () => {
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
     let interestRate;
+    let principal = product?.properties?.hasTargetAmount ? formData.targetAmount : formData.amount
     let rate =  inv_rates?.find((
       item => { return (item.product.id === formData.product) && 
-      (formData.targetAmount >= item.minimumAmount) && (formData.targetAmount <= item.maximumAmount)}
+      (principal >= item.minimumAmount) && (principal <= item.maximumAmount)}
     ))
     let directDebitRate = rate?.percentDirectDebit ? rate?.percentDirectDebit : 0;
     if(rate !== undefined) {
@@ -235,20 +239,13 @@ const PlanForm = () => {
 
   // side effect updates exchange rates
   useEffect(() => {
-    const currency = ex_rates?.filter(item => item.id === formData.currency)[0]
-    
-    if(formData.currency === "NGN"){
-      setFormData({
-        ...formData,
-        exchangeRate: 0
-      })
-    } else {
-      setFormData({
-        ...formData,
-        exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
-      })
-    }
-  }, [formData.currency])
+    const currency = ex_rates?.filter(item => item.name === formData.currency)[0]
+
+    setFormData({
+      ...formData,
+      exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
+    })
+}, [formData.currency])
 
   const calcContribValue = useMemo(() => contribValue(),[
     formData.savingFrequency, 
@@ -323,6 +320,7 @@ const PlanForm = () => {
     formData.interestReceiptOption, 
     id, 
     formData.targetAmount,
+    formData.amount,
     formData.directDebit
   ])
 
@@ -484,7 +482,8 @@ const PlanForm = () => {
       if(e.target.name === "currency") {
         setFormData({
           ...formData,
-          [e.target.name]: Number(e.target.value)
+          // [e.target.name]: Number(e.target.value)
+          [e.target.name]: e.target.value
         })
       }
       else if(e.target.name === "tenor") {
@@ -637,7 +636,7 @@ const PlanForm = () => {
                   <option value="" disabled hidden selected >Select investment currency</option>
                   {
                     product?.currency?.map((item, id) => (
-                      <option key={id} value={item.id} >{item.name} </option>
+                      <option key={id} value={item.name} >{item.name} </option>
                     ))
                   }
                 </Input>
