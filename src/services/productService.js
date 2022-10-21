@@ -20,3 +20,10 @@ export const getCatWithProductsService = () => {
 
     return http.getData(url);
 }
+
+export const getCategoriesService = () => {
+    const http = new HttpService();
+    const url = `auth/trproduct-category`;
+
+    return http.getData(url);
+}

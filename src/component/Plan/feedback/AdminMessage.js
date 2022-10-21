@@ -35,9 +35,13 @@ const AdminMessage = () => {
             </p>
           </div>
           <div className="">
-            <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center justify-content-between msg">
               <div className="input-group">
-                <Input type="text" className="form-control" />
+                <Input 
+                  type="text" 
+                  className="form-control" 
+                  placeholder="Type your message"
+                />
               </div>
               <div className="ml-2">
                 <button className="grey_btn">Submit</button>
@@ -72,12 +76,15 @@ const NavTitle = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 80%;
+  width: 95%;
   padding-right: 40%;
   padding-left: 50px;
   padding-top: 50px;
   @media (max-width: 900px) {
     padding-right: 20%;
+    input {
+      width: 100%;
+    }
   }
   @media (max-width: 650px) {
     width: 100%;
@@ -122,10 +129,21 @@ const Wrapper = styled.div`
   .grey_btn {
     font-size: 14px;
     width: 120px;
-    height: 41px;
+    height: 53px;
     background: #f2f2f2;
-    border-radius: 10px;
+    border-radius: 15px;
     color: #111e6c;
     margin-right: 2rem;
+  }
+  input {
+    width: 100%;
+    height: 53px;
+    background-color: #F8F8F8;
+    border-radius: 20px;
+    padding-left: 37px;
+    border: none;
+  }
+  .msg {
+    gap: 19px;
   }
 `;

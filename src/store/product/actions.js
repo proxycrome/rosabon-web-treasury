@@ -1,4 +1,7 @@
 import {
+    GET_PRODUCT_CATEGORIES,
+    GET_PRODUCT_CATEGORIES_ERROR,
+    GET_PRODUCT_CATEGORIES_SUCCESS,
     GET_CATEGORIES_WITH_PRODUCTS,
 	GET_CATEGORIES_WITH_PRODUCTS_ERROR,
 	GET_CATEGORIES_WITH_PRODUCTS_SUCCESS,
@@ -67,6 +70,26 @@ export const getCatWithProductsSuccess = (data) => {
 export const getCatWithProductsError = (error) => {
     return {
         type: GET_CATEGORIES_WITH_PRODUCTS_ERROR,
+        payload: error,
+    }
+}
+
+export const getProductCategories = () => {
+    return {
+        type: GET_PRODUCT_CATEGORIES
+    }
+}
+
+export const getProductCategoriesSuccess = (data) => {
+    return {
+        type: GET_PRODUCT_CATEGORIES_SUCCESS,
+        payload: data,
+    }
+}
+
+export const getProductCategoriesError = (error) => {
+    return {
+        type: GET_PRODUCT_CATEGORIES_ERROR,
         payload: error,
     }
 }

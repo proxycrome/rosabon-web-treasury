@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Verve from '../../../asset/master-card-logo.png';
 import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
-import { PlanSummary } from '../Accesssories';
+import { PlanSummary, PayWithCard } from '../Accesssories';
 import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 import { useDispatch, useSelector } from "react-redux";
@@ -28,15 +28,15 @@ const PlanCardPayment = ({goBack}) => {
     }
   },[show])
 
-  const handleSubmit = async () => {
-    const formData = {
-      amount: JSON.stringify(form?.targetAmount),
-      email: users?.email, 
-    }
-    await dispatch(initPayment(formData));
-    await dispatch(createPlan(form, setShow));
-    await console.log("show pay", paySuccess)
-  }
+  // const handleSubmit = async () => {
+  //   const formData = {
+  //     amount: JSON.stringify(form?.targetAmount),
+  //     email: users?.email, 
+  //   }
+  //   await dispatch(initPayment(formData));
+  //   await dispatch(createPlan(form, setShow));
+  //   await console.log("show pay", paySuccess)
+  // }
 
   return (
     <>
@@ -68,7 +68,7 @@ const PlanCardPayment = ({goBack}) => {
               <button style={{ color: '#111E6C', width: '300px' }} onClick={goBack}>Back</button>
             </div>
             <div>
-              <button
+              {/* <button
                 style={{
                   backgroundColor: '#111E6C',
                   color: '#FFFFFF',
@@ -78,7 +78,12 @@ const PlanCardPayment = ({goBack}) => {
                 onClick={handleSubmit}
               >
                 {loading ? 'LOADING...' : 'Pay'}
-              </button>
+              </button> */}
+              <PayWithCard 
+                amount={JSON.stringify(form?.planSummary?.principal)+"00"}
+                email={users?.email}
+                setShow={setShow}
+              />
               <ModalComponent
                 show={show}
                 size={'md'}

@@ -28,6 +28,7 @@ const PlanForm = () => {
   const { id } = useParams();
   const [conValue, setConValue] = useState("targetAmount");
   const { products  } = useSelector((state) => state.product);
+  const { currencies  } = useSelector((state) => state.currencies);
   const { exRates, investment_rates,withholding_tax  } = useSelector((state) => state.plan);
   // const { currencies } = useSelector((state) => state.currencies);
   // handle validation
@@ -39,6 +40,7 @@ const PlanForm = () => {
   const ex_rates = exRates?.data.body ? exRates?.data.body : []
   const withhold_tax = withholding_tax?.data.body ? withholding_tax?.data.body : []
   const inv_rates = investment_rates?.data.body ? investment_rates?.data.body: []
+  const currencies_list = currencies?.data.body ? currencies?.data.body: []
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
@@ -65,7 +67,7 @@ const PlanForm = () => {
     targetAmount: 0.00,
     tenor: "",
     planDate: recentDate,
-    savingFrequency: "DAILY",
+    savingFrequency: "",
     weeklyContributionDay: "MONDAY",
     monthlyContributionDay: 1,
     interestReceiptOption: "",
@@ -98,7 +100,7 @@ const PlanForm = () => {
     endDate: "",
     principal: 0.00,
     interestRate: 0,
-    interestReceiptOption: "DAILY",
+    interestReceiptOption: "",
     calculatedInterest: 0.00,
     withholdingTax: 0,
     paymentMaturity: 0.00
@@ -113,10 +115,13 @@ const PlanForm = () => {
       // amount: product.hasTargetAmount !== null ? null : formData.amount,
       product: product.id,
       productCategory: product.productCategory?.id,
+      currency: currencies_list.find(item => item.name===formData.currency)?.id,
       actualMaturityDate: formData.actualMaturityDate==="" ? 
       moment(endDate).format("YYYY-MM-DD") : formData.actualMaturityDate,
       contributionValue: formData.contributionValue,
-      numberOfTickets: updateNumOfTickets(formData.targetAmount),
+      numberOfTickets: updateNumOfTickets(
+        product?.properties?.hasTargetAmount ? formData.targetAmount : formData.amount
+      ),
       planSummary: summary,
       directDebit: formData.directDebit === "true" || 
       formData.directDebit === true ? true : false,
@@ -157,39 +162,41 @@ const PlanForm = () => {
         contributionValue: Math.round(computedValue * 100 + Number.EPSILON) / 100
       })
     } else {
-      let computedValue;
-      switch(formData.savingFrequency) {
-        case "DAILY":
-          computedValue = formData.contributionValue * selectedTenor?.tenorDays
-          break;
+      if(product?.properties?.hasTargetAmount) {
+        let computedValue;
+        switch(formData.savingFrequency) {
+          case "DAILY":
+            computedValue = formData.contributionValue * selectedTenor?.tenorDays
+            break;
 
-        case "WEEKLY":
-          computedValue = formData.contributionValue * (selectedTenor?.tenorDays/7)
-          break;
+          case "WEEKLY":
+            computedValue = formData.contributionValue * (selectedTenor?.tenorDays/7)
+            break;
 
-        case "MONTHLY":
-          computedValue = formData.contributionValue * selectedTenor?.tenorMonths
-          break;
-        
-        default: break;
+          case "MONTHLY":
+            computedValue = formData.contributionValue * selectedTenor?.tenorMonths
+            break;
+          
+          default: break;
+        }
+        setFormData({
+          ...formData,
+          targetAmount: Math.round(computedValue * 100 + Number.EPSILON) / 100
+          // targetAmount: Number(parseInt(computedValue))
+        })
       }
-      setFormData({
-        ...formData,
-        targetAmount: Math.round(computedValue * 100 + Number.EPSILON) / 100
-        // targetAmount: Number(parseInt(computedValue))
-      })
     }
   }
 
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
     let interestRate;
+    let principal = product?.properties?.hasTargetAmount ? formData.targetAmount : formData.amount
     let rate =  inv_rates?.find((
       item => { return (item.product.id === formData.product) && 
-      (formData.targetAmount >= item.minimumAmount) && (formData.targetAmount <= item.maximumAmount)}
+      (principal >= item.minimumAmount) && (principal <= item.maximumAmount)}
     ))
     let directDebitRate = rate?.percentDirectDebit ? rate?.percentDirectDebit : 0;
-    console.log("yeah i did load")
     if(rate !== undefined) {
       switch(intRecOption) {
         case "MONTHLY":
@@ -224,7 +231,6 @@ const PlanForm = () => {
         return interestRate
       }
     } else {
-      console.log("first time err")
       interestRate = 1;
       return interestRate
     }
@@ -233,20 +239,13 @@ const PlanForm = () => {
 
   // side effect updates exchange rates
   useEffect(() => {
-    const currency = ex_rates?.filter(item => item.id === formData.currency)[0]
-    
-    if(formData.currency === "NGN"){
-      setFormData({
-        ...formData,
-        exchangeRate: 0
-      })
-    } else {
-      setFormData({
-        ...formData,
-        exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
-      })
-    }
-  }, [formData.currency])
+    const currency = ex_rates?.filter(item => item.name === formData.currency)[0]
+
+    setFormData({
+      ...formData,
+      exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
+    })
+}, [formData.currency])
 
   const calcContribValue = useMemo(() => contribValue(),[
     formData.savingFrequency, 
@@ -275,22 +274,26 @@ const PlanForm = () => {
       startDate: formData.dateCreated,
       endDate: moment(endDate).format("YYYY-MM-DD"),
       interestRate: formData.interestRate,
-      principal: formData.targetAmount,
+      principal: product?.properties?.hasTargetAmount ? formData.targetAmount :
+      formData.amount,
       withholdingTax: withhold_tax[0]?.rate,
       // interestPaymentFrequency: formData.interestReceiptOption,
       interestReceiptOption: formData.interestReceiptOption,
       calculatedInterest: calculateSI(
-          formData.targetAmount, 
+          product?.properties?.hasTargetAmount ? formData.targetAmount :
+          formData.amount, 
           formData.interestRate,
           selectedTenor?.tenorDays
         ),
       paymentMaturity: paymentAtMaturity(
         formData.interestReceiptOption,
-        formData.targetAmount,
+        product?.properties?.hasTargetAmount ? formData.targetAmount :
+        formData.amount,
         withhold_tax[0]?.rate,
         selectedTenor?.tenorMonths,
         calculateSI(
-          formData.targetAmount, 
+          product?.properties?.hasTargetAmount ? formData.targetAmount :
+          formData.amount, 
           formData.interestRate,
           selectedTenor?.tenorDays
         )
@@ -317,17 +320,13 @@ const PlanForm = () => {
     formData.interestReceiptOption, 
     id, 
     formData.targetAmount,
+    formData.amount,
     formData.directDebit
   ])
 
   const updateNumOfTickets = (value) => {
     let ticketNo;
     if (product?.properties?.allowsMonthlyDraw) {
-      // if(product?.properties?.hasTargetAmount !== null) {
-      //   ticketNo = formData.targetAmount / product?.minTransactionLimit
-      // } else {
-      //   ticketNo = formData.amount / product?.minTransactionLimit
-      // }
       ticketNo = value / product?.minTransactionLimit
       return Math.floor(ticketNo);
     } else {
@@ -483,7 +482,8 @@ const PlanForm = () => {
       if(e.target.name === "currency") {
         setFormData({
           ...formData,
-          [e.target.name]: Number(e.target.value)
+          // [e.target.name]: Number(e.target.value)
+          [e.target.name]: e.target.value
         })
       }
       else if(e.target.name === "tenor") {
@@ -636,7 +636,7 @@ const PlanForm = () => {
                   <option value="" disabled hidden selected >Select investment currency</option>
                   {
                     product?.currency?.map((item, id) => (
-                      <option key={id} value={item.id} >{item.name} </option>
+                      <option key={id} value={item.name} >{item.name} </option>
                     ))
                   }
                 </Input>
@@ -668,12 +668,14 @@ const PlanForm = () => {
                   {getCurrIcon(formData.currency)}
                 </div>
                 <Input 
-                  className={`form-control ${ formData.currency !== "" && "curr-input"}`}
+                  className={`form-control ${ formData.currency !== "" && "curr-input"}
+                   ${validate && "validate"}`}
                   name="amount"
+                  required
                   placeholder="" 
                   type="number" 
                   // disabled={product?.properties?.hasTargetAmount===null?false:true}
-                  disabled={true}
+                  disabled={product?.properties?.hasTargetAmount}
                   value={formData.amount}
                   onChange={handleChange}
                 />
@@ -692,7 +694,8 @@ const PlanForm = () => {
                   ${ formData.currency !== "" && "curr-input"} ${validate && "validate"}`}
                   name="targetAmount"
                   placeholder="" 
-                  // disabled={product?.properties?.hasTargetAmount===null?true:false}
+                  disabled={(product?.properties?.hasTargetAmount===null || 
+                    !(product?.properties?.hasTargetAmount))}
                   type="number" 
                   required
                   value={formData.targetAmount}
@@ -702,8 +705,7 @@ const PlanForm = () => {
                 />
               </div>
               {
-                // (product?.properties?.hasTargetAmount !== null) &&
-                // (formData.targetAmount < calculateMinAllowTargetVal(formData.targetAmount)) ? \
+                product?.properties?.hasTargetAmount && 
                 ( formData.targetAmount < product?.minTransactionLimit) ?
                 (
                   <small className="helper-text" >
@@ -712,6 +714,7 @@ const PlanForm = () => {
                 ) : (<></>)
               }
               {
+                product?.properties?.hasTargetAmount && 
                 ( formData.targetAmount > product?.maxTransactionLimit) ?
                 (
                   <small className="helper-text" >
@@ -766,10 +769,11 @@ const PlanForm = () => {
                 style={{gap: 14}}
               >
                 <Input 
-                  className="form-select form-select-md mb-3" 
+                  className={`form-select form-select-md mb-3 ${validate && "validate"}`}
                   type="select"
                   name="savingFrequency" 
                   required
+                  disabled={!(product?.properties?.hasSavingFrequency)}
                   onChange={handleChange}
                   value={formData.savingFrequency}
                 >
@@ -859,7 +863,7 @@ const PlanForm = () => {
                   type="number" 
                   value={formData.contributionValue}
                   onChange={handleChange}
-                  // disabled={autoCompute}
+                  disabled={!(product?.properties?.hasSavingFrequency)}
                 />
               </div>
               {
@@ -929,7 +933,9 @@ const PlanForm = () => {
                   placeholder="" 
                   type="number"
                   disabled={!(product?.properties?.allowsMonthlyDraw)}
-                  value={updateNumOfTickets(formData.targetAmount)} 
+                  value={updateNumOfTickets(
+                    product?.properties?.hasTargetAmount ? formData.targetAmount : formData.amount
+                  )} 
                   onChange={handleChange}
                 />
               </div>

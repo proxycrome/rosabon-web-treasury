@@ -39,6 +39,7 @@ import {
 	FeedbackOpenTickets,
 	FeedbackCloseTickets,
 } from "./component/Plan/Accesssories";
+import DebitCardCallback from "./component/Accessories/DebitCardCallback";
 
 function PageRoutes({ login, isAuth }) {
 	console.log(isAuth);
@@ -46,6 +47,14 @@ function PageRoutes({ login, isAuth }) {
 		// <HashRouter>
 		<Routes>
 			<Route path="*" element={<p>Error 404</p>} />
+			<Route
+				path="/payment/callback"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<DebitCardCallback />
+					</ProtectedRoute>
+				}
+			/>
 
 			<Route
 				exact
@@ -79,7 +88,7 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
-				path="/plan-topup"
+				path="/plan-topup/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>
@@ -119,7 +128,7 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
-				path="/transfer"
+				path="/transfer/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>
@@ -129,7 +138,7 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
-				path="/withdrawal"
+				path="/withdrawal/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>

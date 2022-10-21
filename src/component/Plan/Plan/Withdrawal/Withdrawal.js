@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FormGroup, Input } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
+import moment from 'moment';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import FullWithdrawal from './FullWithdrawal';
 import PartWithdrawal from './PartWithdrawal';
+import {  getSinglePlan } from "../../../../store/actions";
 
 const Withdrawal = () => {
   const [part, setPart] = useState('');
@@ -13,6 +16,16 @@ const Withdrawal = () => {
   const [reason, setReason] = useState("")
   const [otherReasons, setOtherReasons] = useState("")
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  const { singlePlan } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const planStatus = singlePlan?.data.statusCode
+
+  useEffect(() => {
+    dispatch(getSinglePlan(parseInt(id)));
+  },[])
 
   const handleClick = (e) => {
     if (e.target.value === 'part') {
@@ -53,165 +66,175 @@ const Withdrawal = () => {
 
   return (
     <>
-      <ProfileNavBar>
-        <NavTitle>
-          <span className="fw-bold">Plan</span>
-        </NavTitle>
-      </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Withdrawal</h4>
-          <div className="plan-content">
-            <div className="plan">
-              <div className="plan-top h-50 p-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Plan 3</h4>
-                    <p className="p-0 m-0">Product 1</p>
-                  </div>
-                  <h4 className="Active">Active</h4>
-                </div>
-                <div className="d-flex align-items-center justify-content-between pt-4">
-                  <div>
-                    <h4>Start date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
-                  <div>
-                    <h4>End date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex position-relative horizontal-line">
-                <div className="position-absolute horizontal-circle-left"></div>
-                <hr className="dotted" />
-                <div className="position-absolute end-0 horizontal-circle-right"></div>
-              </div>
+      {
+        planStatus === "OK" && (
+          <>
+            <ProfileNavBar>
+              <NavTitle>
+                <span className="fw-bold">Plan</span>
+              </NavTitle>
+            </ProfileNavBar>
+            <Wrapper>
+              <LeftView>
+                <h4 className="pb-3">Withdrawal</h4>
+                <div className="plan-content">
+                  <div className="plan">
+                    <div className="plan-top h-50 p-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{plan.planName}</h4>
+                          <p className="p-0 m-0">{plan?.product.productName}</p>
+                        </div>
+                        <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between pt-4">
+                        <div>
+                          <h4>Start date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
+                          </p>
+                        </div>
+                        <div>
+                          <h4>End date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan.planSummary.endDate).format("DD/MM/YYYY")} 
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex position-relative horizontal-line">
+                      <div className="position-absolute horizontal-circle-left"></div>
+                      <hr className="dotted" />
+                      <div className="position-absolute end-0 horizontal-circle-right"></div>
+                    </div>
 
-              <div className="plan-top h-50 py-1 px-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Balance</h4>
-                    <p className="p-0 m-0">2,000,000</p>
+                    <div className="plan-top h-50 py-1 px-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>Balance</h4>
+                          <p className="p-0 m-0">2,000,000</p>
+                        </div>
+                        {/* <i className="fa-solid fa-ellipsis"></i> */}
+                      </div>
+                    </div>
                   </div>
-                  {/* <i className="fa-solid fa-ellipsis"></i> */}
+                </div>
+                
+                <div className="plan-payment">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between my-5">
+                      <div className="d-flex align-items-center">
+                        <p className="p-0 m-0">Partial Withdrawal</p>
+                      </div>
+                      <input
+                        type="radio"
+                        id="part"
+                        name="rolloverType"
+                        value="part"
+                        onClick={handleClick}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                      <div className="d-flex align-items-center">
+                        <p className="p-0 m-0">Full Withdrawal</p>
+                      </div>
+                      <input
+                        type="radio"
+                        id="full"
+                        name="rolloverType"
+                        value="full"
+                        onClick={handleClick}
+                      />
+                    </div>
+                  </div>
+                  <div className="row my-4">
+                    <div className="col ">
+                      <label>Amount to Liquidate</label>
+                      <div className="input-group">
+                        <input
+                          className="form-control"
+                          placeholder="₦ 0.00"
+                          type="text"
+                        />
+                      </div>
+                      <label>Balance is ₦2,500,000.00</label>
+                    </div>
+                  </div>
+                  <div className="row my-4">
+                    <div className="col ">
+                      <label>Reason for Withdrawal</label>
+                      <div className="input-group">
+                        <select
+                          className="form-select form-select-md"
+                          aria-label=".form-select-md"
+                          name="reason"
+                          onChange={(e) => setReason(e.target.value)} 
+                        >
+                          <option>Select Reason for Withdrawal</option>
+                          <option>Others</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  {reason === "Others" ? (
+                    <div className="row my-4">
+                      <div className="col ">
+                        <FormGroup className="form-group-custom mb-4">
+                          <Input
+                            name="otherReasons"
+                            type="textarea"
+                            rows={5}
+                            value={otherReasons}
+                            className="form-control"
+                            onChange={(e) => setOtherReasons(e.target.value)}
+                            id="otherReasons"
+                            placeholder="Please provide reason for withdrawal"
+                          />
+                        </FormGroup>
+                      </div>
+                    </div>
+                  ) : null} 
+                </div>
+              </LeftView>
+              <RightView>
+              <div className="bank-details">
+                {/* <div className="bank-detail-content"> */}
+                  {/* <UserBankDetails /> */}
+                {/* </div> */}
+              </div>
+            </RightView>
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button
+                      style={{ color: '#111E6C', width: '300px' }}
+                      onClick={back}
+                    >
+                      Back
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      style={{
+                        backgroundColor: '#111E6C',
+                        color: '#FFFFFF',
+                        width: '300px',
+                      }}
+                      onClick={() => setIsClicked(true)}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          <div className="plan-payment">
-            <div>
-              <div className="d-flex align-items-center justify-content-between my-5">
-                <div className="d-flex align-items-center">
-                  <p className="p-0 m-0">Partial Withdrawal</p>
-                </div>
-                <input
-                  type="radio"
-                  id="part"
-                  name="rolloverType"
-                  value="part"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between mb-4">
-                <div className="d-flex align-items-center">
-                  <p className="p-0 m-0">Full Withdrawal</p>
-                </div>
-                <input
-                  type="radio"
-                  id="full"
-                  name="rolloverType"
-                  value="full"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div className="row my-4">
-              <div className="col ">
-                <label>Amount to Liquidate</label>
-                <div className="input-group">
-                  <input
-                    className="form-control"
-                    placeholder="₦ 0.00"
-                    type="text"
-                  />
-                </div>
-                <label>Balance is ₦2,500,000.00</label>
-              </div>
-            </div>
-            <div className="row my-4">
-              <div className="col ">
-                <label>Reason for Withdrawal</label>
-                <div className="input-group">
-                  <select
-                    className="form-select form-select-md"
-                    aria-label=".form-select-md"
-                    name="reason"
-                    onChange={(e) => setReason(e.target.value)} 
-                  >
-                    <option>Select Reason for Withdrawal</option>
-                    <option>Others</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            {reason === "Others" ? (
-              <div className="row my-4">
-                <div className="col ">
-                  <FormGroup className="form-group-custom mb-4">
-                    <Input
-                      name="otherReasons"
-                      type="textarea"
-                      rows={5}
-                      value={otherReasons}
-                      className="form-control"
-                      onChange={(e) => setOtherReasons(e.target.value)}
-                      id="otherReasons"
-                      placeholder="Please provide reason for withdrawal"
-                    />
-                  </FormGroup>
-                </div>
-              </div>
-            ) : null} 
-          </div>
-        </LeftView>
-        <RightView>
-        <div className="bank-details">
-          {/* <div className="bank-detail-content"> */}
-            {/* <UserBankDetails /> */}
-          {/* </div> */}
-        </div>
-      </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={back}
-              >
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
-                }}
-                onClick={() => setIsClicked(true)}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+            </WrapperFooter>
+          </>
+        )
+      }
     </>
   );
 };
@@ -259,6 +282,7 @@ const LeftView = styled.div`
     font-size: 13px;
     line-height: 16px;
     letter-spacing: -0.01em;
+    text-transform: capitalize;
   }
   .Active {
     color: #219653;

@@ -3,6 +3,7 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects";
 import {
 	GET_CATEGORIES_WITH_PRODUCTS,
 	GET_PRODUCTS,
+	GET_PRODUCT_CATEGORIES,
 	GET_SINGLE_PRODUCT,
 } from "./actionTypes";
 
@@ -11,12 +12,15 @@ import {
 	getCatWithProductsSuccess,
 	getProductsError,
 	getProductsSuccess,
+	getProductCategoriesError,
+	getProductCategoriesSuccess,
 	getSingleProductError,
 	getSingleProductSuccess,
 } from "./actions";
 
 import {
 	getCatWithProductsService,
+	getCategoriesService,
 	getProductsService,
 	getSingleProductService,
 } from "../../services/productService";
@@ -54,6 +58,17 @@ function* getCatWithProducts() {
 	}
 }
 
+function* getProductCategories() {
+	try {
+		const response = yield call(getCategoriesService);
+		console.log(response.data);
+		yield put(getProductCategoriesSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getProductCategoriesError(error?.response?.data));
+	}
+}
+
 export function* watchGetProducts() {
 	yield takeEvery(GET_PRODUCTS, getProducts);
 }
@@ -66,11 +81,16 @@ export function* watchGetCatWithProducts() {
 	yield takeEvery(GET_CATEGORIES_WITH_PRODUCTS, getCatWithProducts);
 }
 
+export function* watchGetProductCategories() {
+	yield takeEvery(GET_PRODUCT_CATEGORIES, getProductCategories);
+}
+
 function* ProductSaga() {
 	yield all([
 		fork(watchGetProducts),
 		fork(watchGetSingleProduct),
 		fork(watchGetCatWithProducts),
+		fork(watchGetProductCategories),
 	]);
 }
 
