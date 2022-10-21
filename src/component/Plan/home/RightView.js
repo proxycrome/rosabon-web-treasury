@@ -43,6 +43,11 @@ export const RightView = () => {
     }
   };
 
+  let totalnetWorth = 0;
+  planList.forEach(item => totalnetWorth += item?.planSummary?.principal);
+
+
+
   return (
     <RightWrapper className="border-end border-light">
       <div className="naira-card position-relative">
@@ -63,7 +68,7 @@ export const RightView = () => {
               <p className="p-0 m-0">₦</p>
             </div>
           </div>
-          <h3 className="pt-1 pb-3">₦ 1,500,346.00</h3>
+          <h3 className="pt-1 pb-3">₦ {totalnetWorth.toLocaleString()}</h3>
           <div className="down-button pt-4">
             <div className="d-flex justify-content-between">
               <div className="d-flex  align-items-center justify-content-between active-box">
