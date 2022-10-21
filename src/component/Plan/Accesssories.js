@@ -35,6 +35,7 @@ import {
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
 
+
 export const NairaCard = () => {
   return (
     <RightWrapper>
@@ -2900,7 +2901,7 @@ export const PayWithCard = ({ email, amount, setShow }) => {
     reference: new Date().getTime().toString(),
     email: email,
     amount: amount,
-    publicKey: process.env.REACT_APP_PAYSTACK_PK,
+    publicKey: "pk_test_f5c065493c77a268ff32c483e0e45b672dac4958",
   };
   const dispatch = useDispatch();
   const { form } = useContext(PlanContext);
