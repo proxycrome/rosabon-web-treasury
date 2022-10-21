@@ -1479,6 +1479,7 @@ export const HistoryTable = () => {
         "YYYY-MM-DD"
       );
 
+      console.log(itemDate);
       const date = new Date(itemDate);
       
       return date >= startDate && date <= endDate;

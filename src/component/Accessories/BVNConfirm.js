@@ -266,14 +266,13 @@ export function SuccessConfirm({
                     <>
                       <p className="py-5">Your Payment was successful</p>
                       <div className="d-flex justify-content-between">
-					  <NavLink to="/plan-list" >
-							<button
-								type="button"
-								className="grey_btn"
-							>
-								Check my investments
-							</button>
-						</NavLink>
+            <button
+              onClick={handleClose}
+              type="button"
+              className="grey_btn"
+            >
+              Check my investments
+            </button>
 						<button
 							onClick={handleClose}
 							type="button"
@@ -287,13 +286,15 @@ export function SuccessConfirm({
                     <>
                       <p className="py-5">Plan Successfully Saved</p>
                       <div className="d-flex justify-content-between">
-                        <button
-                          onClick={handleClose}
-                          type="button"
-                          className="grey_btn"
-                        >
-                          Check my investments
-                        </button>
+                        <NavLink state={{ myState: false }} to="/plan-list">
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="grey_btn"
+                          >
+                            Check my investments
+                          </button>
+                        </NavLink>
                         <button
                           onClick={handleClose}
                           type="button"

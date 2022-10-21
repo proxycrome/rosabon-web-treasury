@@ -26,9 +26,12 @@ const PlanForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [conValue, setConValue] = useState("targetAmount");
   const { products  } = useSelector((state) => state.product);
   const { exRates, investment_rates,withholding_tax  } = useSelector((state) => state.plan);
   // const { currencies } = useSelector((state) => state.currencies);
+  // handle validation
+  const [validate, setValidate] = useState(false);
 
   const productStatus = products?.statusCode
   const product = products?.data?.body ? 
@@ -60,7 +63,7 @@ const PlanForm = () => {
     exchangeRate: 0.00,
     amount: 0.00,
     targetAmount: 0.00,
-    tenor: 0,
+    tenor: "",
     planDate: recentDate,
     savingFrequency: "DAILY",
     weeklyContributionDay: "MONDAY",
@@ -100,7 +103,6 @@ const PlanForm = () => {
     withholdingTax: 0,
     paymentMaturity: 0.00
   });
-  const [autoCompute, setAutoCompute] = useState(true);
 
   // final update on the user plan details before switching to next screen
   useEffect(() => {
@@ -111,7 +113,8 @@ const PlanForm = () => {
       // amount: product.hasTargetAmount !== null ? null : formData.amount,
       product: product.id,
       productCategory: product.productCategory?.id,
-      actualMaturityDate:moment(endDate).format("YYYY-MM-DD"),
+      actualMaturityDate: formData.actualMaturityDate==="" ? 
+      moment(endDate).format("YYYY-MM-DD") : formData.actualMaturityDate,
       contributionValue: formData.contributionValue,
       numberOfTickets: updateNumOfTickets(formData.targetAmount),
       planSummary: summary,
@@ -130,7 +133,7 @@ const PlanForm = () => {
   // function to get the auto computed contribution value
   const contribValue = () => {
     const selectedTenor = product.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
-    if(autoCompute===true) {
+    if(conValue==="targetAmount") {
       let computedValue;
       switch(formData.savingFrequency) {
         case "DAILY":
@@ -151,7 +154,7 @@ const PlanForm = () => {
       setFormData({
         ...formData,
         // contributionValue: Number(parseFloat(computedValue).toFixed(2))
-        contributionValue: Number(parseFloat(computedValue).toFixed(2))
+        contributionValue: Math.round(computedValue * 100 + Number.EPSILON) / 100
       })
     } else {
       let computedValue;
@@ -172,7 +175,7 @@ const PlanForm = () => {
       }
       setFormData({
         ...formData,
-        targetAmount: Number(parseFloat(computedValue).toFixed(2))
+        targetAmount: Math.round(computedValue * 100 + Number.EPSILON) / 100
         // targetAmount: Number(parseInt(computedValue))
       })
     }
@@ -180,16 +183,16 @@ const PlanForm = () => {
 
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
-    console.log("ss", formData.product, intRecOption, formData.targetAmount)
     let interestRate;
     let rate =  inv_rates?.find((
       item => { return (item.product.id === formData.product) && 
       (formData.targetAmount >= item.minimumAmount) && (formData.targetAmount <= item.maximumAmount)}
     ))
-    console.log("rere", rate)
-      if(rate !== undefined) {
-          switch(intRecOption) {
-            case "MONTHLY":
+    let directDebitRate = rate?.percentDirectDebit ? rate?.percentDirectDebit : 0;
+    console.log("yeah i did load")
+    if(rate !== undefined) {
+      switch(intRecOption) {
+        case "MONTHLY":
           interestRate = rate?.monthlyInterestRate
           break;
           
@@ -212,16 +215,19 @@ const PlanForm = () => {
         default:
           interestRate = 1;
           break;
-          }
+      }
       if (interestRate === null) {
-        return 1
+        interestRate = formData.directDebit ? 1 + directDebitRate : 1
+        return interestRate
       } else {
+        interestRate = formData.directDebit === "true"? interestRate + directDebitRate : interestRate
         return interestRate
       }
-      } else {
+    } else {
+      console.log("first time err")
       interestRate = 1;
       return interestRate
-      }
+    }
   };
 
 
@@ -244,26 +250,16 @@ const PlanForm = () => {
 
   const calcContribValue = useMemo(() => contribValue(),[
     formData.savingFrequency, 
-    formData.tenor, 
+    formData.tenor,
     formData.targetAmount, 
     formData.contributionValue
   ])
-
-  // side effect updates the contribution value or target amount
-  // useEffect(() => {
-  //   contribValue();
-  // }, [
-  //   formData.savingFrequency, 
-  //   formData.tenor, 
-  //   formData.targetAmount, 
-  //   formData.contributionValue
-  // ])
 
 
   // calculate simple interest
   const calculateSI = (principal, rate, time) => {
     const SI = (principal*rate*(time/365)) / 100
-    return (SI * 100 + Number.EPSILON) / 100
+    return Math.round((SI * 100) + Number.EPSILON) / 100
   }
 
   // Update user plan summary
@@ -317,7 +313,12 @@ const PlanForm = () => {
         formData.interestReceiptOption,
       )
     })
-  }, [formData.interestReceiptOption, id, formData.targetAmount])
+  }, [
+    formData.interestReceiptOption, 
+    id, 
+    formData.targetAmount,
+    formData.directDebit
+  ])
 
   const updateNumOfTickets = (value) => {
     let ticketNo;
@@ -396,17 +397,22 @@ const PlanForm = () => {
   if(product?.tenors) {
     if (product.tenors?.length > 1) {
       product.tenors?.forEach(
-        item => item.tenorDays < minTenor.tenorDays ? minTenor = item : null
+        item => item.tenorDays < minTenor.tenorDays ? 
+        minTenor = item 
+        : null
       ) 
       product.tenors?.forEach(
-        item => item.tenorDays > maxTenor.tenorDays ? maxTenor = item : null
+        item => item.tenorDays > maxTenor.tenorDays ? 
+        maxTenor = item
+        : null
       ) 
     } else {
-      minTenor = product?.tenors[0]
-      maxTenor = product?.tenors[0]
+      minTenor = product?.tenors[0]?.tenorDays
+      maxTenor = product?.tenors[0]?.tenorDays
     }
+    minTenor = moment(recentDate).add(minTenor?.tenorDays, 'days')?._d
+    maxTenor = moment(recentDate).add(maxTenor?.tenorDays, 'days')?._d
   }
-  console.log("minTens", minTenor, "maxTens", maxTenor)
 
   const back = () => {
     navigate("/plan-product");
@@ -452,26 +458,27 @@ const PlanForm = () => {
     }
   }
 
-  // handle the toggle of auto computing the contribution value
-  const handleContribBtn = () => {
-    if(autoCompute) {
-      setAutoCompute(false);
-      setFormData({
-        ...formData
-      })
-    } else {
-      setAutoCompute(true);
-    }
-  }
-
-
   // handle changes on all inputs
   const handleChange = (e) => {
     if(e.target.type === "number") {
-      setFormData({
-        ...formData,
-        [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
-      })
+      if(e.target.name === "contributionValue") {
+        setFormData({
+          ...formData,
+          [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
+        })
+        setConValue(e.target.name);
+      }else if(e.target.name === "targetAmount") {
+        setFormData({
+          ...formData,
+          [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
+        })
+        setConValue(e.target.name);
+      } else {
+        setFormData({
+          ...formData,
+          [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
+        })
+      }
     }else {
       if(e.target.name === "currency") {
         setFormData({
@@ -499,6 +506,9 @@ const PlanForm = () => {
     }
   }
 
+  const handleValidate = () => {
+    setValidate(true);
+  };
 
   // submit form
   const handleSubmit = (e) => {
@@ -602,7 +612,7 @@ const PlanForm = () => {
               <label>Plan Name</label>
               <div className="input-group mb-4">
                 <Input
-                  className="form-control"
+                  className={`form-control ${validate && "validate"}`}
                   name="planName"
                   placeholder="Enter a plan name"
                   type="text"
@@ -616,7 +626,7 @@ const PlanForm = () => {
               <label>Currency</label>
               <div className="input-group mb-4">
                 <Input
-                  className="form-select form-select-md"
+                  className={`form-select form-select-md ${validate && "validate"}`}
                   type="select"
                   onChange={handleChange}
                   name="currency"
@@ -678,13 +688,16 @@ const PlanForm = () => {
                   {getCurrIcon(formData.currency)}
                 </div>
                 <Input 
-                  className={`form-control ${ formData.currency !== "" && "curr-input"}`}
+                  className={`form-control 
+                  ${ formData.currency !== "" && "curr-input"} ${validate && "validate"}`}
                   name="targetAmount"
                   placeholder="" 
                   // disabled={product?.properties?.hasTargetAmount===null?true:false}
                   type="number" 
                   required
                   value={formData.targetAmount}
+                  min={product?.minTransactionLimit}
+                  max={product?.maxTransactionLimit}
                   onChange={handleChange}
                 />
               </div>
@@ -710,20 +723,38 @@ const PlanForm = () => {
             <div className="col-md-6">
               <label>Tenor</label>
               <Input 
-                className="form-select form-select-md mb-3"
+                className={`form-select form-select-md mb-3 ${validate && "validate"}`}
                 type="select" 
                 name="tenor"
                 required
                 onChange={handleChange}
                 value={formData.tenor}
               >
-                <option value={0} disabled hidden selected >Select tenor</option>
+                <option value="" disabled hidden selected >Select tenor</option>
                 {
                   product?.tenors?.map(item => (
                     <option key={item.id} value={item.id} >{item.tenorName} </option>
                   ))
                 }
+                <option value={0} hidden={!(product?.allowCustomization)} >
+                  Customize Tenor
+                </option>
               </Input>
+              {
+                formData.tenor === 0 && (
+                  <Input 
+                    className={`form-control mb-3`}
+                    style={{width:"100%"}}
+                    name="actualMaturityDate"
+                    placeholder="" 
+                    type="date" 
+                    min={moment(minTenor).format("YYYY-MM-DD")}
+                    max={moment(maxTenor).format("YYYY-MM-DD")}
+                    value={moment(formData.actualMaturityDate).format("YYYY-MM-DD")}
+                    onChange={handleChange}
+                  />
+                )
+              }
             </div>
           </div>
           <div className="row">
@@ -748,9 +779,6 @@ const PlanForm = () => {
                   </option>
                   <option value="WEEKLY">Weekly</option>
                   <option value="MONTHLY">Monthly</option>
-                  <option value="CUSTOMIZE" hidden={!(product?.allowCustomization)} >
-                    Customize Tenor
-                  </option>
                 </Input>
                 {
                   formData.savingFrequency === "WEEKLY" && (
@@ -796,7 +824,7 @@ const PlanForm = () => {
               <label>Interest Reciept Option</label>
               <div className="input-group mb-4">
                 <Input 
-                  className="form-select form-select-md mb-3" 
+                  className={`form-select form-select-md mb-3 ${validate && "validate"}`} 
                   name="interestReceiptOption" 
                   type="select"
                   required
@@ -822,14 +850,6 @@ const PlanForm = () => {
             <div className="col-md-6 ">
               <div className="d-flex justify-content-between align-items-center" >
                 <label>Contribution value</label>
-                <button
-                  className={`btn btn-sm ${autoCompute ? "btn-light" : "btn-info"}`}
-                  onClick={handleContribBtn}
-                  // disabled={product?.properties?.hasTargetAmount===null?true:false}
-                  type="button"
-                >
-                  Change Contribution Value
-                </button>
               </div>
               <div className="input-group mb-4">
                 <Input 
@@ -838,8 +858,8 @@ const PlanForm = () => {
                   placeholder="" 
                   type="number" 
                   value={formData.contributionValue}
-                  onChange={!autoCompute ? handleChange : ()=>{}}
-                  disabled={autoCompute}
+                  onChange={handleChange}
+                  // disabled={autoCompute}
                 />
               </div>
               {
@@ -858,14 +878,14 @@ const PlanForm = () => {
                   </div>
                 )
               }
-              {
+              {/* {
                 (formData.contributionValue < calculateMinContribVal(formData.contributionValue) 
                 && product?.properties?.hasTargetAmount!==null) ? (
                   <small>
                     Target value cannot be below {product?.minTransactionLimit}
                   </small>
                 ) : (<></>)
-              }
+              } */}
             </div>
             <div className="col-md-6">
               <label>Direct Debit</label>
@@ -974,6 +994,7 @@ const PlanForm = () => {
                   width: "300px",
                 }}
                 type="submit"
+                onClick={handleValidate}
               >
                 Next
               </button>
@@ -1003,10 +1024,10 @@ const Wrapper = styled.div`
     }
   }
   .choose-plan {
-    width: 448px;
+    width: 100%;
     height: 213px;
     background: #ffffff;
-    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+    border-bottom: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 30px;
     p {
@@ -1062,6 +1083,9 @@ const Wrapper = styled.div`
   }
   input[type=number] {
     -moz-appearance: textfield;
+  }
+  .validate:required:invalid {
+    border: 2px solid red;
   }
   label {
     font-style: normal;
