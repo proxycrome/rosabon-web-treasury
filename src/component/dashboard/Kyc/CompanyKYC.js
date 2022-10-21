@@ -100,7 +100,7 @@ const CompanyKYC = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

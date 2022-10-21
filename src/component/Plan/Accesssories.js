@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { MDBDataTable } from "mdbreact";
@@ -1107,11 +1113,11 @@ export const AvailableBalance = ({
   withdrawReasons,
   withdrawData,
   errors,
+  walletBalance,
 }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [withdrawMandateImage, setWithdrawMandateImage] = useState({});
   const [withdrawInstructionImage, setWithdrawInstructionImage] = useState({});
-  const { walletBalance } = useSelector((state) => state.wallet);
 
   const data = {
     withdrawalAmount: "",
@@ -1329,12 +1335,10 @@ export const AvailableBalance = ({
   );
 };
 
-export const TransferCard = () => {
-  const { walletBalance } = useSelector((state) => state.wallet);
-
+export const TransferCard = ({ walletBalance }) => {
   return (
     <AvailableBalanceWapper>
-      <h3>Withdraw to Bank</h3>
+      <h3>Transfer</h3>
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
@@ -1443,8 +1447,22 @@ const AvailableBalanceWapper = styled.div`
 `;
 
 export const HistoryTable = () => {
+  const date = {
+    startDate: "",
+    endDate: "",
+  };
   const [show, setShow] = useState(false);
+  const [formData, setFormData] = useState(date);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   useEffect(() => {
     dispatch(getWalletTransactions());
@@ -1452,7 +1470,36 @@ export const HistoryTable = () => {
 
   const { walletTransactions } = useSelector((state) => state.wallet);
 
-  console.log(walletTransactions);
+  useEffect(() => {
+    const filteredWalletTrans = walletTransactions?.entities?.filter((item) => {
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+
+      const itemDate = moment(item.createdAt, "DD-MM-YYYY").format(
+        "YYYY-MM-DD"
+      );
+
+      const date = new Date(itemDate);
+      
+      return date >= startDate && date <= endDate;
+    });
+    setFilteredTransactions(filteredWalletTrans);
+  }, [formData]);
+
+  const month = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const data = {
     columns: [
@@ -1487,23 +1534,44 @@ export const HistoryTable = () => {
         width: 100,
       },
     ],
-    rows: walletTransactions?.entities?.map((data) => ({
-      id: (
-        <Link to="#" onClick={() => setShow(true)}>
-          <div>{data?.id}</div>
-        </Link>
-      ),
-      date: `${data?.createdAt?.split(" ")[0]}`,
-      description: `${data?.transactionDescription}`,
-      type: `${data?.transactionType}`,
-      amount: `${
-        data?.transactionType === "CREDIT"
-          ? "+ " + data?.amount
-          : "- " + data?.amount
-      }`,
-      balance: "",
-    })),
+    rows:
+      filteredTransactions?.length > 0
+        ? filteredTransactions?.map((data) => ({
+            id: (
+              <Link to="#" onClick={() => setShow(true)}>
+                <div>{data?.id}</div>
+              </Link>
+            ),
+            date: `${data?.createdAt?.split(" ")[0]}`,
+            description: `${data?.transactionDescription}`,
+            type: `${data?.transactionType}`,
+            amount: `${
+              data?.transactionType === "CREDIT"
+                ? "+ " + data?.amount
+                : "- " + data?.amount
+            }`,
+            balance: "",
+          }))
+        : walletTransactions?.entities?.map((data) => ({
+            id: (
+              <Link to="#" onClick={() => setShow(true)}>
+                <div>{data?.id}</div>
+              </Link>
+            ),
+            date: `${data?.createdAt?.split(" ")[0]}`,
+            description: `${data?.transactionDescription}`,
+            type: `${data?.transactionType}`,
+            amount: `${
+              data?.transactionType === "CREDIT"
+                ? "+ " + data?.amount
+                : "- " + data?.amount
+            }`,
+            balance: "",
+          })),
   };
+
+  const startDate = new Date(formData.startDate);
+  const endDate = new Date(formData.endDate);
 
   return (
     <div>
@@ -1528,6 +1596,9 @@ export const HistoryTable = () => {
                         className="form-control"
                         placeholder="Start date"
                         type="date"
+                        name="startDate"
+                        value={formData.startDate}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -1540,6 +1611,9 @@ export const HistoryTable = () => {
                         className="form-control"
                         placeholder="End date"
                         type="date"
+                        name="endDate"
+                        value={formData.endDate}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -1549,7 +1623,13 @@ export const HistoryTable = () => {
           </div>
         </div>
 
-        <h3>April 28 - May 13</h3>
+        <h3>
+          {formData.startDate &&
+            formData.endDate &&
+            `${month[startDate.getMonth()]} ${startDate.getDate()} - ${
+              month[endDate.getMonth()]
+            } ${endDate.getDate()}`}
+        </h3>
         <hr className="mb-5" />
 
         <div>
@@ -2748,43 +2828,51 @@ export const paymentAtMaturity = (
   tenorMonths,
   calculatedInterest
 ) => {
-	let result = 0;
-	const interestMonthly = calculatedInterest/tenorMonths;
-	const interestQuaterly = calculatedInterest/(tenorMonths/3);
-	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
-	switch(intRecOption) {
-		case "MATURITY":
-			// result = Number(parseFloat(
-			// 	principal + calculatedInterest - withholdingTax
-			// 	).toFixed(2));
-      result = ((principal + calculatedInterest - withholdingTax) * 100 + Number.EPSILON) / 100
-			break;
+  let result = 0;
+  const interestMonthly = calculatedInterest / tenorMonths;
+  const interestQuaterly = calculatedInterest / (tenorMonths / 3);
+  const interestBiAnnual = calculatedInterest / (tenorMonths / 24);
+  switch (intRecOption) {
+    case "MATURITY":
+      // result = Number(parseFloat(
+      // 	principal + calculatedInterest - withholdingTax
+      // 	).toFixed(2));
+      result =
+        ((principal + calculatedInterest - withholdingTax) * 100 +
+          Number.EPSILON) /
+        100;
+      break;
 
-		case "UPFRONT":
-			result = Number(parseFloat(
-				principal
-				).toFixed(2));
-			break;
+    case "UPFRONT":
+      result = Number(parseFloat(principal).toFixed(2));
+      break;
 
-		case "MONTHLY":
-			result = Number(parseFloat(
-				principal + interestMonthly - (withholdingTax*interestMonthly)
-				).toFixed(2));
-			break;
+    case "MONTHLY":
+      result = Number(
+        parseFloat(
+          principal + interestMonthly - withholdingTax * interestMonthly
+        ).toFixed(2)
+      );
+      break;
 
-		case "QUARTERLY":
-			result = Number(parseFloat(
-				principal + interestQuaterly - (withholdingTax*interestQuaterly)
-				).toFixed(2));
-			break;
+    case "QUARTERLY":
+      result = Number(
+        parseFloat(
+          principal + interestQuaterly - withholdingTax * interestQuaterly
+        ).toFixed(2)
+      );
+      break;
 
-		case "BI_ANNUAL":
-			result = Number(parseFloat(
-				principal + interestBiAnnual - (withholdingTax*interestBiAnnual)
-				).toFixed(2));
-			break;
+    case "BI_ANNUAL":
+      result = Number(
+        parseFloat(
+          principal + interestBiAnnual - withholdingTax * interestBiAnnual
+        ).toFixed(2)
+      );
+      break;
 
-		default: break;
-	}
-	return result;
+    default:
+      break;
+  }
+  return result;
 };

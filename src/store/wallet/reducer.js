@@ -88,7 +88,7 @@ const wallet = (state = initialState, action) => {
       state = {
         ...state,
         loading: true,
-        withdraeMsg: null,
+        withdrawMsg: null,
         withdrawMsgError: null,
       };
       break;
@@ -97,7 +97,7 @@ const wallet = (state = initialState, action) => {
       state = {
         ...state,
         loading: false,
-        withdraeMsg: action.payload,
+        withdrawMsg: action.payload,
         withdrawMsgError: null,
       };
       break;
@@ -106,7 +106,7 @@ const wallet = (state = initialState, action) => {
       state = {
         ...state,
         loading: false,
-        withdraeMsg: null,
+        withdrawMsg: null,
         withdrawMsgError: action.payload,
       };
       break;

@@ -23,6 +23,9 @@ import {
   GET_STATE,
   GET_STATE_ERROR,
   GET_STATE_SUCCESS,
+  GET_USER_DOCS,
+  GET_USER_DOCS_ERROR,
+  GET_USER_DOCS_SUCCESS,
   GET_WITHDRAW_REASON,
   GET_WITHDRAW_REASON_ERROR,
   GET_WITHDRAW_REASON_SUCCESS,
@@ -326,6 +329,26 @@ export const getWithdrawReasonSuccess = (data) => {
 export const getWithdrawReasonError = (error) => {
   return {
     type: GET_WITHDRAW_REASON_ERROR,
+    payload: error,
+  };
+};
+
+export const getUserDocs = () => {
+  return {
+    type: GET_USER_DOCS,
+  };
+};
+
+export const getUserDocsSuccess = (data) => {
+  return {
+    type: GET_USER_DOCS_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getUserDocsError = (error) => {
+  return {
+    type: GET_USER_DOCS_ERROR,
     payload: error,
   };
 };

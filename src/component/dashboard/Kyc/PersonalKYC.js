@@ -94,7 +94,7 @@ const PersonalKYC = () => {
       email: email ? email : user_details && user_details?.email,
       individualUser: {
         bvn: bvn ? bvn : user_details.individualUser.bvn,
-        address: {
+        contactAddress: {
           city: city ? city : user_details?.individualUser?.address?.city,
           country: country
             ? country
@@ -153,7 +153,12 @@ const PersonalKYC = () => {
   };
 
   useEffect(() => {
-    dispatch(getAuthUsers());
+    const tokenString = JSON.parse(localStorage.getItem("token"));
+    if (tokenString) {
+      dispatch(getAuthUsers());
+    } else {
+      navigate("/login");
+    }
   }, [dispatch]);
 
   useEffect(() => {

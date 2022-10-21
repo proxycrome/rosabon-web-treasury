@@ -39,7 +39,7 @@ const UserWallet = () => {
   const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
     (state) => state.user_profile
   );
-  const { walletBalance, loading } = useSelector((state) => state.wallet);
+  const { walletBalance, loading, withdrawMsg } = useSelector((state) => state.wallet);
 
   const handleClick = (value) => {
     if (value === "transfer") {
@@ -154,7 +154,7 @@ const UserWallet = () => {
       const data = {
         ...formData,
         withdrawalReasonId:
-          withdrawalReasonId === "others" ? 0 : Number(withdrawalReasonId),
+          withdrawalReasonId === "others" ? null : Number(withdrawalReasonId),
         withdrawalReasonOthers:
           withdrawalReasonId === "others" ? withdrawalReasonOthers : "",
       };
@@ -171,6 +171,12 @@ const UserWallet = () => {
       dispatch(getBankDetails());
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    if(withdrawMsg){
+      dispatch(getWalletBalance());
+    }
+  }, [withdrawMsg])
 
   return (
     <div>
@@ -306,6 +312,7 @@ const UserWallet = () => {
                             withdrawReasons={withdrawReasons?.data?.body}
                             withdrawData={(data) => handleFormData(data)}
                             errors={errors}
+                            walletBalance={walletBalance}
                           />
                         </div>
                       </div>
@@ -314,7 +321,9 @@ const UserWallet = () => {
                     <>
                       <div className="bank-details">
                         <div className="bank-detail-content">
-                          <TransferCard />
+                          <TransferCard 
+                            walletBalance={walletBalance}
+                          />
                         </div>
                       </div>
                     </>

@@ -90,7 +90,10 @@ const PersonalInfo = () => {
   };
 
   const data = {
-    address: "",
+    houseNoAddress: "",
+    state: "",
+    city: "",
+    country: "",
     stateId: "",
     secondaryPhoneNumber: "",
     countryId: 1,
@@ -128,21 +131,24 @@ const PersonalInfo = () => {
       return lgas?.find((lga) => lga.name === users?.individualUser?.lga).id;
     };
 
-    const { address, stateId, secondaryPhoneNumber, countryId, lgaId } =
+    const { houseNoAddress, state, secondaryPhoneNumber, country, countryId, city } =
       formData;
 
     let contactData = {
-      address: address
-        ? address
-        : users?.individualUser?.address?.houseNoAddress,
-      stateId: stateId ? Number(stateId) : Number(selectState()),
+      address: {
+        houseNoAddress: houseNoAddress
+          ? houseNoAddress
+          : users?.individualUser?.address?.houseNoAddress,
+        state: state ? state : users?.individualUser?.address?.state,
+        country: country ? country : users?.individualUser?.address?.country,
+        city: city ? city : users?.individualUser?.address?.city,
+      },
       secondaryPhoneNumber: secondaryPhoneNumber
-        ? secondaryPhoneNumber
+        ? secondaryPhoneNumber.substr(0, 1) === "0"
+          ? secondaryPhoneNumber.trim()
+          : "0" + secondaryPhoneNumber.trim()
         : users.phone,
-      countryId: countryId
-        ? Number(countryId)
-        : users?.individualUser?.coutryOfResidence?.id,
-      lgaId: lgaId ? Number(lgaId) : Number(selectLga()),
+      countryId: countryId ? Number(countryId) : users?.individualUser?.coutryOfResidence?.id
     };
 
     console.log(contactData);
@@ -209,18 +215,23 @@ const PersonalInfo = () => {
 
   const handleVerify = (e) => {
     e.preventDefault();
+    const { secondaryPhoneNumber } = formData;
     dispatch(
       verifyPhone(
-        formData.secondaryPhoneNumber ||
-          users?.individualUser?.secondaryPhoneNumber ||
-          users?.phone
+        secondaryPhoneNumber.substr(0, 1) === "0"
+          ? secondaryPhoneNumber.trim()
+          : "0" + secondaryPhoneNumber ||
+              users?.individualUser?.secondaryPhoneNumber ||
+              users?.phone
       )
     );
+
+    console.log(formData.secondaryPhoneNumber);
   };
 
   const handlePhoneData = (data) => {
     setValldateInfo(data);
-  }
+  };
 
   const handleOTPModalClose = () => {
     dispatch({ type: CLOSE_MODAL });
@@ -434,7 +445,7 @@ const PersonalInfo = () => {
                   <div className="col-lg-8 d-flex">
                     <div className="mb-5">
                       <label>Secondary Phone Number</label>
-                      <div className="input-group">
+                      <div className="d-flex">
                         <select
                           className="form-select-md select-field"
                           style={{
@@ -445,19 +456,30 @@ const PersonalInfo = () => {
                         >
                           <option>NGN</option>
                         </select>
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="secondaryPhoneNumber"
-                          id="phone"
-                          value={formData?.secondaryPhoneNumber}
-                          onChange={handleChange}
-                          placeholder={
-                            users?.individualUser?.secondaryPhoneNumber ||
-                            users?.phone
-                          }
-                          disabled={showEditCont}
-                        />
+                        <div className="input-group">
+                          <div className="input-group-prepend phone-code">
+                            +234
+                          </div>
+                          <input
+                            type="tel"
+                            className="form-control phone-input"
+                            name="secondaryPhoneNumber"
+                            id="phone"
+                            maxLength="10"
+                            value={formData?.secondaryPhoneNumber}
+                            onChange={handleChange}
+                            placeholder={
+                              users?.individualUser?.secondaryPhoneNumber?.startsWith(
+                                "+234"
+                              )
+                                ? users?.individualUser?.secondaryPhoneNumber?.split(
+                                    "+234"
+                                  )[1]
+                                : null || users?.phone
+                            }
+                            disabled={showEditCont}
+                          />
+                        </div>
                       </div>
                       <UncontrolledTooltip placement="bottom" target="phone">
                         Please provide your most active phone number here in
@@ -466,7 +488,11 @@ const PersonalInfo = () => {
                     </div>
                     <div className="mx-2">
                       <button
-                        className={validateInfo?.data?.secondaryPhoneVerified ? "grey-button" : "profile_vify_btn"}
+                        className={
+                          validateInfo?.data?.secondaryPhoneVerified
+                            ? "grey-button"
+                            : "profile_vify_btn"
+                        }
                         disabled={showEditCont}
                         onClick={handleVerify}
                       >
@@ -520,19 +546,14 @@ const PersonalInfo = () => {
                       disabled={showEditCont}
                       onChange={handleChange}
                       value={
-                        formData?.stateId ||
-                        states
-                          ?.find(
-                            (state) =>
-                              state.name === users?.individualUser?.state
-                          )
-                          ?.id.toString()
+                        formData?.state ||
+                        users?.individualUser?.address?.state
                       }
-                      name="stateId"
+                      name="state"
                     >
                       <option value="">Select State...</option>
                       {states?.map((state) => (
-                        <option key={state.id} value={state.id.toString()}>
+                        <option key={state.id} value={state.name}>
                           {state.name}
                         </option>
                       ))}
@@ -540,28 +561,20 @@ const PersonalInfo = () => {
                   </div>
                   <div className="col-md-6 col-lg-4">
                     <label>City</label>
-                    <select
-                      className="form-select form-select-md mb-4"
-                      aria-label=".form-select-md"
-                      disabled={showEditCont}
-                      onChange={handleChange}
-                      value={
-                        formData?.lgaId ||
-                        lgas
-                          ?.find(
-                            (lga) => lga.name === users?.individualUser?.lga
-                          )
-                          ?.id?.toString()
-                      }
-                      name="lgaId"
-                    >
-                      <option value="">Select City...</option>
-                      {lgas?.map((lga) => (
-                        <option key={lga.id} value={lga.id.toString()}>
-                          {lga.name}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="input-group mb-4">
+                      <input
+                        className="form-control"
+                        placeholder={
+                          users?.individualUser?.address?.city ||
+                          "City"
+                        }
+                        type="text"
+                        name="city"
+                        value={formData?.city}
+                        onChange={handleChange}
+                        disabled={showEditCont}
+                      />
+                    </div>
                   </div>
                   <div className="col-md-6 col-lg-4 pb-md-4">
                     <label>Nationality</label>
@@ -572,7 +585,7 @@ const PersonalInfo = () => {
                         name="country"
                         value={
                           formData?.country ||
-                          users?.individualUser?.coutryOfResidence?.name
+                          users?.individualUser?.address?.country
                         }
                         onChange={handleChange}
                         disabled={showEditCont}
@@ -598,8 +611,8 @@ const PersonalInfo = () => {
                           "Contact Address"
                         }
                         type="text"
-                        name="address"
-                        value={formData?.address}
+                        name="houseNoAddress"
+                        value={formData?.houseNoAddress}
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -757,7 +770,7 @@ const PersonalInfo = () => {
                 <div className="row">
                   <div className="col-md-8 ">
                     <label>Next of kin phone number</label>
-                    <div className="input-group mb-4">
+                    <div className="d-flex">
                       <select
                         className="form-select-md select-field"
                         style={{
@@ -768,18 +781,24 @@ const PersonalInfo = () => {
                       >
                         <option>NGN</option>
                       </select>
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.nokDetail?.phone ||
-                          "Next of kin phone number"
-                        }
-                        type="text"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        disabled={showEditNOK}
-                      />
+                      <div className="input-group mb-4">
+                        <div className="input-group-prepend phone-code">
+                          +234
+                        </div>
+                        <input
+                          className="form-control phone-input"
+                          placeholder={
+                            users?.individualUser?.nokDetail?.phone?.slice(1) ||
+                            "Next of kin phone number"
+                          }
+                          type="tel"
+                          name="phone"
+                          maxLength="10"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          disabled={showEditNOK}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -936,6 +955,18 @@ const WrapperBody = styled.div`
     line-height: 21px;
     text-align: right;
     color: #ffffff;
+  }
+
+  .phone-code {
+    position: absolute;
+    margin-top: 16px;
+    margin-left: 20px;
+    z-index: 10;
+    font-weight: 500;
+  }
+
+  .phone-input {
+    padding-left: 60px !important;
   }
 `;
 

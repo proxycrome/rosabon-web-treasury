@@ -27,6 +27,9 @@ import {
   GET_STATE,
   GET_STATE_ERROR,
   GET_STATE_SUCCESS,
+  GET_USER_DOCS,
+  GET_USER_DOCS_ERROR,
+  GET_USER_DOCS_SUCCESS,
   GET_WITHDRAW_REASON,
   GET_WITHDRAW_REASON_ERROR,
   GET_WITHDRAW_REASON_SUCCESS,
@@ -80,6 +83,8 @@ const initialState = {
   bankDetailsError: null,
   withdrawReasons: null,
   withdrawReasonsError: null,
+  documents: null,
+  documentsError: null,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -496,6 +501,33 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         withdrawReasons: null,
         withdrawReasonsError: action.payload,
+      };
+      break;
+
+    case GET_USER_DOCS:
+      state = {
+        ...state,
+        loading: true,
+        documents: null,
+        documentsError: null,
+      };
+      break;
+
+    case GET_USER_DOCS_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        documents: action.payload,
+        documentsError: null,
+      };
+      break;
+
+    case GET_USER_DOCS_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        documents: null,
+        documentsError: action.payload,
       };
       break;
 
