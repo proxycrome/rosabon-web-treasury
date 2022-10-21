@@ -5,6 +5,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Input
 } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import plus from "../../../asset/plus.svg";
@@ -13,26 +14,72 @@ import moment from "moment";
 import ModalComponent from "../../ModalComponent";
 import PlanModal from "./PlanModal";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts, getPlans, getSinglePlan } from "../../../store/actions";
+import { 
+  getProducts, 
+  getPlans, 
+  getSinglePlan ,
+  getProductCategories
+} from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
 import Spinner from "../../common/loading";
 
 export const Plans = () => {
   const [more, setMore] = useState(false);
   const [show, setShow] = useState(false);
+  const [filter, setFilter] = useState({
+    category: 0,
+    startDate: "",
+    endDate: ""
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { plans, loading } = useSelector((state) => state.plan);
-  const { products  } = useSelector((state) => state.product)
+  const { products, categories  } = useSelector((state) => state.product);
   const userPlans = plans?.data.body ? plans?.data.body : [];
+  const prodCategories = categories?.data.body ? categories?.data.body : []
   const planStatus = plans?.statusCode;
   const product = products?.data.body ? products?.data.body : []
-  const currentPlans = more ? userPlans : userPlans.slice(0, 6);
+
+  let filterPlans = userPlans;
+  // filter list of plans
+  if((filter.category===0) || (filter.category===9999999 )) {
+    filterPlans = userPlans;
+  }
+  if((filter.category>0) && (filter.category < 9999999)) {
+    filterPlans = filterPlans.filter(item => item.productCategory?.id===filter.category);
+  }
+  if(filter.startDate !== "") {
+    filterPlans = filterPlans.filter(
+      item => moment(filter.startDate) <= moment(item.planSummary.startDate)
+    )
+  }
+  if(filter.endDate !== "") {
+    filterPlans = filterPlans.filter(
+      item => moment(filter.endDate) >= moment(item.planSummary.endDate)
+    )
+  }
+
+  const currentPlans = more ? filterPlans : filterPlans.slice(0, 6);
 
   useEffect(() => {
     dispatch(getPlans());
     dispatch(getProducts());
+    dispatch(getProductCategories());
   },[])
+
+  const handleChange = (e) => {
+    if(e.target.name==="category") {
+      setFilter({
+        ...filter,
+        category: Number(e.target.value)
+      })
+    } else {
+      setFilter({
+        ...filter,
+        [e.target.name]: e.target.value
+      })
+    }
+  }
 
   const handlePlanModal = async (id) => {
     await dispatch(getSinglePlan(id))
@@ -51,6 +98,55 @@ export const Plans = () => {
         />
       </ModalComponent>
       <div className="row">
+        <div className="col-md-6 col-sm-12">
+          <label>Choose Investment Category</label>
+          <div className="input-group mb-4">
+            <Input
+              className="form-control"
+              type="select"
+              name="category"
+              onChange={handleChange}
+            >
+              <option value={0} hidden disabled selected >Choose Investment Category</option>
+              <option value={9999999}>All</option>
+              {/* {
+                prodCategories.map(item => (
+                  <option value={item.id} key={item.id} >{item.name}</option>
+                ))
+              } */}
+            </Input>
+          </div>
+        </div>
+        <div className="col-md-6 col-sm-12">
+          <div className="row">
+            <div className="col-md-6 col-sm-12">
+              <label>Start Date</label>
+              <div className="input-group mb-4">
+                <Input
+                  className="form-control"
+                  name="startDate"
+                  placeholder="Start Date"
+                  onChange={handleChange}
+                  type="date"
+                />
+              </div>
+            </div>
+            <div className="col-md-6 col-sm-12">
+              <label>End Date</label>
+              <div className="input-group mb-5">
+                <Input
+                  type="date"
+                  name="endDate"
+                  className="form-control"
+                  onChange={handleChange}
+                  placeholder="End Date"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="row">
         <div className="d-flex justify-content-between mb-3">
           <h4>Here are your investments at a glance</h4>
           <div 
@@ -64,7 +160,7 @@ export const Plans = () => {
         </div>
       </div>
       {
-        userPlans.length > 0 ? (
+        filterPlans.length > 0 ? (
           <>
             <div className="plan-content">
               {
@@ -78,7 +174,7 @@ export const Plans = () => {
                             {product?.find((product)=>product.id===item.productId)?.productName}
                           </p>
                         </div>
-                        <h4 className="Active" >{item.planStatus} </h4>
+                        <h4 className="Active" >{item.planStatus.toLowerCase()} </h4>
                       </div>
                       <div className="d-flex align-items-center justify-content-between pt-4">
                         <div>
@@ -109,14 +205,17 @@ export const Plans = () => {
                             {product.find((product)=>product.id===item.productId)?.productName}
                           </p>
                         </div>
-                        <DropDown status="Active" />
+                        <DropDown id={item.id} status="Active" />
                       </div>
                     </div>
                   </div>
                 ))
               }
             </div>
-            <div className="row" style={{display: more ? "none":"auto"}} >
+            <div 
+              className="row" 
+              style={{display: (more || filterPlans.length < 7) ? "none":"auto"}} 
+            >
               <div className="d-flex justify-content-center my-5">
                 <button className="btn-view" onClick={()=>setMore(true)} >View all</button>
               </div>  
@@ -202,7 +301,7 @@ const Wrapper = styled.div`
       font-size: 13px;
       line-height: 16px;
       letter-spacing: -0.01em;
-      text-transform: uppercase;
+      text-transform: capitalize;
     }
     .Active {
       color: #219653;
@@ -238,7 +337,7 @@ const Wrapper = styled.div`
   }
 `;
 
-export const DropDown = ({status}) => {
+export const DropDown = ({id, status}) => {
   const [menu, setMenu] = useState(false);
   const [checkRollover, setCheckRollover] = useState(false);
 
@@ -265,9 +364,9 @@ export const DropDown = ({status}) => {
       <DropdownMenu end className="mt-1">
         {status === "Active" ? (
           <>
-            <DropdownItem tag={Link} to="/plan-topup">Topup</DropdownItem>
-            <DropdownItem tag={Link} to="/transfer">Transfer</DropdownItem>
-            <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
+            <DropdownItem tag={Link} to={`/plan-topup/${id}`}>Topup</DropdownItem>
+            <DropdownItem tag={Link} to={`/transfer/${id}`}>Transfer</DropdownItem>
+            <DropdownItem tag={Link} to={`/withdrawal/${id}`}>Withdraw</DropdownItem>
             <DropdownItem>
               <div className="d-flex align-items-center justify-content-between" style={{width: "150px"}}>
                 <div>Auto rollover</div>{" "}

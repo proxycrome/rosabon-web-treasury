@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
+import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import Verve from '../../../asset/master-card-logo.png';
 import MOneyTransfer from '../../../asset/money-transfer.png';
 // import { UserBankDetails } from '../Accesssories';
 import PlanBankTopup from './PlanBankTopup';
 import PlanCardTopup from './PlanCardTopup';
+import {  getSinglePlan } from "../../../store/actions";
 
 
 const PlanPayment = () => {
@@ -13,6 +17,16 @@ const PlanPayment = () => {
   const [bank, setBank] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  const { singlePlan } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const planStatus = singlePlan?.data.statusCode
+
+  useEffect(() => {
+    dispatch(getSinglePlan(parseInt(id)));
+  },[])
 
   const handleClick = (e) => {
     if (e.target.value === 'card') {
@@ -53,127 +67,137 @@ const PlanPayment = () => {
 
   return (
     <>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Top up</h4>
-          <div className="plan-content">
-            <div className="plan">
-              <div className="plan-top h-50 p-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Plan 1</h4>
-                    <p className="p-0 m-0">Product 1</p>
-                  </div>
-                  <h4 className="Active">Active</h4>
-                </div>
-                <div className="d-flex align-items-center justify-content-between pt-4">
-                  <div>
-                    <h4>Start date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
-                  <div>
-                    <h4>End date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex position-relative horizontal-line">
-                <div className="position-absolute horizontal-circle-left"></div>
-                <hr className="dotted" />
-                <div className="position-absolute end-0 horizontal-circle-right"></div>
-              </div>
+      {
+        planStatus === "OK" && (
+          <>
+            <Wrapper>
+              <LeftView>
+                <h4 className="pb-3">Top up</h4>
+                <div className="plan-content">
+                  <div className="plan">
+                    <div className="plan-top h-50 p-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{plan.planName}</h4>
+                          <p className="p-0 m-0">{plan?.product.productName}</p>
+                        </div>
+                        <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between pt-4">
+                        <div>
+                          <h4>Start date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan.planSummary.startDate).format("DD/MM/YYYY")} 
+                          </p>
+                        </div>
+                        <div>
+                          <h4>End date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan.planSummary.endDate).format("DD/MM/YYYY")} 
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex position-relative horizontal-line">
+                      <div className="position-absolute horizontal-circle-left"></div>
+                      <hr className="dotted" />
+                      <div className="position-absolute end-0 horizontal-circle-right"></div>
+                    </div>
 
-              <div className="plan-top h-50 py-1 px-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Balance</h4>
-                    <p className="p-0 m-0">2,000,000</p>
+                    <div className="plan-top h-50 py-1 px-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>Balance</h4>
+                          <p className="p-0 m-0">2,000,000</p>
+                        </div>
+                        {/* <i className="fa-solid fa-ellipsis"></i> */}
+                      </div>
+                    </div>
                   </div>
-                  {/* <i className="fa-solid fa-ellipsis"></i> */}
+                </div>
+                <h4 className="pt-5">Choose Payment Type</h4>
+                <div className="plan-payment">
+                  <div className="row">
+                    <div className="col ">
+                      <label>Input amout to Top-up</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder="N  0.00"
+                          type="text"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between py-4">
+                      <div className="d-flex align-items-center">
+                        <img className="verve-card" src={Verve} alt="Verve" />
+                        <p className="p-0 m-0">Debit Card</p>
+                      </div>
+                      <input
+                        type="radio"
+                        id="card"
+                        name="paymentType"
+                        value="card"
+                        onClick={handleClick}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="d-flex align-items-center">
+                        <img className="verve-card" src={MOneyTransfer} alt="Verve" />
+                        <p className="p-0 m-0">Bank Transfer</p>
+                      </div>
+                      <input
+                        type="radio"
+                        id="bank"
+                        name="paymentType"
+                        value="bank"
+                        onClick={handleClick}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </LeftView>
+              {/* <RightView>
+              <div className="bank-details">
+                <div className="bank-detail-content">
+                  <UserBankDetails />
                 </div>
               </div>
-            </div>
-          </div>
-          <h4 className="pt-5">Choose Payment Type</h4>
-          <div className="plan-payment">
-            <div className="row">
-              <div className="col ">
-                <label>Input amout to Top-up</label>
-                <div className="input-group mb-4">
-                  <input
-                    className="form-control"
-                    placeholder="N  0.00"
-                    type="text"
-                  />
+            </RightView> */}
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button
+                      style={{ color: '#111E6C', width: '300px' }}
+                      onClick={back}
+                    >
+                      Back
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      style={{
+                        backgroundColor: '#111E6C',
+                        color: '#FFFFFF',
+                        width: '300px',
+                      }}
+                      onClick={() => setIsClicked(true)}
+                    >
+                      Submit
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between py-4">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={Verve} alt="Verve" />
-                  <p className="p-0 m-0">Debit Card</p>
-                </div>
-                <input
-                  type="radio"
-                  id="card"
-                  name="paymentType"
-                  value="card"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                  <p className="p-0 m-0">Bank Transfer</p>
-                </div>
-                <input
-                  type="radio"
-                  id="bank"
-                  name="paymentType"
-                  value="bank"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-          </div>
-        </LeftView>
-        {/* <RightView>
-        <div className="bank-details">
-          <div className="bank-detail-content">
-            <UserBankDetails />
-          </div>
-        </div>
-      </RightView> */}
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={back}
-              >
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
-                }}
-                onClick={() => setIsClicked(true)}
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+            </WrapperFooter>
+          </>
+        )
+      }
     </>
   );
 };
@@ -206,6 +230,7 @@ const LeftView = styled.div`
     font-size: 13px;
     line-height: 16px;
     letter-spacing: -0.01em;
+    text-transform : capitalize;
   }
   .Active {
     color: #219653;

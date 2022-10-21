@@ -2,22 +2,18 @@ import React, { useEffect } from 'react';
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Switch from "react-switch";
-import { getProducts, getTenor } from "../../../store/actions";
+import { getProducts } from "../../../store/actions";
 import Spinner from '../../../component/common/loading';
 import { getCurrIcon } from '../Accesssories';
 
 const PlanModal = ({ handleClose }) => {
   const dispatch = useDispatch();
-  const { singlePlan, tenors, loading } = useSelector((state) => state.plan);
-  const { products } = useSelector((state) => state.product);
-  const product = products?.data.body ? products?.data.body : []
+  const { singlePlan, loading } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
-  const tenor = tenors?.data.body ? tenors?.data.body : []
   const planStatus = singlePlan?.data.statusCode
 
   useEffect(() => {
     dispatch(getProducts());
-    dispatch(getTenor());
   },[])
 
   return (
@@ -36,7 +32,7 @@ const PlanModal = ({ handleClose }) => {
               <div >
                 <p style={{fontSize:14,fontWeight:600}} >{plan.planName} </p>
                 <p>
-                  {product?.find((product)=>product.id===parseInt(plan.productId))?.productName}
+                  {plan?.product.productName}
                 </p>
               </div>
               <div >
@@ -67,22 +63,28 @@ const PlanModal = ({ handleClose }) => {
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
               <div>
                 <p className='p-light' >Target</p>
-                <p className='p-dark' >{getCurrIcon(plan.currency)}{" "}{plan.targetAmount} </p>
+                <p className='p-dark flex' >
+                  {getCurrIcon(plan.currency.id)}{plan.targetAmount} 
+                </p>
               </div>
               <div className='right' >
                 <p className='p-light' >Monthly contribution</p>
-                <p className='p-dark' >{getCurrIcon(plan.currency)}{" "}{plan.contributionValue} </p>
+                <p className='p-dark flex justify-content-end'>
+                  {getCurrIcon(plan.currency.id)}{plan.contributionValue} 
+                </p>
               </div>
             </div>
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
               <div >
                 <p className='p-light' >Principal</p>
-                <p className='p-dark' >{getCurrIcon(plan.currency)}{" "}{plan.planSummary.principal} </p>
+                <p className='p-dark flex' >
+                  {getCurrIcon(plan.currency.id)}{plan.planSummary.principal} 
+                </p>
               </div>
               <div className='right'>
                 <p className='p-light' >Tenor</p>
                 <p className='p-dark' >
-                  {tenor?.find((tenor)=>tenor.id===parseInt(plan.tenor))?.tenorName}
+                  {plan?.tenor?.tenorName}
                 </p>
               </div>
             </div>
@@ -98,20 +100,22 @@ const PlanModal = ({ handleClose }) => {
               </div>
               <div className='right' >
                 <p className='p-light' >Interest earned</p>
-                <p className='p-dark' >
-                  {getCurrIcon(plan.currency)}{" "}{plan.planSummary.calculatedInterest}
+                <p className='p-dark flex justify-content-end' >
+                  {getCurrIcon(plan.currency.id)}{plan.planSummary.calculatedInterest}
                 </p>
               </div>
             </div>
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
               <div >
                 <p className='p-light' >Interest payment frequency</p>
-                <p className='p-dark' >{plan.planSummary.interestReceiptOption} </p>
+                <p className='p-dark' >
+                  {plan.planSummary.interestReceiptOption} 
+                </p>
               </div>
               <div className='right' >
                 <p className='p-light' >Current balance</p>
-                <p className='p-dark' >
-                  {getCurrIcon(plan.currency)}{" "}100
+                <p className='p-dark flex justify-content-end' >
+                  {getCurrIcon(plan.currency.id)}100
                 </p>
               </div>
             </div>
@@ -195,5 +199,9 @@ const Wrapper = styled.div`
     position: absolute;
     width: 100%;
     border-bottom: 0.8px dotted #E0E0E0;
+  }
+  .flex {
+    display: flex;
+    gap: 4px;
   }
 `

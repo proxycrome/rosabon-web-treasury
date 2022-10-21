@@ -1,13 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import moment from 'moment';
+import { useNavigate, useParams } from "react-router-dom";
 import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
+import {  getSinglePlan } from "../../../../store/actions";
 
 const Transfer = () => {
   const [modalState, setModalState] = useState("Close");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  const { singlePlan, plans } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const userPlans = plans?.data.body ? plans?.data.body : [];
+  const planStatus = singlePlan?.data.statusCode
+
+  useEffect(() => {
+    dispatch(getSinglePlan(parseInt(id)));
+  },[])
 
   const back = () => {
     navigate("/plan-list");
@@ -15,136 +29,149 @@ const Transfer = () => {
 
   return (
     <>
-      <ProfileNavBar>
-        <NavTitle>
-          <span className="fw-bold">Plan</span>
-        </NavTitle>
-      </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Transfer</h4>
-          <div className="plan-content">
-            <div className="plan">
-              <div className="plan-top h-50 p-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Plan 3</h4>
-                    <p className="p-0 m-0">Product 1</p>
-                  </div>
-                  <h4 className="Active">Active</h4>
-                </div>
-                <div className="d-flex align-items-center justify-content-between pt-4">
-                  <div>
-                    <h4>Start date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
-                  <div>
-                    <h4>End date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex position-relative horizontal-line">
-                <div className="position-absolute horizontal-circle-left"></div>
-                <hr className="dotted" />
-                <div className="position-absolute end-0 horizontal-circle-right"></div>
-              </div>
+      {
+        planStatus === "OK" && (
+          <>
+            <ProfileNavBar>
+              <NavTitle>
+                <span className="fw-bold">Plan</span>
+              </NavTitle>
+            </ProfileNavBar>
+            <Wrapper>
+              <LeftView>
+                <h4 className="pb-3">Transfer</h4>
+                <div className="plan-content">
+                  <div className="plan">
+                    <div className="plan-top h-50 p-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{plan.planName}</h4>
+                          <p className="p-0 m-0">{plan?.product.productName}</p>
+                        </div>
+                        <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between pt-4">
+                        <div>
+                          <h4>Start date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan.planSummary.startDate).format("DD/MM/YYYY")} 
+                          </p>
+                        </div>
+                        <div>
+                          <h4>End date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan.planSummary.endDate).format("DD/MM/YYYY")} 
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex position-relative horizontal-line">
+                      <div className="position-absolute horizontal-circle-left"></div>
+                      <hr className="dotted" />
+                      <div className="position-absolute end-0 horizontal-circle-right"></div>
+                    </div>
 
-              <div className="plan-top h-50 py-1 px-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Balance</h4>
-                    <p className="p-0 m-0">2,000,000</p>
+                    <div className="plan-top h-50 py-1 px-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>Balance</h4>
+                          <p className="p-0 m-0">2,000,000</p>
+                        </div>
+                        {/* <i className="fa-solid fa-ellipsis"></i> */}
+                      </div>
+                    </div>
                   </div>
-                  {/* <i className="fa-solid fa-ellipsis"></i> */}
                 </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="plan-payment">
-            <div className="row my-4 pt-4">
-              <div className="col ">
-                <label>Select an active plan to transfer into</label>
-                <div className="input-group">
-                  <select
-                    className="form-select form-select-md"
-                    aria-label=".form-select-md"
-                    name="Tenor">
-                    <option>Plan 1</option>
-                    <option>Plan 2</option>
-                    <option>Plan 4</option>
-                  </select>
+                <div className="plan-payment">
+                  <div className="row my-4 pt-4">
+                    <div className="col ">
+                      <label>Select an active plan to transfer into</label>
+                      <div className="input-group">
+                        <select
+                          className="form-select form-select-md"
+                          aria-label=".form-select-md"
+                          name="Tenor"
+                        >
+                          {
+                            userPlans.filter(item => item.id !== plan.id).map(item => (
+                              <option key={item.id} value={item.id} >{item.planName}</option>
+                            ))
+                          }
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row my-4">
+                    <div className="col ">
+                      <label>Amount to Send</label>
+                      <div className="input-group">
+                        <input
+                          className="form-control"
+                          placeholder="₦ 1,000,000"
+                          type="text"
+                        />
+                      </div>
+                      <label>Balance is ₦1,000,000</label>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="row my-4">
-              <div className="col ">
-                <label>Amount to Send</label>
-                <div className="input-group">
-                  <input
-                    className="form-control"
-                    placeholder="₦ 1,000,000"
-                    type="text"
-                  />
+              </LeftView>
+              <RightView>
+                <div className="bank-details">
+                  {/* <div className="bank-detail-content"> */}
+                  {/* <UserBankDetails /> */}
+                  {/* </div> */}
                 </div>
-                <label>Balance is ₦1,000,000</label>
-              </div>
-            </div>
-          </div>
-        </LeftView>
-        <RightView>
-          <div className="bank-details">
-            {/* <div className="bank-detail-content"> */}
-            {/* <UserBankDetails /> */}
-            {/* </div> */}
-          </div>
-        </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: "#111E6C", width: "300px" }}
-                onClick={back}>
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: "#111E6C",
-                  color: "#FFFFFF",
-                  width: "300px",
-                }}
-                onClick={() => setModalState("modal-one")}>
-                Submit
-              </button>
-              <ModalComponent
-                show={modalState === "modal-one"}
-                size={"md"}
-                handleClose={() => setModalState("close")}>
-                <Notice
-                  handleClose={() => setModalState("close")}
-                  handleShowModalTwo={() => setModalState("modal-two")}
-                  transferNotice="transfer"
-                />
-              </ModalComponent>
+              </RightView>
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button
+                      style={{ color: "#111E6C", width: "300px" }}
+                      onClick={back}>
+                      Back
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                      onClick={() => setModalState("modal-one")}>
+                      Submit
+                    </button>
+                    <ModalComponent
+                      show={modalState === "modal-one"}
+                      size={"md"}
+                      handleClose={() => setModalState("close")}>
+                      <Notice
+                        handleClose={() => setModalState("close")}
+                        handleShowModalTwo={() => setModalState("modal-two")}
+                        transferNotice="transfer"
+                      />
+                    </ModalComponent>
 
-              <ModalComponent
-                show={modalState === "modal-two"}
-                size={"md"}
-                handleClose={() => setModalState("close")}>
-                <SuccessConfirm
-                  transferNotice="transfer"
-                  handleClose={() => setModalState("close")}
-                />
-              </ModalComponent>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+                    <ModalComponent
+                      show={modalState === "modal-two"}
+                      size={"md"}
+                      handleClose={() => setModalState("close")}>
+                      <SuccessConfirm
+                        transferNotice="transfer"
+                        handleClose={() => setModalState("close")}
+                      />
+                    </ModalComponent>
+                  </div>
+                </div>
+              </div>
+            </WrapperFooter>
+          </>
+        )
+      }
     </>
   );
 };
@@ -179,6 +206,7 @@ const LeftView = styled.div`
     font-size: 13px;
     line-height: 16px;
     letter-spacing: -0.01em;
+    text-transform : capitalize;
   }
   .Active {
     color: #219653;

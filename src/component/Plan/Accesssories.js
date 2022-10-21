@@ -21,6 +21,7 @@ import ModalComponent from "../ModalComponent";
 import { Table } from "reactstrap";
 import { TransactionPreview } from "../Accessories/BVNConfirm";
 import moment from "moment";
+import { usePaystackPayment } from "react-paystack";
 import { PlanContext } from "./createPlan/PlanForm";
 import {
   getWalletTransactions,
@@ -28,6 +29,8 @@ import {
   getOpenTickets,
   getClosedTickets,
   getSingleTicket,
+  verifyPaystack,
+  createPlan,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -723,6 +726,8 @@ export const RolloverWithdrawMethod = () => {
 };
 
 export const WithdrawalSummary = () => {
+  const { singlePlan } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   return (
     <div>
       <RolloverSummaryWrapper>
@@ -730,15 +735,19 @@ export const WithdrawalSummary = () => {
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
-              <h4>Plan 1</h4>
+              <h4>{plan.planName}</h4>
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Start date </p>
-                  <h4>24/06/2023</h4>
+                  <h4>
+                    {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
+                  </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">End date </p>
-                  <h4>24/06/2023</h4>
+                  <h4>
+                    {moment(plan.planSummary.endDate).format("DD/MM/YYYY")}
+                  </h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
@@ -793,27 +802,27 @@ export const WithdrawalSummary = () => {
 // handles currency icon
 export const getCurrIcon = (currency) => {
   switch (currency) {
-    case 1:
+    case "YEN":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#165;
         </p>
       );
-    case 2:
+    case "USD":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
       );
-    case 3:
+    case "CAD":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
       );
-    case 4:
+    case "NGN":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#8358;
         </p>
       );
-    case 5:
+    case "EURO":
       return (
         <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#163;
@@ -861,7 +870,9 @@ export const PlanSummary = ({ planPay }) => {
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Interest Rate </p>
                   {/* <h4>20.00 %</h4> */}
-                  <h4>{planData.planSummary.interestRate} %</h4>
+                  <h4 className="d-flex justify-content-end">
+                    {planData.planSummary.interestRate} %
+                  </h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
@@ -1481,7 +1492,7 @@ export const HistoryTable = () => {
 
       console.log(itemDate);
       const date = new Date(itemDate);
-      
+
       return date >= startDate && date <= endDate;
     });
     setFilteredTransactions(filteredWalletTrans);
@@ -2831,49 +2842,100 @@ export const paymentAtMaturity = (
 ) => {
   let result = 0;
   const interestMonthly = calculatedInterest / tenorMonths;
-  const interestQuaterly = calculatedInterest / (tenorMonths / 3);
+  const interestQuaterly = calculatedInterest / (tenorMonths / 4);
   const interestBiAnnual = calculatedInterest / (tenorMonths / 24);
   switch (intRecOption) {
     case "MATURITY":
-      // result = Number(parseFloat(
-      // 	principal + calculatedInterest - withholdingTax
-      // 	).toFixed(2));
       result =
-        ((principal + calculatedInterest - withholdingTax) * 100 +
-          Number.EPSILON) /
-        100;
+        Math.round(
+          (principal + calculatedInterest - withholdingTax / 100) * 100
+        ) / 100;
       break;
 
     case "UPFRONT":
-      result = Number(parseFloat(principal).toFixed(2));
+      result = Math.round(principal * 100 + Number.EPSILON) / 100;
       break;
 
     case "MONTHLY":
-      result = Number(
-        parseFloat(
-          principal + interestMonthly - withholdingTax * interestMonthly
-        ).toFixed(2)
-      );
+      result =
+        Math.round(
+          (principal +
+            interestMonthly -
+            (withholdingTax / 100) * interestMonthly) *
+            100 +
+            Number.EPSILON
+        ) / 100;
       break;
 
     case "QUARTERLY":
-      result = Number(
-        parseFloat(
-          principal + interestQuaterly - withholdingTax * interestQuaterly
-        ).toFixed(2)
-      );
+      result =
+        Math.round(
+          (principal +
+            interestQuaterly -
+            (withholdingTax / 100) * interestQuaterly) *
+            100 +
+            Number.EPSILON
+        ) / 100;
       break;
 
     case "BI_ANNUAL":
-      result = Number(
-        parseFloat(
-          principal + interestBiAnnual - withholdingTax * interestBiAnnual
-        ).toFixed(2)
-      );
+      result =
+        Math.round(
+          (principal +
+            interestBiAnnual -
+            (withholdingTax / 100) * interestBiAnnual) *
+            100 +
+            Number.EPSILON
+        ) / 100;
       break;
 
     default:
       break;
   }
   return result;
+};
+
+export const PayWithCard = ({ email, amount, setShow }) => {
+  const config = {
+    reference: new Date().getTime().toString(),
+    email: email,
+    amount: amount,
+    publicKey: process.env.REACT_APP_PAYSTACK_PK,
+  };
+  const dispatch = useDispatch();
+  const { form } = useContext(PlanContext);
+  const { loading } = useSelector((state) => state.plan);
+  console.log("here", process.env.REACT_APP_PAYSTACK_PK);
+
+  // you can call this function anything
+  const onSuccess = (reference) => {
+    // Implementation for whatever you want to do with reference and after success call.
+    console.log(reference);
+    // dispatch(verifyPaystack("PAYSTACK","trans"+reference.trans));
+    dispatch(createPlan(form, setShow));
+  };
+
+  // you can call this function anything
+  const onClose = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    console.log("closed");
+  };
+
+  const initializePayment = usePaystackPayment(config);
+  return (
+    <button
+      style={{
+        backgroundColor: "#111E6C",
+        color: "#FFFFFF",
+        width: "300px",
+      }}
+      // onClick={() => setShow(true)}
+      // onClick={handleSubmit}
+      onClick={() => {
+        initializePayment(onSuccess, onClose);
+      }}
+    >
+      {loading ? "LOADING..." : "Pay"}
+    </button>
+  );
 };
