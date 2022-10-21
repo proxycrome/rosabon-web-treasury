@@ -2755,7 +2755,7 @@ export const paymentAtMaturity = (
 ) => {
 	let result = 0;
 	const interestMonthly = calculatedInterest/tenorMonths;
-	const interestQuaterly = calculatedInterest/(tenorMonths/3);
+	const interestQuaterly = calculatedInterest/(tenorMonths/4);
 	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
 	switch(intRecOption) {
 		case "MATURITY":
