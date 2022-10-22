@@ -20,6 +20,7 @@ import {
   getWalletTransactionsService,
   requestWithdrawalService,
 } from "../../services/walletService";
+import toast from "react-hot-toast";
 
 function* getWalletBalance() {
   try {
@@ -48,9 +49,19 @@ function* requestWithdrawal({ payload: { formData } }) {
     const response = yield call(requestWithdrawalService, formData);
     console.log(response.data);
     yield put(requestWithdrawalSuccess(response.data));
+    if (response) {
+      setTimeout(() => {
+        toast.success(response.data.message);
+      }, 1000);
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(requestWithdrawalError(error?.response?.data));
+    if (error?.response) {
+      setTimeout(() => {
+        toast.error(error?.response?.data?.message);
+      }, 1000);
+    }
   }
 }
 

@@ -41,7 +41,7 @@ export function ProfileNavBar({ children }) {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [dispatch]);
 
   // const user =
   //   users && users.role == 'COMPANY'

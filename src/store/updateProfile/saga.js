@@ -60,6 +60,7 @@ import {
   verifyAccountNoService,
   verifyPhoneService,
 } from "../../services/updateProfileService";
+import { getCompanyDocs } from "../actions";
 
 function* verifyAccountNo({ payload: { formData } }) {
   try {
@@ -171,7 +172,7 @@ function* updatePersonalInfo({ payload: { formData } }) {
   }
 }
 
-function* updateCompanyDocument({ payload: { formData } }) {
+function* updateCompanyDocument({ payload: { formData, reset } }) {
   try {
     const response = yield call(updateCompanyDocsService, formData);
     console.log(response.data);
@@ -180,6 +181,9 @@ function* updateCompanyDocument({ payload: { formData } }) {
       setTimeout(() => {
         toast.success("Your documents have been updated successfully");
       }, 1000);
+      const { setShowEdit} = reset;
+      setShowEdit(true);
+      yield put(getCompanyDocs());
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -231,7 +235,7 @@ function* deleteDirector({ payload: { id, setShowModal } }) {
     yield put(deleteDirectorSuccess(response.data));
     if (response) {
       toast.success(response.data.message);
-	  setShowModal(false);
+      setShowModal(false);
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -245,25 +249,29 @@ function* deleteDirector({ payload: { id, setShowModal } }) {
 }
 
 function* updateBankDetails({ payload: { formData } }) {
-	try {
-	  const response = yield call(updateBankDetailsService, formData);
-	  console.log(response.data);
-	  yield put(updateBankDetailsSuccess(response.data));
-	  if (response) {
-		setTimeout(() => {
-		  toast.success("Your bank details have been updated");
-		}, 1000);
-	  }
-	} catch (error) {
-	  console.log(error?.response?.data);
-	  yield put(updateBankDetailsError(error?.response?.data));
-	  if (error?.response) {
-		setTimeout(() => {
-		  toast.error(error?.response?.data?.message);
-		}, 1000);
-	  }
-	}
+  try {
+    const response = yield call(updateBankDetailsService, formData);
+    console.log(response.data);
+    yield put(updateBankDetailsSuccess(response.data));
+    if (response) {
+      setTimeout(() => {
+        toast.success("Your bank details have been updated");
+      }, 1000);
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(updateBankDetailsError(error?.response?.data));
+    if (error?.response) {
+      if (error?.response?.data?.message?.startsWith("More")) {
+        toast.error("This Bank details has already been used by another user");
+        return;
+      }
+      setTimeout(() => {
+        toast.error(error?.response?.data?.message);
+      }, 1000);
+    }
   }
+}
 
 export function* watchVerifyAccountNo() {
   yield takeEvery(VERIFY_ACCOUNT_NO, verifyAccountNo);
@@ -314,8 +322,8 @@ export function* watchDeleteDirector() {
 }
 
 export function* watchUpdateBankDetails() {
-	yield takeEvery(UPDATE_BANK_DETAILS, updateBankDetails);
-  }
+  yield takeEvery(UPDATE_BANK_DETAILS, updateBankDetails);
+}
 
 function* UpdateProfileSaga() {
   yield all([

@@ -682,7 +682,7 @@ const MoreDetails = () => {
                                 <option value="NATIONAL_IDENTITY_CARD">
                                   National ID card
                                 </option>
-                                <option value=" DRIVER_LICENSE">
+                                <option value="DRIVER_LICENSE">
                                   Driver's License{" "}
                                 </option>
                                 <option value="INTERNATIONAL_PASSPORT">
@@ -1149,7 +1149,7 @@ const MoreDetails = () => {
                               <option value="NATIONAL_IDENTITY_CARD">
                                 National ID card
                               </option>
-                              <option value=" DRIVER_LICENSE">
+                              <option value="DRIVER_LICENSE">
                                 Driver's License{" "}
                               </option>
                               <option value="INTERNATIONAL_PASSPORT">
@@ -1649,7 +1649,7 @@ const MoreDetails = () => {
                             <option value="NATIONAL_IDENTITY_CARD">
                               National ID card
                             </option>
-                            <option value=" DRIVER_LICENSE">
+                            <option value="DRIVER_LICENSE">
                               Driver's License{" "}
                             </option>
                             <option value="INTERNATIONAL_PASSPORT">
@@ -2117,7 +2117,7 @@ const MoreDetails = () => {
                                 <option value="NATIONAL_IDENTITY_CARD">
                                   National ID card
                                 </option>
-                                <option value=" DRIVER_LICENSE">
+                                <option value="DRIVER_LICENSE">
                                   Driver's License{" "}
                                 </option>
                                 <option value="INTERNATIONAL_PASSPORT">

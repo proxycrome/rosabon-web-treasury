@@ -208,10 +208,10 @@ export const updatePersonalInfoError = (error) => {
   };
 };
 
-export const uploadCompanyDocument = (formData) => {
+export const uploadCompanyDocument = (formData, reset) => {
   return {
     type: UPDATE_COMPANY_DOCS,
-    payload: { formData },
+    payload: { formData, reset },
   };
 };
 

@@ -21,6 +21,7 @@ import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
+import { Toaster } from "react-hot-toast";
 
 const UserWallet = () => {
   const [show, setShow] = useState(false);
@@ -38,7 +39,7 @@ const UserWallet = () => {
   const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
     (state) => state.user_profile
   );
-  const { walletBalance, loading } = useSelector((state) => state.wallet);
+  const { walletBalance, loading, withdrawMsg } = useSelector((state) => state.wallet);
 
   const handleClick = (value) => {
     if (value === "transfer") {
@@ -153,7 +154,7 @@ const UserWallet = () => {
       const data = {
         ...formData,
         withdrawalReasonId:
-          withdrawalReasonId === "others" ? 0 : Number(withdrawalReasonId),
+          withdrawalReasonId === "others" ? null : Number(withdrawalReasonId),
         withdrawalReasonOthers:
           withdrawalReasonId === "others" ? withdrawalReasonOthers : "",
       };
@@ -171,6 +172,12 @@ const UserWallet = () => {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    if(withdrawMsg){
+      dispatch(getWalletBalance());
+    }
+  }, [withdrawMsg])
+
   return (
     <div>
       <WrapperBody>
@@ -179,6 +186,7 @@ const UserWallet = () => {
             <span className="fw-bold">Wallet</span>
           </NavTitle>
         </ProfileNavBar>
+        <Toaster/>
         {loading ? (
           <div className="vh-100 w-100">
             <Spinner />
@@ -304,6 +312,7 @@ const UserWallet = () => {
                             withdrawReasons={withdrawReasons?.data?.body}
                             withdrawData={(data) => handleFormData(data)}
                             errors={errors}
+                            walletBalance={walletBalance}
                           />
                         </div>
                       </div>
@@ -312,7 +321,9 @@ const UserWallet = () => {
                     <>
                       <div className="bank-details">
                         <div className="bank-detail-content">
-                          <TransferCard />
+                          <TransferCard 
+                            walletBalance={walletBalance}
+                          />
                         </div>
                       </div>
                     </>

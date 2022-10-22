@@ -61,6 +61,10 @@ export const Plans = () => {
 
   const currentPlans = more ? filterPlans : filterPlans.slice(0, 6);
 
+  const capitalise = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
   useEffect(() => {
     dispatch(getPlans());
     dispatch(getProducts());
@@ -174,7 +178,7 @@ export const Plans = () => {
                             {product?.find((product)=>product.id===item.productId)?.productName}
                           </p>
                         </div>
-                        <h4 className="Active" >{item.planStatus.toLowerCase()} </h4>
+                        <h4 className={capitalise(item.planStatus)} >{item.planStatus.toLowerCase()} </h4>
                       </div>
                       <div className="d-flex align-items-center justify-content-between pt-4">
                         <div>
@@ -205,7 +209,7 @@ export const Plans = () => {
                             {product.find((product)=>product.id===item.productId)?.productName}
                           </p>
                         </div>
-                        <DropDown id={item.id} status="Active" />
+                        <DropDown id={item.id} status={capitalise(item.planStatus)} />
                       </div>
                     </div>
                   </div>

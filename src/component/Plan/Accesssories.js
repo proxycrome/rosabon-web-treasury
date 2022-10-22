@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { MDBDataTable } from "mdbreact";
@@ -15,7 +21,7 @@ import ModalComponent from "../ModalComponent";
 import { Table } from "reactstrap";
 import { TransactionPreview } from "../Accessories/BVNConfirm";
 import moment from "moment";
-import { usePaystackPayment } from 'react-paystack';
+import { usePaystackPayment } from "react-paystack";
 import { PlanContext } from "./createPlan/PlanForm";
 import {
   getWalletTransactions,
@@ -24,10 +30,11 @@ import {
   getClosedTickets,
   getSingleTicket,
   verifyPaystack,
-  createPlan
+  createPlan,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
+
 
 export const NairaCard = () => {
   return (
@@ -721,7 +728,7 @@ export const RolloverWithdrawMethod = () => {
 
 export const WithdrawalSummary = () => {
   const { singlePlan } = useSelector((state) => state.plan);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   return (
     <div>
       <RolloverSummaryWrapper>
@@ -733,11 +740,15 @@ export const WithdrawalSummary = () => {
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Start date </p>
-                  <h4>{moment(plan.planSummary.startDate).format("DD/MM/YYYY")}</h4>
+                  <h4>
+                    {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
+                  </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">End date </p>
-                  <h4>{moment(plan.planSummary.endDate).format("DD/MM/YYYY")}</h4>
+                  <h4>
+                    {moment(plan.planSummary.endDate).format("DD/MM/YYYY")}
+                  </h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
@@ -825,7 +836,7 @@ export const getCurrIcon = (currency) => {
 
 export const PlanSummary = ({ planPay }) => {
   const { form } = useContext(PlanContext);
-  // console.log("gg", form);
+  console.log("gg");
   let planData = form;
   return (
     <div>
@@ -860,7 +871,7 @@ export const PlanSummary = ({ planPay }) => {
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Interest Rate </p>
                   {/* <h4>20.00 %</h4> */}
-                  <h4 className="flex justify-content-end" >
+                  <h4 className="d-flex justify-content-end">
                     {planData.planSummary.interestRate} %
                   </h4>
                 </div>
@@ -887,7 +898,8 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Withholding Tax</p>
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
-                    {planData.planSummary.withholdingTax}%
+                    {getCurrIcon(planData?.currency)}{" "}
+                    {planData.planSummary.withholdingTax}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -926,8 +938,6 @@ const PlanSummaryWrapper = styled.div`
   .plan-content {
     background-color: #ffffff;
     margin-top: 40px;
-    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
-    border-radius: 8px;
   }
   .rollover {
     h4 {
@@ -1115,11 +1125,11 @@ export const AvailableBalance = ({
   withdrawReasons,
   withdrawData,
   errors,
+  walletBalance,
 }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [withdrawMandateImage, setWithdrawMandateImage] = useState({});
   const [withdrawInstructionImage, setWithdrawInstructionImage] = useState({});
-  const { walletBalance } = useSelector((state) => state.wallet);
 
   const data = {
     withdrawalAmount: "",
@@ -1337,12 +1347,10 @@ export const AvailableBalance = ({
   );
 };
 
-export const TransferCard = () => {
-  const { walletBalance } = useSelector((state) => state.wallet);
-
+export const TransferCard = ({ walletBalance }) => {
   return (
     <AvailableBalanceWapper>
-      <h3>Withdraw to Bank</h3>
+      <h3>Transfer</h3>
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
@@ -1451,8 +1459,22 @@ const AvailableBalanceWapper = styled.div`
 `;
 
 export const HistoryTable = () => {
+  const date = {
+    startDate: "",
+    endDate: "",
+  };
   const [show, setShow] = useState(false);
+  const [formData, setFormData] = useState(date);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   useEffect(() => {
     dispatch(getWalletTransactions());
@@ -1460,7 +1482,37 @@ export const HistoryTable = () => {
 
   const { walletTransactions } = useSelector((state) => state.wallet);
 
-  console.log(walletTransactions);
+  useEffect(() => {
+    const filteredWalletTrans = walletTransactions?.entities?.filter((item) => {
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+
+      const itemDate = moment(item.createdAt, "DD-MM-YYYY").format(
+        "YYYY-MM-DD"
+      );
+
+      console.log(itemDate);
+      const date = new Date(itemDate);
+
+      return date >= startDate && date <= endDate;
+    });
+    setFilteredTransactions(filteredWalletTrans);
+  }, [formData]);
+
+  const month = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const data = {
     columns: [
@@ -1495,23 +1547,44 @@ export const HistoryTable = () => {
         width: 100,
       },
     ],
-    rows: walletTransactions?.entities?.map((data) => ({
-      id: (
-        <Link to="#" onClick={() => setShow(true)}>
-          <div>{data?.id}</div>
-        </Link>
-      ),
-      date: `${data?.createdAt?.split(" ")[0]}`,
-      description: `${data?.transactionDescription}`,
-      type: `${data?.transactionType}`,
-      amount: `${
-        data?.transactionType === "CREDIT"
-          ? "+ " + data?.amount
-          : "- " + data?.amount
-      }`,
-      balance: "",
-    })),
+    rows:
+      filteredTransactions?.length > 0
+        ? filteredTransactions?.map((data) => ({
+            id: (
+              <Link to="#" onClick={() => setShow(true)}>
+                <div>{data?.id}</div>
+              </Link>
+            ),
+            date: `${data?.createdAt?.split(" ")[0]}`,
+            description: `${data?.transactionDescription}`,
+            type: `${data?.transactionType}`,
+            amount: `${
+              data?.transactionType === "CREDIT"
+                ? "+ " + data?.amount
+                : "- " + data?.amount
+            }`,
+            balance: "",
+          }))
+        : walletTransactions?.entities?.map((data) => ({
+            id: (
+              <Link to="#" onClick={() => setShow(true)}>
+                <div>{data?.id}</div>
+              </Link>
+            ),
+            date: `${data?.createdAt?.split(" ")[0]}`,
+            description: `${data?.transactionDescription}`,
+            type: `${data?.transactionType}`,
+            amount: `${
+              data?.transactionType === "CREDIT"
+                ? "+ " + data?.amount
+                : "- " + data?.amount
+            }`,
+            balance: "",
+          })),
   };
+
+  const startDate = new Date(formData.startDate);
+  const endDate = new Date(formData.endDate);
 
   return (
     <div>
@@ -1536,6 +1609,9 @@ export const HistoryTable = () => {
                         className="form-control"
                         placeholder="Start date"
                         type="date"
+                        name="startDate"
+                        value={formData.startDate}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -1548,6 +1624,9 @@ export const HistoryTable = () => {
                         className="form-control"
                         placeholder="End date"
                         type="date"
+                        name="endDate"
+                        value={formData.endDate}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -1557,7 +1636,13 @@ export const HistoryTable = () => {
           </div>
         </div>
 
-        <h3>April 28 - May 13</h3>
+        <h3>
+          {formData.startDate &&
+            formData.endDate &&
+            `${month[startDate.getMonth()]} ${startDate.getDate()} - ${
+              month[endDate.getMonth()]
+            } ${endDate.getDate()}`}
+        </h3>
         <hr className="mb-5" />
 
         <div>
@@ -2750,53 +2835,67 @@ export const paymentAtMaturity = (
   tenorMonths,
   calculatedInterest
 ) => {
-	let result = 0;
-	const interestMonthly = calculatedInterest/tenorMonths;
-	const interestQuaterly = calculatedInterest/(tenorMonths/4);
-	const interestBiAnnual = calculatedInterest/(tenorMonths/24);
-	switch(intRecOption) {
-		case "MATURITY":
-      result = Math.round(
-        ((principal + calculatedInterest) - (withholdingTax/100)) 
-        * 100) / 100
-			break;
+  let result = 0;
+  const interestMonthly = calculatedInterest / tenorMonths;
+  const interestQuaterly = calculatedInterest / (tenorMonths / 4);
+  const interestBiAnnual = calculatedInterest / (tenorMonths / 24);
+  switch (intRecOption) {
+    case "MATURITY":
+      result =
+        Math.round(
+          (principal + calculatedInterest - withholdingTax / 100) * 100
+        ) / 100;
+      break;
 
-		case "UPFRONT":
-			result = Math.round((principal * 100) + Number.EPSILON) / 100;
-			break;
+    case "UPFRONT":
+      result = Math.round(principal * 100 + Number.EPSILON) / 100;
+      break;
 
-		case "MONTHLY":
-			result = Math.round(
-				(((principal + interestMonthly) - ((withholdingTax/100)*interestMonthly))
-         * 100) + Number.EPSILON
-				) / 100;
-			break;
+    case "MONTHLY":
+      result =
+        Math.round(
+          (principal +
+            interestMonthly -
+            (withholdingTax / 100) * interestMonthly) *
+            100 +
+            Number.EPSILON
+        ) / 100;
+      break;
 
-		case "QUARTERLY":
-			result = Math.round(
-				(principal + interestQuaterly - ((withholdingTax/100)*interestQuaterly))
-        * 100 + Number.EPSILON
-				) / 100;
-			break;
+    case "QUARTERLY":
+      result =
+        Math.round(
+          (principal +
+            interestQuaterly -
+            (withholdingTax / 100) * interestQuaterly) *
+            100 +
+            Number.EPSILON
+        ) / 100;
+      break;
 
-		case "BI_ANNUAL":
-			result = Math.round(
-				(((principal + interestBiAnnual) - ((withholdingTax/100)*interestBiAnnual))
-        * 100) + Number.EPSILON
-				) / 100;
-			break;
+    case "BI_ANNUAL":
+      result =
+        Math.round(
+          (principal +
+            interestBiAnnual -
+            (withholdingTax / 100) * interestBiAnnual) *
+            100 +
+            Number.EPSILON
+        ) / 100;
+      break;
 
-		default: break;
-	}
-	return result;
+    default:
+      break;
+  }
+  return result;
 };
 
 export const PayWithCard = ({ email, amount, setShow }) => {
   const config = {
-    reference: (new Date()).getTime().toString(),
+    reference: new Date().getTime().toString(),
     email: email,
     amount: amount,
-    publicKey: process.env.REACT_APP_PAYSTACK_PK,
+    publicKey: "pk_test_f5c065493c77a268ff32c483e0e45b672dac4958",
   };
   const dispatch = useDispatch();
   const { form } = useContext(PlanContext);
@@ -2813,22 +2912,24 @@ export const PayWithCard = ({ email, amount, setShow }) => {
   // you can call this function anything
   const onClose = () => {
     // implementation for  whatever you want to do when the Paystack dialog closed.
-    console.log('closed')
-  }
+    console.log("closed");
+  };
 
   const initializePayment = usePaystackPayment(config);
   return (
     <button
       style={{
-        backgroundColor: '#111E6C',
-        color: '#FFFFFF',
-        width: '300px',
+        backgroundColor: "#111E6C",
+        color: "#FFFFFF",
+        width: "300px",
       }}
       // onClick={() => setShow(true)}
       // onClick={handleSubmit}
-      onClick={() => {initializePayment(onSuccess, onClose)}}
+      onClick={() => {
+        initializePayment(onSuccess, onClose);
+      }}
     >
-      {loading ? 'LOADING...' : 'Pay'}
+      {loading ? "LOADING..." : "Pay"}
     </button>
-  )
+  );
 };
