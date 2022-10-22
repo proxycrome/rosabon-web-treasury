@@ -106,10 +106,10 @@ const UserWallet = () => {
         errors.withdrawalReasonOthers = "Withdrawal Reason is required";
       }
 
-      if (Object.keys(values.withdrawalInstructionImage).length === 0) {
-        errors.withdrawalInstructionImage =
-          "Upload a withdrawal instruction document";
-      }
+      // if (Object.keys(values.withdrawalInstructionImage).length === 0) {
+      //   errors.withdrawalInstructionImage =
+      //     "Upload a withdrawal instruction document";
+      // }
 
       if (Object.keys(values.withdrawalMandateLetterImage).length === 0) {
         errors.withdrawalMandateLetterImage =

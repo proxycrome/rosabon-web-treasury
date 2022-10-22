@@ -1173,7 +1173,7 @@ export const AvailableBalance = ({
         withdrawalAmount: Number(withdrawalAmount),
         withdrawalReasonId,
         withdrawalReasonOthers,
-        withdrawalInstructionImage: withdrawInstructionImage,
+        // withdrawalInstructionImage: withdrawInstructionImage,
         withdrawalMandateLetterImage: withdrawMandateImage,
       };
       withdrawData(data);
@@ -1274,7 +1274,7 @@ export const AvailableBalance = ({
               </small>
             )}
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <FileUpload
               fileName="withdrawal instruction document"
               setFile={(file) => setWithdrawInstructionImage(file)}
@@ -1285,7 +1285,7 @@ export const AvailableBalance = ({
                 {errors.withdrawalInstructionImage}
               </small>
             )}
-          </div>
+          </div> */}
         </>
       ) : (
         <></>

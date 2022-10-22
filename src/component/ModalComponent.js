@@ -15,7 +15,8 @@ const ModalComponent = ({
       onHide={handleClose}
       size={size}
       aria-labelledby="contained-modal-title-vcenter"
-      centered>
+      centered
+    >
       {header && (
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">{header}</Modal.Title>
