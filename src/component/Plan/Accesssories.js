@@ -2460,7 +2460,7 @@ export const FeedbackTickets = () => {
 
   const viewTicket = async (id) => {
     await dispatch(getSingleTicket(id));
-    navigate("/admin-message");
+    navigate(`/admin-message/${id}`);
   };
   return (
     <div>
@@ -2519,12 +2519,10 @@ export const FeedbackTickets = () => {
                           </button>
                         </td>
                         <td>
-                          {item.createdAt[0]} / {item.createdAt[1]} /{" "}
-                          {item.createdAt[2]}
+                          {item.createdAt.slice(0,10)}
                         </td>
                         <td>
-                          {item.createdAt[0]} / {item.createdAt[1]} /{" "}
-                          {item.createdAt[2]}
+                          {item.createdAt.slice(0,10)}
                         </td>
                         <td>
                           <button
@@ -2620,7 +2618,7 @@ export const FeedbackOpenTickets = () => {
 
   const viewTicket = async (id) => {
     await dispatch(getSingleTicket(id));
-    navigate("/admin-message");
+    navigate(`/admin-message/${id}`);
   };
   return (
     <div>
@@ -2679,12 +2677,10 @@ export const FeedbackOpenTickets = () => {
                           </button>
                         </td>
                         <td>
-                          {item.createdAt[0]} / {item.createdAt[1]} /{" "}
-                          {item.createdAt[2]}
+                          {item.createdAt.slice(0,10)}
                         </td>
                         <td>
-                          {item.createdAt[0]} / {item.createdAt[1]} /{" "}
-                          {item.createdAt[2]}
+                          {item.createdAt.slice(0,10)}
                         </td>
                         <td>
                           <button
@@ -2728,7 +2724,7 @@ export const FeedbackCloseTickets = () => {
 
   const viewTicket = async (id) => {
     await dispatch(getSingleTicket(id));
-    navigate("/admin-message");
+    navigate(`/admin-message/${id}`);
   };
   return (
     <div>
@@ -2782,12 +2778,10 @@ export const FeedbackCloseTickets = () => {
                           </button>
                         </td>
                         <td>
-                          {item.createdAt[0]} / {item.createdAt[1]} /{" "}
-                          {item.createdAt[2]}
+                          {item.createdAt.slice(0,10)}
                         </td>
                         <td>
-                          {item.createdAt[0]} / {item.createdAt[1]} /{" "}
-                          {item.createdAt[2]}
+                          {item.createdAt.slice(0,10)}
                         </td>
                         <td>
                           <button
@@ -2906,7 +2900,6 @@ export const PayWithCard = ({ email, amount, setShow }) => {
   const dispatch = useDispatch();
   const { form } = useContext(PlanContext);
   const { loading } = useSelector((state) => state.plan);
-  console.log("here", process.env.REACT_APP_PAYSTACK_PK);
 
   // you can call this function anything
   const onSuccess = (reference) => {

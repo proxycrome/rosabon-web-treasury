@@ -34,3 +34,17 @@ export const getClosedTicketsService = () => {
 
     return http.getData(url);
 }
+
+export const postReplyService = (formData) => {
+    const http = new HttpService();
+    const url = `auth/feedback/reply-ticket`;
+
+    return http.postDataWithToken(formData, url);
+}
+
+export const getRepliesService = (id) => {
+    const http = new HttpService();
+    const url = `auth/feedback/ticket-reply/${id}`;
+
+    return http.getData(url);
+}
