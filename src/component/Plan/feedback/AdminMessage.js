@@ -1,15 +1,49 @@
-import React from "react";
+import React, { useState ,useEffect } from "react";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import styled from "styled-components";
 import { Input } from "reactstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import moment from "moment/moment";
+import { Toaster } from 'react-hot-toast';
+import { 
+  getReplies, 
+  getSingleTicket,
+  postReply 
+} from "../../../store/actions";
 
 const AdminMessage = () => {
-  const { single_ticket } = useSelector((state) => state.feedback)
-  const ticket = single_ticket ? single_ticket : {}
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const [reply, setReply] = useState("");
+
+  const { single_ticket, replies, loading } = useSelector((state) => state.feedback)
+  const ticket = single_ticket ? single_ticket : {};
+  const messages = replies ? replies : [];
+
+  useEffect(() => {
+    dispatch(getReplies(parseInt(id)));
+    dispatch(getSingleTicket(parseInt(id)));
+  }, [])
+
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    const form = {
+      content: reply,
+      images: [],
+      ticketId: parseInt(id),
+      title: moment()
+    }
+    await dispatch(postReply(form))
+    await dispatch(getReplies(parseInt(id)));
+    await setReply("");
+  };
+
   return (
     <div>
       <WrapperBody>
+        <Toaster/>
         <ProfileNavBar>
           <NavTitle>
             <span className="fw-bold">Feedback</span>
@@ -18,37 +52,45 @@ const AdminMessage = () => {
         <Wrapper>
           <h4 className="title">Title </h4>
           <p className="p-0 m-0">{ticket?.title} </p>
-          <h4 className="pt-4">Message</h4>
-          {/* <p className="p-0 m-0">
-            The passage experienced a surge in popularity during the 1960s when
-            Letraset used it on their dry-transfer sheets, and again during the
-            90s as desktop publishers bundled the text with their software.{" "}
-          </p> */}
-          <p className="p-0 m-0">{ticket?.message} {" "}</p>
-          <div className="message pt-4">
-            <h4>Admin</h4>
-            <p className="p-0 m-0">
-              The passage experienced a surge in popularity during the 1960s
-              when Letraset used it on their dry-transfer sheets, and again
-              during the 90s as desktop publishers bundled the text with their
-              software.{" "}
-            </p>
-          </div>
-          <div className="">
-            <div className="d-flex align-items-center justify-content-between msg">
-              <div className="input-group">
-                <Input 
-                  type="text" 
-                  className="form-control" 
-                  placeholder="Type your message"
-                />
-              </div>
-              <div className="ml-2">
-                <button className="grey_btn">Submit</button>
-              </div>
+          {
+            messages.map(item => item.replyType === "USER_REPLY" ? 
+            <div key={item.id} >
+              <h4 className="pt-4">Message</h4>
+              <p className="p-0 m-0">{item.content} {" "}</p>
+            </div> : 
+            <div className="message pt-4">
+              <h4>Admin</h4>
+              <p className="p-0 m-0">{item.content}{" "}</p>
             </div>
-          </div>
+            )
+          }
         </Wrapper>
+        <WrapperFooter className="">
+          <form 
+            onSubmit={handleSubmit} 
+            className="d-flex align-items-center justify-content-between msg"
+          >
+            <div className="input-group">
+              <Input 
+                type="text" 
+                className="form-control" 
+                name="reply"
+                placeholder="Type your message"
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+              />
+            </div>
+            <div className="ml-2">
+              <button 
+                className="grey_btn" 
+                type="submit" 
+                disabled={reply===""}
+              >
+                {loading ? "Sending..." : "Submit"}
+              </button>
+            </div>
+          </form>
+        </WrapperFooter>
       </WrapperBody>
     </div>
   );
@@ -77,9 +119,12 @@ const NavTitle = styled.div`
 
 const Wrapper = styled.div`
   width: 95%;
+  height: calc(90% - 141px);
   padding-right: 40%;
   padding-left: 50px;
   padding-top: 50px;
+  padding-bottom: 50px;
+  overflow-y: auto;
   @media (max-width: 900px) {
     padding-right: 20%;
     input {
@@ -126,6 +171,13 @@ const Wrapper = styled.div`
     padding-bottom: 100px;
   }
 
+`;
+
+const WrapperFooter = styled.div`
+  padding-right: 40%;
+  padding-left: 50px;
+  padding-top: 20px;
+  width: 95%;
   .grey_btn {
     font-size: 14px;
     width: 120px;

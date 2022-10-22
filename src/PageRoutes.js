@@ -268,7 +268,7 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
-				path="/admin-message"
+				path="/admin-message/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>
