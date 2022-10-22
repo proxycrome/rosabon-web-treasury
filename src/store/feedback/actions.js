@@ -5,6 +5,9 @@ import {
     GET_OPEN_TICKETS,
     GET_OPEN_TICKETS_ERROR,
     GET_OPEN_TICKETS_SUCCESS,
+    GET_REPLIES,
+    GET_REPLIES_ERROR,
+    GET_REPLIES_SUCCESS,
     GET_SINGLE_TICKET,
     GET_SINGLE_TICKET_ERROR,
     GET_SINGLE_TICKET_SUCCESS,
@@ -14,6 +17,9 @@ import {
 	POST_FEEDBACK,
 	POST_FEEDBACK_ERROR,
 	POST_FEEDBACK_SUCCESS,
+    POST_REPLY,
+    POST_REPLY_ERROR,
+    POST_REPLY_SUCCESS,
 } from "./actionTypes";
 
 export const postFeedback = (formData, setShow) => {
@@ -118,3 +124,45 @@ export const getClosedTicketsError = (error) => {
         payload: error,
     }
 }
+
+export const postReply = (formData) => {
+	return {
+		type: POST_REPLY,
+		payload: { formData },
+	};
+};
+
+export const postReplySuccess = (data) => {
+	return {
+		type: POST_REPLY_SUCCESS,
+		payload: data,
+	};
+};
+
+export const postReplyError = (error) => {
+	return {
+		type: POST_REPLY_ERROR,
+		payload: error,
+	};
+};
+
+export const getReplies = (id) => {
+    return {
+        type: GET_REPLIES,
+        payload: {id}
+    }
+};
+
+export const getRepliesSuccess = (data) => {
+    return {
+        type: GET_REPLIES_SUCCESS,
+        payload: data,
+    }
+};
+
+export const getRepliesError = (error) => {
+    return {
+        type: GET_REPLIES_ERROR,
+        payload: error
+    }
+};

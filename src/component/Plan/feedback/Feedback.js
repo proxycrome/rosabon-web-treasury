@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, NavLink } from "react-router-dom";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { Toaster } from 'react-hot-toast';
 // import {
 //   updateUserCompanyKYC,
 //   getAuthUsers,
@@ -23,7 +24,10 @@ const Feedback = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [feedbackForm, setFeedbackForm] = useState(initialForm)
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    title: false,
+    content: false
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
@@ -53,6 +57,10 @@ const Feedback = () => {
         [e.target.name]: parseInt(e.target.value)
       })
     } else {
+      setErrors({
+        ...errors,
+        [e.target.name]: false
+      })
       setFeedbackForm({
         ...feedbackForm,
         [e.target.name]: e.target.value
@@ -61,31 +69,36 @@ const Feedback = () => {
   }
  
   const validateForm = (values) => {
-    let errors = {};
-
-    if(!values.content) {
-      errors.content = "Message Description is required";
+    if(values.content==="") {
+      setErrors({
+        ...errors,
+        content: true
+      })
     }
 
-    if(!values.title) {
-      errors.title = "Message Title is required";
+    if(values.title==="") {
+      setErrors({
+        ...errors,
+        title: true
+      });
     }
 
-    return errors;
   }
+  console.log("feedb", errors)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors(validateForm(feedbackForm));
+    await validateForm(feedbackForm);
     setIsSubmitted(true);
+    if(feedbackForm.title!=="" && feedbackForm.content!=="") {
+     await dispatch(postFeedback(feedbackForm, setShow));
+     setFeedbackForm(initialForm);
+     setErrors({
+      title: false,
+      content: false
+     })
+    };
   }
-
-  useEffect(() => {
-    if(Object.keys(errors).length === 0 && isSubmitted) {
-      dispatch(postFeedback(feedbackForm, setShow));
-      setFeedbackForm(initialForm);
-    }
-  }, [errors])
 
   // useEffect(() => {
   //   const tokenString = JSON.parse(localStorage.getItem("token"));
@@ -99,6 +112,7 @@ const Feedback = () => {
   return (
     <form onSubmit={handleSubmit}>
       <WrapperBody>
+        <Toaster/>
         <ProfileNavBar>
           <NavTitle>
             <span className="fw-bold">Feedback</span>
@@ -115,6 +129,7 @@ const Feedback = () => {
                   aria-label=".form-select-lg"
                   //   onClick={handleOnclick}
                   name="categoryId"
+                  required
                   onChange={handleChange}
                   value={feedbackForm.categoryId}
                 >
@@ -127,7 +142,7 @@ const Feedback = () => {
           </div>
           <div className="pb-4">
             <label>Title of Message </label>
-            <div className="input-group">
+            <div className={`input-group ${errors.title && "validate"}`}>
               <Input 
                 type="text" 
                 className="form-control" 
@@ -136,7 +151,12 @@ const Feedback = () => {
                 value={feedbackForm.title}
               />
             </div>
-            {errors.title && <small className="text-danger">{errors.title}</small>}
+            {
+              errors.title && 
+              <small className="text-danger">
+                Message Title is required
+              </small>
+            }
           </div>
           <div className="pb-4">
             <div className="mb-4">
@@ -146,13 +166,18 @@ const Feedback = () => {
                   rows="5"
                   cols="60"
                   placeholder="Enter your message"
-                  className="form-control select-field"
+                  className={`form-control select-field ${errors.content && "validate"}`}
                   name="content"
                   onChange={handleChange}
                   value={feedbackForm.content}
                 ></textarea>
               </div>
-              {errors.content && <small className="text-danger">{errors.content}</small>}
+              {
+                errors.content && 
+                <small className="text-danger">
+                  Message Description is required
+                </small>
+              }
             </div>
           </div>
         </Wrapper>
@@ -272,6 +297,9 @@ const Wrapper = styled.div`
     color: #242424;
     padding-top: 50px;
     padding-bottom: 20px;
+  }
+  .validate {
+    border: 1px solid #d9534f;
   }
 `;
 

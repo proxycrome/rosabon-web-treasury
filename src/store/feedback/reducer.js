@@ -13,7 +13,13 @@ import {
     GET_CLOSED_TICKETS_ERROR,
     GET_SINGLE_TICKET,
     GET_SINGLE_TICKET_SUCCESS,
-    GET_SINGLE_TICKET_ERROR
+    GET_SINGLE_TICKET_ERROR,
+    POST_REPLY,
+    POST_REPLY_SUCCESS,
+    POST_REPLY_ERROR,
+    GET_REPLIES,
+    GET_REPLIES_SUCCESS,
+    GET_REPLIES_ERROR
   } from "./actionTypes";
   
   const initialState = {
@@ -27,7 +33,11 @@ import {
     closed_tickets: null,
     closed_tickets_err: null,
     single_ticket: null,
-    single_ticket_error: null
+    single_ticket_error: null,
+    post_reply: null,
+    post_reply_err: null,
+    replies: null,
+    replies_err: null
   }
   
   const feedback = ( state=initialState, action ) => {
@@ -37,6 +47,8 @@ import {
       case GET_OPEN_TICKETS:
       case GET_CLOSED_TICKETS:
       case GET_SINGLE_TICKET:
+      case POST_REPLY:
+      case GET_REPLIES:
         state = {
           ...state,
           loading: true
@@ -130,6 +142,42 @@ import {
           loading: false,
           single_ticket: null,
           single_ticket_error: action.payload
+        };
+        break;
+
+      case POST_REPLY_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          post_reply: action.payload,
+          post_reply_err: null
+        };
+        break;
+
+      case POST_REPLY_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          post_reply: null,
+          post_reply_err: action.payload
+        };
+        break;
+
+      case GET_REPLIES_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          replies: action.payload,
+          replies_err: null
+        };
+        break;
+
+      case GET_REPLIES_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          replies: null,
+          replies_err: action.payload
         };
         break;
   
