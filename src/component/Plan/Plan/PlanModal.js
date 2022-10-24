@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Switch from "react-switch";
-import { getProducts } from "../../../store/actions";
+import { getProducts, getCurrencies } from "../../../store/actions";
 import Spinner from '../../../component/common/loading';
 import { getCurrIcon } from '../Accesssories';
 
@@ -11,9 +11,13 @@ const PlanModal = ({ handleClose }) => {
   const { singlePlan, loading } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
   const planStatus = singlePlan?.data.statusCode
+  const { currencies  } = useSelector((state) => state.currencies);
+  const currencies_list = currencies?.data.body ? currencies?.data.body: []
+  const current_currency = currencies_list.find(item=>item.id===plan?.currency?.id)?.name
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getCurrencies());
   },[])
 
   return (
@@ -64,13 +68,13 @@ const PlanModal = ({ handleClose }) => {
               <div>
                 <p className='p-light' >Target</p>
                 <p className='p-dark flex' >
-                  {getCurrIcon(plan.currency.id)}{plan.targetAmount} 
+                  {getCurrIcon(current_currency)}{plan.targetAmount} 
                 </p>
               </div>
               <div className='right' >
                 <p className='p-light' >Monthly contribution</p>
                 <p className='p-dark flex justify-content-end'>
-                  {getCurrIcon(plan.currency.id)}{plan.contributionValue} 
+                  {getCurrIcon(current_currency)}{plan.contributionValue} 
                 </p>
               </div>
             </div>
@@ -78,7 +82,7 @@ const PlanModal = ({ handleClose }) => {
               <div >
                 <p className='p-light' >Principal</p>
                 <p className='p-dark flex' >
-                  {getCurrIcon(plan.currency.id)}{plan.planSummary.principal} 
+                  {getCurrIcon(current_currency)}{plan.planSummary.principal} 
                 </p>
               </div>
               <div className='right'>
@@ -101,7 +105,7 @@ const PlanModal = ({ handleClose }) => {
               <div className='right' >
                 <p className='p-light' >Interest earned</p>
                 <p className='p-dark flex justify-content-end' >
-                  {getCurrIcon(plan.currency.id)}{plan.planSummary.calculatedInterest}
+                  {getCurrIcon(current_currency)}{plan.planSummary.calculatedInterest}
                 </p>
               </div>
             </div>
@@ -115,7 +119,7 @@ const PlanModal = ({ handleClose }) => {
               <div className='right' >
                 <p className='p-light' >Current balance</p>
                 <p className='p-dark flex justify-content-end' >
-                  {getCurrIcon(plan.currency.id)}100
+                  {getCurrIcon(current_currency)}100
                 </p>
               </div>
             </div>
