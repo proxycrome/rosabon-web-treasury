@@ -2,6 +2,9 @@ import {
   INITIALIZE_PAYMENT,
   INITIALIZE_PAYMENT_SUCCESS,
   INITIALIZE_PAYMENT_ERROR,
+  REGISTER_TRANSACTION,
+  REGISTER_TRANSACTION_SUCCESS,
+  REGISTER_TRANSACTION_ERROR,
   VERIFY_PAYSTACK,
   VERIFY_PAYSTACK_SUCCESS,
   VERIFY_PAYSTACK_ERROR
@@ -11,14 +14,17 @@ const initialState = {
   loading: false,
   paySuccess: null,
   payError: null,
-  verifyPaystack: null,
-  verifyPaystackError: null,
+  verify_paystack: null,
+  verify_paystackError: null,
+  reg_transaction: null,
+  reg_transactionError: null,
 };
 
 const paystack = ( state=initialState, action ) => {
   switch(action.type) {
     case INITIALIZE_PAYMENT:
     case VERIFY_PAYSTACK:
+    case REGISTER_TRANSACTION:
       state = {
         ...state,
         loading: true
@@ -47,8 +53,8 @@ const paystack = ( state=initialState, action ) => {
       state = {
         ...state,
         loading: false,
-        verifyPaystack: action.payload,
-        verifyPaystackError: null
+        verify_paystack: action.payload,
+        verify_paystackError: null
       };
       break;
 
@@ -56,8 +62,26 @@ const paystack = ( state=initialState, action ) => {
       state = {
         ...state,
         loading: false,
-        verifyPaystack: null,
-        verifyPaystackError: action.payload
+        verify_paystack: null,
+        verify_paystackError: action.payload
+      };
+      break;
+
+    case REGISTER_TRANSACTION_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        reg_transaction: action.payload,
+        reg_transactionError: null
+      };
+      break;
+
+    case REGISTER_TRANSACTION_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        reg_transaction: null,
+        reg_transactionError: action.payload
       };
       break;
 

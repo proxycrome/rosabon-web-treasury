@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   Dropdown,
@@ -6,10 +6,44 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ProfileNavBar } from '../../../dashboard/ProfileNavbar';
+import moment from "moment";
+import ModalComponent from "../../../ModalComponent";
+import PlanModal from "../PlanModal";
+import { useDispatch, useSelector } from "react-redux";
+import { 
+  getProducts, 
+  getPlans, 
+  getSinglePlan,
+} from "../../../../store/actions";
+import EmptyPlan from "../EmptyPlan";
 
 const Archives = () => {
+  const [show, setShow] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { plans } = useSelector((state) => state.plan);
+  const { products  } = useSelector((state) => state.product);
+  const userPlans = plans?.data.body ? plans?.data?.body : [];
+  const planStatus = plans?.statusCode;
+  const product = products?.data.body ? products?.data.body : []
+  const archivedPlans = userPlans.filter(item => item.planStatus === "CLOSED");
+
+  const capitalise = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  useEffect(() => {
+    dispatch(getPlans());
+    dispatch(getProducts());
+  },[])
+
+  const handlePlanModal = async (id) => {
+    await dispatch(getSinglePlan(id))
+    setShow(true);
+  }
   return (
     <>
       <ProfileNavBar>
@@ -18,226 +52,72 @@ const Archives = () => {
           </NavTitle>
         </ProfileNavBar>
       <Wrapper>
-        <div className="plan-content">
-          <div className="plan">
-            <div className="plan-top h-50 p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <h4 className="Closed">Closed</h4>
+        <ModalComponent
+          show={show}
+          size={'md'}
+          handleClose={() => setShow(false)}
+        >
+          <PlanModal 
+            handleClose={() => setShow(false)}
+          />
+        </ModalComponent>
+        {
+          archivedPlans.length > 0 ? (
+            <>
+              <div className="plan-content">
+                {
+                  planStatus === "OK" && archivedPlans.map((item) => (
+                    <div className="plan" key={item.id} >
+                      <div className="plan-top h-50 p-4" onClick={() => handlePlanModal(item.id)} >
+                        <div className="d-flex align-items-center justify-content-between">
+                          <div>
+                            <h4>{item.planName} </h4>
+                            <p className="p-0 m-0">
+                              {product?.find((product)=>product.id===item.productId)?.productName}
+                            </p>
+                          </div>
+                          <h4 className={capitalise(item.planStatus)} >{capitalise(item.planStatus)} </h4>
+                        </div>
+                        <div className="d-flex align-items-center justify-content-between pt-4">
+                          <div>
+                            <h4>Start date</h4>
+                            <p className="p-0 m-0">
+                              {moment(item.planSummary.startDate).format("DD/MM/YYYY")} 
+                            </p>
+                          </div>
+                          <div>
+                            <h4>End date</h4>
+                            <p className="p-0 m-0">
+                              {moment(item.planSummary.endDate).format("DD/MM/YYYY")} 
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="d-flex position-relative horizontal-line">
+                        <div className="position-absolute horizontal-circle-left"></div>
+                        <hr className="dotted" />
+                        <div className="position-absolute end-0 horizontal-circle-right"></div>
+                      </div>
+  
+                      <div className=" h-50 py-1 px-4">
+                        <div className="d-flex align-items-center justify-content-between">
+                          <div>
+                            <h4>{item.planName} </h4>
+                            <p className="p-0 m-0">
+                              {product.find((product)=>product.id===item.productId)?.productName}
+                            </p>
+                          </div>
+                          <DropDown id={item.id} status="Closed" />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <h4>Start date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-                <div>
-                  <h4>End date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex position-relative horizontal-line">
-              <div className="position-absolute horizontal-circle-left"></div>
-              <hr className="dotted" />
-              <div className="position-absolute end-0 horizontal-circle-right"></div>
-            </div>
-
-            <div className="plan-top h-50 py-1 px-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <DropDown status="Closed" />
-              </div>
-            </div>
-          </div>
-
-          <div className="plan">
-            <div className="plan-top h-50 p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <h4 className="Closed">Closed</h4>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <h4>Start date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-                <div>
-                  <h4>End date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex position-relative horizontal-line">
-              <div className="position-absolute horizontal-circle-left"></div>
-              <hr className="dotted" />
-              <div className="position-absolute end-0 horizontal-circle-right"></div>
-            </div>
-
-            <div className="plan-top h-50 py-1 px-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <DropDown status="Closed" />
-              </div>
-            </div>
-          </div>
-
-          <div className="plan">
-            <div className="plan-top h-50 p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <h4 className="Closed">Closed</h4>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <h4>Start date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-                <div>
-                  <h4>End date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex position-relative horizontal-line">
-              <div className="position-absolute horizontal-circle-left"></div>
-              <hr className="dotted" />
-              <div className="position-absolute end-0 horizontal-circle-right"></div>
-            </div>
-
-            <div className="plan-top h-50 py-1 px-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <DropDown status="Closed" />
-              </div>
-            </div>
-          </div>
-          <div className="plan">
-            <div className="plan-top h-50 p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <h4 className="Closed">Closed</h4>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <h4>Start date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-                <div>
-                  <h4>End date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex position-relative horizontal-line">
-              <div className="position-absolute horizontal-circle-left"></div>
-              <hr className="dotted" />
-              <div className="position-absolute end-0 horizontal-circle-right"></div>
-            </div>
-
-            <div className="plan-top h-50 py-1 px-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <DropDown status="Closed" />
-              </div>
-            </div>
-          </div>
-          <div className="plan">
-            <div className="plan-top h-50 p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <h4 className="Closed">Closed</h4>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <h4>Start date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-                <div>
-                  <h4>End date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex position-relative horizontal-line">
-              <div className="position-absolute horizontal-circle-left"></div>
-              <hr className="dotted" />
-              <div className="position-absolute end-0 horizontal-circle-right"></div>
-            </div>
-
-            <div className="plan-top h-50 py-1 px-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <DropDown status="Closed" />
-              </div>
-            </div>
-          </div>
-          <div className="plan">
-            <div className="plan-top h-50 p-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <h4 className="Closed">Closed</h4>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <h4>Start date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-                <div>
-                  <h4>End date</h4>
-                  <p className="p-0 m-0">24/06/2023</p>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex position-relative horizontal-line">
-              <div className="position-absolute horizontal-circle-left"></div>
-              <hr className="dotted" />
-              <div className="position-absolute end-0 horizontal-circle-right"></div>
-            </div>
-
-            <div className="plan-top h-50 py-1 px-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h4>Plan 1</h4>
-                  <p className="p-0 m-0">Product 1</p>
-                </div>
-                <DropDown status="Closed" />
-              </div>
-            </div>
-          </div>
-        </div>
+            </>
+          ) : 
+          <EmptyPlan />
+        }
         {/* <div className="row">
           <div className="d-flex justify-content-center my-5">
             <button className="btn-view">View all</button>

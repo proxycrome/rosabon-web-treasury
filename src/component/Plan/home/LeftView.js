@@ -36,15 +36,19 @@ export const LeftView = () => {
       (data.amount >= item.minimumAmount) && (data.amount <= item.maximumAmount)}
     ))
     if(rate !== undefined) {
-      return rate?.maturityRate
+      if(rate?.maturityRate === null) {
+        return 1;
+      } else {
+        return rate?.maturityRate;
+      }
     } else {
       return 1;
     }
-  }, [data.product])
+  }, [data.product, data.amount])
 
   const calculateSI = (principal, rate, time) => {
     const SI = (principal*rate*(((time/365) * 100 + Number.EPSILON) / 100)) / 100
-    return Number(parseFloat(SI).toFixed(2))
+    return Math.round(SI * 100 + Number.EPSILON) / 100
     // return Number((SI * 100 + Number.EPSILON) / 100).toFixed(2)
   }
 

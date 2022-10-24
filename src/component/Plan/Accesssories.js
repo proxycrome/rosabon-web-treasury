@@ -34,6 +34,7 @@ import {
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
+import toast from 'react-hot-toast';
 
 
 export const NairaCard = () => {
@@ -836,8 +837,15 @@ export const getCurrIcon = (currency) => {
 
 export const PlanSummary = ({ planPay }) => {
   const { form } = useContext(PlanContext);
-  console.log("gg");
   let planData = form;
+  const { currencies  } = useSelector((state) => state.currencies);
+  const currencies_list = currencies?.data.body ? currencies?.data.body: []
+  const current_currency = currencies_list.find(item=>item.id===planData?.currency)?.name
+  const calc_withholding_tax = Math.round(
+    (planData.planSummary.principal*(planData.planSummary.withholdingTax/100)) * 100 
+    + Number.EPSILON
+    ) / 100
+
   return (
     <div>
       <PlanSummaryWrapper>
@@ -864,7 +872,7 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Principal </p>
                   {/* <h4> ₦2,500,000</h4> */}
                   <h4 className="flex">
-                    {getCurrIcon(planData?.currency)}{" "}
+                    {getCurrIcon(current_currency)}{" "}
                     {planData.planSummary.principal}
                   </h4>
                 </div>
@@ -888,7 +896,7 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Calculated Interest </p>
                   {/* <h4>₦200,000</h4> */}
                   <h4 className="flex justify-content-end">
-                    {getCurrIcon(planData?.currency)}{" "}
+                    {getCurrIcon(current_currency)}{" "}
                     {planData.planSummary.calculatedInterest}
                   </h4>
                 </div>
@@ -898,15 +906,15 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Withholding Tax</p>
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
-                    {getCurrIcon(planData?.currency)}{" "}
-                    {planData.planSummary.withholdingTax}
+                    {getCurrIcon(current_currency)}{" "}
+                    {calc_withholding_tax}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Payment at Maturity</p>
                   {/* <h4>₦2,700,000</h4> */}
                   <h4 className="flex justify-content-end">
-                    {getCurrIcon(planData?.currency)}{" "}
+                    {getCurrIcon(current_currency)}{" "}
                     {planData.planSummary.paymentMaturity}
                   </h4>
                 </div>
@@ -2890,23 +2898,42 @@ export const paymentAtMaturity = (
   return result;
 };
 
-export const PayWithCard = ({ email, amount, setShow }) => {
+export const randomNumbers = (max) => {
+  let random_num = "";
+  for(let i = 0; i < max; i++) {
+    random_num += JSON.stringify(Math.floor(Math.random()*10))
+  }
+  return random_num
+}
+
+export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const config = {
-    reference: new Date().getTime().toString(),
+    reference: transactionRef,
     email: email,
     amount: amount,
-    publicKey: "pk_test_f5c065493c77a268ff32c483e0e45b672dac4958",
+    publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
   };
   const dispatch = useDispatch();
   const { form } = useContext(PlanContext);
   const { loading } = useSelector((state) => state.plan);
+  const { verify_paystack } = useSelector((state) => state.paystack);
+
+  const success = async() => {
+    await dispatch(verifyPaystack("PAYSTACK",transactionRef,dispatch,form, setShow));
+    // if(verify_paystack?.message === "Payment validated") {
+    //   dispatch(createPlan(form, setShow));
+    // } else {
+    //   toast.error("Payment not verified", {
+    //     position: "top-right",
+    //   })
+    // }
+  };
 
   // you can call this function anything
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
     console.log(reference);
-    // dispatch(verifyPaystack("PAYSTACK","trans"+reference.trans));
-    dispatch(createPlan(form, setShow));
+    success();
   };
 
   // you can call this function anything
@@ -2917,19 +2944,33 @@ export const PayWithCard = ({ email, amount, setShow }) => {
 
   const initializePayment = usePaystackPayment(config);
   return (
-    <button
-      style={{
-        backgroundColor: "#111E6C",
-        color: "#FFFFFF",
-        width: "300px",
-      }}
-      // onClick={() => setShow(true)}
-      // onClick={handleSubmit}
-      onClick={() => {
-        initializePayment(onSuccess, onClose);
-      }}
-    >
-      {loading ? "LOADING..." : "Pay"}
-    </button>
+    <>
+      {
+        transactionRef !== null ? (
+          <>
+            <button
+              style={{
+                backgroundColor: "#111E6C",
+                color: "#FFFFFF",
+                width: "300px",
+              }}
+              // onClick={() => setShow(true)}
+              // onClick={handleSubmit}
+              onClick={() => {
+                initializePayment(onSuccess, onClose);
+              }}
+            >
+              {loading ? "LOADING..." : "Pay"}
+            </button>
+          </>
+        ) : (<>
+          {
+            toast.error("No transaction Reference", {
+              position: "top-right",
+            })
+          }
+        </>)
+      }
+    </>
   );
 };

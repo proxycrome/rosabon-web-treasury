@@ -15,11 +15,18 @@ import { PlanContext } from "./PlanForm";
 
 const PlanBankPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
-  const { form } = useContext(PlanContext);
+  const { form, setForm } = useContext(PlanContext);
   const [modalCount, setModalCount] = useState(0);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.plan);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      planStatus: "PENDING",
+    });
+  },[])
 
   useEffect(() => {
     setModalCount(modalCount+1);
@@ -31,6 +38,8 @@ const PlanBankPayment = ({goBack}) => {
   const handleSubmit = () => {
     dispatch(createPlan(form, setShow));
   }
+
+  console.log("form here", form)
 
 
   return (

@@ -8,18 +8,30 @@ import ModalComponent from '../../ModalComponent';
 import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { createPlan, initPayment } from '../../../store/actions';
-import { PlanContext } from "./PlanForm";
+import { PlanContext } from './PlanForm';
+import { regTransaction } from '../../../store/actions';
+import Spinner from '../../common/loading';
 
 const PlanCardPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
   const [modalCount, setModalCount] = useState(0);
-  const { form } = useContext(PlanContext);
+  const { form, setForm } = useContext(PlanContext);
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.plan);
   const { users } = useSelector((state) => state.user_profile);
-  const { paySuccess } = useSelector((state) => state.paystack);
+  const { reg_transaction } = useSelector((state) => state.paystack);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const formData = {
+      amount: form?.planSummary.principal,
+      purposeOfPayment: "PLAN_CREATION"
+    }
+    setForm({
+      ...form,
+      planStatus: "ACTIVE",
+    });
+    dispatch(regTransaction(formData))
+  }, [])
 
   useEffect(() => {
     setModalCount(modalCount+1);
@@ -40,64 +52,75 @@ const PlanCardPayment = ({goBack}) => {
 
   return (
     <>
-      <ProfileNavBar>
-          <NavTitle>
-            <span className="fw-bold">Choose Plan</span>
-          </NavTitle>
-        </ProfileNavBar>
-      <Wrapper>
-        <Toaster />
-        <LeftView>
-          <h6>Kindly confirm your transaction details below</h6>
-          <div className="choose-plan mt-5">
-            <div className="d-flex align-items-center justify-content-between">
-                <div>Payment Type:</div>
-                <div className="d-flex align-items-center">
-                    <img className="verve-card" src={Verve} alt="Verve" />
-                    <p className="p-0 m-0">Debit Card</p>
+      {
+        reg_transaction !== null ? (
+          <>
+            <ProfileNavBar>
+              <NavTitle>
+                <span className="fw-bold">Choose Plan</span>
+              </NavTitle>
+            </ProfileNavBar>
+            <Wrapper>
+              <Toaster />
+              <LeftView>
+                <h6>Kindly confirm your transaction details below</h6>
+                <div className="choose-plan mt-5">
+                  <div className="d-flex align-items-center justify-content-between">
+                      <div>Payment Type:</div>
+                      <div className="d-flex align-items-center">
+                          <img className="verve-card" src={Verve} alt="Verve" />
+                          <p className="p-0 m-0">Debit Card</p>
+                      </div>
+                  </div>
                 </div>
-            </div>
+                <PlanSummary />
+              </LeftView>
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button style={{ color: '#111E6C', width: '300px' }} onClick={goBack}>Back</button>
+                  </div>
+                  <div>
+                    {/* <button
+                      style={{
+                        backgroundColor: '#111E6C',
+                        color: '#FFFFFF',
+                        width: '300px',
+                      }}
+                      // onClick={() => setShow(true)}
+                      onClick={handleSubmit}
+                    >
+                      {loading ? 'LOADING...' : 'Pay'}
+                    </button> */}
+                    <PayWithCard 
+                      amount={JSON.stringify(form?.planSummary?.principal)+"00"}
+                      email={users?.email}
+                      setShow={setShow}
+                      transactionRef={reg_transaction?.transactionReference}
+                    />
+                    <ModalComponent
+                      show={show}
+                      size={'md'}
+                      handleClose={() => setShow(false)}
+                    >
+                      <SuccessConfirm 
+                        createPlan="paid"
+                        handleClose={() => setShow(false)}
+                      />
+                    </ModalComponent>
+                  </div>
+                </div>
+              </div>
+            </WrapperFooter>
+          </>
+        ) : (
+          <div className="vh-100 w-100">
+            <Spinner />
           </div>
-          <PlanSummary />
-        </LeftView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button style={{ color: '#111E6C', width: '300px' }} onClick={goBack}>Back</button>
-            </div>
-            <div>
-              {/* <button
-                style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
-                }}
-                // onClick={() => setShow(true)}
-                onClick={handleSubmit}
-              >
-                {loading ? 'LOADING...' : 'Pay'}
-              </button> */}
-              <PayWithCard 
-                amount={JSON.stringify(form?.planSummary?.principal)+"00"}
-                email={users?.email}
-                setShow={setShow}
-              />
-              <ModalComponent
-                show={show}
-                size={'md'}
-                handleClose={() => setShow(false)}
-              >
-                <SuccessConfirm 
-                  createPlan="paid"
-                  handleClose={() => setShow(false)}
-                />
-              </ModalComponent>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+        )
+      }
     </>
   );
 };
