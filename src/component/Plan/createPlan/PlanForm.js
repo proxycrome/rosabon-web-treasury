@@ -115,10 +115,10 @@ const PlanForm = () => {
       // amount: product.hasTargetAmount !== null ? null : formData.amount,
       product: product.id,
       productCategory: product.productCategory?.id,
-      currency: currencies_list.find(item => item.name===formData.currency)?.id,
       actualMaturityDate: formData.actualMaturityDate==="" ? 
       moment(endDate).format("YYYY-MM-DD") : formData.actualMaturityDate,
       contributionValue: formData.contributionValue,
+      currency: currencies_list.find(item => item.name===formData.currency)?.id,
       numberOfTickets: updateNumOfTickets(
         product?.properties?.hasTargetAmount ? formData.targetAmount : formData.amount
       ),
@@ -193,10 +193,11 @@ const PlanForm = () => {
     let interestRate;
     let principal = product?.properties?.hasTargetAmount ? formData.targetAmount : formData.amount
     let rate =  inv_rates?.find((
-      item => { return (item.product.id === formData.product) && 
+      item => { return (item.product.id === parseInt(id)) && 
       (principal >= item.minimumAmount) && (principal <= item.maximumAmount)}
     ))
     let directDebitRate = rate?.percentDirectDebit ? rate?.percentDirectDebit : 0;
+    console.log("deb deb", directDebitRate)
     if(rate !== undefined) {
       switch(intRecOption) {
         case "MONTHLY":
@@ -227,7 +228,8 @@ const PlanForm = () => {
         interestRate = formData.directDebit ? 1 + directDebitRate : 1
         return interestRate
       } else {
-        interestRate = formData.directDebit === "true"? interestRate + directDebitRate : interestRate
+        interestRate = (formData.directDebit===true || formData.directDebit === "true")
+        ? interestRate + directDebitRate : interestRate
         return interestRate
       }
     } else {
@@ -239,13 +241,14 @@ const PlanForm = () => {
 
   // side effect updates exchange rates
   useEffect(() => {
-    const currency = ex_rates?.filter(item => item.name === formData.currency)[0]
-
-    setFormData({
-      ...formData,
-      exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
-    })
-}, [formData.currency])
+    if(typeof formData.currency === 'string') {
+      const currency = ex_rates?.filter(item => item.name === formData.currency)[0]
+      setFormData({
+        ...formData,
+        exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
+      })
+    }
+  }, [formData.currency])
 
   const calcContribValue = useMemo(() => contribValue(),[
     formData.savingFrequency, 

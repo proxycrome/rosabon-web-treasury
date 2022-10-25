@@ -50,12 +50,12 @@ export const Plans = () => {
   }
   if(filter.startDate !== "") {
     filterPlans = filterPlans.filter(
-      item => moment(filter.startDate) <= moment(item.planSummary.startDate)
+      item => moment(filter.startDate) >= moment(item.planSummary.startDate)
     )
   }
   if(filter.endDate !== "") {
     filterPlans = filterPlans.filter(
-      item => moment(filter.endDate) >= moment(item.planSummary.endDate)
+      item => moment(filter.endDate) <= moment(item.planSummary.endDate)
     )
   }
 
@@ -113,11 +113,11 @@ export const Plans = () => {
             >
               <option value={0} hidden disabled selected >Choose Investment Category</option>
               <option value={9999999}>All</option>
-              {/* {
+              {
                 prodCategories.map(item => (
                   <option value={item.id} key={item.id} >{item.name}</option>
                 ))
-              } */}
+              }
             </Input>
           </div>
         </div>
@@ -178,7 +178,7 @@ export const Plans = () => {
                             {product?.find((product)=>product.id===item.productId)?.productName}
                           </p>
                         </div>
-                        <h4 className={capitalise(item.planStatus)} >{item.planStatus.toLowerCase()} </h4>
+                        <h4 className={capitalise(item.planStatus)} >{capitalise(item.planStatus)} </h4>
                       </div>
                       <div className="d-flex align-items-center justify-content-between pt-4">
                         <div>
