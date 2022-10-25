@@ -229,10 +229,10 @@ export const uploadCompanyDocumentError = (error) => {
   };
 };
 
-export const uploadPersonalDocument = (formData) => {
+export const uploadPersonalDocument = (formData, reset) => {
   return {
     type: PUT_PERSONAL_DOCUMENTS,
-    payload: { formData },
+    payload: { formData, reset },
   };
 };
 
@@ -291,10 +291,10 @@ export const deleteDirectorError = (error) => {
   };
 };
 
-export const updateBankDetails = (formData) => {
+export const updateBankDetails = (formData, reset) => {
     return {
         type: UPDATE_BANK_DETAILS,
-        payload: {formData},
+        payload: {formData, reset},
     }
 }
 

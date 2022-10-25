@@ -144,7 +144,7 @@ const CompanyKYC = () => {
                                 name="name"
                                 onChange={handleChange}
                                 value={formData.name}
-                                disabled
+                                // disabled
                               />
                             </div>
                           </div>

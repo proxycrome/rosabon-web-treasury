@@ -31,10 +31,10 @@ import {
   getSingleTicket,
   verifyPaystack,
   createPlan,
+  getEachWalletTransaction,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
-
 
 export const NairaCard = () => {
   return (
@@ -1480,7 +1480,7 @@ export const HistoryTable = () => {
     dispatch(getWalletTransactions());
   }, [dispatch]);
 
-  const { walletTransactions } = useSelector((state) => state.wallet);
+  const { walletTransactions, transaction } = useSelector((state) => state.wallet);
 
   useEffect(() => {
     const filteredWalletTrans = walletTransactions?.entities?.filter((item) => {
@@ -1513,6 +1513,12 @@ export const HistoryTable = () => {
     "November",
     "December",
   ];
+
+  const previewTransaction = async(transId) => {
+    dispatch(getEachWalletTransaction(transId));
+    console.log(transId);
+    setShow(true)
+  }
 
   const data = {
     columns: [
@@ -1551,35 +1557,35 @@ export const HistoryTable = () => {
       filteredTransactions?.length > 0
         ? filteredTransactions?.map((data) => ({
             id: (
-              <Link to="#" onClick={() => setShow(true)}>
-                <div>{data?.id}</div>
+              <Link to="#" onClick={() => previewTransaction(data?.transactionId)}>
+                <div>{data?.transactionId}</div>
               </Link>
             ),
-            date: `${data?.createdAt?.split(" ")[0]}`,
-            description: `${data?.transactionDescription}`,
+            date: `${data?.transactionDate?.split(" ")[0]}`,
+            description: `${data?.transactionCategory}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
-                ? "+ " + data?.amount
-                : "- " + data?.amount
+                ? "+ " + data?.debit
+                : "- " + data?.debit
             }`,
-            balance: "",
+            balance: `${data?.balanceAfterTransaction}`,
           }))
         : walletTransactions?.entities?.map((data) => ({
             id: (
-              <Link to="#" onClick={() => setShow(true)}>
-                <div>{data?.id}</div>
+              <Link to="#" onClick={() => previewTransaction(data?.transactionId)}>
+                <div>{data?.transactionId}</div>
               </Link>
             ),
-            date: `${data?.createdAt?.split(" ")[0]}`,
-            description: `${data?.transactionDescription}`,
+            date: `${data?.transactionDate?.split(" ")[0]}`,
+            description: `${data?.transactionCategory}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
-                ? "+ " + data?.amount
-                : "- " + data?.amount
+                ? "+ " + data?.debit
+                : "- " + data?.debit
             }`,
-            balance: "",
+            balance: `${data?.balanceAfterTransaction}`,
           })),
   };
 
@@ -1656,7 +1662,7 @@ export const HistoryTable = () => {
               setShow(false);
             }}
           >
-            <TransactionPreview handleClose={() => setShow(false)} />
+            <TransactionPreview handleClose={() => setShow(false)} transaction={transaction} />
           </ModalComponent>
         </div>
       </HistoryTableWarapper>
@@ -2518,12 +2524,8 @@ export const FeedbackTickets = () => {
                             {item.status}
                           </button>
                         </td>
-                        <td>
-                          {item.createdAt.slice(0,10)}
-                        </td>
-                        <td>
-                          {item.createdAt.slice(0,10)}
-                        </td>
+                        <td>{item.createdAt.slice(0, 10)}</td>
+                        <td>{item.createdAt.slice(0, 10)}</td>
                         <td>
                           <button
                             style={{
@@ -2676,12 +2678,8 @@ export const FeedbackOpenTickets = () => {
                             {item.status}
                           </button>
                         </td>
-                        <td>
-                          {item.createdAt.slice(0,10)}
-                        </td>
-                        <td>
-                          {item.createdAt.slice(0,10)}
-                        </td>
+                        <td>{item.createdAt.slice(0, 10)}</td>
+                        <td>{item.createdAt.slice(0, 10)}</td>
                         <td>
                           <button
                             style={{
@@ -2777,12 +2775,8 @@ export const FeedbackCloseTickets = () => {
                             {item.status}
                           </button>
                         </td>
-                        <td>
-                          {item.createdAt.slice(0,10)}
-                        </td>
-                        <td>
-                          {item.createdAt.slice(0,10)}
-                        </td>
+                        <td>{item.createdAt.slice(0, 10)}</td>
+                        <td>{item.createdAt.slice(0, 10)}</td>
                         <td>
                           <button
                             style={{

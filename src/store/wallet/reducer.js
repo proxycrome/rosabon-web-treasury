@@ -1,6 +1,9 @@
 import {
   CLEAR_TRANSACTIONS,
   CLEAR_WALLET_BALANCE,
+  GET_EACH_WALLET_TRANSACTION,
+  GET_EACH_WALLET_TRANSACTION_ERROR,
+  GET_EACH_WALLET_TRANSACTION_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -20,6 +23,8 @@ const initialState = {
   walletTransError: null,
   withdrawMsg: null,
   withdrawMsgError: null,
+  transaction: null,
+  transactionError: null,
 };
 
 const wallet = (state = initialState, action) => {
@@ -108,6 +113,33 @@ const wallet = (state = initialState, action) => {
         loading: false,
         withdrawMsg: null,
         withdrawMsgError: action.payload,
+      };
+      break;
+
+    case GET_EACH_WALLET_TRANSACTION:
+      state = {
+        ...state,
+        loading: true,
+        transaction: null,
+        transactionError: null,
+      };
+      break;
+
+    case GET_EACH_WALLET_TRANSACTION_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        transaction: action.payload,
+        transactionError: null,
+      };
+      break;
+
+    case GET_EACH_WALLET_TRANSACTION_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        transaction: null,
+        transactionError: action.payload,
       };
       break;
 

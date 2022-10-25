@@ -12,8 +12,7 @@ import { OTPVerify } from "../../Accessories/BVNConfirm";
 import FileDoc from "../../../asset/file.png";
 import User from "../../../asset/user.png";
 import Check from "../../../asset/checked.png";
-// import { uploadPersonalDocument } from '../../../redux/actions/updateProfile/uploadDocument.action';
-// import { sendOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
+import Spinner from "../../common/loading";
 import {
   getUserDocs,
   sendOtp,
@@ -43,6 +42,7 @@ const MyDocu = () => {
     otpError,
     validateEmailOtp,
     documents,
+    loading,
   } = useSelector((state) => state.user_profile);
 
   const { docMsg } = useSelector((state) => state.updateProfile);
@@ -108,16 +108,16 @@ const MyDocu = () => {
 
     const { idType, idNumber } = formData;
 
-    if (!frontEncodedString && !idType) {
-      toast.error("Please Select and Upload your ID");
-      return;
-    } else if (!frontEncodedString) {
-      toast.error("Please Upload ID");
-      return;
-    } else if (!idType) {
-      toast.error("Please Select ID Type");
-      return;
-    }
+    // if (!frontEncodedString && !idType) {
+    //   toast.error("Please Select and Upload your ID");
+    //   return;
+    // } else if (!frontEncodedString) {
+    //   toast.error("Please Upload ID");
+    //   return;
+    // } else if (!idType) {
+    //   toast.error("Please Select ID Type");
+    //   return;
+    // }
 
     let data = {
       idDocumentImage: {
@@ -135,8 +135,16 @@ const MyDocu = () => {
         name: "Utility Image",
       },
     };
+
+    const reset = {
+      setShowEdit,
+      setformData,
+      setBase64File,
+      getUserDocs,
+    };
+
     console.log(data);
-    dispatch(uploadPersonalDocument(data));
+    dispatch(uploadPersonalDocument(data, reset));
   };
 
   const handleFileSelect = (e, reference) => {
@@ -161,28 +169,28 @@ const MyDocu = () => {
     }
   }, [validateEmailOtp]);
 
-  useEffect(() => {
-    if (docMsg) {
-      setShowEdit(true);
-      setformData({
-        ...formData,
-        idNumber: "",
-        idType: "",
-      });
-      setBase64File({
-        ...base64File,
-        frontEncodedString: "",
-        utilityEncodedString: "",
-        photoEncodedString: "",
-      });
-    }
-  }, [docMsg]);
+  // useEffect(() => {
+  //   if (docMsg) {
+  //     setShowEdit(true);
+  //     setformData({
+  //       ...formData,
+  //       idNumber: "",
+  //       idType: "",
+  //     });
+  //     setBase64File({
+  //       ...base64File,
+  //       frontEncodedString: "",
+  //       utilityEncodedString: "",
+  //       photoEncodedString: "",
+  //     });
+  //   }
+  // }, [docMsg]);
 
   useEffect(() => {
-    if (!documents || docMsg) {
+    if (!documents) {
       dispatch(getUserDocs());
     }
-  }, [documents, docMsg]);
+  }, [documents]);
 
   console.log(documents);
 
@@ -190,323 +198,165 @@ const MyDocu = () => {
     <div>
       <Toaster />
       <form autoComplete="off" onSubmit={handleSubmit}>
-        <WrapperBody>
-          <div className="banner position-relative">
-            {documents?.passportPhotographImage?.imageUrl && showEdit ? (
-              <div className="position-absolute user-image">
-                <div className="">
-                  <img
-                    className="image-frame"
-                    style={{ borderRadius: "50%", border: "6px solid #FFFFFF" }}
-                    src={documents?.passportPhotographImage?.imageUrl}
-                    alt="User"
-                    width="125"
-                    height="125"
-                  />
-                  {base64File.photoEncodedString ? (
+        {loading ? (
+          <div className="vh-100 w-100">
+            <Spinner />
+          </div>
+        ) : (
+          <WrapperBody>
+            <div className="banner position-relative">
+              {documents?.passportPhotographImage?.imageUrl && showEdit ? (
+                <div className="position-absolute user-image">
+                  <div className="">
                     <img
-                      className="image-fluid position-absolute"
-                      src={Check}
-                      alt="check"
-                      width="15"
+                      className="image-frame"
+                      style={{
+                        borderRadius: "50%",
+                        border: "6px solid #FFFFFF",
+                      }}
+                      src={documents?.passportPhotographImage?.imageUrl}
+                      alt="User"
+                      width="125"
+                      height="125"
                     />
-                  ) : null}
-                </div>
-              </div>
-            ) : (
-              <div className="position-absolute user-image">
-                <div className="">
-                  <img
-                    className="image-frame"
-                    style={{ borderRadius: "50%", border: "2px solid #FFFFFF" }}
-                    src={
-                      base64File.photoEncodedString
-                        ? `data:image/jpeg;base64,${base64File.photoEncodedString}`
-                        : User
-                    }
-                    alt="User"
-                    width="125"
-                    height="125"
-                  />
-                  {base64File.photoEncodedString ? (
-                    <img
-                      className="image-fluid position-absolute"
-                      src={Check}
-                      alt="check"
-                      width="15"
-                    />
-                  ) : null}
-                </div>
-              </div>
-            )}
-
-            <input
-              type="file"
-              className="file"
-              accept="image/jpeg"
-              ref={photoFileInputRef}
-              onChange={(e) => handleFileChange(e, "photoEncodedString")}
-              disabled={showEdit}
-            />
-            <i
-              className={
-                documents?.passportPhotographImage?.imageUrl
-                  ? "white-camera-font-awe position-absolute fa-solid fa-camera"
-                  : "camera-font-awe position-absolute fa-solid fa-camera"
-              }
-              onClick={(e) => handleFileSelect(e, photoFileInputRef)}
-            ></i>
-          </div>
-          <div className="image-holder">
-            <div className="row">
-              <div className="d-flex justify-content-between">
-                <div className="fileText pl-5">
-                  <h4 className="">Profile</h4>
-                  <small className="">
-                    Update your photo and personal details
-                  </small>
-                </div>
-                <div>
-                  {showEdit ? (
-                    <button type="button" onClick={handleSendOtp}>
-                      Edit
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="grey-button"
-                      onClick={toggleEdit}
-                    >
-                      Cancel
-                    </button>
-                  )}
-                </div>
-              </div>
-              <ModalComponent
-                show={showEmailOtpModal}
-                size={"md"}
-                handleClose={handleOTPModalClose}
-              >
-                <OTPVerify
-                  show={showEmailOtpModal}
-                  handleClose={handleOTPModalClose}
-                  emailOtp={true}
-                  updateOtp={(otp) => createOtp(otp)}
-                  otpData={otp?.data}
-                />
-              </ModalComponent>
-            </div>
-          </div>
-          <div className="row pt-5">
-            <div className="col-md-12 col-lg-6">
-              <label>ID Type</label>
-              <select
-                className="form-select form-select-md mb-3"
-                aria-label=".form-select-md"
-                name="idType"
-                value={formData.idType || documents?.idType}
-                onChange={handleChange}
-                disabled={showEdit}
-              >
-                <option value="">Select ID Type...</option>
-                <option value="NATIONAL_ID_CARD">National ID card</option>
-                <option value="DRIVERS_LICENSE">Driver's License </option>
-                <option value="INTERNATIONAL_PASSPORT">
-                  International Passport
-                </option>
-                <option value="VOTERS_CARD">Voter's Card </option>
-              </select>
-            </div>
-            <div className="col-md-12 col-lg-6">
-              <label>ID Number</label>
-              <div className="input-group mb-4">
-                <input
-                  className="form-control"
-                  placeholder={documents?.idNumber || "Enter ID Number"}
-                  type="text"
-                  name="idNumber"
-                  value={formData.idNumber}
-                  onChange={handleChange}
-                  disabled={showEdit}
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <div>
-              {documents?.idDocumentImage?.imageUrl && showEdit ? (
-                <div className="row pb-4">
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center justify-content-center">
+                    {base64File.photoEncodedString ? (
                       <img
-                        className="file-image image-fluid"
-                        src={FileDoc}
-                        alt="FileDoc"
+                        className="image-fluid position-absolute"
+                        src={Check}
+                        alt="check"
+                        width="15"
                       />
-                      <div className="d-flex" style={{ columnGap: "10px" }}>
-                        <h5 className="image-fluid mr-3">ID Card </h5>
-                        <img
-                          // className="position-absolute"
-                          src={Check}
-                          alt="check"
-                          width="15"
-                          height="15"
-                        />
-                      </div>
-                    </div>
-                    <div className=" style-attachment">
-                      <a
-                        href={documents?.idDocumentImage?.imageUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                        >
-                          View
-                        </button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ) : (     
-                <div className="row pb-4">
-                  {!base64File.frontEncodedString ? (
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center justify-content-center">
-                        <img
-                          className="file-image image-fluid"
-                          src={FileDoc}
-                          alt="FileDoc"
-                        />
-                        <div>
-                          <h5 className="">Upload ID Card</h5>
-                          <h5 className="">jpg, pdf, 2MB</h5>
-                        </div>
-                      </div>
-                      <div className=" style-attachment">
-                        <input
-                          type="file"
-                          className="file"
-                          ref={frontFileInputRef}
-                          onChange={(e) =>
-                            handleFileChange(e, "frontEncodedString")
-                          }
-                          accept="application/pdf, image/jpeg"
-                        />
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                          disabled={showEdit}
-                          onClick={(e) =>
-                            handleFileSelect(e, frontFileInputRef)
-                          }
-                        >
-                          Choose file
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="d-flex align-items-center justify-content-between w-100">
-                      <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                        <img
-                          className="file-image image-fluid"
-                          src={FileDoc}
-                          alt="FileDoc"
-                        />
-                        <div className="progress-bar-style">
-                          <h5 className="position-relative">
-                            ID Card{" "}
-                            <span
-                              style={{ cursor: "pointer" }}
-                              onClick={() =>
-                                setBase64File({
-                                  ...base64File,
-                                  frontEncodedString: "",
-                                })
-                              }
-                            >
-                              <i className="fa-solid fa-xmark"></i>
-                            </span>
-                          </h5>
-                          <div className="progress" style={{ height: "3px" }}>
-                            <div
-                              className="progress-bar"
-                              role="progressbar"
-                              style={{ width: "75%" }}
-                              aria-valuenow="25"
-                              aria-valuemin="0"
-                              aria-valuemax="100"
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className=" style-attachment">
-                        <input
-                          type="file"
-                          className="file"
-                          ref={frontFileInputRef}
-                          onChange={(e) =>
-                            handleFileChange(e, "frontEncodedString")
-                          }
-                        />
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                          disabled={showEdit}
-                          onClick={(e) =>
-                            handleFileSelect(e, frontFileInputRef)
-                          }
-                        >
-                          Choose file
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-              {documents?.utilityBillImage?.imageUrl && showEdit ? (
-                <div className="row pb-4">
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center justify-content-center">
-                      <img
-                        className="file-image image-fluid"
-                        src={FileDoc}
-                        alt="FileDoc"
-                      />
-                      <div className="d-flex" style={{ columnGap: "10px" }}>
-                        <h5 className="image-fluid mr-3">
-                          Company/Business Certificate of Incorporation
-                        </h5>
-                        <img
-                          // className="position-absolute"
-                          src={Check}
-                          alt="check"
-                          width="15"
-                          height="15"
-                        />
-                      </div>
-                    </div>
-                    <div className=" style-attachment">
-                      <a
-                        href={documents?.utilityBillImage?.imageUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                        >
-                          View
-                        </button>
-                      </a>
-                    </div>
+                    ) : null}
                   </div>
                 </div>
               ) : (
-                <div className="row pb-4">
-                  {!base64File.utilityEncodedString ? (
+                <div className="position-absolute user-image">
+                  <div className="">
+                    <img
+                      className="image-frame"
+                      style={{
+                        borderRadius: "50%",
+                        border: "2px solid #FFFFFF",
+                      }}
+                      src={
+                        base64File.photoEncodedString
+                          ? `data:image/jpeg;base64,${base64File.photoEncodedString}`
+                          : documents?.passportPhotographImage?.imageUrl
+                          ? documents?.passportPhotographImage?.imageUrl
+                          : User
+                      }
+                      alt="User"
+                      width="125"
+                      height="125"
+                    />
+                    {base64File.photoEncodedString ? (
+                      <img
+                        className="image-fluid position-absolute"
+                        src={Check}
+                        alt="check"
+                        width="15"
+                      />
+                    ) : null}
+                  </div>
+                </div>
+              )}
+
+              <input
+                type="file"
+                className="file"
+                accept="image/jpeg"
+                ref={photoFileInputRef}
+                onChange={(e) => handleFileChange(e, "photoEncodedString")}
+                disabled={showEdit}
+              />
+              <i
+                className={
+                  documents?.passportPhotographImage?.imageUrl
+                    ? "white-camera-font-awe position-absolute fa-solid fa-camera"
+                    : "camera-font-awe position-absolute fa-solid fa-camera"
+                }
+                onClick={(e) => handleFileSelect(e, photoFileInputRef)}
+              ></i>
+            </div>
+            <div className="image-holder">
+              <div className="row">
+                <div className="d-flex justify-content-between">
+                  <div className="fileText pl-5">
+                    <h4 className="">Profile</h4>
+                    <small className="">
+                      Update your photo and personal details
+                    </small>
+                  </div>
+                  <div>
+                    {showEdit ? (
+                      <button type="button" onClick={handleSendOtp}>
+                        Edit
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="grey-button"
+                        onClick={toggleEdit}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <ModalComponent
+                  show={showEmailOtpModal}
+                  size={"md"}
+                  handleClose={handleOTPModalClose}
+                >
+                  <OTPVerify
+                    show={showEmailOtpModal}
+                    handleClose={handleOTPModalClose}
+                    emailOtp={true}
+                    updateOtp={(otp) => createOtp(otp)}
+                    otpData={otp?.data}
+                  />
+                </ModalComponent>
+              </div>
+            </div>
+            <div className="row pt-5">
+              <div className="col-md-12 col-lg-6">
+                <label>ID Type</label>
+                <select
+                  className="form-select form-select-md mb-3"
+                  aria-label=".form-select-md"
+                  name="idType"
+                  value={formData.idType || documents?.idType}
+                  onChange={handleChange}
+                  disabled={showEdit}
+                >
+                  <option value="">Select ID Type...</option>
+                  <option value="NATIONAL_ID_CARD">National ID card</option>
+                  <option value="DRIVERS_LICENSE">Driver's License </option>
+                  <option value="INTERNATIONAL_PASSPORT">
+                    International Passport
+                  </option>
+                  <option value="VOTERS_CARD">Voter's Card </option>
+                </select>
+              </div>
+              <div className="col-md-12 col-lg-6">
+                <label>ID Number</label>
+                <div className="input-group mb-4">
+                  <input
+                    className="form-control"
+                    placeholder={documents?.idNumber || "Enter ID Number"}
+                    type="text"
+                    name="idNumber"
+                    value={formData.idNumber}
+                    onChange={handleChange}
+                    disabled={showEdit}
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              <div>
+                {documents?.idDocumentImage?.imageUrl && showEdit ? (
+                  <div className="row pb-4">
                     <div className="d-flex align-items-center justify-content-between">
                       <div className="d-flex align-items-center justify-content-center">
                         <img
@@ -514,95 +364,266 @@ const MyDocu = () => {
                           src={FileDoc}
                           alt="FileDoc"
                         />
-                        <div>
-                          <h5 className="">Upload Utility Bill</h5>
-                          <h5 className="">jpg, pdf, 2 MB</h5>
+                        <div className="d-flex" style={{ columnGap: "10px" }}>
+                          <h5 className="image-fluid mr-3">ID Card </h5>
+                          <img
+                            // className="position-absolute"
+                            src={Check}
+                            alt="check"
+                            width="15"
+                            height="15"
+                          />
                         </div>
                       </div>
                       <div className=" style-attachment">
-                        <input
-                          type="file"
-                          className="file"
-                          ref={utilityFileInputRef}
-                          onChange={(e) =>
-                            handleFileChange(e, "utilityEncodedString")
-                          }
-                          accept="image/jpeg, application/pdf"
-                        />
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                          disabled={showEdit}
-                          onClick={(e) =>
-                            handleFileSelect(e, utilityFileInputRef)
-                          }
+                        <a
+                          href={documents?.idDocumentImage?.imageUrl}
+                          target="_blank"
+                          rel="noreferrer"
                         >
-                          Choose file
-                        </button>
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                          >
+                            View
+                          </button>
+                        </a>
                       </div>
                     </div>
-                  ) : (
-                    <div className="d-flex align-items-center justify-content-between w-100">
-                      <div className="progress-bar-style d-flex align-items-center justify-content-start">
+                  </div>
+                ) : (
+                  <div className="row pb-4">
+                    {!base64File.frontEncodedString ? (
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <img
+                            className="file-image image-fluid"
+                            src={FileDoc}
+                            alt="FileDoc"
+                          />
+                          <div>
+                            <h5 className="">Upload ID Card</h5>
+                            <h5 className="">jpg, pdf, 2MB</h5>
+                          </div>
+                        </div>
+                        <div className=" style-attachment">
+                          <input
+                            type="file"
+                            className="file"
+                            ref={frontFileInputRef}
+                            onChange={(e) =>
+                              handleFileChange(e, "frontEncodedString")
+                            }
+                            accept="application/pdf, image/jpeg"
+                          />
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                            disabled={showEdit}
+                            onClick={(e) =>
+                              handleFileSelect(e, frontFileInputRef)
+                            }
+                          >
+                            Choose file
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="d-flex align-items-center justify-content-between w-100">
+                        <div className="progress-bar-style d-flex align-items-center justify-content-start">
+                          <img
+                            className="file-image image-fluid"
+                            src={FileDoc}
+                            alt="FileDoc"
+                          />
+                          <div className="progress-bar-style">
+                            <h5 className="position-relative">
+                              ID Card{" "}
+                              <span
+                                style={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  setBase64File({
+                                    ...base64File,
+                                    frontEncodedString: "",
+                                  })
+                                }
+                              >
+                                <i className="fa-solid fa-xmark"></i>
+                              </span>
+                            </h5>
+                            <div className="progress" style={{ height: "3px" }}>
+                              <div
+                                className="progress-bar"
+                                role="progressbar"
+                                style={{ width: "75%" }}
+                                aria-valuenow="25"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className=" style-attachment">
+                          <input
+                            type="file"
+                            className="file"
+                            ref={frontFileInputRef}
+                            onChange={(e) =>
+                              handleFileChange(e, "frontEncodedString")
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                            disabled={showEdit}
+                            onClick={(e) =>
+                              handleFileSelect(e, frontFileInputRef)
+                            }
+                          >
+                            Choose file
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {documents?.utilityBillImage?.imageUrl && showEdit ? (
+                  <div className="row pb-4">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="d-flex align-items-center justify-content-center">
                         <img
                           className="file-image image-fluid"
                           src={FileDoc}
                           alt="FileDoc"
                         />
-                        <div className="progress-bar-style">
-                          <h5 className="position-relative">
-                            Utility Bill{" "}
-                            <span
-                              style={{ cursor: "pointer" }}
-                              onClick={() =>
-                                setBase64File({
-                                  ...base64File,
-                                  utilityEncodedString: "",
-                                })
-                              }
-                            >
-                              <i className="fa-solid fa-xmark"></i>
-                            </span>
-                          </h5>
-                          <div className="progress" style={{ height: "3px" }}>
-                            <div
-                              className="progress-bar"
-                              role="progressbar"
-                              style={{ width: "75%" }}
-                              aria-valuenow="25"
-                              aria-valuemin="0"
-                              aria-valuemax="100"
-                            ></div>
-                          </div>
+                        <div className="d-flex" style={{ columnGap: "10px" }}>
+                          <h5 className="image-fluid mr-3">Utility Bill</h5>
+                          <img
+                            // className="position-absolute"
+                            src={Check}
+                            alt="check"
+                            width="15"
+                            height="15"
+                          />
                         </div>
                       </div>
                       <div className=" style-attachment">
-                        <input
-                          type="file"
-                          className="file"
-                          ref={utilityFileInputRef}
-                          onChange={(e) =>
-                            handleFileChange(e, "utilityEncodedString")
-                          }
-                        />
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                          disabled={showEdit}
-                          onClick={(e) =>
-                            handleFileSelect(e, utilityFileInputRef)
-                          }
+                        <a
+                          href={documents?.utilityBillImage?.imageUrl}
+                          target="_blank"
+                          rel="noreferrer"
                         >
-                          Choose file
-                        </button>
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                          >
+                            View
+                          </button>
+                        </a>
                       </div>
                     </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                ) : (
+                  <div className="row pb-4">
+                    {!base64File.utilityEncodedString ? (
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <img
+                            className="file-image image-fluid"
+                            src={FileDoc}
+                            alt="FileDoc"
+                          />
+                          <div>
+                            <h5 className="">Upload Utility Bill</h5>
+                            <h5 className="">jpg, pdf, 2 MB</h5>
+                          </div>
+                        </div>
+                        <div className=" style-attachment">
+                          <input
+                            type="file"
+                            className="file"
+                            ref={utilityFileInputRef}
+                            onChange={(e) =>
+                              handleFileChange(e, "utilityEncodedString")
+                            }
+                            accept="image/jpeg, application/pdf"
+                          />
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                            disabled={showEdit}
+                            onClick={(e) =>
+                              handleFileSelect(e, utilityFileInputRef)
+                            }
+                          >
+                            Choose file
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="d-flex align-items-center justify-content-between w-100">
+                        <div className="progress-bar-style d-flex align-items-center justify-content-start">
+                          <img
+                            className="file-image image-fluid"
+                            src={FileDoc}
+                            alt="FileDoc"
+                          />
+                          <div className="progress-bar-style">
+                            <h5 className="position-relative">
+                              Utility Bill{" "}
+                              <span
+                                style={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  setBase64File({
+                                    ...base64File,
+                                    utilityEncodedString: "",
+                                  })
+                                }
+                              >
+                                <i className="fa-solid fa-xmark"></i>
+                              </span>
+                            </h5>
+                            <div className="progress" style={{ height: "3px" }}>
+                              <div
+                                className="progress-bar"
+                                role="progressbar"
+                                style={{ width: "75%" }}
+                                aria-valuenow="25"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className=" style-attachment">
+                          <input
+                            type="file"
+                            className="file"
+                            ref={utilityFileInputRef}
+                            onChange={(e) =>
+                              handleFileChange(e, "utilityEncodedString")
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                            disabled={showEdit}
+                            onClick={(e) =>
+                              handleFileSelect(e, utilityFileInputRef)
+                            }
+                          >
+                            Choose file
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </WrapperBody>
+          </WrapperBody>
+        )}
+
         <WrapperFooter>
           <div className="footer-body">
             <div className="d-flex align-items-center justify-content-end footer-content">

@@ -39,6 +39,7 @@ const BankDetails = () => {
   };
 
   const {
+    loading,
     users,
     showEmailOtpModal,
     otp,
@@ -46,10 +47,10 @@ const BankDetails = () => {
     otpError,
     bvnMessage,
     validateEmailOtp,
-    bankUpdateMsg,
+    bankDetails
   } = useSelector((state) => state.user_profile);
 
-  const { accountDetail, accountDetailError, bankDetails } = useSelector(
+  const { accountDetail, accountDetailError, bankUpdateMsg } = useSelector(
     (state) => state.updateProfile
   );
 
@@ -85,8 +86,12 @@ const BankDetails = () => {
     e.preventDefault();
     const { accountNumber, bankCode } = formData;
     let data = { accountName, accountNumber, bankCode };
+    const reset = {
+      setShowEdit,
+      getBankDetails,
+    }
     console.log(data);
-    dispatch(updateBankDetails(data));
+    dispatch(updateBankDetails(data, reset));
   };
 
   const handleVerifyAccountNo = (e) => {
@@ -172,11 +177,11 @@ const BankDetails = () => {
     setAccountName("");
   };
 
-  // useEffect(() => {
-  //   if(!bankDetails || bankUpdateMsg){
-  //     dispatch(getBankDetails());
-  //   }
-  // }, [bankDetails, bankUpdateMsg])
+  useEffect(() => {
+    if(!bankDetails){
+      dispatch(getBankDetails());
+    }
+  }, [bankDetails])
 
   return (
     <div>
@@ -238,7 +243,7 @@ const BankDetails = () => {
                     onChange={handleChange}
                     name="bankCode"
                     disabled={showEdit}
-                    value={formData.bankCode}
+                    value={formData.bankCode || bankDetails?.bank?.code}
                   >
                     <option value="">Please choose an option</option>
                     {banks?.data?.map((bank) => (
@@ -259,7 +264,7 @@ const BankDetails = () => {
                       <div className="input-group mb-4">
                         <input
                           className="form-control"
-                          placeholder=""
+                          placeholder={bankDetails?.accountNumber}
                           type="text"
                           disabled={showEdit}
                           onChange={handleChange}
@@ -297,7 +302,7 @@ const BankDetails = () => {
                   <div className="input-group mb-4">
                     <input
                       className="form-control"
-                      placeholder=""
+                      placeholder={bankDetails?.accountName}
                       type="text"
                       disabled={showEdit}
                       onChange={handleChange}

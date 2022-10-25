@@ -1,4 +1,7 @@
 import {
+  GET_EACH_WALLET_TRANSACTION,
+  GET_EACH_WALLET_TRANSACTION_ERROR,
+  GET_EACH_WALLET_TRANSACTION_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -67,6 +70,27 @@ export const requestWithdrawalSuccess = (data) => {
 export const requestWithdrawalError = (error) => {
   return {
     type: REQUEST_WITHDRAWAL_ERROR,
+    payload: error,
+  };
+};
+
+export const getEachWalletTransaction = (transId) => {
+  return {
+    type: GET_EACH_WALLET_TRANSACTION,
+    payload: { transId },
+  };
+};
+
+export const getEachWalletTransactionSuccess = (data) => {
+  return {
+    type: GET_EACH_WALLET_TRANSACTION_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getEachWalletTransactionError = (error) => {
+  return {
+    type: GET_EACH_WALLET_TRANSACTION_ERROR,
     payload: error,
   };
 };

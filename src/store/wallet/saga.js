@@ -1,12 +1,15 @@
 import { takeEvery, fork, put, all, call } from "redux-saga/effects";
 
 import {
+  GET_EACH_WALLET_TRANSACTION,
   GET_WALLET_BALANCE,
   GET_WALLET_TRANSACTIONS,
   REQUEST_WITHDRAWAL,
 } from "./actionTypes";
 
 import {
+  getEachWalletTransactionError,
+  getEachWalletTransactionSuccess,
   getWalletBalanceError,
   getWalletBalanceSuccess,
   getWalletTransactionsError,
@@ -16,6 +19,7 @@ import {
 } from "./actions";
 
 import {
+  getEachWalletTransactionService,
   getWalletBalanceService,
   getWalletTransactionsService,
   requestWithdrawalService,
@@ -65,6 +69,17 @@ function* requestWithdrawal({ payload: { formData } }) {
   }
 }
 
+function* getEachWalletTransaction({payload: {transId}}) {
+  try {
+    const response = yield call(getEachWalletTransactionService, transId);
+    console.log(response.data);
+    yield put(getEachWalletTransactionSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getEachWalletTransactionError(error?.response?.data));
+  }
+}
+
 export function* watchGetWalletBalance() {
   yield takeEvery(GET_WALLET_BALANCE, getWalletBalance);
 }
@@ -77,11 +92,16 @@ export function* watchRequestWithdrawal() {
   yield takeEvery(REQUEST_WITHDRAWAL, requestWithdrawal);
 }
 
+export function* watchGetEachWalletTransaction() {
+  yield takeEvery(GET_EACH_WALLET_TRANSACTION, getEachWalletTransaction);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
     fork(watchGetWalletTransactions),
     fork(watchRequestWithdrawal),
+    fork(watchGetEachWalletTransaction),
   ]);
 }
 

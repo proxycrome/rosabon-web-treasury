@@ -9,7 +9,7 @@ export const getWalletBalanceService = () => {
 
 export const getWalletTransactionsService = () => {
   const http = new HttpService();
-  const url = `auth/wallet-transactions`;
+  const url = `auth/transactions/history`;
   return http.getData(url);
 };
 
@@ -18,3 +18,9 @@ export const requestWithdrawalService = (formData) => {
   const url = `auth/wallets/request-withdrawal`;
   return http.postDataWithToken(formData, url);
 };
+
+export const getEachWalletTransactionService = (transId) => {
+  const http = new HttpService();
+  const url = `auth/transactions/history/${transId}`;
+  return http.getData(url);
+}

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Confetti from "../../asset/confetti.png";
 import Checked from "../../asset/checked.png";
 import Caneled from "../../asset/cnaceled.png";
 import OtpInput from "react18-input-otp";
+import JsPDF from "jspdf";
 import {
   updateUserKyc,
   sendOtp,
@@ -93,8 +94,9 @@ export function BVNConfirm({
                       <>
                         <h4>BVN Verification</h4>
                         <p className="pt-5">
-                          Your name on our system will be updated with {firstName} {lastName} to
-                          reflect exactly as it appears on your BVN
+                          Your name on our system will be updated with{" "}
+                          {firstName} {lastName} to reflect exactly as it
+                          appears on your BVN
                         </p>
                         <div className=" text-center pt-3">
                           <button
@@ -266,20 +268,20 @@ export function SuccessConfirm({
                     <>
                       <p className="py-5">Your Payment was successful</p>
                       <div className="d-flex justify-content-between">
-            <button
-              onClick={handleClose}
-              type="button"
-              className="grey_btn"
-            >
-              Check my investments
-            </button>
-						<button
-							onClick={handleClose}
-							type="button"
-							className="blue_btn"
-						>
-							Invest more
-						</button>
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="grey_btn"
+                        >
+                          Check my investments
+                        </button>
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="blue_btn"
+                        >
+                          Invest more
+                        </button>
                       </div>
                     </>
                   ) : createPlan === "paid" ? (
@@ -337,7 +339,7 @@ export function OTPVerify({
   otpData,
   secondPhone,
   company,
-  phoneData
+  phoneData,
 }) {
   const [token, setToken] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -532,12 +534,12 @@ export function SuccessOTP() {
   );
 }
 
-export function Unsuccessful({handleClose}) {
+export function Unsuccessful({ handleClose }) {
   const dispatch = useDispatch();
   const handleCloseModal = () => {
-	dispatch({type: CLEAR_MESSAGES});
-	handleClose();
-  }
+    dispatch({ type: CLEAR_MESSAGES });
+    handleClose();
+  };
 
   return (
     <div>
@@ -559,7 +561,11 @@ export function Unsuccessful({handleClose}) {
                     tied to your BVN
                   </p>
                   <div className="pt-5 ">
-                    <button type="button" className="btn verify_congrates_btn" onClick={handleCloseModal}>
+                    <button
+                      type="button"
+                      className="btn verify_congrates_btn"
+                      onClick={handleCloseModal}
+                    >
                       Continue
                     </button>
                   </div>
@@ -720,7 +726,18 @@ export function Notice({ handleClose, handleShowModalTwo, transferNotice }) {
   );
 }
 
-export function TransactionPreview({ handleClose }) {
+export function TransactionPreview({ handleClose, transaction }) {
+
+  const generatePDF = () => {
+    const transaction = new JsPDF({ orientation: "portrait", unit: "pt" });
+    transaction
+      .html(document.querySelector("#print"))
+      .then(() => {
+        transaction.save("transaction.pdf");
+      });
+  };
+
+  console.log(transaction);
   return (
     <div>
       <Wrapper>
@@ -728,36 +745,42 @@ export function TransactionPreview({ handleClose }) {
           <WrapDetails>
             <div className="container">
               <div className="row">
-                <div className="col">
+                <div className="col" id="print" style={{textAlign: "center", margin: "15px"}}>
                   <div className="d-flex flex-column justify-content-center align-items-center pb-5">
-                    <h4>- ₦1,500,000</h4>
-                    <p>Part-withdrawal</p>
+                    <h4>
+                      {transaction?.transactionType === "CREDIT" ? "+" : "-"}{" "}
+                      NGN
+                      {transaction?.debit}
+                    </h4>
+                    <p style={{ fontSize: "12px" }}>
+                      {transaction?.transactionCategory}
+                    </p>
                   </div>
                   <div className="d-flex justify-content-between align-items-start">
-                    <p>Transaction ID</p>
-                    <h6>NO_1947034</h6>
+                    <p>Transaction ID:</p>
+                    <h6>{transaction?.transactionId}</h6>
                   </div>
                   <div className="d-flex justify-content-between align-items-start">
-                    <p>Transaction Date</p>
-                    <h6>April 28, 2022</h6>
+                    <p>Transaction Date:</p>
+                    <h6>{transaction?.transactionDate.split(" ")[0]}</h6>
                   </div>
                   <div className="d-flex justify-content-between align-items-start">
-                    <p>Transaction Type</p>
-                    <h6>Debit</h6>
+                    <p>Transaction Type:</p>
+                    <h6>{transaction?.transactionType}</h6>
                   </div>
                   <div className="d-flex justify-content-between align-items-start">
-                    <p>Balance</p>
-                    <h6>₦1,000,000</h6>
+                    <p>Balance:</p>
+                    <h6>NGN {transaction?.balanceAfterTransaction}</h6>
                   </div>
-                  <div className="pt-5 d-flex justify-content-center">
-                    <button
-                      type="button"
-                      className="btn grey_btn"
-                      onClick={handleClose}
-                    >
-                      Download PDF
-                    </button>
-                  </div>
+                </div>
+                <div className="pt-5 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    className="btn grey_btn"
+                    onClick={generatePDF}
+                  >
+                    Download PDF
+                  </button>
                 </div>
               </div>
             </div>

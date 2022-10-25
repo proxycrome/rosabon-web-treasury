@@ -181,7 +181,7 @@ function* updateCompanyDocument({ payload: { formData, reset } }) {
       setTimeout(() => {
         toast.success("Your documents have been updated successfully");
       }, 1000);
-      const { setShowEdit} = reset;
+      const { setShowEdit } = reset;
       setShowEdit(true);
       yield put(getCompanyDocs());
     }
@@ -196,7 +196,7 @@ function* updateCompanyDocument({ payload: { formData, reset } }) {
   }
 }
 
-function* updatePersonalDocument({ payload: { formData } }) {
+function* updatePersonalDocument({ payload: { formData, reset } }) {
   try {
     const response = yield call(updatePersonalDocsService, formData);
     console.log(response.data);
@@ -205,6 +205,9 @@ function* updatePersonalDocument({ payload: { formData } }) {
       setTimeout(() => {
         toast.success("Your documents have been updated successfully");
       }, 1000);
+      const { setShowEdit, getUserDocs } = reset;
+      setShowEdit(true);
+      yield put(getUserDocs());
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -248,7 +251,7 @@ function* deleteDirector({ payload: { id, setShowModal } }) {
   }
 }
 
-function* updateBankDetails({ payload: { formData } }) {
+function* updateBankDetails({ payload: { formData, reset } }) {
   try {
     const response = yield call(updateBankDetailsService, formData);
     console.log(response.data);
@@ -257,15 +260,18 @@ function* updateBankDetails({ payload: { formData } }) {
       setTimeout(() => {
         toast.success("Your bank details have been updated");
       }, 1000);
+      const {setShowEdit, getBankDetails} = reset;
+      setShowEdit(true);
+      yield put(getBankDetails())
     }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(updateBankDetailsError(error?.response?.data));
     if (error?.response) {
-      if (error?.response?.data?.message?.startsWith("More")) {
-        toast.error("This Bank details has already been used by another user");
-        return;
-      }
+      // if (error?.response?.data?.message?.startsWith("More")) {
+      //   toast.error("This Bank details has already been used by another user");
+      //   return;
+      // }
       setTimeout(() => {
         toast.error(error?.response?.data?.message);
       }, 1000);
