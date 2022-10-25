@@ -9,6 +9,7 @@ import {
   getWalletBalance,
   getWalletBalanceSuccess,
   getWithdrawReason,
+  postTransferToPlan,
   requestWithdrawal,
 } from "../../../store/actions";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
@@ -29,6 +30,7 @@ const UserWallet = () => {
   const [modalValue, setModalvalue] = useState("");
   const [closeFooter, setClosefooter] = useState(false);
   const [formData, setFormData] = useState({});
+  const [transferFormData, setTransferFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
@@ -64,6 +66,10 @@ const UserWallet = () => {
     setSidebar(false);
     setClosefooter(false);
   };
+
+  const handleTransferFormData = (data) => {
+    setTransferFormData(data)
+  }
 
   const handleFormData = (data) => {
     setFormData(data);
@@ -164,6 +170,10 @@ const UserWallet = () => {
       dispatch(requestWithdrawal(data));
     }
   }, [errors]);
+
+  const handleTransferSubmit = () => {
+    dispatch(postTransferToPlan(transferFormData));
+  };
 
   useEffect(() => {
     dispatch(getWalletBalance());
@@ -321,7 +331,10 @@ const UserWallet = () => {
                     <>
                       <div className="bank-details">
                         <div className="bank-detail-content">
-                          <TransferCard walletBalance={walletBalance} />
+                          <TransferCard
+                            walletBalance={walletBalance}
+                            transferData={(data) => handleTransferFormData(data)}
+                          />
                         </div>
                       </div>
                     </>
@@ -348,18 +361,31 @@ const UserWallet = () => {
                   </button>
                 </div>
                 <div>
-                  <button
-                    style={{
-                      backgroundColor: "#111E6C",
-                      color: "#FFFFFF",
-                      width: "300px",
-                    }}
-                    onClick={(e) => {
-                      handleSubmit(e);
-                    }}
-                  >
-                    Submit
-                  </button>
+                  {isTransfer ? (
+                    <button
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                      onClick={handleSubmit}
+                    >
+                      Submit
+                    </button>
+                  ) : IsWithDraw ? (
+                    <button
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                      onClick={handleTransferSubmit}
+                    >
+                      Submit
+                    </button>
+                  ) : (
+                    <></>
+                  )}
                   <ModalComponent
                     show={show}
                     size={"md"}

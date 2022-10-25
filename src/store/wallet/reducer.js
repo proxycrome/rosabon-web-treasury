@@ -13,6 +13,9 @@ import {
   GET_WALLET_TRANSACTIONS,
   GET_WALLET_TRANSACTIONS_ERROR,
   GET_WALLET_TRANSACTIONS_SUCCESS,
+  POST_TRANSFER_TO_PLAN,
+  POST_TRANSFER_TO_PLAN_ERROR,
+  POST_TRANSFER_TO_PLAN_SUCCESS,
   REQUEST_WITHDRAWAL,
   REQUEST_WITHDRAWAL_ERROR,
   REQUEST_WITHDRAWAL_SUCCESS,
@@ -30,6 +33,8 @@ const initialState = {
   transactionError: null,
   myReferrals: null,
   myReferralsError: null,
+  transferMsg: null,
+  transferMsgError: null,
 };
 
 const wallet = (state = initialState, action) => {
@@ -172,6 +177,33 @@ const wallet = (state = initialState, action) => {
         loading: false,
         myReferrals: null,
         myReferralsError: action.payload,
+      };
+      break;
+
+    case POST_TRANSFER_TO_PLAN:
+      state = {
+        ...state,
+        loading: true,
+        transferMsg: null,
+        transferMsgError: null,
+      };
+      break;
+
+    case POST_TRANSFER_TO_PLAN_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        transferMsg: action.payload,
+        transferMsgError: null,
+      };
+      break;
+
+    case POST_TRANSFER_TO_PLAN_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        transferMsg: null,
+        transferMsgError: action.payload,
       };
       break;
 

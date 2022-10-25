@@ -37,7 +37,7 @@ import {
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 export const NairaCard = () => {
   return (
@@ -368,18 +368,18 @@ const PaymentTypeWrapper = styled.div`
   }
 `;
 
-export const UserBankDetails = ({type=null}) => {
+export const UserBankDetails = ({ type = null }) => {
   const { login } = useSelector((state) => state.auth);
   const { singlePlan } = useSelector((state) => state.plan);
   const { dynamic_account } = useSelector((state) => state.providus);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
   let date = new Date();
-  const time_format = moment(date).format('HH:mm');
-  const add_hours = moment(date).add(48, 'hours');
+  const time_format = moment(date).format("HH:mm");
+  const add_hours = moment(date).add(48, "hours");
   const expire_date = moment(add_hours).format("DD/MM/YYYY");
 
-  const account = (type === null) ? dynamic_account : plan?.bankAccountInfo;
+  const account = type === null ? dynamic_account : plan?.bankAccountInfo;
 
   return (
     <div>
@@ -413,8 +413,8 @@ export const UserBankDetails = ({type=null}) => {
           <p className="pt-4">
             Account details expires in 48 hours, kindly endeavour to make
             transfer{" "}
-            <span style={{display: type === null?"auto":"none"}} >
-              before{" "}{expire_date},{" "} {time_format}
+            <span style={{ display: type === null ? "auto" : "none" }}>
+              before {expire_date}, {time_format}
             </span>
           </p>
         </div>
@@ -853,13 +853,18 @@ export const getCurrIcon = (currency) => {
 export const PlanSummary = ({ planPay }) => {
   const { form } = useContext(PlanContext);
   let planData = form;
-  const { currencies  } = useSelector((state) => state.currencies);
-  const currencies_list = currencies?.data.body ? currencies?.data.body: []
-  const current_currency = currencies_list.find(item=>item.id===planData?.currency)?.name
-  const calc_withholding_tax = Math.round(
-    (planData.planSummary.principal*(planData.planSummary.withholdingTax/100)) * 100 
-    + Number.EPSILON
-    ) / 100
+  const { currencies } = useSelector((state) => state.currencies);
+  const currencies_list = currencies?.data.body ? currencies?.data.body : [];
+  const current_currency = currencies_list.find(
+    (item) => item.id === planData?.currency
+  )?.name;
+  const calc_withholding_tax =
+    Math.round(
+      planData.planSummary.principal *
+        (planData.planSummary.withholdingTax / 100) *
+        100 +
+        Number.EPSILON
+    ) / 100;
 
   return (
     <div>
@@ -921,8 +926,7 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Withholding Tax</p>
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
-                    {getCurrIcon(current_currency)}{" "}
-                    {calc_withholding_tax}
+                    {getCurrIcon(current_currency)} {calc_withholding_tax}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1365,10 +1369,41 @@ export const AvailableBalance = ({
   );
 };
 
-export const TransferCard = ({ walletBalance }) => {
+export const TransferCard = ({ walletBalance, transferData }) => {
   const dispatch = useDispatch();
-  const {eligiblePlans} = useSelector(state => state.plan);
+  const { eligiblePlans } = useSelector((state) => state.plan);
   console.log(eligiblePlans);
+
+  const data = {
+    amount: "",
+    planId: "",
+  };
+
+  const [formData, setFormData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const planName = (id) => {
+    const obj = eligiblePlans?.find(item => item.id === +id)
+    return obj?.planName;
+  }
+
+  useEffect(() => {
+    const { amount, planId } = formData;
+
+    const data = {
+      amount: Number(amount),
+      description: `Transfer of ${amount ? amount : 0} to ${planName(planId)}`,
+      planId: Number(planId),
+    };
+    transferData(data);
+  }, [formData]);
 
   useEffect(() => {
     dispatch(getEligiblePlans());
@@ -1390,7 +1425,10 @@ export const TransferCard = ({ walletBalance }) => {
             <input
               className="form-control"
               placeholder="N1,500,000"
-              type="text"
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -1401,13 +1439,17 @@ export const TransferCard = ({ walletBalance }) => {
           <select
             className="form-select form-select-lg mb-3 select-field"
             aria-label=".form-select-lg"
-            name="companyType"
+            name="planId"
+            value={formData.planId}
+            onChange={handleChange}
           >
             <option value=""></option>
-            <option value="others">Plan 1</option>
-            <option value="others">Plan 2</option>
-            <option value="others">Plan 3</option>
-            <option value="others">Credit wallet</option>
+            {eligiblePlans?.map((item) => (
+              <option key={item.id} value={item.id.toString()}>
+                {item.planName}
+              </option>
+            ))}
+            {/* <option value="others">Credit wallet</option> */}
           </select>
         </div>
       </div>
@@ -1506,7 +1548,9 @@ export const HistoryTable = () => {
     dispatch(getWalletTransactions());
   }, [dispatch]);
 
-  const { walletTransactions, transaction } = useSelector((state) => state.wallet);
+  const { walletTransactions, transaction } = useSelector(
+    (state) => state.wallet
+  );
 
   useEffect(() => {
     const filteredWalletTrans = walletTransactions?.entities?.filter((item) => {
@@ -1540,11 +1584,11 @@ export const HistoryTable = () => {
     "December",
   ];
 
-  const previewTransaction = async(transId) => {
+  const previewTransaction = async (transId) => {
     dispatch(getEachWalletTransaction(transId));
     console.log(transId);
-    setShow(true)
-  }
+    setShow(true);
+  };
 
   const data = {
     columns: [
@@ -1583,7 +1627,10 @@ export const HistoryTable = () => {
       filteredTransactions?.length > 0
         ? filteredTransactions?.map((data) => ({
             id: (
-              <Link to="#" onClick={() => previewTransaction(data?.transactionId)}>
+              <Link
+                to="#"
+                onClick={() => previewTransaction(data?.transactionId)}
+              >
                 <div>{data?.transactionId}</div>
               </Link>
             ),
@@ -1599,7 +1646,10 @@ export const HistoryTable = () => {
           }))
         : walletTransactions?.entities?.map((data) => ({
             id: (
-              <Link to="#" onClick={() => previewTransaction(data?.transactionId)}>
+              <Link
+                to="#"
+                onClick={() => previewTransaction(data?.transactionId)}
+              >
                 <div>{data?.transactionId}</div>
               </Link>
             ),
@@ -1688,7 +1738,10 @@ export const HistoryTable = () => {
               setShow(false);
             }}
           >
-            <TransactionPreview handleClose={() => setShow(false)} transaction={transaction} />
+            <TransactionPreview
+              handleClose={() => setShow(false)}
+              transaction={transaction}
+            />
           </ModalComponent>
         </div>
       </HistoryTableWarapper>
@@ -1743,12 +1796,12 @@ const HistoryTableWarapper = styled.div`
 
 export const ReferalTable = () => {
   const dispatch = useDispatch();
-  const {myReferrals} = useSelector(state => state.wallet);
+  const { myReferrals } = useSelector((state) => state.wallet);
   // console.log(myReferrals);
 
   useEffect(() => {
     dispatch(getMyReferrals());
-  }, [dispatch])
+  }, [dispatch]);
 
   const data = {
     columns: [
@@ -2920,11 +2973,11 @@ export const paymentAtMaturity = (
 
 export const randomNumbers = (max) => {
   let random_num = "";
-  for(let i = 0; i < max; i++) {
-    random_num += JSON.stringify(Math.floor(Math.random()*10))
+  for (let i = 0; i < max; i++) {
+    random_num += JSON.stringify(Math.floor(Math.random() * 10));
   }
-  return random_num
-}
+  return random_num;
+};
 
 export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const config = {
@@ -2938,8 +2991,10 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const { loading } = useSelector((state) => state.plan);
   const { verify_paystack } = useSelector((state) => state.paystack);
 
-  const success = async() => {
-    await dispatch(verifyPaystack("PAYSTACK",transactionRef,dispatch,form, setShow));
+  const success = async () => {
+    await dispatch(
+      verifyPaystack("PAYSTACK", transactionRef, dispatch, form, setShow)
+    );
     // if(verify_paystack?.message === "Payment validated") {
     //   dispatch(createPlan(form, setShow));
     // } else {
@@ -2965,32 +3020,30 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const initializePayment = usePaystackPayment(config);
   return (
     <>
-      {
-        transactionRef !== null ? (
-          <>
-            <button
-              style={{
-                backgroundColor: "#111E6C",
-                color: "#FFFFFF",
-                width: "300px",
-              }}
-              // onClick={() => setShow(true)}
-              // onClick={handleSubmit}
-              onClick={() => {
-                initializePayment(onSuccess, onClose);
-              }}
-            >
-              {loading ? "LOADING..." : "Pay"}
-            </button>
-          </>
-        ) : (<>
-          {
-            toast.error("No transaction Reference", {
-              position: "top-right",
-            })
-          }
-        </>)
-      }
+      {transactionRef !== null ? (
+        <>
+          <button
+            style={{
+              backgroundColor: "#111E6C",
+              color: "#FFFFFF",
+              width: "300px",
+            }}
+            // onClick={() => setShow(true)}
+            // onClick={handleSubmit}
+            onClick={() => {
+              initializePayment(onSuccess, onClose);
+            }}
+          >
+            {loading ? "LOADING..." : "Pay"}
+          </button>
+        </>
+      ) : (
+        <>
+          {toast.error("No transaction Reference", {
+            position: "top-right",
+          })}
+        </>
+      )}
     </>
   );
 };

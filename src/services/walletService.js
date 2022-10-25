@@ -30,3 +30,9 @@ export const getMyReferralsService = () => {
   const url = `auth/referrals`;
   return http.getData(url);
 }
+
+export const postTransferToPlanService = (formData) => {
+  const http = new HttpService();
+  const url = `auth/wallets/wallet-transfer`;
+  return http.postDataWithToken(formData, url);
+}
