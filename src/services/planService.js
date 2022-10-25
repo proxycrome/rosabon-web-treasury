@@ -42,6 +42,13 @@ export const getSinglePlanService = (id) => {
     return http.getData(url)
 }
 
+export const deletePlanService = (id) => {
+    const http = new HttpService();
+    const url = `auth/trcreate-plan/${id}`;
+
+    return http.deleteData(url)
+}
+
 export const getTenorService = () => {
     const http = new HttpService();
     const url = `auth/trtenor`;

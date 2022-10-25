@@ -2,6 +2,9 @@ import {
 	CREATE_PLAN,
 	CREATE_PLAN_ERROR,
 	CREATE_PLAN_SUCCESS,
+    DELETE_PLAN,
+    DELETE_PLAN_ERROR,
+    DELETE_PLAN_SUCCESS,
 	GET_CONTRIB_VAL,
 	GET_CONTRIB_VAL_ERROR,
 	GET_CONTRIB_VAL_SUCCESS,
@@ -85,6 +88,27 @@ export const createPlanError = (error) => {
 		payload: error,
 	};
 };
+
+export const deletePlan = (id) => {
+    return {
+        type: DELETE_PLAN,
+        payload: {id}
+    }
+}
+
+export const deletePlanSuccess = (data) => {
+    return {
+        type: DELETE_PLAN_SUCCESS,
+        payload: data
+    }
+}
+
+export const deletePlanError = (error) => {
+    return {
+        type: DELETE_PLAN_ERROR,
+        payload: error
+    }
+}
 
 export const getInvestmentRates = () => {
     return {

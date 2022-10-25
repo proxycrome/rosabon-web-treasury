@@ -159,7 +159,7 @@ const PlanForm = () => {
       setFormData({
         ...formData,
         // contributionValue: Number(parseFloat(computedValue).toFixed(2))
-        contributionValue: Math.round(computedValue * 100 + Number.EPSILON) / 100
+        contributionValue: (computedValue * 100 + Number.EPSILON) / 100
       })
     } else {
       if(product?.properties?.hasTargetAmount) {
@@ -181,7 +181,7 @@ const PlanForm = () => {
         }
         setFormData({
           ...formData,
-          targetAmount: Math.round(computedValue * 100 + Number.EPSILON) / 100
+          targetAmount: (computedValue * 100 + Number.EPSILON) / 100
           // targetAmount: Number(parseInt(computedValue))
         })
       }
