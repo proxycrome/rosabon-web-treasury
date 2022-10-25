@@ -1513,7 +1513,7 @@ export const HistoryTable = () => {
       const startDate = new Date(formData.startDate);
       const endDate = new Date(formData.endDate);
 
-      const itemDate = moment(item.createdAt, "DD-MM-YYYY").format(
+      const itemDate = moment(item.transactionDate, "DD-MM-YYYY").format(
         "YYYY-MM-DD"
       );
 
@@ -1592,10 +1592,10 @@ export const HistoryTable = () => {
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
-                ? "+ " + data?.debit
-                : "- " + data?.debit
+                ? "+ " + data?.debit.toLocaleString()
+                : "- " + data?.debit.toLocaleString()
             }`,
-            balance: `${data?.balanceAfterTransaction}`,
+            balance: `${data?.balanceAfterTransaction.toLocaleString()}`,
           }))
         : walletTransactions?.entities?.map((data) => ({
             id: (
@@ -1608,10 +1608,10 @@ export const HistoryTable = () => {
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
-                ? "+ " + data?.debit
-                : "- " + data?.debit
+                ? "+ " + data?.debit.toLocaleString()
+                : "- " + data?.debit.toLocaleString()
             }`,
-            balance: `${data?.balanceAfterTransaction}`,
+            balance: `${data?.balanceAfterTransaction.toLocaleString()}`,
           })),
   };
 

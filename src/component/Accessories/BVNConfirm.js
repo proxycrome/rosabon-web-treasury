@@ -750,7 +750,7 @@ export function TransactionPreview({ handleClose, transaction }) {
                     <h4>
                       {transaction?.transactionType === "CREDIT" ? "+" : "-"}{" "}
                       NGN
-                      {transaction?.debit}
+                      {transaction?.debit.toLocaleString()}
                     </h4>
                     <p style={{ fontSize: "12px" }}>
                       {transaction?.transactionCategory}
@@ -770,7 +770,7 @@ export function TransactionPreview({ handleClose, transaction }) {
                   </div>
                   <div className="d-flex justify-content-between align-items-start">
                     <p>Balance:</p>
-                    <h6>NGN {transaction?.balanceAfterTransaction}</h6>
+                    <h6>NGN {transaction?.balanceAfterTransaction.toLocaleString()}</h6>
                   </div>
                 </div>
                 <div className="pt-5 d-flex justify-content-center">
