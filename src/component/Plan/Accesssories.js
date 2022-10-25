@@ -1731,7 +1731,7 @@ const HistoryTableWarapper = styled.div`
 export const ReferalTable = () => {
   const dispatch = useDispatch();
   const {myReferrals} = useSelector(state => state.wallet);
-  console.log(myReferrals);
+  // console.log(myReferrals);
 
   useEffect(() => {
     dispatch(getMyReferrals());
