@@ -4,6 +4,9 @@ import {
   GET_EACH_WALLET_TRANSACTION,
   GET_EACH_WALLET_TRANSACTION_ERROR,
   GET_EACH_WALLET_TRANSACTION_SUCCESS,
+  GET_MY_REFERRALS,
+  GET_MY_REFERRALS_ERROR,
+  GET_MY_REFERRALS_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -25,6 +28,8 @@ const initialState = {
   withdrawMsgError: null,
   transaction: null,
   transactionError: null,
+  myReferrals: null,
+  myReferralsError: null,
 };
 
 const wallet = (state = initialState, action) => {
@@ -140,6 +145,33 @@ const wallet = (state = initialState, action) => {
         loading: false,
         transaction: null,
         transactionError: action.payload,
+      };
+      break;
+
+    case GET_MY_REFERRALS:
+      state = {
+        ...state,
+        loading: true,
+        myReferrals: null,
+        myReferralsError: null,
+      };
+      break;
+
+    case GET_MY_REFERRALS_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        myReferrals: action.payload,
+        myReferralsError: null,
+      };
+      break;
+
+    case GET_MY_REFERRALS_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        myReferrals: null,
+        myReferralsError: action.payload,
       };
       break;
 

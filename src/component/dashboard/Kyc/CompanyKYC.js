@@ -11,8 +11,6 @@ const CompanyKYC = () => {
   const navigate = useNavigate();
 
   const { users, loading } = useSelector((state) => state.user_profile);
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
 
   console.log(users);
 

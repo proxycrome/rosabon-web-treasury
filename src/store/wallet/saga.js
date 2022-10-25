@@ -2,6 +2,7 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects";
 
 import {
   GET_EACH_WALLET_TRANSACTION,
+  GET_MY_REFERRALS,
   GET_WALLET_BALANCE,
   GET_WALLET_TRANSACTIONS,
   REQUEST_WITHDRAWAL,
@@ -10,6 +11,8 @@ import {
 import {
   getEachWalletTransactionError,
   getEachWalletTransactionSuccess,
+  getMyReferralsError,
+  getMyReferralsSuccess,
   getWalletBalanceError,
   getWalletBalanceSuccess,
   getWalletTransactionsError,
@@ -20,6 +23,7 @@ import {
 
 import {
   getEachWalletTransactionService,
+  getMyReferralsService,
   getWalletBalanceService,
   getWalletTransactionsService,
   requestWithdrawalService,
@@ -80,6 +84,17 @@ function* getEachWalletTransaction({payload: {transId}}) {
   }
 }
 
+function* getMyReferrals() {
+  try {
+    const response = yield call(getMyReferralsService);
+    console.log(response.data);
+    yield put(getMyReferralsSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getMyReferralsError(error?.response?.data));
+  }
+}
+
 export function* watchGetWalletBalance() {
   yield takeEvery(GET_WALLET_BALANCE, getWalletBalance);
 }
@@ -96,12 +111,17 @@ export function* watchGetEachWalletTransaction() {
   yield takeEvery(GET_EACH_WALLET_TRANSACTION, getEachWalletTransaction);
 }
 
+export function* watchGetMyReferrals() {
+  yield takeEvery(GET_MY_REFERRALS, getMyReferrals);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
     fork(watchGetWalletTransactions),
     fork(watchRequestWithdrawal),
     fork(watchGetEachWalletTransaction),
+    fork(watchGetMyReferrals),
   ]);
 }
 

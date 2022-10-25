@@ -5,6 +5,9 @@ import {
 	GET_CONTRIB_VAL,
 	GET_CONTRIB_VAL_ERROR,
 	GET_CONTRIB_VAL_SUCCESS,
+	GET_ELIGIBLE_PLANS,
+	GET_ELIGIBLE_PLANS_ERROR,
+	GET_ELIGIBLE_PLANS_SUCCESS,
 	GET_EX_RATES,
 	GET_EX_RATES_ERROR,
 	GET_EX_RATES_SUCCESS,
@@ -185,5 +188,25 @@ export const getWithholdingTaxError = (error) => {
     return {
         type: GET_WITHHOLDING_TAX_ERROR,
         payload: error
+    }
+}
+
+export const getEligiblePlans = () => {
+    return {
+        type: GET_ELIGIBLE_PLANS,
+    }
+}
+
+export const getEligiblePlansSuccess = (data) => {
+    return {
+        type: GET_ELIGIBLE_PLANS_SUCCESS,
+        payload: data,
+    }
+}
+
+export const getEligiblePlansError = (error) => {
+    return {
+        type: GET_ELIGIBLE_PLANS_ERROR,
+        payload: error,
     }
 }

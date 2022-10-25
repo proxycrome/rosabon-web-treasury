@@ -32,6 +32,8 @@ import {
   verifyPaystack,
   createPlan,
   getEachWalletTransaction,
+  getEligiblePlans,
+  getMyReferrals,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -1194,11 +1196,6 @@ export const AvailableBalance = ({
     }
   };
 
-  const handleFileSelect = (e, reference) => {
-    e.preventDefault();
-    reference.current.click();
-  };
-
   console.log(withdrawReasons);
   console.log(bankDetails);
   return (
@@ -1356,6 +1353,14 @@ export const AvailableBalance = ({
 };
 
 export const TransferCard = ({ walletBalance }) => {
+  const dispatch = useDispatch();
+  const {eligiblePlans} = useSelector(state => state.plan);
+  console.log(eligiblePlans);
+
+  useEffect(() => {
+    dispatch(getEligiblePlans());
+  }, [dispatch]);
+
   return (
     <AvailableBalanceWapper>
       <h3>Transfer</h3>
@@ -1724,6 +1729,14 @@ const HistoryTableWarapper = styled.div`
 `;
 
 export const ReferalTable = () => {
+  const dispatch = useDispatch();
+  const {myReferrals} = useSelector(state => state.wallet);
+  console.log(myReferrals);
+
+  useEffect(() => {
+    dispatch(getMyReferrals());
+  }, [dispatch])
+
   const data = {
     columns: [
       {

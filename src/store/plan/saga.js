@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import {
 	CREATE_PLAN,
 	GET_CONTRIB_VAL,
+	GET_ELIGIBLE_PLANS,
 	GET_EX_RATES,
 	GET_INVESTMENT_RATES,
 	GET_PLANS,
@@ -17,6 +18,8 @@ import {
 	createPlanSuccess,
 	getContribValError,
 	getContribValSuccess,
+	getEligiblePlansError,
+	getEligiblePlansSuccess,
 	getExRatesError,
 	getExRatesSuccess,
 	getInvestmentRatesError,
@@ -34,6 +37,7 @@ import {
 import {
 	createPlanService,
 	getContribValService,
+	getEligiblePlansService,
 	getExRatesService,
 	getInvestmentRatesService,
 	getPlansService,
@@ -141,6 +145,18 @@ function* getInvestmentRates() {
 	}
 }
 
+function* getEligiblePlans() {
+	try {
+		const response = yield call(getEligiblePlansService);
+		console.log(response.data);
+		yield put(getEligiblePlansSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getEligiblePlansError(error?.response?.data));
+	}
+}
+
+
 export function* watchGetContribVal() {
 	yield takeEvery(GET_CONTRIB_VAL, getContribVal);
 }
@@ -173,6 +189,10 @@ export function* watchGetInvestmentRates() {
 	yield takeEvery(GET_INVESTMENT_RATES, getInvestmentRates);
 }
 
+export function* watchGetEligiblePlans() {
+	yield takeEvery(GET_ELIGIBLE_PLANS, getEligiblePlans);
+}
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -182,7 +202,8 @@ function* PlanSaga() {
 		fork(watchGetSinglePlan),
 		fork(watchGetTenor),
 		fork(watchGetWithholdingTax),
-		fork(watchGetInvestmentRates)
+		fork(watchGetInvestmentRates),
+		fork(watchGetEligiblePlans),
 	]);
 }
 

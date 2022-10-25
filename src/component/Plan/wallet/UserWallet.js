@@ -39,7 +39,9 @@ const UserWallet = () => {
   const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
     (state) => state.user_profile
   );
-  const { walletBalance, loading, withdrawMsg } = useSelector((state) => state.wallet);
+  const { walletBalance, loading, withdrawMsg } = useSelector(
+    (state) => state.wallet
+  );
 
   const handleClick = (value) => {
     if (value === "transfer") {
@@ -173,10 +175,10 @@ const UserWallet = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if(withdrawMsg){
+    if (withdrawMsg) {
       dispatch(getWalletBalance());
     }
-  }, [withdrawMsg])
+  }, [withdrawMsg]);
 
   return (
     <div>
@@ -186,7 +188,7 @@ const UserWallet = () => {
             <span className="fw-bold">Wallet</span>
           </NavTitle>
         </ProfileNavBar>
-        <Toaster/>
+        <Toaster />
         {loading ? (
           <div className="vh-100 w-100">
             <Spinner />
@@ -248,7 +250,6 @@ const UserWallet = () => {
 
                   <div>
                     <div
-                      value="transfer"
                       onClick={() => {
                         handleClick("transfer");
                         setClosefooter(true);
@@ -257,7 +258,6 @@ const UserWallet = () => {
                     >
                       <img
                         value="transfer"
-                        // onClick={() => handleClick("transter")}
                         className=" image-fluid"
                         src={TransferImg}
                         alt="TransferImg"
@@ -321,9 +321,7 @@ const UserWallet = () => {
                     <>
                       <div className="bank-details">
                         <div className="bank-detail-content">
-                          <TransferCard 
-                            walletBalance={walletBalance}
-                          />
+                          <TransferCard walletBalance={walletBalance} />
                         </div>
                       </div>
                     </>
@@ -357,9 +355,6 @@ const UserWallet = () => {
                       width: "300px",
                     }}
                     onClick={(e) => {
-                      // setShow(true);
-                      // setSidebar(false);
-                      // setClosefooter(false)
                       handleSubmit(e);
                     }}
                   >

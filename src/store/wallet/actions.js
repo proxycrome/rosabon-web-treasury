@@ -2,6 +2,9 @@ import {
   GET_EACH_WALLET_TRANSACTION,
   GET_EACH_WALLET_TRANSACTION_ERROR,
   GET_EACH_WALLET_TRANSACTION_SUCCESS,
+  GET_MY_REFERRALS,
+  GET_MY_REFERRALS_ERROR,
+  GET_MY_REFERRALS_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -94,3 +97,23 @@ export const getEachWalletTransactionError = (error) => {
     payload: error,
   };
 };
+
+export const getMyReferrals = () => {
+  return {
+    type: GET_MY_REFERRALS,
+  }
+}
+
+export const getMyReferralsSuccess = (data) => {
+  return {
+    type: GET_MY_REFERRALS_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getMyReferralsError = (error) => {
+  return {
+    type: GET_MY_REFERRALS_ERROR,
+    payload: error,
+  }
+}

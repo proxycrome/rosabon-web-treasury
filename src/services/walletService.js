@@ -23,4 +23,10 @@ export const getEachWalletTransactionService = (transId) => {
   const http = new HttpService();
   const url = `auth/transactions/history/${transId}`;
   return http.getData(url);
+};
+
+export const getMyReferralsService = () => {
+  const http = new HttpService();
+  const url = `auth/referrals`;
+  return http.getData(url);
 }
