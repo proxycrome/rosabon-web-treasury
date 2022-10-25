@@ -1223,7 +1223,7 @@ export const AvailableBalance = ({
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦ {walletBalance?.amount ? walletBalance?.amount.toFixed(2) : 0}
+          ₦ {walletBalance?.amount ? walletBalance?.amount.toLocaleString() : 0}
         </h4>
       </div>
       {role !== "COMPANY" &&
@@ -1380,7 +1380,7 @@ export const TransferCard = ({ walletBalance }) => {
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦ {walletBalance?.amount ? walletBalance?.amount.toFixed(2) : 0}
+          ₦ {walletBalance?.amount ? walletBalance?.amount.toLocaleString() : 0}
         </h4>
       </div>
       <div className="pt-3">

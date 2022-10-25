@@ -220,7 +220,7 @@ const UserWallet = () => {
                     <h5>
                       ₦{" "}
                       {walletBalance?.amount
-                        ? walletBalance?.amount.toFixed(2)
+                        ? walletBalance?.amount.toLocaleString()
                         : 0}
                     </h5>
                   </div>
