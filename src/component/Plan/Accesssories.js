@@ -368,7 +368,13 @@ const PaymentTypeWrapper = styled.div`
 
 export const UserBankDetails = () => {
   const { login } = useSelector((state) => state.auth);
+  const { dynamic_account } = useSelector((state) => state.providus);
 
+  let date = new Date();
+  const time_format = moment(date).format('HH:mm');
+  const add_hours = moment(date).add(48, 'hours');
+  const expire_date = moment(add_hours).format("DD/MM/YYYY");
+  
   return (
     <div>
       <UserBankDetailsWrapper>
@@ -384,13 +390,13 @@ export const UserBankDetails = () => {
             <div>
               <p className="p-0 m-0">Account Number</p>
             </div>
-            <p className="p-0 m-0 bold-text">{login.virtualAccountNo} </p>
+            <p className="p-0 m-0 bold-text">{dynamic_account?.accountNumber} </p>
           </div>
           <div className="pt-3">
             <div>
               <p className="p-0 m-0">Account Name</p>
             </div>
-            <p className="p-0 m-0 bold-text">{login.virtualAccountName} </p>
+            <p className="p-0 m-0 bold-text">{dynamic_account?.accountName} </p>
           </div>
           <div className="pt-3">
             <div>
@@ -400,7 +406,7 @@ export const UserBankDetails = () => {
           </div>
           <p className="pt-4">
             Account details expires in 48 hours, kindly endeavour to make
-            transfer before 09/07/2022, 09 : 00
+            transfer before{" "} {expire_date},{" "} {time_format}
           </p>
         </div>
       </UserBankDetailsWrapper>

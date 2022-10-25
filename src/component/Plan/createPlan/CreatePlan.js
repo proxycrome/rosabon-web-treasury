@@ -56,7 +56,7 @@ const CreatePlan = () => {
                     <img
                       className="image-holder"
                       src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
-                      alt="ChoosePlanHolder"
+                      alt="Product"
                     />
                     <div>
                       <h5>{product.productName} </h5>
