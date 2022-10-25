@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 
 import {
 	CREATE_PLAN,
+	DELETE_PLAN,
 	GET_CONTRIB_VAL,
 	GET_EX_RATES,
 	GET_INVESTMENT_RATES,
@@ -15,6 +16,8 @@ import {
 import {
 	createPlanError,
 	createPlanSuccess,
+	deletePlanError,
+	deletePlanSuccess,
 	getContribValError,
 	getContribValSuccess,
 	getExRatesError,
@@ -33,6 +36,7 @@ import {
 
 import {
 	createPlanService,
+	deletePlanService,
 	getContribValService,
 	getExRatesService,
 	getInvestmentRatesService,
@@ -141,6 +145,28 @@ function* getInvestmentRates() {
 	}
 }
 
+function* deletePlan({ payload: { id } }) {
+	try {
+		const response = yield call(deletePlanService, id);
+		console.log(response.data);
+		yield put(deletePlanSuccess(response.data));
+		toast.success("Plan Successfully removed", {
+			position: "top-right",
+		});
+		
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(deletePlanError(error?.response?.data));
+		const message = error?.response?.data ? error?.response?.data?.message : 
+		"Unable to create plan"
+		if (message) {
+			toast.error(message, {
+				position: "top-right",
+			});
+		}
+	}
+}
+
 export function* watchGetContribVal() {
 	yield takeEvery(GET_CONTRIB_VAL, getContribVal);
 }
@@ -173,6 +199,10 @@ export function* watchGetInvestmentRates() {
 	yield takeEvery(GET_INVESTMENT_RATES, getInvestmentRates);
 }
 
+export function* watchDeletePlan() {
+	yield takeEvery(DELETE_PLAN, deletePlan);
+};
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -182,7 +212,8 @@ function* PlanSaga() {
 		fork(watchGetSinglePlan),
 		fork(watchGetTenor),
 		fork(watchGetWithholdingTax),
-		fork(watchGetInvestmentRates)
+		fork(watchGetInvestmentRates),
+		fork(watchDeletePlan),
 	]);
 }
 
