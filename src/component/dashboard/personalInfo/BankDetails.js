@@ -47,7 +47,7 @@ const BankDetails = () => {
     otpError,
     bvnMessage,
     validateEmailOtp,
-    bankDetails
+    bankDetails,
   } = useSelector((state) => state.user_profile);
 
   const { accountDetail, accountDetailError, bankUpdateMsg } = useSelector(
@@ -85,11 +85,15 @@ const BankDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { accountNumber, bankCode } = formData;
-    let data = { accountName, accountNumber, bankCode };
+    let data = {
+      accountName,
+      accountNumber: accountNumber ? accountNumber : bankDetails?.accountNumber,
+      bankCode,
+    };
     const reset = {
       setShowEdit,
       getBankDetails,
-    }
+    };
     console.log(data);
     dispatch(updateBankDetails(data, reset));
   };
@@ -97,8 +101,8 @@ const BankDetails = () => {
   const handleVerifyAccountNo = (e) => {
     e.preventDefault();
     const data = {
-      accountNumber: formData.accountNumber,
-      bankCode: formData.bankCode,
+      accountNumber: formData.accountNumber || bankDetails?.accountNumber,
+      bankCode: formData.bankCode || bankDetails?.bank?.code,
     };
 
     console.log(data);
@@ -178,10 +182,10 @@ const BankDetails = () => {
   };
 
   useEffect(() => {
-    if(!bankDetails){
+    if (!bankDetails) {
       dispatch(getBankDetails());
     }
-  }, [bankDetails])
+  }, [bankDetails]);
 
   return (
     <div>
