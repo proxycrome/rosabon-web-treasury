@@ -9,8 +9,9 @@ import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 // import { createPlan } from "../../../redux/actions/plan/planAction";
-import { createPlan } from '../../../store/actions';
+import { createPlan, createDynamicAcc } from '../../../store/actions';
 import { PlanContext } from "./PlanForm";
+import Spinner from '../../common/loading';
 
 
 const PlanBankPayment = ({goBack}) => {
@@ -19,6 +20,7 @@ const PlanBankPayment = ({goBack}) => {
   const [modalCount, setModalCount] = useState(0);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.plan);
+  const { dynamic_account } = useSelector((state) => state.providus);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +28,19 @@ const PlanBankPayment = ({goBack}) => {
       ...form,
       planStatus: "PENDING",
     });
+    dispatch(createDynamicAcc(form.planName))
   },[])
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      bankAccountInfo: {
+        accountName: dynamic_account?.accountName,
+        accountNumber: dynamic_account?.accountNumber,
+        bankName: "Rosabon"
+      }
+    })
+  }, [dynamic_account])
 
   useEffect(() => {
     setModalCount(modalCount+1);
@@ -45,65 +59,75 @@ const PlanBankPayment = ({goBack}) => {
   return (
     <>
       <ProfileNavBar>
-          <NavTitle>
-            <span className="fw-bold">Choose Plan</span>
-          </NavTitle>
-        </ProfileNavBar>
-      <Wrapper>
-        <Toaster />
-        <LeftView>
-          <h6>Kindly confirm your transaction details below</h6>
-          <div className="choose-plan mt-5">
-            <div className="d-flex align-items-center justify-content-between">
-                <div>Payment Type:</div>
-                <div className="d-flex align-items-center">
-                    <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                    <p className="p-0 m-0">Bank Transfer</p>
+        <NavTitle>
+          <span className="fw-bold">Choose Plan</span>
+        </NavTitle>
+      </ProfileNavBar>
+      {
+        dynamic_account !== null ? (
+          <div>
+            <Wrapper>
+              <Toaster />
+              <LeftView>
+                <h6>Kindly confirm your transaction details below</h6>
+                <div className="choose-plan mt-5">
+                  <div className="d-flex align-items-center justify-content-between">
+                      <div>Payment Type:</div>
+                      <div className="d-flex align-items-center">
+                          <img className="verve-card" src={MOneyTransfer} alt="Verve" />
+                          <p className="p-0 m-0">Bank Transfer</p>
+                      </div>
+                  </div>
                 </div>
-            </div>
+                <PlanSummary />
+              </LeftView>
+              <RightView>
+                <div className="bank-details">
+                  <div className="bank-detail-content">
+                    <UserBankDetails />
+                  </div>
+                </div>
+              </RightView>
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button style={{ color: '#111E6C', width: '300px' }} onClick={goBack}>Back</button>
+                  </div>
+                  <div>
+                    <button
+                      style={{
+                        backgroundColor: '#111E6C',
+                        color: '#FFFFFF',
+                        width: '300px',
+                      }}
+                      // onClick={() => setShow(true)}
+                      onClick={handleSubmit}
+                    >
+                      {loading ? 'LOADING...' : 'Pay'}
+                    </button>
+                    <ModalComponent
+                      show={show}
+                      size={'md'}
+                      handleClose={() => setShow(false)}
+                    >
+                      <SuccessConfirm 
+                        createPlan="paid"
+                        handleClose={() => setShow(false)}
+                      />
+                    </ModalComponent>
+                  </div>
+                </div>
+              </div>
+            </WrapperFooter>
           </div>
-          <PlanSummary />
-        </LeftView>
-        <RightView>
-          <div className="bank-details">
-            <div className="bank-detail-content">
-              <UserBankDetails />
-            </div>
+        ) : (
+          <div className="h-100 w-100">
+            <Spinner />
           </div>
-        </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button style={{ color: '#111E6C', width: '300px' }} onClick={goBack}>Back</button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
-                }}
-                // onClick={() => setShow(true)}
-                onClick={handleSubmit}
-              >
-                {loading ? 'LOADING...' : 'Pay'}
-              </button>
-              <ModalComponent
-                show={show}
-                size={'md'}
-                handleClose={() => setShow(false)}
-              >
-                <SuccessConfirm 
-                  createPlan="paid"
-                  handleClose={() => setShow(false)}
-                />
-              </ModalComponent>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+        )
+      }
     </>
   );
 };

@@ -18,14 +18,18 @@ import {
   getProducts, 
   getPlans, 
   getSinglePlan ,
-  getProductCategories
+  getProductCategories,
+  deletePlan,
 } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
+import { UserBankDetails } from "../Accesssories";
+import { Toaster } from "react-hot-toast";
 import Spinner from "../../common/loading";
 
 export const Plans = () => {
   const [more, setMore] = useState(false);
   const [show, setShow] = useState(false);
+  const [bankDetail, setBankDetail] = useState(false);
   const [filter, setFilter] = useState({
     category: 0,
     startDate: "",
@@ -90,8 +94,19 @@ export const Plans = () => {
     setShow(true);
   }
 
+  const handleBankModal = async (id) => {
+    await dispatch(getSinglePlan(id))
+    setBankDetail(true);
+  }
+
+  const removePlan = async (id) => {
+    await dispatch(deletePlan(id));
+    dispatch(getPlans())
+  };
+
   return (
     <Wrapper>
+      <Toaster />
       <ModalComponent
         show={show}
         size={'md'}
@@ -99,6 +114,15 @@ export const Plans = () => {
       >
         <PlanModal 
           handleClose={() => setShow(false)}
+        />
+      </ModalComponent>
+      <ModalComponent
+        show={bankDetail}
+        size={'md'}
+        handleClose={() => setBankDetail(false)}
+      >
+        <UserBankDetails 
+          type="account-details"
         />
       </ModalComponent>
       <div className="row">
@@ -209,7 +233,12 @@ export const Plans = () => {
                             {product.find((product)=>product.id===item.productId)?.productName}
                           </p>
                         </div>
-                        <DropDown id={item.id} status={capitalise(item.planStatus)} />
+                        <DropDown 
+                          id={item.id} 
+                          status={capitalise(item.planStatus)}
+                          handleBankModal={handleBankModal} 
+                          removePlan={removePlan}
+                        />
                       </div>
                     </div>
                   </div>
@@ -341,7 +370,7 @@ const Wrapper = styled.div`
   }
 `;
 
-export const DropDown = ({id, status}) => {
+export const DropDown = ({id, status, handleBankModal, removePlan}) => {
   const [menu, setMenu] = useState(false);
   const [checkRollover, setCheckRollover] = useState(false);
 
@@ -389,9 +418,9 @@ export const DropDown = ({id, status}) => {
           </>
         ) : status === "Pending" ? (
           <>
-            <DropdownItem>View account details</DropdownItem>
+            <DropdownItem onClick={()=>handleBankModal(id)}  >View account details</DropdownItem>
             <DropdownItem>Pay with card</DropdownItem>
-            <DropdownItem>Remove</DropdownItem>
+            <DropdownItem onClick={() =>removePlan(id)} >Remove</DropdownItem>
           </>
         ) : status === "Matured" ? (
           <>

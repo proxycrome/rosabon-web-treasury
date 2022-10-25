@@ -119,7 +119,7 @@ const PlanModal = ({ handleClose }) => {
               <div className='right' >
                 <p className='p-light' >Current balance</p>
                 <p className='p-dark flex justify-content-end' >
-                  {getCurrIcon(current_currency)}100
+                  {getCurrIcon(current_currency)}{plan.planSummary.principal} 
                 </p>
               </div>
             </div>

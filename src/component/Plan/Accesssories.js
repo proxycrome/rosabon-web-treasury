@@ -368,8 +368,18 @@ const PaymentTypeWrapper = styled.div`
   }
 `;
 
-export const UserBankDetails = () => {
+export const UserBankDetails = ({type=null}) => {
   const { login } = useSelector((state) => state.auth);
+  const { singlePlan } = useSelector((state) => state.plan);
+  const { dynamic_account } = useSelector((state) => state.providus);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+
+  let date = new Date();
+  const time_format = moment(date).format('HH:mm');
+  const add_hours = moment(date).add(48, 'hours');
+  const expire_date = moment(add_hours).format("DD/MM/YYYY");
+
+  const account = (type === null) ? dynamic_account : plan?.bankAccountInfo;
 
   return (
     <div>
@@ -386,13 +396,13 @@ export const UserBankDetails = () => {
             <div>
               <p className="p-0 m-0">Account Number</p>
             </div>
-            <p className="p-0 m-0 bold-text">{login.virtualAccountNo} </p>
+            <p className="p-0 m-0 bold-text">{account?.accountNumber} </p>
           </div>
           <div className="pt-3">
             <div>
               <p className="p-0 m-0">Account Name</p>
             </div>
-            <p className="p-0 m-0 bold-text">{login.virtualAccountName} </p>
+            <p className="p-0 m-0 bold-text">{account?.accountName} </p>
           </div>
           <div className="pt-3">
             <div>
@@ -402,7 +412,10 @@ export const UserBankDetails = () => {
           </div>
           <p className="pt-4">
             Account details expires in 48 hours, kindly endeavour to make
-            transfer before 09/07/2022, 09 : 00
+            transfer{" "}
+            <span style={{display: type === null?"auto":"none"}} >
+              before{" "}{expire_date},{" "} {time_format}
+            </span>
           </p>
         </div>
       </UserBankDetailsWrapper>

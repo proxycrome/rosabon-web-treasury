@@ -7,3 +7,4 @@ export * from "./product/actions";
 export * from "./plan/actions";
 export * from "./paystack/actions";
 export * from "./currency/actions";
+export * from "./providus/actions";
