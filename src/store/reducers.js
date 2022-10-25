@@ -7,6 +7,7 @@ import userProfileReducer from './profile/reducer';
 import paystack from './paystack/reducer';
 import plan from './plan/reducer';
 import product from './product/reducer';
+import providus from './providus/reducer';
 import updateProfile from './updateProfile/reducer';
 import wallet from './wallet/reducer';
 
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
     plan,
     paystack,
     currencies,
+    providus,
 });
 
 export default rootReducer;

@@ -128,7 +128,7 @@ export const RightView = () => {
                             <img
                               className="image-holder"
                               src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
-                              alt="ChoosePlanHolder"
+                              alt="Product"
                             />
                           </div>
                           <div className="col-sm-9">

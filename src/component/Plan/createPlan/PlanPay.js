@@ -49,6 +49,7 @@ const PlanPay = ({ goBack }) => {
       />
     );
   }
+  
 
   return (
     <>
@@ -65,7 +66,7 @@ const PlanPay = ({ goBack }) => {
               <img
                 className="image-holder"
                 src={product?.imageUrl?.length > 10 ? product?.imageUrl : ChoosePlanHolder}
-                alt="ChoosePlanHolder"
+                alt="Product"
               />
               <div>
                 <div>

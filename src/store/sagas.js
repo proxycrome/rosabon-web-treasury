@@ -7,6 +7,7 @@ import PaystackSaga from "./paystack/saga";
 import ProfileSaga from "./profile/saga";
 import PlanSaga from "./plan/saga";
 import ProductSaga from "./product/saga";
+import ProvidusSaga from "./providus/saga";
 import UpdateProfileSaga from "./updateProfile/saga";
 import WalletSaga from "./wallet/saga";
 
@@ -21,5 +22,6 @@ export default function* rootSaga() {
         PlanSaga(),
         PaystackSaga(),
         CurrencySaga(),
+        ProvidusSaga(),
     ]);
 }
