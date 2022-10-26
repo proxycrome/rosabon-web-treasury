@@ -62,3 +62,10 @@ export const getWithholdingTaxService = () => {
 
     return http.getData(url)
 }
+
+export const planActionService = (formData) => {
+    const http = new HttpService();
+    const url = `auth/trplan-action`;
+
+    return http.postDataWithToken(formData, url)
+};

@@ -10,7 +10,8 @@ import {
 	GET_PLANS,
     GET_SINGLE_PLAN,
     GET_TENOR,
-	GET_WITHHOLDING_TAX
+	GET_WITHHOLDING_TAX,
+	PLAN_ACTION,
 } from "./actionTypes";
 
 import {
@@ -31,7 +32,9 @@ import {
     getTenorError,
     getTenorSuccess,
 	getWithholdingTaxError,
-	getWithholdingTaxSuccess
+	getWithholdingTaxSuccess,
+	planActionError,
+	planActionSuccess,
 } from "./actions";
 
 import {
@@ -43,7 +46,8 @@ import {
 	getPlansService,
 	getSinglePlanService,
     getTenorService,
-	getWithholdingTaxService
+	getWithholdingTaxService,
+	planActionService,
 } from "../../services/planService";
 
 function* getContribVal() {
@@ -165,6 +169,17 @@ function* deletePlan({ payload: { id } }) {
 			});
 		}
 	}
+};
+
+function* planAction({ payload: { formData } }) {
+	try {
+		const response = yield call(planActionService, formData);
+		console.log(response.data);
+		yield put(planActionSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(planActionError(error?.response?.data));
+	}
 }
 
 export function* watchGetContribVal() {
@@ -203,6 +218,10 @@ export function* watchDeletePlan() {
 	yield takeEvery(DELETE_PLAN, deletePlan);
 };
 
+export function* watchPlanAction() {
+	yield takeEvery(PLAN_ACTION, planAction);
+};
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -214,6 +233,7 @@ function* PlanSaga() {
 		fork(watchGetWithholdingTax),
 		fork(watchGetInvestmentRates),
 		fork(watchDeletePlan),
+		fork(watchPlanAction),
 	]);
 }
 

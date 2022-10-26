@@ -22,7 +22,10 @@ import {
     GET_WITHHOLDING_TAX_ERROR,
     GET_INVESTMENT_RATES,
     GET_INVESTMENT_RATES_SUCCESS,
-    GET_INVESTMENT_RATES_ERROR
+    GET_INVESTMENT_RATES_ERROR,
+    PLAN_ACTION,
+    PLAN_ACTION_ERROR,
+    PLAN_ACTION_SUCCESS,
   } from './actionTypes';
   
   const initialState = {
@@ -43,6 +46,8 @@ import {
     withholding_tax_error: null,
     investment_rates: null,
     investment_rates_err: null,
+    plan_action: null,
+    plan_action_error: null,
   }
   
   const plan = ( state=initialState, action ) => {
@@ -55,6 +60,7 @@ import {
       case GET_PLANS:
       case GET_WITHHOLDING_TAX:
       case GET_INVESTMENT_RATES:
+      case PLAN_ACTION:
         state = {
           ...state,
           loading: true
@@ -200,6 +206,24 @@ import {
           loading: false,
           investment_rates: null,
           investment_rates_err: action.payload
+        };
+        break;
+
+      case PLAN_ACTION_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          plan_action: action.payload,
+          plan_action_error: null
+        };
+        break;
+
+      case PLAN_ACTION_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          plan_action: null,
+          plan_action_error: action.payload
         };
         break;
   

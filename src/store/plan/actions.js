@@ -25,7 +25,10 @@ import {
     GET_TENOR_SUCCESS,
     GET_WITHHOLDING_TAX,
     GET_WITHHOLDING_TAX_ERROR,
-    GET_WITHHOLDING_TAX_SUCCESS
+    GET_WITHHOLDING_TAX_SUCCESS,
+    PLAN_ACTION,
+    PLAN_ACTION_ERROR,
+    PLAN_ACTION_SUCCESS,
 } from "./actionTypes";
 
 export const getContribVal = () => {
@@ -211,3 +214,24 @@ export const getWithholdingTaxError = (error) => {
         payload: error
     }
 }
+
+export const planAction = (formData) => {
+	return {
+		type: PLAN_ACTION,
+		payload: { formData },
+	};
+};
+
+export const planActionSuccess = (data) => {
+	return {
+		type: PLAN_ACTION_SUCCESS,
+		payload: data,
+	};
+};
+
+export const planActionError = (error) => {
+	return {
+		type: PLAN_ACTION_ERROR,
+		payload: error,
+	};
+};

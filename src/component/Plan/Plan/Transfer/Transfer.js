@@ -6,10 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
-import {  getSinglePlan } from "../../../../store/actions";
+import {  getSinglePlan, getPlans } from "../../../../store/actions";
 
 const Transfer = () => {
   const [modalState, setModalState] = useState("Close");
+  const [amount, setAmount] = useState(0);
+  const [receive, setReceive] = useState({
+    name: "",
+    id: ""
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -21,11 +26,13 @@ const Transfer = () => {
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
+    dispatch(getPlans());
   },[])
 
   const back = () => {
     navigate("/plan-list");
   };
+
 
   return (
     <>
@@ -75,7 +82,7 @@ const Transfer = () => {
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
                           <h4>Balance</h4>
-                          <p className="p-0 m-0">2,000,000</p>
+                          <p className="p-0 m-0">{plan?.planSummary?.principal.toLocaleString()} </p>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}
                       </div>
@@ -91,11 +98,24 @@ const Transfer = () => {
                         <select
                           className="form-select form-select-md"
                           aria-label=".form-select-md"
-                          name="Tenor"
+                          name="planName"
+                          value={receive}
+                          onChange={(e) => setReceive(
+                            e.target.value
+                          )}
                         >
+                          <option selected hidden value={{
+                            name: "",
+                            id: ""
+                            }} disabled
+                          >
+                            Select an active plan to transfer into
+                          </option>
                           {
-                            userPlans.filter(item => item.id !== plan.id).map(item => (
-                              <option key={item.id} value={item.id} >{item.planName}</option>
+                            userPlans.filter(
+                              item => item.id !== plan.id && item.planStatus === "ACTIVE"
+                              ).map(item => (
+                              <option key={item.id} value={JSON.stringify(item)} >{item.planName}</option>
                             ))
                           }
                         </select>
@@ -107,12 +127,15 @@ const Transfer = () => {
                       <label>Amount to Send</label>
                       <div className="input-group">
                         <input
-                          className="form-control"
+                          className="form-control pl-5"
                           placeholder="₦ 1,000,000"
                           type="text"
+                          value={amount}
+                          onChange={(e)=>setAmount(parseInt(e.target.value))}
+                          max={plan.planSummary.principal}
                         />
                       </div>
-                      <label>Balance is ₦1,000,000</label>
+                      <label>Balance is ₦{plan.planSummary.principal - amount}</label>
                     </div>
                   </div>
                 </div>
@@ -152,6 +175,8 @@ const Transfer = () => {
                       <Notice
                         handleClose={() => setModalState("close")}
                         handleShowModalTwo={() => setModalState("modal-two")}
+                        transferForm={{receive, amount}}
+                        plan={plan}
                         transferNotice="transfer"
                       />
                     </ModalComponent>
