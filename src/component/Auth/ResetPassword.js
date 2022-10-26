@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 // import { resetPassword } from '../../redux/actions/auth/SignupAction'
 import { Input, InputGroup, InputGroupText } from 'reactstrap'
 import { ValidatePasswordForm, validatePassword } from './validateForm'
@@ -22,12 +22,23 @@ function ResetPassword() {
   const [passwordShown1, setPasswordShown1] = useState(false)
   const [passwordShown2, setPasswordShown2] = useState(false)
 
+  const location = useLocation();
+  console.log(location);
+
+  const query = new URLSearchParams(location?.search)
+
+  const email = query.get('email');
+  const token = query.get('token');
+
+  
+
   const {
     handleValueChange,
     values,
     handleSubmit,
     errors,
-  } = ValidatePasswordForm(validatePassword)
+  } = ValidatePasswordForm(validatePassword, email, token)
+
 
   const togglePassword1 = () => {
     setPasswordShown1(!passwordShown1)
@@ -68,7 +79,7 @@ function ResetPassword() {
                               type={passwordShown1 ? 'text' : 'password'}
                               bsSize="lg"
                               onChange={handleValueChange}
-                              name="password"
+                              name="newPassword"
                               value={values.newPassword}
                             />
                             <InputGroupText>
@@ -84,7 +95,7 @@ function ResetPassword() {
                             </InputGroupText>
                           </InputGroup>
                         </div>
-                        {errors.password && <h3>{errors.password}</h3>}
+                        {errors.newPassword && <h3>{errors.newPassword}</h3>}
                       </div>
                       <div className="mb-4 input_password">
                         <label>Confirm Password</label>
