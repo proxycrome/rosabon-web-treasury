@@ -5,6 +5,7 @@ import {
 	CREATE_PLAN,
 	DELETE_PLAN,
 	GET_CONTRIB_VAL,
+	GET_ELIGIBLE_PLANS,
 	GET_EX_RATES,
 	GET_INVESTMENT_RATES,
 	GET_PLANS,
@@ -21,6 +22,8 @@ import {
 	deletePlanSuccess,
 	getContribValError,
 	getContribValSuccess,
+	getEligiblePlansError,
+	getEligiblePlansSuccess,
 	getExRatesError,
 	getExRatesSuccess,
 	getInvestmentRatesError,
@@ -41,6 +44,7 @@ import {
 	createPlanService,
 	deletePlanService,
 	getContribValService,
+	getEligiblePlansService,
 	getExRatesService,
 	getInvestmentRatesService,
 	getPlansService,
@@ -149,6 +153,18 @@ function* getInvestmentRates() {
 	}
 }
 
+function* getEligiblePlans() {
+	try {
+		const response = yield call(getEligiblePlansService);
+		console.log(response.data);
+		yield put(getEligiblePlansSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getEligiblePlansError(error?.response?.data));
+	}
+}
+
+
 function* deletePlan({ payload: { id } }) {
 	try {
 		const response = yield call(deletePlanService, id);
@@ -214,6 +230,9 @@ export function* watchGetInvestmentRates() {
 	yield takeEvery(GET_INVESTMENT_RATES, getInvestmentRates);
 }
 
+export function* watchGetEligiblePlans() {
+	yield takeEvery(GET_ELIGIBLE_PLANS, getEligiblePlans);
+}
 export function* watchDeletePlan() {
 	yield takeEvery(DELETE_PLAN, deletePlan);
 };
@@ -232,6 +251,7 @@ function* PlanSaga() {
 		fork(watchGetTenor),
 		fork(watchGetWithholdingTax),
 		fork(watchGetInvestmentRates),
+		fork(watchGetEligiblePlans),
 		fork(watchDeletePlan),
 		fork(watchPlanAction),
 	]);

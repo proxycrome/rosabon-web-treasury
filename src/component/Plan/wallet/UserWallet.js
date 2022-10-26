@@ -9,6 +9,7 @@ import {
   getWalletBalance,
   getWalletBalanceSuccess,
   getWithdrawReason,
+  postTransferToPlan,
   requestWithdrawal,
 } from "../../../store/actions";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
@@ -29,6 +30,7 @@ const UserWallet = () => {
   const [modalValue, setModalvalue] = useState("");
   const [closeFooter, setClosefooter] = useState(false);
   const [formData, setFormData] = useState({});
+  const [transferFormData, setTransferFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
@@ -39,7 +41,9 @@ const UserWallet = () => {
   const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
     (state) => state.user_profile
   );
-  const { walletBalance, loading, withdrawMsg } = useSelector((state) => state.wallet);
+  const { walletBalance, loading, withdrawMsg } = useSelector(
+    (state) => state.wallet
+  );
 
   const handleClick = (value) => {
     if (value === "transfer") {
@@ -62,6 +66,10 @@ const UserWallet = () => {
     setSidebar(false);
     setClosefooter(false);
   };
+
+  const handleTransferFormData = (data) => {
+    setTransferFormData(data)
+  }
 
   const handleFormData = (data) => {
     setFormData(data);
@@ -106,10 +114,10 @@ const UserWallet = () => {
         errors.withdrawalReasonOthers = "Withdrawal Reason is required";
       }
 
-      if (Object.keys(values.withdrawalInstructionImage).length === 0) {
-        errors.withdrawalInstructionImage =
-          "Upload a withdrawal instruction document";
-      }
+      // if (Object.keys(values.withdrawalInstructionImage).length === 0) {
+      //   errors.withdrawalInstructionImage =
+      //     "Upload a withdrawal instruction document";
+      // }
 
       if (Object.keys(values.withdrawalMandateLetterImage).length === 0) {
         errors.withdrawalMandateLetterImage =
@@ -163,6 +171,10 @@ const UserWallet = () => {
     }
   }, [errors]);
 
+  const handleTransferSubmit = () => {
+    dispatch(postTransferToPlan(transferFormData));
+  };
+
   useEffect(() => {
     dispatch(getWalletBalance());
     dispatch(getAuthUsers());
@@ -173,10 +185,10 @@ const UserWallet = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if(withdrawMsg){
+    if (withdrawMsg) {
       dispatch(getWalletBalance());
     }
-  }, [withdrawMsg])
+  }, [withdrawMsg]);
 
   return (
     <div>
@@ -186,7 +198,7 @@ const UserWallet = () => {
             <span className="fw-bold">Wallet</span>
           </NavTitle>
         </ProfileNavBar>
-        <Toaster/>
+        <Toaster />
         {loading ? (
           <div className="vh-100 w-100">
             <Spinner />
@@ -218,7 +230,7 @@ const UserWallet = () => {
                     <h5>
                       ₦{" "}
                       {walletBalance?.amount
-                        ? walletBalance?.amount.toFixed(2)
+                        ? walletBalance?.amount.toLocaleString()
                         : 0}
                     </h5>
                   </div>
@@ -248,7 +260,6 @@ const UserWallet = () => {
 
                   <div>
                     <div
-                      value="transfer"
                       onClick={() => {
                         handleClick("transfer");
                         setClosefooter(true);
@@ -257,7 +268,6 @@ const UserWallet = () => {
                     >
                       <img
                         value="transfer"
-                        // onClick={() => handleClick("transter")}
                         className=" image-fluid"
                         src={TransferImg}
                         alt="TransferImg"
@@ -321,8 +331,9 @@ const UserWallet = () => {
                     <>
                       <div className="bank-details">
                         <div className="bank-detail-content">
-                          <TransferCard 
+                          <TransferCard
                             walletBalance={walletBalance}
+                            transferData={(data) => handleTransferFormData(data)}
                           />
                         </div>
                       </div>
@@ -350,21 +361,31 @@ const UserWallet = () => {
                   </button>
                 </div>
                 <div>
-                  <button
-                    style={{
-                      backgroundColor: "#111E6C",
-                      color: "#FFFFFF",
-                      width: "300px",
-                    }}
-                    onClick={(e) => {
-                      // setShow(true);
-                      // setSidebar(false);
-                      // setClosefooter(false)
-                      handleSubmit(e);
-                    }}
-                  >
-                    Submit
-                  </button>
+                  {isTransfer ? (
+                    <button
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                      onClick={handleSubmit}
+                    >
+                      Submit
+                    </button>
+                  ) : IsWithDraw ? (
+                    <button
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                      onClick={handleTransferSubmit}
+                    >
+                      Submit
+                    </button>
+                  ) : (
+                    <></>
+                  )}
                   <ModalComponent
                     show={show}
                     size={"md"}

@@ -23,6 +23,9 @@ import {
     GET_INVESTMENT_RATES,
     GET_INVESTMENT_RATES_SUCCESS,
     GET_INVESTMENT_RATES_ERROR,
+    GET_ELIGIBLE_PLANS,
+    GET_ELIGIBLE_PLANS_SUCCESS,
+    GET_ELIGIBLE_PLANS_ERROR,
     PLAN_ACTION,
     PLAN_ACTION_ERROR,
     PLAN_ACTION_SUCCESS,
@@ -46,6 +49,8 @@ import {
     withholding_tax_error: null,
     investment_rates: null,
     investment_rates_err: null,
+    eligiblePlans: null,
+    eligiblePlansError: null,
     plan_action: null,
     plan_action_error: null,
   }
@@ -60,6 +65,7 @@ import {
       case GET_PLANS:
       case GET_WITHHOLDING_TAX:
       case GET_INVESTMENT_RATES:
+      case GET_ELIGIBLE_PLANS:
       case PLAN_ACTION:
         state = {
           ...state,
@@ -173,32 +179,32 @@ import {
         }
         break;
 
-      case GET_WITHHOLDING_TAX_SUCCESS:
-        state = {
-          ...state,
-          loading: false,
-          withholding_tax: action.payload,
-          withholding_tax_error: null
-        };
-        break;
+    case GET_WITHHOLDING_TAX_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        withholding_tax: action.payload,
+        withholding_tax_error: null,
+      };
+      break;
 
-      case GET_WITHHOLDING_TAX_ERROR:
-        state = {
-          ...state, 
-          loading: false,
-          withholding_tax: null,
-          withholding_tax_error: action.payload
-        };
-        break;
+    case GET_WITHHOLDING_TAX_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        withholding_tax: null,
+        withholding_tax_error: action.payload,
+      };
+      break;
 
-      case GET_INVESTMENT_RATES_SUCCESS:
-        state = {
-          ...state,
-          loading: false,
-          investment_rates: action.payload,
-          investment_rates_err: null
-        };
-        break;
+    case GET_INVESTMENT_RATES_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        investment_rates: action.payload,
+        investment_rates_err: null,
+      };
+      break;
 
       case GET_INVESTMENT_RATES_ERROR:
         state = {
@@ -208,6 +214,24 @@ import {
           investment_rates_err: action.payload
         };
         break;
+
+    case GET_ELIGIBLE_PLANS_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        eligiblePlans: action.payload,
+        eligiblePlansError: null,
+      };
+      break;
+
+    case GET_ELIGIBLE_PLANS_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        eligiblePlans: null,
+        eligiblePlansError: action.payload,
+      };
+      break;
 
       case PLAN_ACTION_SUCCESS:
         state = {

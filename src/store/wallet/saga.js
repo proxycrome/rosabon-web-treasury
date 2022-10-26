@@ -1,23 +1,35 @@
 import { takeEvery, fork, put, all, call } from "redux-saga/effects";
 
 import {
+  GET_EACH_WALLET_TRANSACTION,
+  GET_MY_REFERRALS,
   GET_WALLET_BALANCE,
   GET_WALLET_TRANSACTIONS,
+  POST_TRANSFER_TO_PLAN,
   REQUEST_WITHDRAWAL,
 } from "./actionTypes";
 
 import {
+  getEachWalletTransactionError,
+  getEachWalletTransactionSuccess,
+  getMyReferralsError,
+  getMyReferralsSuccess,
   getWalletBalanceError,
   getWalletBalanceSuccess,
   getWalletTransactionsError,
   getWalletTransactionsSuccess,
+  postTransferToPlanError,
+  postTransferToPlanSuccess,
   requestWithdrawalError,
   requestWithdrawalSuccess,
 } from "./actions";
 
 import {
+  getEachWalletTransactionService,
+  getMyReferralsService,
   getWalletBalanceService,
   getWalletTransactionsService,
+  postTransferToPlanService,
   requestWithdrawalService,
 } from "../../services/walletService";
 import toast from "react-hot-toast";
@@ -65,6 +77,49 @@ function* requestWithdrawal({ payload: { formData } }) {
   }
 }
 
+function* getEachWalletTransaction({ payload: { transId } }) {
+  try {
+    const response = yield call(getEachWalletTransactionService, transId);
+    console.log(response.data);
+    yield put(getEachWalletTransactionSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getEachWalletTransactionError(error?.response?.data));
+  }
+}
+
+function* getMyReferrals() {
+  try {
+    const response = yield call(getMyReferralsService);
+    console.log(response.data);
+    yield put(getMyReferralsSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getMyReferralsError(error?.response?.data));
+  }
+}
+
+function* postTransferToPlan({ payload: { formData } }) {
+  try {
+    const response = yield call(postTransferToPlanService, formData);
+    console.log(response.data);
+    yield put(postTransferToPlanSuccess(response.data));
+    if (response) {
+      setTimeout(() => {
+        toast.success(response.data.message);
+      }, 1000);
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(postTransferToPlanError(error?.response?.data));
+    if (error?.response?.data?.message) {
+      setTimeout(() => {
+        toast.error(error?.response?.data?.message);
+      }, 1000);
+    }
+  }
+}
+
 export function* watchGetWalletBalance() {
   yield takeEvery(GET_WALLET_BALANCE, getWalletBalance);
 }
@@ -77,11 +132,26 @@ export function* watchRequestWithdrawal() {
   yield takeEvery(REQUEST_WITHDRAWAL, requestWithdrawal);
 }
 
+export function* watchGetEachWalletTransaction() {
+  yield takeEvery(GET_EACH_WALLET_TRANSACTION, getEachWalletTransaction);
+}
+
+export function* watchGetMyReferrals() {
+  yield takeEvery(GET_MY_REFERRALS, getMyReferrals);
+}
+
+export function* watchPostTransferToPlan() {
+  yield takeEvery(POST_TRANSFER_TO_PLAN, postTransferToPlan);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
     fork(watchGetWalletTransactions),
     fork(watchRequestWithdrawal),
+    fork(watchGetEachWalletTransaction),
+    fork(watchGetMyReferrals),
+    fork(watchPostTransferToPlan),
   ]);
 }
 

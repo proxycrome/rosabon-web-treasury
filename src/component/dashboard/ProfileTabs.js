@@ -37,7 +37,7 @@ export function ProfileTabs({ personal, handleChange }) {
                   <li
                     className={activeBtn === "documents" ? "style-active" : ""}
                   >
-                    My documents
+                    My Documents
                   </li>
                 </a>
                 <a
