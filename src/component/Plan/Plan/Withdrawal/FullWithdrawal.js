@@ -7,7 +7,7 @@ import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
 import { WithdrawalSummary } from "../../Accesssories";
 
-const FullWithdrawal = ({ goBack }) => {
+const FullWithdrawal = ({ goBack, amount, reason }) => {
   const [modalState, setModalState] = useState(false);
   const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
@@ -57,7 +57,9 @@ const FullWithdrawal = ({ goBack }) => {
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
                     <h4>Balance</h4>
-                    <p className="p-0 m-0">2,000,000</p>
+                    <p className="p-0 m-0">
+                      ₦{plan?.planSummary?.principal?.toLocaleString()}
+                    </p>
                   </div>
                   {/* <i className="fa-solid fa-ellipsis"></i> */}
                 </div>
@@ -68,7 +70,7 @@ const FullWithdrawal = ({ goBack }) => {
         <RightView>
           <div className="bank-details">
             <div className="bank-detail-content">
-              <WithdrawalSummary />
+              <WithdrawalSummary amount={amount} reason={reason} />
             </div>
           </div>
         </RightView>
