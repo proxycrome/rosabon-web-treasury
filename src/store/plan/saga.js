@@ -195,6 +195,13 @@ function* planAction({ payload: { formData } }) {
 	} catch (error) {
 		console.log(error?.response?.data);
 		yield put(planActionError(error?.response?.data));
+		const message = error?.response?.data ? error?.response?.data?.message : 
+		"Unable to Withdraw"
+		if (message) {
+			toast.error(message, {
+				position: "top-right",
+			});
+		}
 	}
 }
 

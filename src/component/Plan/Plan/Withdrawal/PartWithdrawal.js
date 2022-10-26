@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import moment from 'moment';
 // import { SuccessConfirm } from '../../../Accessories/BVNConfirm';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 // import ModalComponent from '../../../ModalComponent';
 import { WithdrawalSummary } from '../../Accesssories';
 import WithdrawalChannel from './WithdrawalChannel';
+import { Toaster } from 'react-hot-toast';
 
 const FullWithdrawal = ({goBack, amount, reason}) => {
   const [isClicked, setIsClicked] = useState(false);
-  const { singlePlan } = useSelector((state) => state.plan);
+  const { singlePlan, loading } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
 
   if (isClicked) {
-    return <WithdrawalChannel goBack={() => setIsClicked(false)} />;
+    return <WithdrawalChannel amount={amount} goBack={() => setIsClicked(false)} />;
   }
 
   return (
     <>
+    <Toaster />
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Plan</span>
@@ -98,9 +100,9 @@ const FullWithdrawal = ({goBack, amount, reason}) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setIsClicked(true)}
+                onClick={()=>setIsClicked(true)}
               >
-                Proceed
+                { loading ? "Loading..." : "Proceed" }
               </button>
             </div>
           </div>

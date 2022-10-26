@@ -712,7 +712,7 @@ export function Notice({
       // withdrawType: null
     }
     await dispatch(planAction(formData));
-    handleShowModalTwo();
+    handleShowModalTwo("modal-two");
   }
   return (
     <>
