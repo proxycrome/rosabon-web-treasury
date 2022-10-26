@@ -32,17 +32,6 @@ const PlanBankPayment = ({goBack}) => {
   },[])
 
   useEffect(() => {
-    setForm({
-      ...form,
-      bankAccountInfo: {
-        accountName: dynamic_account?.accountName,
-        accountNumber: dynamic_account?.accountNumber,
-        bankName: "Rosabon"
-      }
-    })
-  }, [dynamic_account])
-
-  useEffect(() => {
     setModalCount(modalCount+1);
     if(modalCount >= 2){
       navigate("/plan-product")
@@ -123,7 +112,7 @@ const PlanBankPayment = ({goBack}) => {
             </WrapperFooter>
           </div>
         ) : (
-          <div className="h-100 w-100">
+          <div className="vh-100 w-100">
             <Spinner />
           </div>
         )

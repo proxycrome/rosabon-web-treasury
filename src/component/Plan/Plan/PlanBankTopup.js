@@ -153,7 +153,7 @@ const PlanBankTopup = ({ goBack }) => {
             </WrapperFooter>
           </>
         ) : (
-          <div className='w-100 h-100'>
+          <div className='w-100 vh-100'>
             <Spinner />
           </div>
         )
