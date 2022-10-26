@@ -107,9 +107,9 @@ function* refreshUser() {
 	}
 }
 
-function* resetPassword({ payload }) {
+function* resetPassword({ payload: {formData} }) {
 	try {
-		const response = yield call(resetPasswordService, payload);
+		const response = yield call(resetPasswordService, formData);
 
 		yield put(resetPasswordSuccess(response.data));
 	} catch (error) {

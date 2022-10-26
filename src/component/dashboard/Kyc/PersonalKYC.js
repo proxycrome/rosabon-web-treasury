@@ -106,7 +106,7 @@ const PersonalKYC = () => {
         },
         countryId: +countryId,
         dateOfBirth: dateOfBirth
-          ? String(moment(dateOfBirth).format("DD-MM-YYYY"))
+          ? String(moment(dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY"))
           : user_details?.individualUser?.dateOfBirth,
         gender: gender ? gender : user_details?.individualUser?.gender,
         firstName: firstName
@@ -273,14 +273,17 @@ const PersonalKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder={
-                                  user_details?.individualUser?.dateOfBirth ||
-                                  "DD-MM-YYYY"
-                                }
-                                type="text"
+                                placeholder=""
+                                type="date"
                                 onChange={handleChange}
                                 name="dateOfBirth"
-                                value={formData.dateOfBirth}
+                                value={
+                                  formData.dateOfBirth ||
+                                  moment(
+                                    user_details?.individualUser?.dateOfBirth,
+                                    "DD-MM-YYYY"
+                                  ).format("YYYY-MM-DD")
+                                }
                               />
                             </div>
                           </div>

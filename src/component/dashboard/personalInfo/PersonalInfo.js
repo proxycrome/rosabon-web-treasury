@@ -251,14 +251,6 @@ const PersonalInfo = () => {
     dispatch(getStates(formData.countryId));
   }, [dispatch, formData.countryId]);
 
-  const sId = states?.find(
-    (state) => state.name === users?.individualUser?.state
-  )?.id;
-
-  useEffect(() => {
-    dispatch(getLgas(formData.stateId || sId));
-  }, [dispatch, formData.stateId, sId]);
-
   return (
     <div>
       <form
