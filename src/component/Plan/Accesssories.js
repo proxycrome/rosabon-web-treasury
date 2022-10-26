@@ -742,7 +742,7 @@ export const RolloverWithdrawMethod = () => {
   );
 };
 
-export const WithdrawalSummary = () => {
+export const WithdrawalSummary = ({amount=0, reason=""}) => {
   const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   return (
@@ -772,11 +772,11 @@ export const WithdrawalSummary = () => {
                   <p className="p-0 m-0">
                     Balance before <br /> Liquidation{" "}
                   </p>
-                  <h4> ₦2,000,000</h4>
+                  <h4> ₦{plan?.planSummary?.principal}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Withdrawal Amount</p>
-                  <h4 className=""> ₦1,500,000</h4>
+                  <h4 className=""> ₦{amount.toLocaleString()}</h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
@@ -789,16 +789,16 @@ export const WithdrawalSummary = () => {
                     Available Plan
                     <br /> Balance{" "}
                   </p>
-                  <h4 className="">₦460,000</h4>
+                  <h4 className="">
+                    ₦{(plan?.planSummary?.principal - (amount + 40000)).toLocaleString()} 
+                  </h4>
                 </div>
               </div>
               <div className="mt-4">
                 <div>
                   <p className="p-0 mb-3">Reason for withdrawal</p>
                   <p>
-                    as it is sometimes known, is dummy text used in laying out
-                    print, graphic or web designs. The passage is attributed to
-                    an unknown typesetter in the 15th century
+                    {reason}
                   </p>
                 </div>
               </div>

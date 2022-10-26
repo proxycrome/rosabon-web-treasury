@@ -44,7 +44,9 @@ export const RightView = () => {
   };
 
   let totalnetWorth = 0;
-  planList.forEach(item => totalnetWorth += item?.planSummary?.principal);
+  planList.forEach(item => item?.currency?.name === "NGN" ?
+   totalnetWorth += item?.planSummary?.principal : 
+   totalnetWorth += (item?.planSummary?.principal * item?.exchangeRate));
 
 
 

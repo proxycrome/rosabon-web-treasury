@@ -12,9 +12,11 @@ import {
   sendCompanyOtp,
   verifyPhone,
   validatePhoneOtp,
+  planAction
 } from "../../store/actions";
 
 import { Link, useNavigate, NavLink } from "react-router-dom";
+import { usePaystackPayment } from "react-paystack";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { CLEAR_MESSAGES } from "../../store/updateProfile/actionTypes";
 
@@ -268,20 +270,24 @@ export function SuccessConfirm({
                     <>
                       <p className="py-5">Your Payment was successful</p>
                       <div className="d-flex justify-content-between">
-                        <button
-                          onClick={handleClose}
-                          type="button"
-                          className="grey_btn"
-                        >
-                          Check my investments
-                        </button>
-                        <button
-                          onClick={handleClose}
-                          type="button"
-                          className="blue_btn"
-                        >
-                          Invest more
-                        </button>
+                      <NavLink state={{ myState: false }} to="/plan-list">
+              <button
+                onClick={handleClose}
+                type="button"
+                className="grey_btn"
+              >
+                Check my investments
+              </button>
+            </NavLink>
+						<NavLink state={{ myState: false }} to="/plan-product">
+              <button
+                onClick={handleClose}
+                type="button"
+                className="blue_btn"
+              >
+                Invest more
+              </button>
+            </NavLink>
                       </div>
                     </>
                   ) : createPlan === "paid" ? (
@@ -679,7 +685,35 @@ const WrappCongrate = styled.div`
   }
 `;
 
-export function Notice({ handleClose, handleShowModalTwo, transferNotice }) {
+export function Notice({ 
+  handleClose, 
+  handleShowModalTwo=null, 
+  transferNotice=null, 
+  transferForm=null,
+  plan=null,
+  payType="",
+ }) {
+  const dispatch = useDispatch();
+
+  const receive_amount = transferForm !== null && transferForm?.amount
+  const receiving_plan = transferForm !== null && JSON.parse(transferForm?.receive);
+
+  const submit = async() => {
+    const formData = {
+      amount: receive_amount,
+      completed: true,
+      // corporateUserWithdrawalMandate: null,
+      // extraDetails: null,
+      paymentType: null,
+      plan: plan?.id,
+      planAction: "TRANSFER",
+      planToReceive: receiving_plan?.id,
+      // withdrawTo: null,
+      // withdrawType: null
+    }
+    await dispatch(planAction(formData));
+    handleShowModalTwo();
+  }
   return (
     <>
       <Wrapper>
@@ -691,8 +725,9 @@ export function Notice({ handleClose, handleShowModalTwo, transferNotice }) {
                   <h5>Note</h5>
                   {transferNotice === "transfer" ? (
                     <p className="">
-                      You are about to transfer ₦1,000,000 from your Plan 1 plan
-                      into Plan 2 plan
+                      You are about to transfer ₦{receive_amount?.toLocaleString()} 
+                      {" "}from your {receiving_plan?.planName} plan
+                      into {plan?.planName} plan
                     </p>
                   ) : (
                     <p className="">
@@ -709,7 +744,7 @@ export function Notice({ handleClose, handleShowModalTwo, transferNotice }) {
                       Cancel
                     </button>
                     <button
-                      onClick={handleShowModalTwo}
+                      onClick={submit}
                       type="button"
                       className="blue_btn"
                     >
@@ -819,3 +854,57 @@ const WrapDetails = styled.div`
     color: #111e6c;
   }
 `;
+
+export function ProceedPayCard({ 
+  payType="",
+  amount,
+  text,
+  onSuccess,
+  onClose
+ }) {
+
+  const { reg_transaction, loading } = useSelector((state) => state.paystack);
+  const { users } = useSelector((state) => state.user_profile);
+
+  const config = {
+    reference: reg_transaction?.transactionReference,
+    email: users?.email,
+    amount: amount,
+    publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
+  };
+
+  const initializePayment = usePaystackPayment(config);
+
+  return (
+    <>
+      <Wrapper>
+        <div className="d-flex justify-content-center align-items-center">
+          <WrappCongrate>
+            <div className="container">
+              <div className="row">
+                {
+                  payType === "withdraw-paystack" ? (
+                    <div className="col">
+                      <button 
+                        className="blue_btn w-100" 
+                        onClick={() => {
+                          initializePayment(onSuccess, onClose);
+                        }}
+                      >
+                        {loading ? "Loading" : text}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="col">
+                      
+                    </div>
+                  )
+                }
+              </div>
+            </div>
+          </WrappCongrate>
+        </div>
+      </Wrapper>
+    </>
+  );
+}
