@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import moment from 'moment';
@@ -6,30 +6,39 @@ import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
 import { WithdrawalSummary } from "../../Accesssories";
-import {  planAction } from "../../../../store/actions";
+import {  getBankDetails } from "../../../../store/actions";
 import { Toaster } from 'react-hot-toast';
+import WithdrawalChannel from './WithdrawalChannel';
 
 const FullWithdrawal = ({ goBack, amount, reason }) => {
-  const [modalState, setModalState] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   const dispatch = useDispatch();
   const { singlePlan, loading, plan_action, plan_action_error } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
 
-  const submit = async() => {
-    const formData = {
-      amount: amount,
-      completed: true,
-      corporateUserWithdrawalMandate: null,
-      plan: plan?.id,
-      planAction: "WITHDRAW",
-      withdrawTo: "TO_BANK",
-      withdrawType: "FULL"
-    }
-    await dispatch(planAction(formData))
-    if(plan_action !== null && plan_action_error===null) {
-      setModalState(true)
-    }
-  }
+  // const submit = async() => {
+  //   const formData = {
+  //     amount: amount,
+  //     completed: true,
+  //     corporateUserWithdrawalMandate: null,
+  //     plan: plan?.id,
+  //     planAction: "WITHDRAW",
+  //     withdrawTo: "TO_BANK",
+  //     withdrawType: "FULL"
+  //   }
+  //   await dispatch(planAction(formData))
+  //   if(plan_action !== null && plan_action_error===null) {
+  //     setModalState(true)
+  //   }
+  // }
+
+  useEffect(() => {
+    dispatch(getBankDetails());
+  },[])
+
+  if (isClicked) {
+    return <WithdrawalChannel amount={amount} type="FULL" goBack={() => setIsClicked(false)} />;
+  };
 
   return (
     <>
@@ -112,10 +121,10 @@ const FullWithdrawal = ({ goBack, amount, reason }) => {
                   color: "#FFFFFF",
                   width: "300px",
                 }}
-                onClick={submit}>
+                onClick={()=>setIsClicked(true)}>
                 { loading ? "Loading..." : "Proceed" }
               </button>
-              <ModalComponent
+              {/* <ModalComponent
                 show={modalState}
                 size={"md"}
                 handleClose={() => setModalState(false)}>
@@ -123,7 +132,7 @@ const FullWithdrawal = ({ goBack, amount, reason }) => {
                   confirmNotice="withdrawal"
                   handleClose={() => setModalState(false)}
                 />
-              </ModalComponent>
+              </ModalComponent> */}
             </div>
           </div>
         </div>

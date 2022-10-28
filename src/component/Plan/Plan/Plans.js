@@ -20,6 +20,7 @@ import {
   getSinglePlan ,
   getProductCategories,
   deletePlan,
+  planAction
 } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
 import { UserBankDetails } from "../Accesssories";
@@ -99,11 +100,11 @@ export const Plans = () => {
   const handleBankModal = async (id) => {
     await dispatch(getSinglePlan(id))
     setBankDetail(true);
-  }
+  };
 
   const removePlan = async (id) => {
     await dispatch(deletePlan(id));
-    dispatch(getPlans())
+    await dispatch(getPlans());
   };
 
   return (
@@ -392,6 +393,7 @@ export const DropDown = ({
 }) => {
   const [menu, setMenu] = useState(false);
   const [checkRollover, setCheckRollover] = useState(false);
+  const dispatch = useDispatch();
   const { plans } = useSelector((state) => state.plan);
   const { products  } = useSelector((state) => state.product);
 
@@ -400,6 +402,15 @@ export const DropDown = ({
     item=>item.id===userPlan?.product?.id
   ) : {}
 
+  const autoRollover = () => {
+    const data = {
+      completed: true,
+      plan: id,
+      planAction: "AUTO_ROLLOVER",
+    }
+    dispatch(planAction(data));
+    dispatch(getSinglePlan(id));
+  }
 
 
   const toggle = () => {
@@ -448,7 +459,7 @@ export const DropDown = ({
                 <Switch
                   className="mr-2 mt-1"
                   onColor="#111E6C"
-                  onChange={() => setCheckRollover(!checkRollover)}
+                  onChange={autoRollover}
                   checked={userPlan?.autoRenew}
                   uncheckedIcon={false}
                   width={35}

@@ -283,6 +283,7 @@ export const MakePayment = ({ setPaymentType }) => {
       setForm({
         ...form,
         paymentMethod: "DEBIT_CARD",
+        planStatus: "ACTIVE",
       });
       setCard("card");
       setBank("");
@@ -291,6 +292,7 @@ export const MakePayment = ({ setPaymentType }) => {
       setForm({
         ...form,
         paymentMethod: "BANK_TRANSFER",
+        planStatus: "PENDING",
       });
       setBank("bank");
       setCard("");
@@ -408,7 +410,7 @@ export const UserBankDetails = ({ type = null }) => {
             <div>
               <p className="p-0 m-0">Bank Name</p>
             </div>
-            <p className="p-0 m-0 bold-text">Rosabon</p>
+            <p className="p-0 m-0 bold-text">Providus</p>
           </div>
           <p className="pt-4">
             Account details expires in 48 hours, kindly endeavour to make
@@ -689,10 +691,90 @@ const RolloverSummaryWrapper = styled.div`
       padding-left: 10px;
     }
   }
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
+  }
+  padding: 0 2rem 7rem 1rem;
+  .style-attachment {
+    .font-awe-btn {
+      display: none;
+    }
+    .normal-btn {
+      display: block;
+    }
+  }
+
+  @media (max-width: 900px) {
+    padding: 0 2rem 7rem 1rem;
+    .style-attachment {
+      .normal-btn {
+        display: none;
+      }
+      .font-awe-btn {
+        display: block;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .file {
+    display: none;
+  }
 `;
 
-export const RolloverWithdrawMethod = ({ setWithdrawTo }) => {
+export const RolloverWithdrawMethod = ({ 
+  withdrawTo,
+  setWithdrawTo,
+  base64File,
+  setBase64File }) => {
   const [withdraw, setWithdraw] = useState("");
+  const { login } = useSelector(state => state.auth);
+  
+  const user_role = login ? login?.role?.name : "";
+  const { bankDetails, bankDetailsError } = useSelector(
+    (state) => state.user_profile
+  );
+  const corporateUserWithdrawalMandateRef = useRef();
+  console.log("bank dets", bankDetails)
+
+  const handleFileChange = (e, name) => {
+    const { files } = e.target;
+
+    console.log(files[0]);
+
+    const encodedFileBase64 = (file) => {
+      let reader = new FileReader();
+      if (file) {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setBase64File({
+            ...base64File,
+            [name]: reader.result.split("base64,")[1],
+          });
+        };
+        reader.onerror = (error) => {
+          console.log("error", error);
+        };
+      }
+    };
+
+    if (
+      files[0]?.size <= 2000000 &&
+      (files[0]?.type === "image/jpeg" || files[0]?.type === "application/pdf")
+    ) {
+      encodedFileBase64(files[0]);
+    }
+    e.target.value = null;
+  };
+
+  const handleFileSelect = (e, reference) => {
+    e.preventDefault();
+    reference.current.click();
+  };
+
+  console.log("hhh", withdrawTo)
+
   return (
     <div>
       <RolloverSummaryWrapper>
@@ -710,6 +792,7 @@ export const RolloverWithdrawMethod = ({ setWithdrawTo }) => {
                       aria-label=".form-select-md"
                       name="withdraw"
                       onChange={(e) => setWithdrawTo(e.target.value)}
+                      value={withdrawTo}
                     >
                       <option value="">Select withdrawal destination</option>
                       <option value="TO_BANK">To Bank</option>
@@ -718,22 +801,58 @@ export const RolloverWithdrawMethod = ({ setWithdrawTo }) => {
                   </div>
                 </div>
               </div>
-              {withdraw === "bank" && (
+              {withdrawTo === "TO_BANK" && user_role==="INDIVIDUAL_USER" ? 
+              bankDetailsError?.message === "Bank Account not available for this user" ? (
+                <span className="text-danger">
+                  No Registered Bank Account Details
+                </span>
+              ) : (
                 <div className="mt-3">
                   <div className="pt-4">
                     <p className="p-0 m-0">Account Number</p>
-                    <h4>2210345678</h4>
+                    <h4>{bankDetails?.accountNumber} </h4>
                   </div>
                   <div className="pt-4">
                     <p className="p-0 m-0">Account Name</p>
-                    <h4>Ekiyee Bllaowel</h4>
+                    <h4>{bankDetails?.name} </h4>
                   </div>
                   <div className="pt-4">
                     <p className="p-0 m-0">Bank Name</p>
-                    <h4>Zenith Bank</h4>
+                    <h4>{bankDetails?.bank?.name} </h4>
                   </div>
                 </div>
-              )}
+              ) : user_role==="COMPANY" ? (<div>
+                <div className="d-flex justify-content-between" >
+                  <div>
+                    <p>Upload withdrawal mandate instruction</p>
+                    <p>png</p>
+                  </div>
+                  <div>
+                    <div className=" style-attachment">
+                      <input
+                        type="file"
+                        className="file"
+                        ref={corporateUserWithdrawalMandateRef}
+                        onChange={(e) =>
+                          handleFileChange(e, "corporateUserWithdrawalMandate")
+                        }
+                      />
+                      <button
+                        type="button"
+                        className="normal-btn grey-button"
+                        onClick={(e) =>
+                          handleFileSelect(e, corporateUserWithdrawalMandateRef)
+                        }
+                      >
+                        Choose file
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <p>
+                  Letter must be on a company’s letter head and also carry bank account details
+                </p>
+              </div>) : (<></>)}
             </div>
           </div>
         </div>
@@ -860,11 +979,13 @@ export const PlanSummary = ({ planPay }) => {
   )?.name;
   const calc_withholding_tax =
     Math.round(
-      planData.planSummary.principal *
+      planData.planSummary.calculatedInterest *
         (planData.planSummary.withholdingTax / 100) *
         100 +
         Number.EPSILON
     ) / 100;
+
+    console.log("form check", form)
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import moment from 'moment';
@@ -8,15 +8,21 @@ import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import { WithdrawalSummary } from '../../Accesssories';
 import WithdrawalChannel from './WithdrawalChannel';
 import { Toaster } from 'react-hot-toast';
+import { getBankDetails } from '../../../../store/actions';
 
 const FullWithdrawal = ({goBack, amount, reason}) => {
+  const dispatch = useDispatch();
   const [isClicked, setIsClicked] = useState(false);
   const { singlePlan, loading } = useSelector((state) => state.plan);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+
+  useEffect(() => {
+    dispatch(getBankDetails());
+  },[])
 
   if (isClicked) {
-    return <WithdrawalChannel amount={amount} goBack={() => setIsClicked(false)} />;
-  }
+    return <WithdrawalChannel amount={amount} type="PARTIAL" goBack={() => setIsClicked(false)} />;
+  };
 
   return (
     <>
