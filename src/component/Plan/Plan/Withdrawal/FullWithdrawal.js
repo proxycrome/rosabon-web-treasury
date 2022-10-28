@@ -1,19 +1,39 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import moment from 'moment';
 import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
 import { WithdrawalSummary } from "../../Accesssories";
+import {  planAction } from "../../../../store/actions";
+import { Toaster } from 'react-hot-toast';
 
 const FullWithdrawal = ({ goBack, amount, reason }) => {
   const [modalState, setModalState] = useState(false);
-  const { singlePlan } = useSelector((state) => state.plan);
+  const dispatch = useDispatch();
+  const { singlePlan, loading, plan_action, plan_action_error } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+
+  const submit = async() => {
+    const formData = {
+      amount: amount,
+      completed: true,
+      corporateUserWithdrawalMandate: null,
+      plan: plan?.id,
+      planAction: "WITHDRAW",
+      withdrawTo: "TO_BANK",
+      withdrawType: "FULL"
+    }
+    await dispatch(planAction(formData))
+    if(plan_action !== null && plan_action_error===null) {
+      setModalState(true)
+    }
+  }
 
   return (
     <>
+    <Toaster />
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Plan</span>
@@ -92,8 +112,8 @@ const FullWithdrawal = ({ goBack, amount, reason }) => {
                   color: "#FFFFFF",
                   width: "300px",
                 }}
-                onClick={() => setModalState(true)}>
-                Proceed
+                onClick={submit}>
+                { loading ? "Loading..." : "Proceed" }
               </button>
               <ModalComponent
                 show={modalState}
