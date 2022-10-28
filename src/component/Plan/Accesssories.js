@@ -901,7 +901,7 @@ export const WithdrawalSummary = ({amount=0, reason=""}) => {
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Penal Charges </p>
-                  <h4>₦40,000</h4>
+                  <h4>₦0</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">
