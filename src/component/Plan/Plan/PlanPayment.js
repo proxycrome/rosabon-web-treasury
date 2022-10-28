@@ -81,6 +81,7 @@ const PlanPayment = () => {
       completed: true,
       paymentType: "DEBIT_CARD",
       plan: parseInt(id),
+      planToReceive: parseInt(id),
       planAction: "TOP_UP",
     }
     await dispatch(planAction(formData))
@@ -144,7 +145,9 @@ const PlanPayment = () => {
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
                           <h4>Balance</h4>
-                          <p className="p-0 m-0">2,000,000</p>
+                          <p className="p-0 m-0">
+                            {plan?.planSummary?.principal?.toLocaleString()} 
+                          </p>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}
                       </div>

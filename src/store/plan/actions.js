@@ -17,12 +17,18 @@ import {
     GET_INVESTMENT_RATES,
     GET_INVESTMENT_RATES_ERROR,
     GET_INVESTMENT_RATES_SUCCESS,
+    GET_PLAN_HISTORY,
+    GET_PLAN_HISTORY_ERROR,
+    GET_PLAN_HISTORY_SUCCESS,
     GET_PLANS,
     GET_PLANS_ERROR,
     GET_PLANS_SUCCESS,
     GET_SINGLE_PLAN,
     GET_SINGLE_PLAN_ERROR,
     GET_SINGLE_PLAN_SUCCESS,
+    GET_SINGLE_PLAN_HISTORY,
+    GET_SINGLE_PLAN_HISTORY_ERROR,
+    GET_SINGLE_PLAN_HISTORY_SUCCESS,
     GET_TENOR,
     GET_TENOR_ERROR,
     GET_TENOR_SUCCESS,
@@ -32,6 +38,9 @@ import {
     PLAN_ACTION,
     PLAN_ACTION_ERROR,
     PLAN_ACTION_SUCCESS,
+    VIEW_BANK_DETAIL,
+    VIEW_BANK_DETAIL_ERROR,
+    VIEW_BANK_DETAIL_SUCCESS,
 } from "./actionTypes";
 
 export const getContribVal = () => {
@@ -238,6 +247,7 @@ export const planActionError = (error) => {
 		payload: error,
 	};
 };
+
 export const getEligiblePlans = () => {
     return {
         type: GET_ELIGIBLE_PLANS,
@@ -257,3 +267,65 @@ export const getEligiblePlansError = (error) => {
         payload: error,
     }
 }
+
+export const getPlanHistory = () => {
+    return {
+        type: GET_PLAN_HISTORY,
+    }
+};
+
+export const getPlanHistorySuccess = (data) => {
+    return {
+        type: GET_PLAN_HISTORY_SUCCESS,
+        payload: data,
+    }
+};
+
+export const getPlanHistoryError = (error) => {
+    return {
+        type: GET_PLAN_HISTORY_ERROR,
+        payload: error,
+    }
+};
+
+export const getSinglePlanHistory = (id) => {
+    return {
+        type: GET_SINGLE_PLAN_HISTORY,
+        payload: {id}
+    }
+};
+
+export const getSinglePlanHistorySuccess = (data) => {
+    return {
+        type: GET_SINGLE_PLAN_HISTORY_SUCCESS,
+        payload: data,
+    }
+};
+
+export const getSinglePlanHistoryError = (error) => {
+    return {
+        type: GET_SINGLE_PLAN_HISTORY_ERROR,
+        payload: error,
+    }
+};
+
+export const viewBankDetail = (id) => {
+    return {
+        type: VIEW_BANK_DETAIL,
+        payload: {id}
+    }
+};
+
+export const viewBankDetailSuccess = (data) => {
+    return {
+        type: VIEW_BANK_DETAIL_SUCCESS,
+        payload: data,
+    }
+};
+
+export const viewBankDetailError = (error) => {
+    return {
+        type: VIEW_BANK_DETAIL_ERROR,
+        payload: error,
+    }
+};

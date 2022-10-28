@@ -75,3 +75,28 @@ export const planActionService = (formData) => {
 
   return http.postDataWithToken(formData, url)
 };
+
+export const getAllPlanHistoryService = () => {
+  const http = new HttpService();
+  const url = `auth/tr-plan-history`;
+  return http.getData(url);
+};
+
+export const singlePlanHistoryService = (id) => {
+  const http = new HttpService();
+  const url = `auth/tr-plan-history/${id}`;
+
+  return http.getData(url);
+};
+
+export const viewBankDetailService = (id) => {
+  const http = new HttpService();
+  const url = `auth/trplan-action/view-bank-details?planId=${id}`;
+  return http.getData(url);
+};
+
+export const completeTransferService = (id) => {
+  const http = new HttpService();
+  const url = `auth/trplan-action/complete-transfer?id=${id}`;
+  return http.getData(url);
+};

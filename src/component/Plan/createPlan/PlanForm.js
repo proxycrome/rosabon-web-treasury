@@ -115,6 +115,7 @@ const PlanForm = () => {
       // amount: product.hasTargetAmount !== null ? null : formData.amount,
       product: product.id,
       productCategory: product.productCategory?.id,
+      exchangeRate: formData.currency !== "NGN" ? 1 : formData.exchangeRate,
       actualMaturityDate: formData.actualMaturityDate==="" ? 
       moment(endDate).format("YYYY-MM-DD") : formData.actualMaturityDate,
       contributionValue: formData.contributionValue,
@@ -138,52 +139,54 @@ const PlanForm = () => {
   // function to get the auto computed contribution value
   const contribValue = () => {
     const selectedTenor = product.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
-    if(conValue==="targetAmount") {
-      let computedValue;
-      switch(formData.savingFrequency) {
-        case "DAILY":
-          computedValue = formData.targetAmount / selectedTenor?.tenorDays
-          // computedValue = return (SI * 100 + Number.EPSILON) / 100
-          break;
-
-        case "WEEKLY":
-          computedValue = formData.targetAmount / (selectedTenor?.tenorDays/7)
-          break;
-
-        case "MONTHLY":
-          computedValue = formData.targetAmount / selectedTenor?.tenorMonths
-          break;
-        
-        default: break;
-      }
-      setFormData({
-        ...formData,
-        // contributionValue: Number(parseFloat(computedValue).toFixed(2))
-        contributionValue: (computedValue * 100 + Number.EPSILON) / 100
-      })
-    } else {
-      if(product?.properties?.hasTargetAmount) {
+    if(formData.savingFrequency!=="") {
+      if(conValue==="targetAmount") {
         let computedValue;
         switch(formData.savingFrequency) {
           case "DAILY":
-            computedValue = formData.contributionValue * selectedTenor?.tenorDays
+            computedValue = formData.targetAmount / selectedTenor?.tenorDays
+            // computedValue = return (SI * 100 + Number.EPSILON) / 100
             break;
 
           case "WEEKLY":
-            computedValue = formData.contributionValue * (selectedTenor?.tenorDays/7)
+            computedValue = formData.targetAmount / (selectedTenor?.tenorDays/7)
             break;
 
           case "MONTHLY":
-            computedValue = formData.contributionValue * selectedTenor?.tenorMonths
+            computedValue = formData.targetAmount / selectedTenor?.tenorMonths
             break;
           
           default: break;
         }
         setFormData({
           ...formData,
-          targetAmount: (computedValue * 100 + Number.EPSILON) / 100
-          // targetAmount: Number(parseInt(computedValue))
+          // contributionValue: Number(parseFloat(computedValue).toFixed(2))
+          contributionValue: (computedValue * 100 + Number.EPSILON) / 100
         })
+      } else {
+        if(product?.properties?.hasTargetAmount) {
+          let computedValue;
+          switch(formData.savingFrequency) {
+            case "DAILY":
+              computedValue = formData.contributionValue * selectedTenor?.tenorDays
+              break;
+
+            case "WEEKLY":
+              computedValue = formData.contributionValue * (selectedTenor?.tenorDays/7)
+              break;
+
+            case "MONTHLY":
+              computedValue = formData.contributionValue * selectedTenor?.tenorMonths
+              break;
+            
+            default: break;
+          }
+          setFormData({
+            ...formData,
+            targetAmount: (computedValue * 100 + Number.EPSILON) / 100
+            // targetAmount: Number(parseInt(computedValue))
+          })
+        }
       }
     }
   }
@@ -197,7 +200,6 @@ const PlanForm = () => {
       (principal >= item.minimumAmount) && (principal <= item.maximumAmount)}
     ))
     let directDebitRate = rate?.percentDirectDebit ? rate?.percentDirectDebit : 0;
-    console.log("deb deb", directDebitRate)
     if(rate !== undefined) {
       switch(intRecOption) {
         case "MONTHLY":
@@ -245,7 +247,8 @@ const PlanForm = () => {
       const currency = ex_rates?.filter(item => item.name === formData.currency)[0]
       setFormData({
         ...formData,
-        exchangeRate: Number(parseFloat(currency?.sellingPrice).toFixed(2))
+        exchangeRate: formData.currency === "NGN" ? 1 : 
+        Number(parseFloat(currency?.sellingPrice).toFixed(2))
       })
     }
   }, [formData.currency])
@@ -680,6 +683,8 @@ const PlanForm = () => {
                   // disabled={product?.properties?.hasTargetAmount===null?false:true}
                   disabled={product?.properties?.hasTargetAmount}
                   value={formData.amount}
+                  min={product?.minTransactionLimit}
+                  max={product?.maxTransactionLimit}
                   onChange={handleChange}
                 />
               </div>

@@ -712,7 +712,7 @@ export function Notice({
       // withdrawType: null
     }
     await dispatch(planAction(formData));
-    handleShowModalTwo("modal-two");
+    await handleShowModalTwo("modal-two");
   }
   return (
     <>
@@ -869,7 +869,7 @@ export function ProceedPayCard({
   const config = {
     reference: reg_transaction?.transactionReference,
     email: users?.email,
-    amount: amount,
+    amount: JSON.stringify(amount)+"00",
     publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
   };
 

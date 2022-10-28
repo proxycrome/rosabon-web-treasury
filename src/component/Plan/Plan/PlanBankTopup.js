@@ -1,15 +1,24 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import moment from 'moment';
 import { UserBankDetails } from '../Accesssories';
-import { createDynamicAcc } from "../../../store/actions";
+import { createDynamicAcc, planAction } from "../../../store/actions";
 import Spinner from "../../common/loading";
+import toast, {Toaster} from "react-hot-toast";
 
 const PlanBankTopup = ({ goBack }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-  const { singlePlan } = useSelector((state) => state.plan);
+  const { 
+    singlePlan, 
+    plan_action, 
+    loading, 
+    plan_action_error 
+  } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
   const { dynamic_account } = useSelector((state) => state.providus);
   const planStatus = singlePlan?.data.statusCode
@@ -17,9 +26,33 @@ const PlanBankTopup = ({ goBack }) => {
   useEffect(() => {
     dispatch(createDynamicAcc(plan?.planName))
   },[])
+
+  useEffect(() => {},[])
+
+  const save = async() => {
+    const planForm = {
+      amount: 20000,
+      completed: true,
+      paymentType: "BANK_TRANSFER",
+      plan: parseInt(id),
+      planAction: "TOP_UP",
+      planToReceive: parseInt(id),
+    }
+    await dispatch(planAction(planForm))
+    if(!loading) {
+      if(plan_action_error !== null) {
+        toast.error(plan_action_error,{position:'top-right'})
+        navigate("/plan-list")
+      } else if(plan_action?.statusCode==="CREATED") {
+        toast.success("Top-up saved",{position:'top-right'})
+        navigate("/plan-list")
+      }
+    }
+  }
   
   return (
     <>
+      <Toaster />
       {
         dynamic_account !== null ? (
           <>
@@ -144,6 +177,7 @@ const PlanBankTopup = ({ goBack }) => {
                         color: '#FFFFFF',
                         width: '300px',
                       }}
+                      onClick={save}
                     >
                       Save
                     </button>
