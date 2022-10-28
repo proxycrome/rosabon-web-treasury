@@ -174,7 +174,7 @@ const Transfer = () => {
                       handleClose={() => setModalState("close")}>
                       <Notice
                         handleClose={() => setModalState("close")}
-                        handleShowModalTwo={() => setModalState("modal-two")}
+                        handleShowModalTwo={setModalState}
                         transferForm={{receive, amount}}
                         plan={plan}
                         transferNotice="transfer"

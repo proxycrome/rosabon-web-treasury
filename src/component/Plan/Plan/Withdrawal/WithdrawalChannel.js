@@ -1,15 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { SuccessConfirm } from '../../../Accessories/BVNConfirm';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from '../../../ModalComponent';
 import { RolloverWithdrawMethod, WithdrawalSummary } from '../../Accesssories';
+import { Toaster } from 'react-hot-toast';
+import {  planAction } from "../../../../store/actions";
 
-const WithdrawalChannel = ({goBack}) => {
+const WithdrawalChannel = ({goBack, amount}) => {
   const [modalState, setModalState] = useState(false);
+  const [withdrawTo, setWithdrawTo] = useState("");
+
+  const dispatch = useDispatch();
+  const { singlePlan, loading, plan_action, plan_action_error } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+
+  useEffect(() => {
+    if(plan_action !== null && plan_action_error===null) {
+      setModalState(true)
+    }
+  },[plan_action,plan_action_error])
+
+  const submit = async() => {
+    const formData = {
+      amount: amount,
+      completed: true,
+      corporateUserWithdrawalMandate: null,
+      plan: plan?.id,
+      planAction: "WITHDRAW",
+      withdrawTo: withdrawTo,
+      withdrawType: "PARTIAL"
+    }
+    await dispatch(planAction(formData))
+  }
 
   return (
     <>
+    <Toaster />
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Plan</span>
@@ -23,7 +51,7 @@ const WithdrawalChannel = ({goBack}) => {
         <RightView>
           <div className="bank-details">
             <div className="bank-detail-content">
-              <RolloverWithdrawMethod />
+              <RolloverWithdrawMethod setWithdrawTo={setWithdrawTo} />
             </div>
           </div>  
         </RightView>
@@ -46,9 +74,9 @@ const WithdrawalChannel = ({goBack}) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setModalState(true)}
+                onClick={submit}
               >
-                Submit
+                { loading ? "Loading..." : "Submit" }
               </button>
               <ModalComponent
                 show={modalState}

@@ -449,7 +449,7 @@ export const DropDown = ({
                   className="mr-2 mt-1"
                   onColor="#111E6C"
                   onChange={() => setCheckRollover(!checkRollover)}
-                  checked={checkRollover}
+                  checked={userPlan?.autoRenew}
                   uncheckedIcon={false}
                   width={35}
                   height={18}
