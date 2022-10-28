@@ -31,63 +31,61 @@ const Help = () => {
             <span className="fw-bold">FAQ</span>
           </NavTitle>
         </ProfileNavBar>
-        <Wrapper>
-          {loading ? (
-            <div className="vh-100 w-100">
-              <Spinner />
-            </div>
-          ) : (
-            <>
-              <div className="d-flex justify-content-between align-items-center">
-                <h3 className="w-50">Frequently Asked Questions</h3>
-                <div className="input-group w-50 position-relative search-group">
-                  {/* <Input
+        {loading ? (
+          <div className="vh-100 w-100">
+            <Spinner />
+          </div>
+        ) : (
+          <Wrapper>
+            <div className="d-flex justify-content-between align-items-center">
+              <h3 className="w-50">Frequently Asked Questions</h3>
+              <div className="input-group w-50 position-relative search-group">
+                {/* <Input
                 placeholder="Search Using Keywords"
                 type="text"
                 className="form-control"
               />
               <i className="fa-solid fa-magnifying-glass position-absolute search"></i>
               <i className="fa-solid fa-xmark position-absolute clear"></i> */}
-                </div>
               </div>
-              <hr className="my-5" />
-              <div className="accordion" id="accordionExample">
-                {faqs?.data?.body?.map((data) => (
-                  <div className="accordion-item" key={data.id}>
-                    <h2
-                      className="accordion-header"
-                      id="heading"
-                      onClick={() => t_col1(data.id)}
+            </div>
+            <hr className="my-5" />
+            <div className="accordion" id="accordionExample">
+              {faqs?.data?.body?.map((data) => (
+                <div className="accordion-item" key={data.id}>
+                  <h2
+                    className="accordion-header"
+                    id="heading"
+                    onClick={() => t_col1(data.id)}
+                  >
+                    <div
+                      className={`accordion-button ${
+                        col1 === data.id ? "" : "collapsed"
+                      }`}
+                      style={{ backgroundColor: "#FFFFFF" }}
+                      type="button"
                     >
-                      <div
-                        className={`accordion-button ${
-                          col1 === data.id ? "" : "collapsed"
-                        }`}
-                        style={{ backgroundColor: "#FFFFFF" }}
-                        type="button"
-                      >
-                        {data.faqCategory.name}
+                      {data.faqCategory.name}
+                    </div>
+                  </h2>
+                  <Collapse isOpen={col1 === data.id}>
+                    <div
+                      id="collapseOne"
+                      className="accordion-collapse collapse show"
+                      aria-labelledby="headingOne"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div className="accordion-body">
+                        <h5>{data.question}</h5>
+                        <p className="p-0 m-0">{data.answer}</p>
                       </div>
-                    </h2>
-                    <Collapse isOpen={col1 === data.id}>
-                      <div
-                        id="collapseOne"
-                        className="accordion-collapse collapse show"
-                        aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample"
-                      >
-                        <div className="accordion-body">
-                          <h5>{data.question}</h5>
-                          <p className="p-0 m-0">{data.answer}</p>
-                        </div>
-                      </div>
-                    </Collapse>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </Wrapper>
+                    </div>
+                  </Collapse>
+                </div>
+              ))}
+            </div>
+          </Wrapper>
+        )}
       </WrapperBody>
     </div>
   );
