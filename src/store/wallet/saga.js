@@ -5,6 +5,7 @@ import {
   GET_MY_REFERRALS,
   GET_WALLET_BALANCE,
   GET_WALLET_TRANSACTIONS,
+  POKE_USER,
   POST_TRANSFER_TO_PLAN,
   REQUEST_WITHDRAWAL,
 } from "./actionTypes";
@@ -18,6 +19,8 @@ import {
   getWalletBalanceSuccess,
   getWalletTransactionsError,
   getWalletTransactionsSuccess,
+  pokeUserError,
+  pokeUserSuccess,
   postTransferToPlanError,
   postTransferToPlanSuccess,
   requestWithdrawalError,
@@ -29,6 +32,7 @@ import {
   getMyReferralsService,
   getWalletBalanceService,
   getWalletTransactionsService,
+  pokeUserService,
   postTransferToPlanService,
   requestWithdrawalService,
 } from "../../services/walletService";
@@ -120,6 +124,27 @@ function* postTransferToPlan({ payload: { formData } }) {
   }
 }
 
+function* pokeUser({ payload: { id } }) {
+  try {
+    const response = yield call(pokeUserService, id);
+    console.log(response.data);
+    yield put(pokeUserSuccess(response.data));
+    if (response) {
+      setTimeout(() => {
+        toast.success(response.data.message);
+      }, 1000);
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(pokeUserError(error?.response?.data));
+    if (error?.response?.data?.message) {
+      setTimeout(() => {
+        toast.error(error?.response?.data?.message);
+      }, 1000);
+    }
+  }
+}
+
 export function* watchGetWalletBalance() {
   yield takeEvery(GET_WALLET_BALANCE, getWalletBalance);
 }
@@ -144,6 +169,10 @@ export function* watchPostTransferToPlan() {
   yield takeEvery(POST_TRANSFER_TO_PLAN, postTransferToPlan);
 }
 
+export function* watchPokeUser() {
+  yield takeEvery(POKE_USER, pokeUser);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
@@ -152,6 +181,7 @@ function* WalletSaga() {
     fork(watchGetEachWalletTransaction),
     fork(watchGetMyReferrals),
     fork(watchPostTransferToPlan),
+    fork(watchPokeUser),
   ]);
 }
 

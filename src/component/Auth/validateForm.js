@@ -9,7 +9,9 @@ import { registerUser, resetPassword } from "../../store/actions";
 export const ValidateCompanyForm = (
   validateInfo,
   isCompanyNewsLetters,
-  isCompanyTerms
+  isCompanyTerms,
+  referralCode,
+  sourcer
 ) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ export const ValidateCompanyForm = (
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(validateInfo(values, isCompanyTerms));
+    setErrors(validateInfo(values, isCompanyTerms, referralCode, sourcer));
     setisSubmitted(true);
   };
 
@@ -70,10 +72,10 @@ export const ValidateCompanyForm = (
         password,
         phone: phone.substr( 0, 1 ) === "0" ? phone.trim() : "0" + phone.trim(),
         role: "COMPANY",
-        source,
+        source: source ? source : sourcer,
         sourceOthers,
         usage: "TREASURY",
-        refferedBy,
+        refferedBy: refferedBy ? refferedBy : referralCode,
       };
 
       dispatch(registerUser(data, navigate));
@@ -83,16 +85,16 @@ export const ValidateCompanyForm = (
   return { handleValueChange, values, handleSubmit, errors };
 };
 
-export function validateInfo(values, isCompanyTerms) {
+export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
   let errors = {};
   var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
   if (!values.name) {
     errors.name = "Name field is required";
   }
-  // if (!values.refferedBy && !values.sourceOthers) {
-  //   errors.refferedBy = "This field is required";
-  // }
-  if (!values.source) {
+  if (!values.refferedBy && !values.sourceOthers && !referralCode) {
+    errors.refferedBy = "This field is required";
+  }
+  if (!values.source && !sourcer) {
     errors.source = "Field cannot be empty";
   }
   if (!values.email) {
@@ -130,7 +132,9 @@ export function validateInfo(values, isCompanyTerms) {
 export const ValidateUserForm = (
   validateInfo,
   isUserNewsLetters,
-  isUserTerms
+  isUserTerms,
+  referralCode,
+  sourcer
 ) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -157,9 +161,10 @@ export const ValidateUserForm = (
       [name]: value,
     });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(validateInfo(values, isUserTerms));
+    setErrors(validateInfo(values, isUserTerms, sourcer, referralCode));
     setisSubmitted(true);
   };
 
@@ -187,10 +192,10 @@ export const ValidateUserForm = (
         password,
         phone: phone.substr( 0, 1 ) === "0" ? phone.trim() : "0" + phone.trim(),
         role: "INDIVIDUAL_USER",
-        source,
+        source: source ? source : sourcer,
         sourceOthers,
         usage: "TREASURY",
-        refferedBy,
+        refferedBy: refferedBy ? refferedBy : referralCode,
       };
 
       dispatch(registerUser(data, navigate));
@@ -200,14 +205,14 @@ export const ValidateUserForm = (
   return { handleValueChange, values, handleSubmit, errors };
 };
 
-export function validateUserInfo(values, isUserTerms) {
+export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
   let errors = {};
   var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
-  if (!values.refferedBy && !values.sourceOthers) {
+  if (!values.refferedBy && !values.sourceOthers && !referralCode) {
     errors.refferedBy = "This field is required";
   }
-  if (!values.source) {
+  if (!values.source && !sourcer) {
     errors.source = "Field cannot be empty";
   }
   if (!values.email) {

@@ -36,3 +36,9 @@ export const postTransferToPlanService = (formData) => {
   const url = `auth/wallets/wallet-transfer`;
   return http.postDataWithToken(formData, url);
 }
+
+export const pokeUserService = (id) => {
+  const http = new HttpService();
+  const url = `auth/referrals/poke/${id}`;
+  return http.postDataWithToken(null, url);
+}

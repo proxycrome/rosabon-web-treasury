@@ -6,7 +6,8 @@ import {
   getProducts, 
   getCatWithProducts,
   getInvestmentRates,
-  getWithholdingTax
+  getWithholdingTax,
+  getAuthUsers
 } from '../../../store/actions';
 import { paymentAtMaturity } from '../Accesssories';
 
@@ -19,6 +20,7 @@ export const LeftView = () => {
     tenor: 0,
   });
   const [result, setResult] = useState();
+  const {users} = useSelector(state => state.user_profile);
   const { products  } = useSelector((state) => state.product);
   const { investment_rates,withholding_tax  } = useSelector((state) => state.plan);
 
@@ -28,6 +30,8 @@ export const LeftView = () => {
   const inv_rates = investment_rates?.data.body ? investment_rates?.data.body: []
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
+
+  console.log(users);
 
   // fetch interest rate
   const interest_rate = useMemo(() => {
@@ -57,6 +61,7 @@ export const LeftView = () => {
     dispatch(getCatWithProducts());
     dispatch(getInvestmentRates());
     dispatch(getWithholdingTax());
+    dispatch(getAuthUsers());
   },[]);
 
   // useEffect(() => {},[data.tenor])
@@ -246,6 +251,7 @@ export const LeftView = () => {
               type="text"
               className="form-control"
               aria-label="Text input with checkbox"
+              value={users?.referralLink}
             />
             <div className="input-group-text">
               <i className="fa-solid fa-key"></i>
@@ -259,6 +265,7 @@ export const LeftView = () => {
               type="text"
               className="form-control"
               aria-label="Text input with checkbox"
+              value={users?.myReferralCode}
             />
             <div className="input-group-text">
               <i className="fa-solid fa-key"></i>

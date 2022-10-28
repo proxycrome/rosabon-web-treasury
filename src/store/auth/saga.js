@@ -66,7 +66,7 @@ function* loginUser({ payload: { formData, navigate } }) {
 
 function* logoutUser({ payload: { navigate } }) {
 	try {
-		localStorage.removeItem("token");
+		localStorage.clear();
 		yield put(logoutSuccess());
 		navigate("/login");
 	} catch (error) {

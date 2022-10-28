@@ -11,12 +11,9 @@ import {
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-// import {
-//   registerCompany,
-//   registerUser,
-// } from '../../redux/actions/auth/SignupAction'
+
 import { SignupLeftView } from "./loginLeftView";
 import { ValidateUserForm, validateUserInfo } from "./validateForm";
 import Footer from "../dashboard/ProfileFooter";
@@ -32,10 +29,27 @@ function UserSignup() {
   const [isUserNewsLetters, setisUserNewsLetters] = useState(false);
   const [isUserTerms, setIsUserTerms] = useState(false);
 
+  const location = useLocation();
+  console.log(location);
+
+  const query = new URLSearchParams(location?.search)
+
+  const referralCode = query.get('referralCode');
+  const sourcer = query.get('source');
+
+  const referral = {
+    referralCode,
+    sourcer
+  }
+
+  localStorage.setItem("referral", JSON.stringify(referral));
+
   const { handleValueChange, values, handleSubmit, errors } = ValidateUserForm(
     validateUserInfo,
     isUserNewsLetters,
-    isUserTerms
+    isUserTerms,
+    referralCode,
+    sourcer
   );
 
   const togglePassword1 = () => {
@@ -44,6 +58,8 @@ function UserSignup() {
   const togglePassword2 = () => {
     setPasswordShown2(!passwordShown2);
   };
+
+  
 
   // useEffect(() => {
   //   if (isSignedup) {
@@ -219,6 +235,7 @@ function UserSignup() {
                             aria-label=".form-select-lg"
                             onChange={handleValueChange}
                             name="source"
+                            value={sourcer || ""}
                           >
                             <option value=""></option>
                             <option value="ROSABON_SALES">
@@ -266,7 +283,7 @@ function UserSignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              value={values.refferedBy || referralCode}
                             />
                           )}
                         </div>
