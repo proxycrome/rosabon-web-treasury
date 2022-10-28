@@ -8,31 +8,40 @@ import { RolloverWithdrawMethod, WithdrawalSummary } from '../../Accesssories';
 import { Toaster } from 'react-hot-toast';
 import {  planAction } from "../../../../store/actions";
 
-const WithdrawalChannel = ({goBack, amount}) => {
+const WithdrawalChannel = ({goBack, amount, type}) => {
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [base64File, setBase64File] = useState({
+    corporateUserWithdrawalMandate: ""
+  });
 
   const dispatch = useDispatch();
   const { singlePlan, loading, plan_action, plan_action_error } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
 
+  const { login } = useSelector(state => state.auth);
+  const user_role = login ? login?.role?.name : "";
+
   useEffect(() => {
-    if(plan_action !== null && plan_action_error===null) {
+    if(plan_action !== null && plan_action_error===null && submitted) {
       setModalState(true)
     }
   },[plan_action,plan_action_error])
 
   const submit = async() => {
+    const { corporateUserWithdrawalMandate } = base64File;
     const formData = {
       amount: amount,
       completed: true,
-      corporateUserWithdrawalMandate: null,
+      corporateUserWithdrawalMandate: user_role==="COMPANY" ? corporateUserWithdrawalMandate: null,
       plan: plan?.id,
       planAction: "WITHDRAW",
       withdrawTo: withdrawTo,
-      withdrawType: "PARTIAL"
+      withdrawType: type
     }
     await dispatch(planAction(formData))
+    setSubmitted(true);
   }
 
   return (
@@ -51,7 +60,12 @@ const WithdrawalChannel = ({goBack, amount}) => {
         <RightView>
           <div className="bank-details">
             <div className="bank-detail-content">
-              <RolloverWithdrawMethod setWithdrawTo={setWithdrawTo} />
+              <RolloverWithdrawMethod 
+                withdrawTo={withdrawTo}
+                setWithdrawTo={setWithdrawTo} 
+                base64File={base64File}
+                setBase64File={setBase64File}
+              />
             </div>
           </div>  
         </RightView>

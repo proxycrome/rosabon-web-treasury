@@ -24,12 +24,20 @@ const PlanBankPayment = ({goBack}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setForm({
-      ...form,
-      planStatus: "PENDING",
-    });
     dispatch(createDynamicAcc(form.planName))
   },[])
+
+  useEffect(() => {
+    console.log("pendwork?", form)
+    setForm({
+      ...form,
+      bankAccountInfo: {
+        accountName: dynamic_account?.accountName,
+        accountNumber: dynamic_account?.accountNumber,
+        bankName: "Rosabon"
+      }
+    })
+  }, [dynamic_account])
 
   useEffect(() => {
     setModalCount(modalCount+1);
