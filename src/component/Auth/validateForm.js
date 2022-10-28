@@ -242,11 +242,11 @@ export function validateUserInfo(values, isUserTerms) {
   return errors;
 }
 
-export const ValidatePasswordForm = (validatePassword) => {
+export const ValidatePasswordForm = (validatePassword, email, token) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [values, setValues] = useState({
-    password: "",
+    newPassword: "",
     c_password: "",
   });
 
@@ -269,8 +269,15 @@ export const ValidatePasswordForm = (validatePassword) => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { password } = values;
-      dispatch(resetPassword(password));
+      const { newPassword } = values;
+      const formData = {
+        email,
+        newPassword,
+        token,
+      }
+
+      console.log(formData);
+      dispatch(resetPassword(formData));
     }
   }, [errors]);
 
@@ -281,13 +288,13 @@ export function validatePassword(values) {
   let errors = {};
   var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
-  if (!values.password) {
+  if (!values.newPassword) {
     errors.password = "Password is required";
-  } else if (!re.test(values.password)) {
-    errors.password =
+  } else if (!re.test(values.newPassword)) {
+    errors.newPassword =
       "Your password must contain at least one uppercase, one lowercase, a special character, and must be at least 8 characters";
   }
-  if (values.c_password !== values.password) {
+  if (values.c_password !== values.newPassword) {
     errors.c_password = "Password does not match";
   }
 
