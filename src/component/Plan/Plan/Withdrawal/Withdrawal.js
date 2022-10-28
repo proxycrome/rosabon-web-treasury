@@ -166,7 +166,7 @@ const Withdrawal = () => {
                         <input
                           className="form-control"
                           placeholder="₦ 0.00"
-                          type="text"
+                          type="number"
                           value={amount}
                           onChange={(e)=>setAmount(parseInt(e.target.value))}
                           disabled={full==="full"}

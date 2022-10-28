@@ -29,6 +29,15 @@ import {
     PLAN_ACTION,
     PLAN_ACTION_ERROR,
     PLAN_ACTION_SUCCESS,
+    GET_PLAN_HISTORY,
+    GET_PLAN_HISTORY_SUCCESS,
+    GET_PLAN_HISTORY_ERROR,
+    GET_SINGLE_PLAN_HISTORY,
+    GET_SINGLE_PLAN_HISTORY_SUCCESS,
+    GET_SINGLE_PLAN_HISTORY_ERROR,
+    VIEW_BANK_DETAIL,
+    VIEW_BANK_DETAIL_SUCCESS,
+    VIEW_BANK_DETAIL_ERROR,
   } from './actionTypes';
   
   const initialState = {
@@ -53,6 +62,12 @@ import {
     eligiblePlansError: null,
     plan_action: null,
     plan_action_error: null,
+    plan_history: null,
+    plan_history_error: null,
+    single_plan_history: null,
+    single_plan_history_err: null,
+    bank_detail: null,
+    bank_detail_err: null,
   }
   
   const plan = ( state=initialState, action ) => {
@@ -67,6 +82,9 @@ import {
       case GET_INVESTMENT_RATES:
       case GET_ELIGIBLE_PLANS:
       case PLAN_ACTION:
+      case GET_PLAN_HISTORY:
+      case GET_SINGLE_PLAN_HISTORY:
+      case VIEW_BANK_DETAIL:
         state = {
           ...state,
           loading: true
@@ -248,6 +266,60 @@ import {
           loading: false,
           plan_action: null,
           plan_action_error: action.payload
+        };
+        break;
+
+      case GET_PLAN_HISTORY_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          plan_history: action.payload,
+          plan_history_error: null
+        };
+        break;
+        
+      case GET_PLAN_HISTORY_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          plan_history: null,
+          plan_history_error: action.payload
+        };
+        break;
+
+      case GET_SINGLE_PLAN_HISTORY_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          single_plan_history: action.payload,
+          single_plan_history_err: null
+        };
+        break;
+
+      case GET_SINGLE_PLAN_HISTORY_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          single_plan_history: null,
+          single_plan_history_err: action.payload
+        };
+        break;
+
+      case VIEW_BANK_DETAIL_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          bank_detail: action.payload,
+          bank_detail_err: null
+        };
+        break;
+
+      case VIEW_BANK_DETAIL_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          bank_detail: null,
+          bank_detail_err: action.payload
         };
         break;
   

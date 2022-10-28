@@ -129,7 +129,7 @@ const Transfer = () => {
                         <input
                           className="form-control pl-5"
                           placeholder="₦ 1,000,000"
-                          type="text"
+                          type="number"
                           value={amount}
                           onChange={(e)=>setAmount(parseInt(e.target.value))}
                           max={plan.planSummary.principal}
