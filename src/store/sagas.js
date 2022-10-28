@@ -10,6 +10,7 @@ import ProductSaga from "./product/saga";
 import ProvidusSaga from "./providus/saga";
 import UpdateProfileSaga from "./updateProfile/saga";
 import WalletSaga from "./wallet/saga";
+import HelpSaga from "./help/saga";
 
 export default function* rootSaga() {
 	yield all([
@@ -23,5 +24,6 @@ export default function* rootSaga() {
         PaystackSaga(),
         CurrencySaga(),
         ProvidusSaga(),
+        HelpSaga(),
     ]);
 }
