@@ -691,7 +691,7 @@ const RolloverSummaryWrapper = styled.div`
   }
 `;
 
-export const RolloverWithdrawMethod = () => {
+export const RolloverWithdrawMethod = ({ setWithdrawTo }) => {
   const [withdraw, setWithdraw] = useState("");
   return (
     <div>
@@ -709,11 +709,11 @@ export const RolloverWithdrawMethod = () => {
                       className="form-select form-select-md"
                       aria-label=".form-select-md"
                       name="withdraw"
-                      onChange={(e) => setWithdraw(e.target.value)}
+                      onChange={(e) => setWithdrawTo(e.target.value)}
                     >
                       <option value="">Select withdrawal destination</option>
-                      <option value="bank">To Bank</option>
-                      <option value="wallet">My Wallet</option>
+                      <option value="TO_BANK">To Bank</option>
+                      <option value="TO_WALLET">My Wallet</option>
                     </select>
                   </div>
                 </div>
