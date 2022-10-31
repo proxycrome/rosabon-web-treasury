@@ -332,6 +332,7 @@ import {
       case GET_PENAL_CHARGE_SUCCESS:
         state = {
           ...state,
+          loading: false,
           penal_charge: action.payload,
           penal_charge_error: null
         };
@@ -340,6 +341,7 @@ import {
       case GET_PENAL_CHARGE_ERROR:
         state = {
           ...state,
+          loading: false,
           penal_charge: null,
           penal_charge_error: action.payload
         };

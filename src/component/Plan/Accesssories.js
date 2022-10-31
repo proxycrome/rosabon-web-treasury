@@ -374,7 +374,7 @@ const PaymentTypeWrapper = styled.div`
 
 export const UserBankDetails = ({ type = null }) => {
   const { login } = useSelector((state) => state.auth);
-  const { singlePlan } = useSelector((state) => state.plan);
+  const { singlePlan, bank_detail } = useSelector((state) => state.plan);
   const { dynamic_account } = useSelector((state) => state.providus);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
@@ -383,11 +383,11 @@ export const UserBankDetails = ({ type = null }) => {
   const add_hours = moment(date).add(48, "hours");
   const expire_date = moment(add_hours).format("DD/MM/YYYY");
 
-  const account = type === null ? dynamic_account : plan?.bankAccountInfo;
+  const account = type === null ? dynamic_account : bank_detail;
 
   let text = `Account Name: ${account?.accountName},
   Account Number: ${account?.accountNumber},
-  Bank: PROVIDUS BANK`
+  Bank: Providus Bank`
 
   const copied = () => {
     toast.success("Account Details Copied", {position: "top-right"})
@@ -427,7 +427,7 @@ export const UserBankDetails = ({ type = null }) => {
             <div>
               <p className="p-0 m-0">Bank Name</p>
             </div>
-            <p className="p-0 m-0 bold-text">PROVIDUS BANK</p>
+            <p className="p-0 m-0 bold-text">Providus Bank</p>
           </div>
           <p className="pt-4">
             Account details expires in 48 hours, kindly endeavour to make

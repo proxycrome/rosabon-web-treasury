@@ -20,7 +20,8 @@ import {
   getSinglePlan ,
   getProductCategories,
   deletePlan,
-  planAction
+  planAction,
+  viewBankDetail
 } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
 import { UserBankDetails } from "../Accesssories";
@@ -98,7 +99,8 @@ export const Plans = () => {
   }
 
   const handleBankModal = async (id) => {
-    await dispatch(getSinglePlan(id))
+    await dispatch(getSinglePlan(id));
+    await dispatch(viewBankDetail(id));
     setBankDetail(true);
   };
 

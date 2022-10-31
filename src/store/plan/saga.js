@@ -340,7 +340,7 @@ function* PlanSaga() {
 		fork(watchGetPlanHistory),
 		fork(watchGetSinglePlanHistory),
 		fork(watchViewBankDetail),
-		fork(getPenalCharge),
+		fork(watchGetPenalCharge),
 	]);
 }
 
