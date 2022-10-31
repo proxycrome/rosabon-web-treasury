@@ -83,9 +83,8 @@ const PlanPayment = () => {
       planToReceive: parseInt(id),
       planAction: "TOP_UP",
     }
-    await dispatch(planAction(formData))
+    await dispatch(planAction(formData, setSuccess))
     await dispatch(getSinglePlan(parseInt(id)));
-    setSuccess(true);
   }
 
   const onSuccess = () => {

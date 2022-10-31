@@ -38,6 +38,9 @@ import {
     GET_WITHHOLDING_TAX,
     GET_WITHHOLDING_TAX_ERROR,
     GET_WITHHOLDING_TAX_SUCCESS,
+    PAY_WITH_CARD,
+    PAY_WITH_CARD_ERROR,
+    PAY_WITH_CARD_SUCCESS,
     PLAN_ACTION,
     PLAN_ACTION_ERROR,
     PLAN_ACTION_SUCCESS,
@@ -230,10 +233,10 @@ export const getWithholdingTaxError = (error) => {
     }
 }
 
-export const planAction = (formData) => {
+export const planAction = (formData, onSuccess) => {
 	return {
 		type: PLAN_ACTION,
-		payload: { formData },
+		payload: { formData, onSuccess },
 	};
 };
 
@@ -350,5 +353,26 @@ export const getPenalChargeError = (error) => {
     return {
         type: GET_PENAL_CHARGE_ERROR,
         payload: error
+    }
+};
+
+export const payWithCard = (id) => {
+    return {
+        type: PAY_WITH_CARD,
+        payload: {id}
+    }
+};
+
+export const payWithCardSuccess = (data) => {
+    return {
+        type: [PAY_WITH_CARD_SUCCESS],
+        payload: data,
+    }
+};
+
+export const payWithCardError = (error) => {
+    return {
+        type: PAY_WITH_CARD_ERROR,
+        payload: error,
     }
 };
