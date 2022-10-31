@@ -393,6 +393,14 @@ export const UserBankDetails = ({ type = null }) => {
     toast.success("Account Details Copied", {position: "top-right"})
   };
 
+  let text = `Account Name: ${account?.accountName},
+  Account Number: ${account?.accountNumber},
+  Bank: PROVIDUS BANK`
+
+  const copied = () => {
+    toast.success("Account Details Copied", {position: "top-right"})
+  };
+
   return (
     <div>
       <UserBankDetailsWrapper>
