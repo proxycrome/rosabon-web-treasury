@@ -48,3 +48,10 @@ export const getRepliesService = (id) => {
 
     return http.getData(url);
 }
+
+export const getTicketCategoriesService = () => {
+    const http = new HttpService();
+    const url = `auth/admin/feedback/categories`;
+
+    return http.getData(url);
+};

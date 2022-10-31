@@ -8,6 +8,7 @@ import {
 	GET_ELIGIBLE_PLANS,
 	GET_EX_RATES,
 	GET_INVESTMENT_RATES,
+	GET_PENAL_CHARGE,
 	GET_PLAN_HISTORY,
 	GET_PLANS,
     GET_SINGLE_PLAN,
@@ -31,6 +32,8 @@ import {
 	getExRatesSuccess,
 	getInvestmentRatesError,
 	getInvestmentRatesSuccess,
+	getPenalChargeSuccess,
+	getPenalChargeError,
 	getPlanHistoryError,
 	getPlanHistorySuccess,
 	getPlansError,
@@ -61,6 +64,7 @@ import {
 	getSinglePlanService,
     getTenorService,
 	getWithholdingTaxService,
+	penalChargeService,
 	planActionService,
 	singlePlanHistoryService,
 	viewBankDetailService,
@@ -248,7 +252,18 @@ function* viewBankDetail({ payload: { id } }) {
 		console.log(error?.response?.data);
 		yield put(viewBankDetailError(error?.response?.data));
 	}
-}
+};
+
+function* getPenalCharge() {
+	try {
+		const response = yield call(penalChargeService);
+		console.log(response.data);
+		yield put(getPenalChargeSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getPenalChargeError(error?.response?.data));
+	}
+};
 
 export function* watchGetContribVal() {
 	yield takeEvery(GET_CONTRIB_VAL, getContribVal);
@@ -305,6 +320,10 @@ export function* watchViewBankDetail() {
 	yield takeEvery(VIEW_BANK_DETAIL, viewBankDetail);
 };
 
+export function* watchGetPenalCharge() {
+	yield takeEvery(GET_PENAL_CHARGE, getPenalCharge);
+};
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -321,6 +340,7 @@ function* PlanSaga() {
 		fork(watchGetPlanHistory),
 		fork(watchGetSinglePlanHistory),
 		fork(watchViewBankDetail),
+		fork(watchGetPenalCharge),
 	]);
 }
 

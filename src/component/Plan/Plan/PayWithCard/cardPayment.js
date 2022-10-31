@@ -1,52 +1,96 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import moment from 'moment';
-import { useNavigate, useParams } from "react-router-dom";
-import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
-import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
-import ModalComponent from "../../../ModalComponent";
-import {  getSinglePlan, getPlans } from "../../../../store/actions";
+import { useNavigate } from 'react-router-dom';
+import Verve from '../../../../asset/master-card-logo.png';
+import MOneyTransfer from '../../../../asset/money-transfer.png';
+import {  
+  getSinglePlan, 
+  createDynamicAcc, 
+  planAction,
+  regTransaction
+} from "../../../../store/actions";
+import { ProceedPayCard, SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import ModalComponent from '../../../ModalComponent';
 
-const Transfer = () => {
-  const [modalState, setModalState] = useState("Close");
-  const [amount, setAmount] = useState(0);
-  const [receive, setReceive] = useState({
-    name: "",
-    id: ""
-  });
+const PlanPayment = () => {
+  const [card, setCard] = useState('card');
+  const [amount, setAmount] = useState();
+  const [debitPopup, setDebitPopup] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const { singlePlan, plans } = useSelector((state) => state.plan);
+  const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
-  const userPlans = plans?.data.body ? plans?.data.body : [];
   const planStatus = singlePlan?.data.statusCode
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
-    dispatch(getPlans());
   },[])
 
-  const back = () => {
-    navigate("/plan-list");
+  useEffect(() => {
+    if(plan?.id===parseInt(id)) {
+      setAmount(plan?.targetAmount);
+    }
+  }, [plan])
+
+  useEffect(() => {
+    const formData = {
+      amount: amount,
+      purposeOfPayment: "PLAN_CREATION"
+    }
+    if(card && isClicked) {
+      dispatch(regTransaction(formData))
+      setDebitPopup(true);
+    }
+  }, [isClicked])
+
+  const handleClick = (e) => {
+    if (e.target.value === 'card') {
+      setCard('card');
+    }
   };
 
+  // const paymentSuccess = async () => {
+  //   const formData = {
+  //     amount: amount,
+  //     completed: true,
+  //     paymentType: "DEBIT_CARD",
+  //     plan: parseInt(id),
+  //     planToReceive: parseInt(id),
+  //     planAction: "TOP_UP",
+  //   }
+  //   await dispatch(planAction(formData))
+  //   await dispatch(getSinglePlan(parseInt(id)));
+  //   setSuccess(true);
+  // }
+
+  const onSuccess = () => {
+    setDebitPopup(false);
+    // paymentSuccess();
+  }
+
+  const onClose = () => {
+    console.log("Paystack closed")
+  }
+
+  const back = () => {
+    navigate('/plan-list');
+  };
 
   return (
     <>
       {
         planStatus === "OK" && (
           <>
-            <ProfileNavBar>
-              <NavTitle>
-                <span className="fw-bold">Plan</span>
-              </NavTitle>
-            </ProfileNavBar>
             <Wrapper>
               <LeftView>
-                <h4 className="pb-3">Transfer</h4>
+                <h4 className="pb-3">Pay with card</h4>
                 <div className="plan-content">
                   <div className="plan">
                     <div className="plan-top h-50 p-4">
@@ -55,7 +99,7 @@ const Transfer = () => {
                           <h4>{plan.planName}</h4>
                           <p className="p-0 m-0">{plan?.product.productName}</p>
                         </div>
-                        <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+                        <h4 className="Pending">{plan.planStatus.toLowerCase()}</h4>
                       </div>
                       <div className="d-flex align-items-center justify-content-between pt-4">
                         <div>
@@ -82,122 +126,109 @@ const Transfer = () => {
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
                           <h4>Balance</h4>
-                          <p className="p-0 m-0">{plan?.planSummary?.principal.toLocaleString()} </p>
+                          <p className="p-0 m-0">
+                            {plan?.planSummary?.principal?.toLocaleString()} 
+                          </p>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}
                       </div>
                     </div>
                   </div>
                 </div>
-
+                <h4 className="pt-5">Payment Type</h4>
                 <div className="plan-payment">
-                  <div className="row my-4 pt-4">
-                    <div className="col ">
-                      <label>Select an active plan to transfer into</label>
-                      <div className="input-group">
-                        <select
-                          className="form-select form-select-md"
-                          aria-label=".form-select-md"
-                          name="planName"
-                          value={receive}
-                          onChange={(e) => setReceive(
-                            e.target.value
-                          )}
-                        >
-                          <option selected hidden value={{
-                            name: "",
-                            id: ""
-                            }} disabled
-                          >
-                            Select an active plan to transfer into
-                          </option>
-                          {
-                            userPlans.filter(
-                              item => item.id !== plan.id && item.planStatus === "ACTIVE"
-                              ).map(item => (item?.allowsLiquidation && 
-                                item?.interestReceiptOption === "MATURITY") 
-                              && (
-                              <option key={item.id} value={JSON.stringify(item)} >
-                                {item.planName}
-                              </option>
-                            ))
-                          }
-                        </select>
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between py-4">
+                      <div className="d-flex align-items-center">
+                        <img className="verve-card" src={Verve} alt="Verve" />
+                        <p className="p-0 m-0">Debit Card</p>
                       </div>
+                      <input
+                        type="radio"
+                        id="card"
+                        name="paymentType"
+                        value="card"
+                        checked
+                        onClick={handleClick}
+                      />
                     </div>
                   </div>
-                  <div className="row my-4">
+                  <div className="row">
                     <div className="col ">
-                      <label>Amount to Send</label>
-                      <div className="input-group">
+                      <label>Input amout to Top-up</label>
+                      <div className="input-group mb-4">
                         <input
-                          className="form-control pl-5"
-                          placeholder="₦ 1,000,000"
+                          className="form-control"
+                          placeholder="N  0.00"
                           type="number"
+                          name="amount"
                           value={amount}
+                          min={plan?.product?.minTransactionLimit}
+                          required
                           onChange={(e)=>setAmount(parseInt(e.target.value))}
-                          max={plan.planSummary.principal}
                         />
                       </div>
-                      <label>Balance is ₦{plan.planSummary.principal - amount}</label>
                     </div>
                   </div>
                 </div>
               </LeftView>
-              <RightView>
-                <div className="bank-details">
-                  {/* <div className="bank-detail-content"> */}
-                  {/* <UserBankDetails /> */}
-                  {/* </div> */}
+              {/* <RightView>
+              <div className="bank-details">
+                <div className="bank-detail-content">
+                  <UserBankDetails />
                 </div>
-              </RightView>
+              </div>
+            </RightView> */}
             </Wrapper>
             <WrapperFooter>
               <div className="footer-body">
                 <div className="d-flex align-items-center justify-content-between footer-content">
                   <div>
                     <button
-                      style={{ color: "#111E6C", width: "300px" }}
-                      onClick={back}>
+                      style={{ color: '#111E6C', width: '300px' }}
+                      onClick={back}
+                    >
                       Back
                     </button>
                   </div>
                   <div>
                     <button
                       style={{
-                        backgroundColor: "#111E6C",
-                        color: "#FFFFFF",
-                        width: "300px",
+                        backgroundColor: '#111E6C',
+                        color: '#FFFFFF',
+                        width: '300px',
                       }}
-                      onClick={() => setModalState("modal-one")}>
+                      onClick={() => setIsClicked(true)}
+                    >
                       Submit
                     </button>
-                    <ModalComponent
-                      show={modalState === "modal-one"}
-                      size={"md"}
-                      handleClose={() => setModalState("close")}>
-                      <Notice
-                        handleClose={() => setModalState("close")}
-                        handleShowModalTwo={setModalState}
-                        transferForm={{receive, amount}}
-                        plan={plan}
-                        transferNotice="transfer"
-                      />
-                    </ModalComponent>
-
-                    <ModalComponent
-                      show={modalState === "modal-two"}
-                      size={"md"}
-                      handleClose={() => setModalState("close")}>
-                      <SuccessConfirm
-                        transferNotice="transfer"
-                        handleClose={() => setModalState("close")}
-                      />
-                    </ModalComponent>
                   </div>
                 </div>
               </div>
             </WrapperFooter>
+            <ModalComponent
+              show={debitPopup}
+              size={'md'}
+              handleClose={() => setDebitPopup(false)}
+            >
+              <ProceedPayCard 
+                amount={amount}
+                payType="withdraw-paystack"
+                onSuccess={onSuccess}
+                onClose={onClose}
+                text="Proceed to pay with paystack"
+              />
+            </ModalComponent>
+            <ModalComponent
+              show={success}
+              size={'md'}
+              handleClose={() => setSuccess(false)}
+            >
+              <SuccessConfirm 
+                cardTopup="paid"
+                handleClose={() => setSuccess(false)}
+              />
+            </ModalComponent>
           </>
         )
       }
@@ -205,7 +236,7 @@ const Transfer = () => {
   );
 };
 
-export default Transfer;
+export default PlanPayment;
 
 const LeftView = styled.div`
   width: 50%;
@@ -228,9 +259,7 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active,
-  .Pending,
-  .Matured {
+  .Active, .Pending, .Matured {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
@@ -241,10 +270,10 @@ const LeftView = styled.div`
     color: #219653;
   }
   .Pending {
-    color: #f2994a;
+    color: #F2994A;
   }
   .Matured {
-    color: #2d9cdb;
+    color: #2D9CDB;
   }
 `;
 
@@ -254,7 +283,6 @@ const RightView = styled.div`
     width: 100% !important;
   }
   .bank-details {
-    height: 70vh;
     padding: 40px;
     margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
@@ -365,20 +393,5 @@ const WrapperFooter = styled.div`
   .blue-btn {
     color: #f2f2f2;
     background: #111e6c;
-  }
-`;
-
-const NavTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  h2,
-  span {
-    text-align: left;
-  }
-  @media (max-width: 500px) {
-    h2,
-    span {
-      display: none;
-    }
   }
 `;

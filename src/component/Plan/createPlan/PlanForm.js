@@ -64,10 +64,10 @@ const PlanForm = () => {
     currency: "",
     exchangeRate: 0.00,
     amount: 0.00,
-    targetAmount: 0.00,
+    targetAmount: null,
     tenor: "",
     planDate: recentDate,
-    savingFrequency: "",
+    savingFrequency: null,
     weeklyContributionDay: "MONDAY",
     monthlyContributionDay: 1,
     interestReceiptOption: "",
@@ -139,53 +139,55 @@ const PlanForm = () => {
   // function to get the auto computed contribution value
   const contribValue = () => {
     const selectedTenor = product.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
-    if(formData.savingFrequency!=="") {
-      if(conValue==="targetAmount") {
-        let computedValue;
-        switch(formData.savingFrequency) {
-          case "DAILY":
-            computedValue = formData.targetAmount / selectedTenor?.tenorDays
-            // computedValue = return (SI * 100 + Number.EPSILON) / 100
-            break;
-
-          case "WEEKLY":
-            computedValue = formData.targetAmount / (selectedTenor?.tenorDays/7)
-            break;
-
-          case "MONTHLY":
-            computedValue = formData.targetAmount / selectedTenor?.tenorMonths
-            break;
-          
-          default: break;
-        }
-        setFormData({
-          ...formData,
-          // contributionValue: Number(parseFloat(computedValue).toFixed(2))
-          contributionValue: (computedValue * 100 + Number.EPSILON) / 100
-        })
-      } else {
-        if(product?.properties?.hasTargetAmount) {
+    if(product?.properties?.hasTargetAmount) {
+      if(formData.savingFrequency!=="") {
+        if(conValue==="targetAmount") {
           let computedValue;
           switch(formData.savingFrequency) {
             case "DAILY":
-              computedValue = formData.contributionValue * selectedTenor?.tenorDays
+              computedValue = formData.targetAmount / selectedTenor?.tenorDays
+              // computedValue = return (SI * 100 + Number.EPSILON) / 100
               break;
 
             case "WEEKLY":
-              computedValue = formData.contributionValue * (selectedTenor?.tenorDays/7)
+              computedValue = formData.targetAmount / (selectedTenor?.tenorDays/7)
               break;
 
             case "MONTHLY":
-              computedValue = formData.contributionValue * selectedTenor?.tenorMonths
+              computedValue = formData.targetAmount / selectedTenor?.tenorMonths
               break;
             
             default: break;
           }
           setFormData({
             ...formData,
-            targetAmount: (computedValue * 100 + Number.EPSILON) / 100
-            // targetAmount: Number(parseInt(computedValue))
+            // contributionValue: Number(parseFloat(computedValue).toFixed(2))
+            contributionValue: (computedValue * 100 + Number.EPSILON) / 100
           })
+        } else {
+          if(product?.properties?.hasTargetAmount) {
+            let computedValue;
+            switch(formData.savingFrequency) {
+              case "DAILY":
+                computedValue = formData.contributionValue * selectedTenor?.tenorDays
+                break;
+
+              case "WEEKLY":
+                computedValue = formData.contributionValue * (selectedTenor?.tenorDays/7)
+                break;
+
+              case "MONTHLY":
+                computedValue = formData.contributionValue * selectedTenor?.tenorMonths
+                break;
+              
+              default: break;
+            }
+            setFormData({
+              ...formData,
+              targetAmount: (computedValue * 100 + Number.EPSILON) / 100
+              // targetAmount: Number(parseInt(computedValue))
+            })
+          }
         }
       }
     }

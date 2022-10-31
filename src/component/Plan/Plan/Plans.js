@@ -20,7 +20,8 @@ import {
   getSinglePlan ,
   getProductCategories,
   deletePlan,
-  planAction
+  planAction,
+  viewBankDetail
 } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
 import { UserBankDetails } from "../Accesssories";
@@ -98,7 +99,8 @@ export const Plans = () => {
   }
 
   const handleBankModal = async (id) => {
-    await dispatch(getSinglePlan(id))
+    await dispatch(getSinglePlan(id));
+    await dispatch(viewBankDetail(id));
     setBankDetail(true);
   };
 
@@ -135,7 +137,7 @@ export const Plans = () => {
       >
         <Notice 
           handleClose={() => setDebitPopup(false)}
-          payType="withdraw-paystack"
+          payType="pay-card"
         />
       </ModalComponent>
       <div className="row">
@@ -251,7 +253,6 @@ export const Plans = () => {
                           status={capitalise(item.planStatus)}
                           handleBankModal={handleBankModal} 
                           removePlan={removePlan}
-                          setDebit={setDebitPopup}
                         />
                       </div>
                     </div>
@@ -389,7 +390,6 @@ export const DropDown = ({
   status, 
   handleBankModal, 
   removePlan, 
-  setDebit
 }) => {
   const [menu, setMenu] = useState(false);
   const [checkRollover, setCheckRollover] = useState(false);
@@ -467,12 +467,12 @@ export const DropDown = ({
                 />
               </div>
             </DropdownItem>
-            <DropdownItem tag={Link} to="/history">History</DropdownItem>
+            <DropdownItem tag={Link} to={`/history/${id}`}>History</DropdownItem>
           </>
         ) : status === "Pending" ? (
           <>
             <DropdownItem onClick={()=>handleBankModal(id)}  >View account details</DropdownItem>
-            <DropdownItem onClick={()=>setDebit(true)} >Pay with card</DropdownItem>
+            <DropdownItem tag={Link} to={`/pay-with-card/${id}`} >Pay with card</DropdownItem>
             <DropdownItem onClick={() =>removePlan(id)} >Remove</DropdownItem>
           </>
         ) : status === "Matured" ? (
@@ -486,10 +486,10 @@ export const DropDown = ({
               Transfer
             </DropdownItem>
             <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
-            <DropdownItem tag={Link} to="/history">History</DropdownItem>
+            <DropdownItem tag={Link} to={`/history/${id}`}>History</DropdownItem>
           </>
         ) : status === "Closed" ? (
-          <DropdownItem tag={Link} to="/history">History</DropdownItem>
+          <DropdownItem tag={Link} to={`/history/${id}`}>History</DropdownItem>
         ) : null}
       </DropdownMenu>
     </Dropdown>
