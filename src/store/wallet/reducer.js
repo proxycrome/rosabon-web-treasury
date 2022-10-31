@@ -13,6 +13,9 @@ import {
   GET_WALLET_TRANSACTIONS,
   GET_WALLET_TRANSACTIONS_ERROR,
   GET_WALLET_TRANSACTIONS_SUCCESS,
+  POKE_USER,
+  POKE_USER_ERROR,
+  POKE_USER_SUCCESS,
   POST_TRANSFER_TO_PLAN,
   POST_TRANSFER_TO_PLAN_ERROR,
   POST_TRANSFER_TO_PLAN_SUCCESS,
@@ -35,6 +38,8 @@ const initialState = {
   myReferralsError: null,
   transferMsg: null,
   transferMsgError: null,
+  pokeMsg: null,
+  pokeMsgError: null,
 };
 
 const wallet = (state = initialState, action) => {
@@ -204,6 +209,33 @@ const wallet = (state = initialState, action) => {
         loading: false,
         transferMsg: null,
         transferMsgError: action.payload,
+      };
+      break;
+
+    case POKE_USER:
+      state = {
+        ...state,
+        loading: true,
+        pokeMsg: null,
+        pokeMsgError: null,
+      };
+      break;
+
+    case POKE_USER_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        pokeMsg: action.payload,
+        pokeMsgError: null,
+      };
+      break;
+
+    case POKE_USER_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        pokeMsg: null,
+        pokeMsgError: action.payload,
       };
       break;
 

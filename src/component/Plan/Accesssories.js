@@ -36,10 +36,12 @@ import {
   getEachWalletTransaction,
   getEligiblePlans,
   getMyReferrals,
+  pokeUser,
+  getAuthUsers,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export const NairaCard = () => {
   return (
@@ -388,6 +390,14 @@ export const UserBankDetails = ({ type = null }) => {
   let text = `Account Name: ${account?.accountName},
   Account Number: ${account?.accountNumber},
   Bank: Providus Bank`
+
+  const copied = () => {
+    toast.success("Account Details Copied", {position: "top-right"})
+  };
+
+  let text = `Account Name: ${account?.accountName},
+  Account Number: ${account?.accountNumber},
+  Bank: PROVIDUS BANK`
 
   const copied = () => {
     toast.success("Account Details Copied", {position: "top-right"})
@@ -884,6 +894,7 @@ export const RolloverWithdrawMethod = ({
 
 export const WithdrawalSummary = ({amount=0, reason=""}) => {
   const { singlePlan, penal_charge } = useSelector((state) => state.plan);
+
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   return (
     <div>
@@ -930,16 +941,18 @@ export const WithdrawalSummary = ({amount=0, reason=""}) => {
                     <br /> Balance{" "}
                   </p>
                   <h4 className="">
-                    ₦{(plan?.planSummary?.principal - (amount + 40000)).toLocaleString()} 
+                    ₦
+                    {(
+                      plan?.planSummary?.principal -
+                      (amount + 40000)
+                    ).toLocaleString()}
                   </h4>
                 </div>
               </div>
               <div className="mt-4">
                 <div>
                   <p className="p-0 mb-3">Reason for withdrawal</p>
-                  <p>
-                    {reason}
-                  </p>
+                  <p>{reason}</p>
                 </div>
               </div>
               <div className="py-5 check-box-bank">
@@ -1532,9 +1545,9 @@ export const TransferCard = ({ walletBalance, transferData }) => {
   };
 
   const planName = (id) => {
-    const obj = eligiblePlans?.find(item => item.id === +id)
+    const obj = eligiblePlans?.find((item) => item.id === +id);
     return obj?.planName;
-  }
+  };
 
   useEffect(() => {
     const { amount, planId } = formData;
@@ -1938,11 +1951,19 @@ const HistoryTableWarapper = styled.div`
 
 export const ReferalTable = () => {
   const dispatch = useDispatch();
-  const { myReferrals } = useSelector((state) => state.wallet);
+  const { users } = useSelector(state => state.user_profile);
+  const { myReferrals, loading } = useSelector((state) => state.wallet);
   console.log(myReferrals);
+
+  const referrals = myReferrals?.filter((item) => item.dateOfReg).slice(0, 6);
+
+  const handleClick = (id) => {
+    dispatch(pokeUser(id));
+  };
 
   useEffect(() => {
     dispatch(getMyReferrals());
+    dispatch(getAuthUsers())
   }, [dispatch]);
 
   const data = {
@@ -1973,36 +1994,48 @@ export const ReferalTable = () => {
         width: 100,
       },
     ],
-    rows: [
-      {
-        sn: 1,
-        date: "Apr 28 2022",
-        name: "Jane Doe",
-        status: "Active",
-        action: <button className="active">Poke User</button>,
-      },
-      {
-        sn: 2,
-        date: "Apr 28 2022",
-        name: "Jane Doe",
-        status: "Active",
-        action: <button className="active">Poke User</button>,
-      },
-      {
-        sn: 3,
-        date: "Apr 28 2022",
-        name: "Jane Doe",
-        status: "Active",
-        action: <button className="active">Poke User</button>,
-      },
-      {
-        sn: 4,
-        date: "Apr 28 2022",
-        name: "Jane Doe",
-        status: "Active",
-        action: <button className="in-active">Poke User</button>,
-      },
-    ],
+    rows: referrals?.map((data) => ({
+      sn: `${data.id}`,
+      date: `${data.dateOfReg}`,
+      name: `${data.customerName}`,
+      status: `${data.status}`,
+      action: (
+        <button
+          className={data.status === "INACTIVE" ? "in-active" : "active"}
+          disabled={data.status === "ACTIVE"}
+          onClick={() => handleClick(data.id)}
+        >
+          Poke User
+        </button>
+      ),
+    })),
+
+    // [
+    //   {
+
+    //   },
+    //   {
+    //     sn: 2,
+    //     date: "Apr 28 2022",
+    //     name: "Jane Doe",
+    //     status: "Active",
+    //     action: <button className="active">Poke User</button>,
+    //   },
+    //   {
+    //     sn: 3,
+    //     date: "Apr 28 2022",
+    //     name: "Jane Doe",
+    //     status: "Active",
+    //     action: <button className="active">Poke User</button>,
+    //   },
+    //   {
+    //     sn: 4,
+    //     date: "Apr 28 2022",
+    //     name: "Jane Doe",
+    //     status: "Active",
+    //     action: <button className="in-active">Poke User</button>,
+    //   },
+    // ],
   };
 
   return (
@@ -2012,30 +2045,37 @@ export const ReferalTable = () => {
           <span className="fw-bold">Wallet</span>
         </NavTitle>
       </ProfileNavBar>
-      <ReferalTableWarapper>
-        <h3>My Referrals</h3>
-        <div className="d-flex justify-content-start align-items-center">
-          <div className="padd-referal">
-            <label>Referral Link</label>
-            <div className="input-group mb-3">
-              <input type="text" className="form-control" />
-              <div className="input-group-text">
-                <i className="fa-solid fa-key"></i>
+      <Toaster />
+      {loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : (
+        <ReferalTableWarapper>
+          <h3>My Referrals</h3>
+          <div className="d-flex justify-content-start align-items-center">
+            <div className="padd-referal">
+              <label>Referral Link</label>
+              <div className="input-group mb-3">
+                <input type="text" className="form-control" value={users?.referralLink} readOnly />
+                <div className="input-group-text">
+                  <i className="fa-solid fa-key"></i>
+                </div>
+              </div>
+            </div>
+            <div className="">
+              <p className="p-0 m-0">Total Referrals</p>
+              <div className="box-image">
+                <h3>{referrals?.length}</h3>
               </div>
             </div>
           </div>
-          <div className="">
-            <p className="p-0 m-0">Total Referrals</p>
-            <div className="box-image">
-              <h3>12</h3>
-            </div>
-          </div>
-        </div>
 
-        <div>
-          <MDBDataTable responsive striped data={data} searching={false} />
-        </div>
-      </ReferalTableWarapper>
+          <div>
+            <MDBDataTable responsive striped data={data} searching={false} />
+          </div>
+        </ReferalTableWarapper>
+      )}
     </div>
   );
 };

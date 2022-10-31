@@ -11,6 +11,9 @@ import {
   GET_WALLET_TRANSACTIONS,
   GET_WALLET_TRANSACTIONS_ERROR,
   GET_WALLET_TRANSACTIONS_SUCCESS,
+  POKE_USER,
+  POKE_USER_ERROR,
+  POKE_USER_SUCCESS,
   POST_TRANSFER_TO_PLAN,
   POST_TRANSFER_TO_PLAN_ERROR,
   POST_TRANSFER_TO_PLAN_SUCCESS,
@@ -104,40 +107,61 @@ export const getEachWalletTransactionError = (error) => {
 export const getMyReferrals = () => {
   return {
     type: GET_MY_REFERRALS,
-  }
-}
+  };
+};
 
 export const getMyReferralsSuccess = (data) => {
   return {
     type: GET_MY_REFERRALS_SUCCESS,
     payload: data,
-  }
-}
+  };
+};
 
 export const getMyReferralsError = (error) => {
   return {
     type: GET_MY_REFERRALS_ERROR,
     payload: error,
-  }
-}
+  };
+};
 
 export const postTransferToPlan = (formData) => {
   return {
     type: POST_TRANSFER_TO_PLAN,
-    payload: {formData},
-  }
-}
+    payload: { formData },
+  };
+};
 
 export const postTransferToPlanSuccess = (data) => {
   return {
     type: POST_TRANSFER_TO_PLAN_SUCCESS,
     payload: data,
-  }
-}
+  };
+};
 
 export const postTransferToPlanError = (error) => {
   return {
     type: POST_TRANSFER_TO_PLAN_ERROR,
     payload: error,
-  }
-}
+  };
+};
+
+export const pokeUser = (id) => {
+  return {
+    type: POKE_USER,
+    payload: { id },
+  };
+};
+
+export const pokeUserSuccess = (data) => {
+  return {
+    type: POKE_USER_SUCCESS,
+    payload: data,
+  };
+};
+
+export const pokeUserError = (error) => {
+  return {
+    type: POKE_USER_ERROR,
+    payload: error,
+  };
+};

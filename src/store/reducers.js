@@ -10,6 +10,7 @@ import product from './product/reducer';
 import providus from './providus/reducer';
 import updateProfile from './updateProfile/reducer';
 import wallet from './wallet/reducer';
+import help from './help/reducer';
 
 
 const rootReducer = combineReducers({
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
     paystack,
     currencies,
     providus,
+    help,
 });
 
 export default rootReducer;
