@@ -5,6 +5,9 @@ import {
     GET_TICKETS,
     GET_TICKETS_SUCCESS,
     GET_TICKETS_ERROR,
+    GET_TICKET_CATEGORIES,
+    GET_TICKET_CATEGORIES_SUCCESS,
+    GET_TICKET_CATEGORIES_ERROR,
     GET_OPEN_TICKETS,
     GET_OPEN_TICKETS_SUCCESS,
     GET_OPEN_TICKETS_ERROR,
@@ -37,7 +40,9 @@ import {
     post_reply: null,
     post_reply_err: null,
     replies: null,
-    replies_err: null
+    replies_err: null,
+    categories: null,
+    categories_err: null
   }
   
   const feedback = ( state=initialState, action ) => {
@@ -49,6 +54,7 @@ import {
       case GET_SINGLE_TICKET:
       case POST_REPLY:
       case GET_REPLIES:
+      case GET_TICKET_CATEGORIES:
         state = {
           ...state,
           loading: true
@@ -178,6 +184,24 @@ import {
           loading: false,
           replies: null,
           replies_err: action.payload
+        };
+        break;
+
+      case GET_TICKET_CATEGORIES_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          categories: action.payload,
+          categories_err: null
+        };
+        break;
+
+      case GET_TICKET_CATEGORIES_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          categories: null,
+          categories_err: action.payload
         };
         break;
   

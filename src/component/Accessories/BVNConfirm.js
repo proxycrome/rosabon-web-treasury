@@ -729,7 +729,12 @@ export function Notice({
                       {" "}from your {receiving_plan?.planName} plan
                       into {plan?.planName} plan
                     </p>
-                  ) : (
+                  ) : payType==="pay-card" ? (
+                    <p className="">
+                      Proceed to pay with card
+                    </p>
+                  ): 
+                  (
                     <p className="">
                       Your plan is about to be rolled over. kindly confirm
                       action

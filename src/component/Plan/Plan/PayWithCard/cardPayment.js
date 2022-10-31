@@ -4,24 +4,19 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
-import Verve from '../../../asset/master-card-logo.png';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-// import { UserBankDetails } from '../Accesssories';
-import PlanBankTopup from './PlanBankTopup';
-import PlanCardTopup from './PlanCardTopup';
+import Verve from '../../../../asset/master-card-logo.png';
+import MOneyTransfer from '../../../../asset/money-transfer.png';
 import {  
   getSinglePlan, 
   createDynamicAcc, 
   planAction,
   regTransaction
-} from "../../../store/actions";
-import { ProceedPayCard, SuccessConfirm } from '../../Accessories/BVNConfirm';
-import ModalComponent from '../../ModalComponent';
-
+} from "../../../../store/actions";
+import { ProceedPayCard, SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import ModalComponent from '../../../ModalComponent';
 
 const PlanPayment = () => {
-  const [card, setCard] = useState('');
-  const [bank, setBank] = useState('');
+  const [card, setCard] = useState('card');
   const [amount, setAmount] = useState();
   const [debitPopup, setDebitPopup] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -36,10 +31,13 @@ const PlanPayment = () => {
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
-    if(plan?.id===parseInt(id)) {
-      dispatch(createDynamicAcc(plan.planName))
-    }
   },[])
+
+  useEffect(() => {
+    if(plan?.id===parseInt(id)) {
+      setAmount(plan?.targetAmount);
+    }
+  }, [plan])
 
   useEffect(() => {
     const formData = {
@@ -55,42 +53,26 @@ const PlanPayment = () => {
   const handleClick = (e) => {
     if (e.target.value === 'card') {
       setCard('card');
-      setBank('');
-    }
-    if (e.target.value === 'bank') {
-      setBank('bank');
-      setCard('');
     }
   };
 
-  if (bank && isClicked) {
-    return (
-      <PlanBankTopup
-        goBack={() => {
-          setBank('');
-          setIsClicked(false);
-        }}
-      />
-    );
-  };
-
-  const paymentSuccess = async () => {
-    const formData = {
-      amount: amount,
-      completed: true,
-      paymentType: "DEBIT_CARD",
-      plan: parseInt(id),
-      planToReceive: parseInt(id),
-      planAction: "TOP_UP",
-    }
-    await dispatch(planAction(formData))
-    await dispatch(getSinglePlan(parseInt(id)));
-    setSuccess(true);
-  }
+  // const paymentSuccess = async () => {
+  //   const formData = {
+  //     amount: amount,
+  //     completed: true,
+  //     paymentType: "DEBIT_CARD",
+  //     plan: parseInt(id),
+  //     planToReceive: parseInt(id),
+  //     planAction: "TOP_UP",
+  //   }
+  //   await dispatch(planAction(formData))
+  //   await dispatch(getSinglePlan(parseInt(id)));
+  //   setSuccess(true);
+  // }
 
   const onSuccess = () => {
     setDebitPopup(false);
-    paymentSuccess();
+    // paymentSuccess();
   }
 
   const onClose = () => {
@@ -108,7 +90,7 @@ const PlanPayment = () => {
           <>
             <Wrapper>
               <LeftView>
-                <h4 className="pb-3">Top up</h4>
+                <h4 className="pb-3">Pay with card</h4>
                 <div className="plan-content">
                   <div className="plan">
                     <div className="plan-top h-50 p-4">
@@ -117,7 +99,7 @@ const PlanPayment = () => {
                           <h4>{plan.planName}</h4>
                           <p className="p-0 m-0">{plan?.product.productName}</p>
                         </div>
-                        <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+                        <h4 className="Pending">{plan.planStatus.toLowerCase()}</h4>
                       </div>
                       <div className="d-flex align-items-center justify-content-between pt-4">
                         <div>
@@ -153,24 +135,8 @@ const PlanPayment = () => {
                     </div>
                   </div>
                 </div>
-                <h4 className="pt-5">Choose Payment Type</h4>
+                <h4 className="pt-5">Payment Type</h4>
                 <div className="plan-payment">
-                  <div className="row">
-                    <div className="col ">
-                      <label>Input amout to Top-up</label>
-                      <div className="input-group mb-4">
-                        <input
-                          className="form-control"
-                          placeholder="N  0.00"
-                          type="number"
-                          name="amount"
-                          value={amount}
-                          required
-                          onChange={(e)=>setAmount(parseInt(e.target.value))}
-                        />
-                      </div>
-                    </div>
-                  </div>
                   <div>
                     <div className="d-flex align-items-center justify-content-between py-4">
                       <div className="d-flex align-items-center">
@@ -182,23 +148,26 @@ const PlanPayment = () => {
                         id="card"
                         name="paymentType"
                         value="card"
+                        checked
                         onClick={handleClick}
                       />
                     </div>
                   </div>
-                  <div>
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center">
-                        <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                        <p className="p-0 m-0">Bank Transfer</p>
+                  <div className="row">
+                    <div className="col ">
+                      <label>Input amout to Top-up</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder="N  0.00"
+                          type="number"
+                          name="amount"
+                          value={amount}
+                          min={plan?.product?.minTransactionLimit}
+                          required
+                          onChange={(e)=>setAmount(parseInt(e.target.value))}
+                        />
                       </div>
-                      <input
-                        type="radio"
-                        id="bank"
-                        name="paymentType"
-                        value="bank"
-                        onClick={handleClick}
-                      />
                     </div>
                   </div>
                 </div>

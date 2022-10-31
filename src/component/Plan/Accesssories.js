@@ -11,6 +11,7 @@ import { MDBDataTable } from "mdbreact";
 import { Input, Label, UncontrolledTooltip } from "reactstrap";
 import halfEllipse from "../../asset/halfEllipse.png";
 import ChoosePlanHolder from "../../asset/chooseplaneHolder.png";
+import Copy from "../../asset/copy-2.png";
 import Verve from "../../asset/master-card-logo.png";
 import MOneyTransfer from "../../asset/money-transfer.png";
 import FileDoc from "../../asset/file.png";
@@ -22,6 +23,7 @@ import { Table } from "reactstrap";
 import { TransactionPreview } from "../Accessories/BVNConfirm";
 import moment from "moment";
 import { usePaystackPayment } from "react-paystack";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { PlanContext } from "./createPlan/PlanForm";
 import {
   getWalletTransactions,
@@ -383,6 +385,14 @@ export const UserBankDetails = ({ type = null }) => {
 
   const account = type === null ? dynamic_account : plan?.bankAccountInfo;
 
+  let text = `Account Name: ${account?.accountName},
+  Account Number: ${account?.accountNumber},
+  Bank: PROVIDUS BANK`
+
+  const copied = () => {
+    toast.success("Account Details Copied", {position: "top-right"})
+  };
+
   return (
     <div>
       <UserBankDetailsWrapper>
@@ -394,11 +404,18 @@ export const UserBankDetails = ({ type = null }) => {
               account details
             </p>
           </div>
-          <div className="pt-4">
+          <div className="pt-4 d-flex justify-content-between w-100">
             <div>
-              <p className="p-0 m-0">Account Number</p>
+              <div>
+                <p className="p-0 m-0">Account Number</p>
+              </div>
+              <p className="p-0 m-0 bold-text">{account?.accountNumber} </p>
             </div>
-            <p className="p-0 m-0 bold-text">{account?.accountNumber} </p>
+            <div>
+              <CopyToClipboard text={text} onCopy={copied} >
+                <img src={Copy} alt="copy" className="copy" />
+              </CopyToClipboard>
+            </div>
           </div>
           <div className="pt-3">
             <div>
@@ -410,7 +427,7 @@ export const UserBankDetails = ({ type = null }) => {
             <div>
               <p className="p-0 m-0">Bank Name</p>
             </div>
-            <p className="p-0 m-0 bold-text">Providus</p>
+            <p className="p-0 m-0 bold-text">PROVIDUS BANK</p>
           </div>
           <p className="pt-4">
             Account details expires in 48 hours, kindly endeavour to make
@@ -425,7 +442,11 @@ export const UserBankDetails = ({ type = null }) => {
   );
 };
 
-const UserBankDetailsWrapper = styled.div``;
+const UserBankDetailsWrapper = styled.div`
+  .copy {
+    cursor: pointer;
+  }
+`;
 
 export const InterestCalculator = () => {
   return (
@@ -814,7 +835,7 @@ export const RolloverWithdrawMethod = ({
                   </div>
                   <div className="pt-4">
                     <p className="p-0 m-0">Account Name</p>
-                    <h4>{bankDetails?.name} </h4>
+                    <h4>{bankDetails?.accountName} </h4>
                   </div>
                   <div className="pt-4">
                     <p className="p-0 m-0">Bank Name</p>
@@ -862,7 +883,7 @@ export const RolloverWithdrawMethod = ({
 };
 
 export const WithdrawalSummary = ({amount=0, reason=""}) => {
-  const { singlePlan } = useSelector((state) => state.plan);
+  const { singlePlan, penal_charge } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   return (
     <div>

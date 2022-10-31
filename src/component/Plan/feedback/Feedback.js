@@ -12,7 +12,7 @@ import Checked from "../../../asset/checked.png";
 import ModalComponent from "../../ModalComponent";
 import { Input } from "reactstrap";
 // import { postFeedback } from "../../../redux/actions/feedback/feedbackAction";
-import { postFeedback } from "../../../store/actions";
+import { postFeedback, getTicketCategories } from "../../../store/actions";
 
 const initialForm = {
   categoryId: "",
@@ -34,7 +34,12 @@ const Feedback = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [tabs, setTabs] = useState("");
   const user_details = useSelector((state) => state.user_profile.users);
-  const { loading } = useSelector((state) => state.feedback);
+  const { loading, categories } = useSelector((state) => state.feedback);
+
+  useEffect(() => {
+    
+    dispatch(getTicketCategories());
+  }, [])
 
   const [show, setShow] = useState(false);
 
@@ -133,9 +138,14 @@ const Feedback = () => {
                   onChange={handleChange}
                   value={feedbackForm.categoryId}
                 >
-                  <option value=""></option>
-                  <option value={2}>Complaints</option>
-                  <option value={1}>Enquiries</option>
+                  <option value="" disabled hidden ></option>
+                  {
+                    categories?.map(item => item.status === "ACTIVE" && (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))
+                  }
                 </select>
               </div>
             </div>

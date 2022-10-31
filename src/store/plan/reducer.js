@@ -29,6 +29,9 @@ import {
     PLAN_ACTION,
     PLAN_ACTION_ERROR,
     PLAN_ACTION_SUCCESS,
+    GET_PENAL_CHARGE,
+    GET_PENAL_CHARGE_ERROR,
+    GET_PENAL_CHARGE_SUCCESS,
     GET_PLAN_HISTORY,
     GET_PLAN_HISTORY_SUCCESS,
     GET_PLAN_HISTORY_ERROR,
@@ -68,6 +71,8 @@ import {
     single_plan_history_err: null,
     bank_detail: null,
     bank_detail_err: null,
+    penal_charge: null,
+    penal_charge_error: null,
   }
   
   const plan = ( state=initialState, action ) => {
@@ -85,6 +90,7 @@ import {
       case GET_PLAN_HISTORY:
       case GET_SINGLE_PLAN_HISTORY:
       case VIEW_BANK_DETAIL:
+      case GET_PENAL_CHARGE:
         state = {
           ...state,
           loading: true
@@ -320,6 +326,22 @@ import {
           loading: false,
           bank_detail: null,
           bank_detail_err: action.payload
+        };
+        break;
+
+      case GET_PENAL_CHARGE_SUCCESS:
+        state = {
+          ...state,
+          penal_charge: action.payload,
+          penal_charge_error: null
+        };
+        break;
+
+      case GET_PENAL_CHARGE_ERROR:
+        state = {
+          ...state,
+          penal_charge: null,
+          penal_charge_error: action.payload
         };
         break;
   
