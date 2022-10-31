@@ -785,7 +785,7 @@ export function TransactionPreview({ handleClose, transaction }) {
           <WrapDetails>
             <div className="container">
               <div className="row">
-                <div className="col" id="print" style={{textAlign: "center", margin: "15px"}}>
+                <div className="col" id="print">
                   <div className="d-flex flex-column justify-content-center align-items-center pb-5">
                     <h4>
                       {transaction?.transactionType === "CREDIT" ? "+" : "-"}{" "}

@@ -68,8 +68,8 @@ const UserWallet = () => {
   };
 
   const handleTransferFormData = (data) => {
-    setTransferFormData(data)
-  }
+    setTransferFormData(data);
+  };
 
   const handleFormData = (data) => {
     setFormData(data);
@@ -190,6 +190,9 @@ const UserWallet = () => {
     }
   }, [withdrawMsg]);
 
+  const tokenObj = JSON.parse(localStorage.getItem("token"));
+  console.log(tokenObj);
+
   return (
     <div>
       <WrapperBody>
@@ -224,8 +227,11 @@ const UserWallet = () => {
                       <p className="p-0 m-0">₦</p>
                     </div>
                   </div>
-                  <h3 className="pt-1 pb-3">2200 - 1234 - 5678</h3>
-                  <div className="down-button pt-4">
+                  <h3 className="pt-1 pb-3 accountDet">
+                    {tokenObj?.virtualAccountNo} ({tokenObj?.virtualAccountName}
+                    )
+                  </h3>
+                  <div className="down-button pt-4 mt-5">
                     <p className="p-0 m-0">Balance</p>
                     <h5>
                       ₦{" "}
@@ -333,7 +339,9 @@ const UserWallet = () => {
                         <div className="bank-detail-content">
                           <TransferCard
                             walletBalance={walletBalance}
-                            transferData={(data) => handleTransferFormData(data)}
+                            transferData={(data) =>
+                              handleTransferFormData(data)
+                            }
                           />
                         </div>
                       </div>
@@ -614,7 +622,14 @@ const LeftView = styled.div`
   .eclips-image {
     top: 0;
     right: 0;
+    z-index: 1;
   }
+
+  .accountDet {
+    position: absolute;
+    z-index: 20;
+  }
+
   .sqr-box {
     margin-right: 20px;
     width: 35px;

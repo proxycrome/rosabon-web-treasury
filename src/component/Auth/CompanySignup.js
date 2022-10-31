@@ -30,12 +30,16 @@ function CompanySignup() {
   const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false)
   const [isCompanyTerms, setIsCompanyTerms] = useState(false)
 
+  const referral = JSON.parse(localStorage.getItem('referral'));
+
+  const {referralCode, sourcer} = referral;
+
   const {
     handleValueChange,
     values,
     handleSubmit,
     errors,
-  } = ValidateCompanyForm(validateInfo, isCompanyNewsLetters, isCompanyTerms)
+  } = ValidateCompanyForm(validateInfo, isCompanyNewsLetters, isCompanyTerms, referralCode, sourcer)
 
   const togglePassword1 = () => {
     setPasswordShown1(!passwordShown1)
@@ -226,6 +230,7 @@ function CompanySignup() {
                             aria-label=".form-select-md"
                             onChange={handleValueChange}
                             name="source"
+                            value={sourcer}
                           >
                             <option value=""></option>
                             <option value="ROSABON_SALES">
@@ -273,7 +278,7 @@ function CompanySignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              value={values.refferedBy || referralCode}
                             />
                           )}
                         </div>

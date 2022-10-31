@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import styled from "styled-components";
-import { Input } from "reactstrap";
+import { Input, Collapse } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { getFaq } from "../../../store/actions";
+import Spinner from "../../common/loading";
 
 const Help = () => {
+  const [col1, setCol1] = useState("");
+  // const [searchData, setSearchData] = useState("");
+
+  const t_col1 = (val) => {
+    if (col1 === val) {
+      setCol1("");
+    } else {
+      setCol1(val);
+    }
+  };
+  const dispatch = useDispatch();
+  const { faqs, loading } = useSelector((state) => state.help);
+
+  useEffect(() => {
+    dispatch(getFaq());
+  }, [dispatch]);
   return (
     <div>
       <WrapperBody>
@@ -12,74 +31,61 @@ const Help = () => {
             <span className="fw-bold">FAQ</span>
           </NavTitle>
         </ProfileNavBar>
-        <Wrapper>
-          <div className="d-flex justify-content-between align-items-center">
-            <h3 className="w-50">Frequently Asked Questions</h3>
-            <div className="input-group w-50 position-relative search-group">
-              <Input
+        {loading ? (
+          <div className="vh-100 w-100">
+            <Spinner />
+          </div>
+        ) : (
+          <Wrapper>
+            <div className="d-flex justify-content-between align-items-center">
+              <h3 className="w-50">Frequently Asked Questions</h3>
+              <div className="input-group w-50 position-relative search-group">
+                {/* <Input
                 placeholder="Search Using Keywords"
                 type="text"
                 className="form-control"
               />
               <i className="fa-solid fa-magnifying-glass position-absolute search"></i>
-              <i className="fa-solid fa-xmark position-absolute clear"></i>
-            </div>
-          </div>
-          <hr className="my-5" />
-          <div className="accordion" id="accordionExample">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingOne">
-                <div className="accordion-button collapsed" style={{backgroundColor: '#FFFFFF'}} type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  About Rosabon
-                </div>
-              </h2>
-              <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div className="accordion-body">
-                  <h5>What is Rosabon?</h5>
-                  <p className="p-0 m-0">
-                    The passage experienced a surge in popularity during the 1960s when
-                    Letraset used it on their dry-transfer sheets, and again during the
-                    90s as desktop publishers bundled the text with their software.{" "}
-                  </p>
-                </div>
+              <i className="fa-solid fa-xmark position-absolute clear"></i> */}
               </div>
             </div>
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingTwo">
-                <button className="accordion-button collapsed" style={{backgroundColor: '#FFFFFF'}} type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  About Rosabon
-                </button>
-              </h2>
-              <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div className="accordion-body">
-                  <h5>What is Rosabon?</h5>
-                  <p className="p-0 m-0">
-                    The passage experienced a surge in popularity during the 1960s when
-                    Letraset used it on their dry-transfer sheets, and again during the
-                    90s as desktop publishers bundled the text with their software.{" "}
-                  </p>
+            <hr className="my-5" />
+            <div className="accordion" id="accordionExample">
+              {faqs?.data?.body?.map((data) => (
+                <div className="accordion-item" key={data.id}>
+                  <h2
+                    className="accordion-header"
+                    id="heading"
+                    onClick={() => t_col1(data.id)}
+                  >
+                    <div
+                      className={`accordion-button ${
+                        col1 === data.id ? "" : "collapsed"
+                      }`}
+                      style={{ backgroundColor: "#FFFFFF" }}
+                      type="button"
+                    >
+                      {data.faqCategory.name}
+                    </div>
+                  </h2>
+                  <Collapse isOpen={col1 === data.id}>
+                    <div
+                      id="collapseOne"
+                      className="accordion-collapse collapse show"
+                      aria-labelledby="headingOne"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div className="accordion-body">
+                        <h5>{data.question}</h5>
+                        <p className="p-0 m-0">{data.answer}</p>
+                      </div>
+                    </div>
+                  </Collapse>
                 </div>
-              </div>
+              ))}
             </div>
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingThree">
-                <button className="accordion-button collapsed" style={{backgroundColor: '#FFFFFF'}} type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  About Rosabon
-                </button>
-              </h2>
-              <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div className="accordion-body">
-                  <h5>What is Rosabon?</h5>
-                  <p className="p-0 m-0">
-                    The passage experienced a surge in popularity during the 1960s when
-                    Letraset used it on their dry-transfer sheets, and again during the
-                    90s as desktop publishers bundled the text with their software.{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Wrapper>
+          </Wrapper>
+        )}
       </WrapperBody>
     </div>
   );
