@@ -15,9 +15,8 @@ import {
   planAction,
   regTransaction
 } from "../../../store/actions";
-import { ProceedPayCard } from '../../Accessories/BVNConfirm';
+import { ProceedPayCard, SuccessConfirm } from '../../Accessories/BVNConfirm';
 import ModalComponent from '../../ModalComponent';
-import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 
 
 const PlanPayment = () => {

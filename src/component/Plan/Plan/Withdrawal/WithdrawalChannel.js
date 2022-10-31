@@ -6,7 +6,7 @@ import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from '../../../ModalComponent';
 import { RolloverWithdrawMethod, WithdrawalSummary } from '../../Accesssories';
 import { Toaster } from 'react-hot-toast';
-import {  planAction } from "../../../../store/actions";
+import {  planAction, getPenalCharge } from "../../../../store/actions";
 
 const WithdrawalChannel = ({goBack, amount, type}) => {
   const [modalState, setModalState] = useState(false);
@@ -22,6 +22,10 @@ const WithdrawalChannel = ({goBack, amount, type}) => {
 
   const { login } = useSelector(state => state.auth);
   const user_role = login ? login?.role?.name : "";
+
+  useEffect(() => {
+    dispatch(getPenalCharge());
+  },[])
 
   useEffect(() => {
     if(plan_action !== null && plan_action_error===null && submitted) {

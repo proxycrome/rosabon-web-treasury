@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input, Label, InputGroup } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { MDBDataTable } from 'mdbreact';
 import ModalComponent from '../../../ModalComponent';
 import { TransactionPreview } from '../../../Accessories/BVNConfirm';
+import { getSinglePlanHistory } from '../../../../store/actions';
 
 
 const TransactionDetails = () => {
   const [modalState, setModalState] = useState(false);
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  useEffect(() => {
+    dispatch(getSinglePlanHistory(parseInt(id)));
+  },[])
+
+  const { single_plan_history } = useSelector(state => state.plan);
+  const history = single_plan_history ? single_plan_history?.content : [];
+
+  const history_list = history?.map(item => ({
+    id: item?.id,
+    date: item?.dateOfTransaction[0] + "-" + item?.dateOfTransaction[1] + "-" 
+    + item?.dateOfTransaction[2],
+    description: item?.description,
+    type: item?.type,
+    amount: "₦"+item?.amount,
+    balance: "₦"+item?.balance
+  }));
 
   const data = {
     columns: [
@@ -43,100 +65,7 @@ const TransactionDetails = () => {
         width: 100,
       },
     ],
-    rows: [
-      // {
-      //   id: (
-      //     <Link to="#" onClick={() => setModalState(true)}>
-      //       <div>NO_1947034</div>
-      //     </Link>
-      //   ),
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-      // {
-      //   id: 'NO_1947034',
-      //   date: 'Apr 18 2022',
-      //   description: 'Part-withdrawal',
-      //   type: 'Debit',
-      //   amount: '- ₦1,500,000',
-      //   balance: '₦1,000,000',
-      // },
-    ],
+    rows: history_list
   };
 
   return (

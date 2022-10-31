@@ -203,6 +203,11 @@ export const LeftView = () => {
                 </div>
               </div>
             </div>
+            <div className="row" >
+              <p className='disclaimer' >
+                Please note that this is an estimate and final value is subject to withholding tax
+              </p>
+            </div>
           </Collapse>
         </div>
       </div>
@@ -370,5 +375,9 @@ const LeftWrapper = styled.div`
   }
   input[type=number] {
     -moz-appearance: textfield;
+  }
+  .disclaimer {
+    font-size: 10px;
+    color: #828282;
   }
 `

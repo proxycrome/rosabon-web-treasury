@@ -14,6 +14,9 @@ import {
     GET_TICKETS,
 	GET_TICKETS_ERROR,
 	GET_TICKETS_SUCCESS,
+    GET_TICKET_CATEGORIES,
+    GET_TICKET_CATEGORIES_ERROR,
+    GET_TICKET_CATEGORIES_SUCCESS,
 	POST_FEEDBACK,
 	POST_FEEDBACK_ERROR,
 	POST_FEEDBACK_SUCCESS,
@@ -163,6 +166,26 @@ export const getRepliesSuccess = (data) => {
 export const getRepliesError = (error) => {
     return {
         type: GET_REPLIES_ERROR,
+        payload: error
+    }
+};
+
+export const getTicketCategories = () => {
+    return {
+        type: GET_TICKET_CATEGORIES,
+    }
+};
+
+export const getTicketCategoriesSuccess = (data) => {
+    return {
+        type: GET_TICKET_CATEGORIES_SUCCESS,
+        payload: data
+    }
+};
+
+export const getTicketCategoriesError = (error) => {
+    return {
+        type: GET_TICKET_CATEGORIES_ERROR,
         payload: error
     }
 };

@@ -100,3 +100,9 @@ export const completeTransferService = (id) => {
   const url = `auth/trplan-action/complete-transfer?id=${id}`;
   return http.getData(url);
 };
+
+export const penalChargeService = () => {
+  const http = new HttpService();
+  const url = `auth/trpenal-charge`;
+  return http.getData(url);
+};
