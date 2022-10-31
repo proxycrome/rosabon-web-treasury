@@ -37,7 +37,7 @@ import {
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 export const NairaCard = () => {
   return (
@@ -283,6 +283,7 @@ export const MakePayment = ({ setPaymentType }) => {
       setForm({
         ...form,
         paymentMethod: "DEBIT_CARD",
+        planStatus: "ACTIVE",
       });
       setCard("card");
       setBank("");
@@ -291,6 +292,7 @@ export const MakePayment = ({ setPaymentType }) => {
       setForm({
         ...form,
         paymentMethod: "BANK_TRANSFER",
+        planStatus: "PENDING",
       });
       setBank("bank");
       setCard("");
@@ -368,18 +370,18 @@ const PaymentTypeWrapper = styled.div`
   }
 `;
 
-export const UserBankDetails = ({type=null}) => {
+export const UserBankDetails = ({ type = null }) => {
   const { login } = useSelector((state) => state.auth);
   const { singlePlan } = useSelector((state) => state.plan);
   const { dynamic_account } = useSelector((state) => state.providus);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
   let date = new Date();
-  const time_format = moment(date).format('HH:mm');
-  const add_hours = moment(date).add(48, 'hours');
+  const time_format = moment(date).format("HH:mm");
+  const add_hours = moment(date).add(48, "hours");
   const expire_date = moment(add_hours).format("DD/MM/YYYY");
 
-  const account = (type === null) ? dynamic_account : plan?.bankAccountInfo;
+  const account = type === null ? dynamic_account : plan?.bankAccountInfo;
 
   return (
     <div>
@@ -408,13 +410,13 @@ export const UserBankDetails = ({type=null}) => {
             <div>
               <p className="p-0 m-0">Bank Name</p>
             </div>
-            <p className="p-0 m-0 bold-text">Rosabon</p>
+            <p className="p-0 m-0 bold-text">Providus</p>
           </div>
           <p className="pt-4">
             Account details expires in 48 hours, kindly endeavour to make
             transfer{" "}
-            <span style={{display: type === null?"auto":"none"}} >
-              before{" "}{expire_date},{" "} {time_format}
+            <span style={{ display: type === null ? "auto" : "none" }}>
+              before {expire_date}, {time_format}
             </span>
           </p>
         </div>
@@ -689,10 +691,90 @@ const RolloverSummaryWrapper = styled.div`
       padding-left: 10px;
     }
   }
+  .grey-button {
+    background: #f2f2f2;
+    color: #111e6c;
+  }
+  padding: 0 2rem 7rem 1rem;
+  .style-attachment {
+    .font-awe-btn {
+      display: none;
+    }
+    .normal-btn {
+      display: block;
+    }
+  }
+
+  @media (max-width: 900px) {
+    padding: 0 2rem 7rem 1rem;
+    .style-attachment {
+      .normal-btn {
+        display: none;
+      }
+      .font-awe-btn {
+        display: block;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .file {
+    display: none;
+  }
 `;
 
-export const RolloverWithdrawMethod = () => {
+export const RolloverWithdrawMethod = ({ 
+  withdrawTo,
+  setWithdrawTo,
+  base64File,
+  setBase64File }) => {
   const [withdraw, setWithdraw] = useState("");
+  const { login } = useSelector(state => state.auth);
+  
+  const user_role = login ? login?.role?.name : "";
+  const { bankDetails, bankDetailsError } = useSelector(
+    (state) => state.user_profile
+  );
+  const corporateUserWithdrawalMandateRef = useRef();
+  console.log("bank dets", bankDetails)
+
+  const handleFileChange = (e, name) => {
+    const { files } = e.target;
+
+    console.log(files[0]);
+
+    const encodedFileBase64 = (file) => {
+      let reader = new FileReader();
+      if (file) {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setBase64File({
+            ...base64File,
+            [name]: reader.result.split("base64,")[1],
+          });
+        };
+        reader.onerror = (error) => {
+          console.log("error", error);
+        };
+      }
+    };
+
+    if (
+      files[0]?.size <= 2000000 &&
+      (files[0]?.type === "image/jpeg" || files[0]?.type === "application/pdf")
+    ) {
+      encodedFileBase64(files[0]);
+    }
+    e.target.value = null;
+  };
+
+  const handleFileSelect = (e, reference) => {
+    e.preventDefault();
+    reference.current.click();
+  };
+
+  console.log("hhh", withdrawTo)
+
   return (
     <div>
       <RolloverSummaryWrapper>
@@ -709,31 +791,68 @@ export const RolloverWithdrawMethod = () => {
                       className="form-select form-select-md"
                       aria-label=".form-select-md"
                       name="withdraw"
-                      onChange={(e) => setWithdraw(e.target.value)}
+                      onChange={(e) => setWithdrawTo(e.target.value)}
+                      value={withdrawTo}
                     >
                       <option value="">Select withdrawal destination</option>
-                      <option value="bank">To Bank</option>
-                      <option value="wallet">My Wallet</option>
+                      <option value="TO_BANK">To Bank</option>
+                      <option value="TO_WALLET">My Wallet</option>
                     </select>
                   </div>
                 </div>
               </div>
-              {withdraw === "bank" && (
+              {withdrawTo === "TO_BANK" && user_role==="INDIVIDUAL_USER" ? 
+              bankDetailsError?.message === "Bank Account not available for this user" ? (
+                <span className="text-danger">
+                  No Registered Bank Account Details
+                </span>
+              ) : (
                 <div className="mt-3">
                   <div className="pt-4">
                     <p className="p-0 m-0">Account Number</p>
-                    <h4>2210345678</h4>
+                    <h4>{bankDetails?.accountNumber} </h4>
                   </div>
                   <div className="pt-4">
                     <p className="p-0 m-0">Account Name</p>
-                    <h4>Ekiyee Bllaowel</h4>
+                    <h4>{bankDetails?.name} </h4>
                   </div>
                   <div className="pt-4">
                     <p className="p-0 m-0">Bank Name</p>
-                    <h4>Zenith Bank</h4>
+                    <h4>{bankDetails?.bank?.name} </h4>
                   </div>
                 </div>
-              )}
+              ) : user_role==="COMPANY" ? (<div>
+                <div className="d-flex justify-content-between" >
+                  <div>
+                    <p>Upload withdrawal mandate instruction</p>
+                    <p>png</p>
+                  </div>
+                  <div>
+                    <div className=" style-attachment">
+                      <input
+                        type="file"
+                        className="file"
+                        ref={corporateUserWithdrawalMandateRef}
+                        onChange={(e) =>
+                          handleFileChange(e, "corporateUserWithdrawalMandate")
+                        }
+                      />
+                      <button
+                        type="button"
+                        className="normal-btn grey-button"
+                        onClick={(e) =>
+                          handleFileSelect(e, corporateUserWithdrawalMandateRef)
+                        }
+                      >
+                        Choose file
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <p>
+                  Letter must be on a company’s letter head and also carry bank account details
+                </p>
+              </div>) : (<></>)}
             </div>
           </div>
         </div>
@@ -742,7 +861,7 @@ export const RolloverWithdrawMethod = () => {
   );
 };
 
-export const WithdrawalSummary = () => {
+export const WithdrawalSummary = ({amount=0, reason=""}) => {
   const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   return (
@@ -772,33 +891,33 @@ export const WithdrawalSummary = () => {
                   <p className="p-0 m-0">
                     Balance before <br /> Liquidation{" "}
                   </p>
-                  <h4> ₦2,000,000</h4>
+                  <h4> ₦{plan?.planSummary?.principal}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Withdrawal Amount</p>
-                  <h4 className=""> ₦1,500,000</h4>
+                  <h4 className=""> ₦{amount.toLocaleString()}</h4>
                 </div>
               </div>
               <div className="d-flex align-items-center justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Penal Charges </p>
-                  <h4>₦40,000</h4>
+                  <h4>₦0</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">
                     Available Plan
                     <br /> Balance{" "}
                   </p>
-                  <h4 className="">₦460,000</h4>
+                  <h4 className="">
+                    ₦{(plan?.planSummary?.principal - (amount + 40000)).toLocaleString()} 
+                  </h4>
                 </div>
               </div>
               <div className="mt-4">
                 <div>
                   <p className="p-0 mb-3">Reason for withdrawal</p>
                   <p>
-                    as it is sometimes known, is dummy text used in laying out
-                    print, graphic or web designs. The passage is attributed to
-                    an unknown typesetter in the 15th century
+                    {reason}
                   </p>
                 </div>
               </div>
@@ -853,13 +972,20 @@ export const getCurrIcon = (currency) => {
 export const PlanSummary = ({ planPay }) => {
   const { form } = useContext(PlanContext);
   let planData = form;
-  const { currencies  } = useSelector((state) => state.currencies);
-  const currencies_list = currencies?.data.body ? currencies?.data.body: []
-  const current_currency = currencies_list.find(item=>item.id===planData?.currency)?.name
-  const calc_withholding_tax = Math.round(
-    (planData.planSummary.principal*(planData.planSummary.withholdingTax/100)) * 100 
-    + Number.EPSILON
-    ) / 100
+  const { currencies } = useSelector((state) => state.currencies);
+  const currencies_list = currencies?.data.body ? currencies?.data.body : [];
+  const current_currency = currencies_list.find(
+    (item) => item.id === planData?.currency
+  )?.name;
+  const calc_withholding_tax =
+    Math.round(
+      planData.planSummary.calculatedInterest *
+        (planData.planSummary.withholdingTax / 100) *
+        100 +
+        Number.EPSILON
+    ) / 100;
+
+    console.log("form check", form)
 
   return (
     <div>
@@ -921,8 +1047,7 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Withholding Tax</p>
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
-                    {getCurrIcon(current_currency)}{" "}
-                    {calc_withholding_tax}
+                    {getCurrIcon(current_currency)} {calc_withholding_tax}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1365,10 +1490,41 @@ export const AvailableBalance = ({
   );
 };
 
-export const TransferCard = ({ walletBalance }) => {
+export const TransferCard = ({ walletBalance, transferData }) => {
   const dispatch = useDispatch();
-  const {eligiblePlans} = useSelector(state => state.plan);
+  const { eligiblePlans } = useSelector((state) => state.plan);
   console.log(eligiblePlans);
+
+  const data = {
+    amount: "",
+    planId: "",
+  };
+
+  const [formData, setFormData] = useState(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const planName = (id) => {
+    const obj = eligiblePlans?.find(item => item.id === +id)
+    return obj?.planName;
+  }
+
+  useEffect(() => {
+    const { amount, planId } = formData;
+
+    const data = {
+      amount: Number(amount),
+      description: `Transfer of ${amount ? amount : 0} to ${planName(planId)}`,
+      planId: Number(planId),
+    };
+    transferData(data);
+  }, [formData]);
 
   useEffect(() => {
     dispatch(getEligiblePlans());
@@ -1390,7 +1546,10 @@ export const TransferCard = ({ walletBalance }) => {
             <input
               className="form-control"
               placeholder="N1,500,000"
-              type="text"
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -1401,13 +1560,17 @@ export const TransferCard = ({ walletBalance }) => {
           <select
             className="form-select form-select-lg mb-3 select-field"
             aria-label=".form-select-lg"
-            name="companyType"
+            name="planId"
+            value={formData.planId}
+            onChange={handleChange}
           >
             <option value=""></option>
-            <option value="others">Plan 1</option>
-            <option value="others">Plan 2</option>
-            <option value="others">Plan 3</option>
-            <option value="others">Credit wallet</option>
+            {eligiblePlans?.map((item) => (
+              <option key={item.id} value={item.id.toString()}>
+                {item.planName}
+              </option>
+            ))}
+            {/* <option value="others">Credit wallet</option> */}
           </select>
         </div>
       </div>
@@ -1506,7 +1669,9 @@ export const HistoryTable = () => {
     dispatch(getWalletTransactions());
   }, [dispatch]);
 
-  const { walletTransactions, transaction } = useSelector((state) => state.wallet);
+  const { walletTransactions, transaction } = useSelector(
+    (state) => state.wallet
+  );
 
   useEffect(() => {
     const filteredWalletTrans = walletTransactions?.entities?.filter((item) => {
@@ -1540,11 +1705,11 @@ export const HistoryTable = () => {
     "December",
   ];
 
-  const previewTransaction = async(transId) => {
+  const previewTransaction = async (transId) => {
     dispatch(getEachWalletTransaction(transId));
     console.log(transId);
-    setShow(true)
-  }
+    setShow(true);
+  };
 
   const data = {
     columns: [
@@ -1583,7 +1748,10 @@ export const HistoryTable = () => {
       filteredTransactions?.length > 0
         ? filteredTransactions?.map((data) => ({
             id: (
-              <Link to="#" onClick={() => previewTransaction(data?.transactionId)}>
+              <Link
+                to="#"
+                onClick={() => previewTransaction(data?.transactionId)}
+              >
                 <div>{data?.transactionId}</div>
               </Link>
             ),
@@ -1599,7 +1767,10 @@ export const HistoryTable = () => {
           }))
         : walletTransactions?.entities?.map((data) => ({
             id: (
-              <Link to="#" onClick={() => previewTransaction(data?.transactionId)}>
+              <Link
+                to="#"
+                onClick={() => previewTransaction(data?.transactionId)}
+              >
                 <div>{data?.transactionId}</div>
               </Link>
             ),
@@ -1688,7 +1859,10 @@ export const HistoryTable = () => {
               setShow(false);
             }}
           >
-            <TransactionPreview handleClose={() => setShow(false)} transaction={transaction} />
+            <TransactionPreview
+              handleClose={() => setShow(false)}
+              transaction={transaction}
+            />
           </ModalComponent>
         </div>
       </HistoryTableWarapper>
@@ -1743,12 +1917,12 @@ const HistoryTableWarapper = styled.div`
 
 export const ReferalTable = () => {
   const dispatch = useDispatch();
-  const {myReferrals} = useSelector(state => state.wallet);
-  // console.log(myReferrals);
+  const { myReferrals } = useSelector((state) => state.wallet);
+  console.log(myReferrals);
 
   useEffect(() => {
     dispatch(getMyReferrals());
-  }, [dispatch])
+  }, [dispatch]);
 
   const data = {
     columns: [
@@ -2920,11 +3094,11 @@ export const paymentAtMaturity = (
 
 export const randomNumbers = (max) => {
   let random_num = "";
-  for(let i = 0; i < max; i++) {
-    random_num += JSON.stringify(Math.floor(Math.random()*10))
+  for (let i = 0; i < max; i++) {
+    random_num += JSON.stringify(Math.floor(Math.random() * 10));
   }
-  return random_num
-}
+  return random_num;
+};
 
 export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const config = {
@@ -2938,8 +3112,10 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const { loading } = useSelector((state) => state.plan);
   const { verify_paystack } = useSelector((state) => state.paystack);
 
-  const success = async() => {
-    await dispatch(verifyPaystack("PAYSTACK",transactionRef,dispatch,form, setShow));
+  const success = async () => {
+    await dispatch(
+      verifyPaystack("PAYSTACK", transactionRef, dispatch, form, setShow)
+    );
     // if(verify_paystack?.message === "Payment validated") {
     //   dispatch(createPlan(form, setShow));
     // } else {
@@ -2965,32 +3141,30 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const initializePayment = usePaystackPayment(config);
   return (
     <>
-      {
-        transactionRef !== null ? (
-          <>
-            <button
-              style={{
-                backgroundColor: "#111E6C",
-                color: "#FFFFFF",
-                width: "300px",
-              }}
-              // onClick={() => setShow(true)}
-              // onClick={handleSubmit}
-              onClick={() => {
-                initializePayment(onSuccess, onClose);
-              }}
-            >
-              {loading ? "LOADING..." : "Pay"}
-            </button>
-          </>
-        ) : (<>
-          {
-            toast.error("No transaction Reference", {
-              position: "top-right",
-            })
-          }
-        </>)
-      }
+      {transactionRef !== null ? (
+        <>
+          <button
+            style={{
+              backgroundColor: "#111E6C",
+              color: "#FFFFFF",
+              width: "300px",
+            }}
+            // onClick={() => setShow(true)}
+            // onClick={handleSubmit}
+            onClick={() => {
+              initializePayment(onSuccess, onClose);
+            }}
+          >
+            {loading ? "LOADING..." : "Pay"}
+          </button>
+        </>
+      ) : (
+        <>
+          {toast.error("No transaction Reference", {
+            position: "top-right",
+          })}
+        </>
+      )}
     </>
   );
 };

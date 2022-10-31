@@ -9,7 +9,7 @@ export const getWalletBalanceService = () => {
 
 export const getWalletTransactionsService = () => {
   const http = new HttpService();
-  const url = `auth/transactions/history`;
+  const url = `auth/transactions/history?limit=100000000`;
   return http.getData(url);
 };
 
@@ -29,4 +29,10 @@ export const getMyReferralsService = () => {
   const http = new HttpService();
   const url = `auth/referrals`;
   return http.getData(url);
+}
+
+export const postTransferToPlanService = (formData) => {
+  const http = new HttpService();
+  const url = `auth/wallets/wallet-transfer`;
+  return http.postDataWithToken(formData, url);
 }

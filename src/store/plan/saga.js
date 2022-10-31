@@ -8,10 +8,14 @@ import {
 	GET_ELIGIBLE_PLANS,
 	GET_EX_RATES,
 	GET_INVESTMENT_RATES,
+	GET_PLAN_HISTORY,
 	GET_PLANS,
     GET_SINGLE_PLAN,
+	GET_SINGLE_PLAN_HISTORY,
     GET_TENOR,
-	GET_WITHHOLDING_TAX
+	GET_WITHHOLDING_TAX,
+	PLAN_ACTION,
+	VIEW_BANK_DETAIL,
 } from "./actionTypes";
 
 import {
@@ -27,19 +31,28 @@ import {
 	getExRatesSuccess,
 	getInvestmentRatesError,
 	getInvestmentRatesSuccess,
+	getPlanHistoryError,
+	getPlanHistorySuccess,
 	getPlansError,
 	getPlansSuccess,
 	getSinglePlanError,
 	getSinglePlanSuccess,
+	getSinglePlanHistoryError,
+	getSinglePlanHistorySuccess,
     getTenorError,
     getTenorSuccess,
 	getWithholdingTaxError,
-	getWithholdingTaxSuccess
+	getWithholdingTaxSuccess,
+	planActionError,
+	planActionSuccess,
+	viewBankDetailError,
+	viewBankDetailSuccess,
 } from "./actions";
 
 import {
 	createPlanService,
 	deletePlanService,
+	getAllPlanHistoryService,
 	getContribValService,
 	getEligiblePlansService,
 	getExRatesService,
@@ -47,7 +60,10 @@ import {
 	getPlansService,
 	getSinglePlanService,
     getTenorService,
-	getWithholdingTaxService
+	getWithholdingTaxService,
+	planActionService,
+	singlePlanHistoryService,
+	viewBankDetailService,
 } from "../../services/planService";
 
 function* getContribVal() {
@@ -181,6 +197,57 @@ function* deletePlan({ payload: { id } }) {
 			});
 		}
 	}
+};
+
+function* planAction({ payload: { formData } }) {
+	try {
+		const response = yield call(planActionService, formData);
+		console.log(response.data);
+		yield put(planActionSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(planActionError(error?.response?.data));
+		const message = error?.response?.data ? error?.response?.data?.message : 
+		"Unable to Withdraw"
+		if (message) {
+			toast.error(message, {
+				position: "top-right",
+			});
+		}
+	}
+};
+
+function* getPlanHistory() {
+	try {
+		const response = yield call(getAllPlanHistoryService);
+		console.log(response.data);
+		yield put(getPlanHistorySuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getPlanHistoryError(error?.response?.data));
+	}
+};
+
+function* getSinglePlanHistory({ payload: { id } }) {
+	try {
+		const response = yield call(singlePlanHistoryService, id);
+		console.log(response.data);
+		yield put(getSinglePlanHistorySuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getSinglePlanHistoryError(error?.response?.data));
+	}
+};
+
+function* viewBankDetail({ payload: { id } }) {
+	try {
+		const response = yield call(viewBankDetailService, id);
+		console.log(response.data);
+		yield put(viewBankDetailSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(viewBankDetailError(error?.response?.data));
+	}
 }
 
 export function* watchGetContribVal() {
@@ -222,6 +289,22 @@ export function* watchDeletePlan() {
 	yield takeEvery(DELETE_PLAN, deletePlan);
 };
 
+export function* watchPlanAction() {
+	yield takeEvery(PLAN_ACTION, planAction);
+};
+
+export function* watchGetPlanHistory() {
+	yield takeEvery(GET_PLAN_HISTORY, getPlanHistory);
+};
+
+export function* watchGetSinglePlanHistory() {
+	yield takeEvery(GET_SINGLE_PLAN_HISTORY, getSinglePlanHistory);
+};
+
+export function* watchViewBankDetail() {
+	yield takeEvery(VIEW_BANK_DETAIL, viewBankDetail);
+};
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -234,6 +317,10 @@ function* PlanSaga() {
 		fork(watchGetInvestmentRates),
 		fork(watchGetEligiblePlans),
 		fork(watchDeletePlan),
+		fork(watchPlanAction),
+		fork(watchGetPlanHistory),
+		fork(watchGetSinglePlanHistory),
+		fork(watchViewBankDetail),
 	]);
 }
 

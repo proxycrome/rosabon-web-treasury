@@ -11,6 +11,9 @@ import {
   GET_WALLET_TRANSACTIONS,
   GET_WALLET_TRANSACTIONS_ERROR,
   GET_WALLET_TRANSACTIONS_SUCCESS,
+  POST_TRANSFER_TO_PLAN,
+  POST_TRANSFER_TO_PLAN_ERROR,
+  POST_TRANSFER_TO_PLAN_SUCCESS,
   REQUEST_WITHDRAWAL,
   REQUEST_WITHDRAWAL_ERROR,
   REQUEST_WITHDRAWAL_SUCCESS,
@@ -114,6 +117,27 @@ export const getMyReferralsSuccess = (data) => {
 export const getMyReferralsError = (error) => {
   return {
     type: GET_MY_REFERRALS_ERROR,
+    payload: error,
+  }
+}
+
+export const postTransferToPlan = (formData) => {
+  return {
+    type: POST_TRANSFER_TO_PLAN,
+    payload: {formData},
+  }
+}
+
+export const postTransferToPlanSuccess = (data) => {
+  return {
+    type: POST_TRANSFER_TO_PLAN_SUCCESS,
+    payload: data,
+  }
+}
+
+export const postTransferToPlanError = (error) => {
+  return {
+    type: POST_TRANSFER_TO_PLAN_ERROR,
     payload: error,
   }
 }

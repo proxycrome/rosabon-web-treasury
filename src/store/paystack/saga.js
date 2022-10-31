@@ -47,7 +47,7 @@ function* verifyPaystack({ payload: {
   try {
     const response = yield call(verifyPaymentService, paymentGateway, transactionRef);
     yield put(verifyPaystackSuccess(response.data));
-    yield put(dispatch(createPlan(form, setShow)))
+    dispatch(createPlan(form, setShow));
   } catch (error) {
     yield put(verifyPaystackError(error?.response?.data))
     toast.error("Payment not verified", {

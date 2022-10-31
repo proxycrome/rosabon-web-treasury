@@ -1,15 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { SuccessConfirm } from '../../../Accessories/BVNConfirm';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from '../../../ModalComponent';
 import { RolloverWithdrawMethod, WithdrawalSummary } from '../../Accesssories';
+import { Toaster } from 'react-hot-toast';
+import {  planAction } from "../../../../store/actions";
 
-const WithdrawalChannel = ({goBack}) => {
+const WithdrawalChannel = ({goBack, amount, type}) => {
   const [modalState, setModalState] = useState(false);
+  const [withdrawTo, setWithdrawTo] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [base64File, setBase64File] = useState({
+    corporateUserWithdrawalMandate: ""
+  });
+
+  const dispatch = useDispatch();
+  const { singlePlan, loading, plan_action, plan_action_error } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+
+  const { login } = useSelector(state => state.auth);
+  const user_role = login ? login?.role?.name : "";
+
+  useEffect(() => {
+    if(plan_action !== null && plan_action_error===null && submitted) {
+      setModalState(true)
+    }
+  },[plan_action,plan_action_error])
+
+  const submit = async() => {
+    const { corporateUserWithdrawalMandate } = base64File;
+    const formData = {
+      amount: amount,
+      completed: true,
+      corporateUserWithdrawalMandate: user_role==="COMPANY" ? corporateUserWithdrawalMandate: null,
+      plan: plan?.id,
+      planAction: "WITHDRAW",
+      withdrawTo: withdrawTo,
+      withdrawType: type
+    }
+    await dispatch(planAction(formData))
+    setSubmitted(true);
+  }
 
   return (
     <>
+    <Toaster />
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Plan</span>
@@ -23,7 +60,12 @@ const WithdrawalChannel = ({goBack}) => {
         <RightView>
           <div className="bank-details">
             <div className="bank-detail-content">
-              <RolloverWithdrawMethod />
+              <RolloverWithdrawMethod 
+                withdrawTo={withdrawTo}
+                setWithdrawTo={setWithdrawTo} 
+                base64File={base64File}
+                setBase64File={setBase64File}
+              />
             </div>
           </div>  
         </RightView>
@@ -46,9 +88,9 @@ const WithdrawalChannel = ({goBack}) => {
                   color: '#FFFFFF',
                   width: '300px',
                 }}
-                onClick={() => setModalState(true)}
+                onClick={submit}
               >
-                Submit
+                { loading ? "Loading..." : "Submit" }
               </button>
               <ModalComponent
                 show={modalState}

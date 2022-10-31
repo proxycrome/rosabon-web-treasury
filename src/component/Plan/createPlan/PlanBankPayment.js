@@ -24,14 +24,11 @@ const PlanBankPayment = ({goBack}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setForm({
-      ...form,
-      planStatus: "PENDING",
-    });
     dispatch(createDynamicAcc(form.planName))
   },[])
 
   useEffect(() => {
+    console.log("pendwork?", form)
     setForm({
       ...form,
       bankAccountInfo: {
@@ -123,7 +120,7 @@ const PlanBankPayment = ({goBack}) => {
             </WrapperFooter>
           </div>
         ) : (
-          <div className="h-100 w-100">
+          <div className="vh-100 w-100">
             <Spinner />
           </div>
         )

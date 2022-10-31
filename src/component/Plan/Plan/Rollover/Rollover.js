@@ -1,15 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
+import moment from 'moment';
 import FullRollover from './FullRollover';
 import PartRollover from './PartRollover';
+import {  
+  getSinglePlan, 
+  getWithdrawReason ,
+  getSingleProduct
+} from "../../../../store/actions";
 
 const Rollover = () => {
   const [part, setPart] = useState('');
   const [full, setFull] = useState('');
+  const [amount, setAmount] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
+  const [otherReasons, setOtherReasons] = useState("")
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  const { singlePlan } = useSelector((state) => state.plan);
+  const { withdrawReasons } = useSelector((state) => state.user_profile);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const planStatus = singlePlan?.data.statusCode
+
+  useEffect(() => {
+    dispatch(getSinglePlan(parseInt(id)));
+    dispatch(getWithdrawReason());
+  },[])
+
+  useEffect(() => {
+    dispatch(getSingleProduct(plan?.product?.id))
+  },[plan])
+
+  const { singleProduct } = useSelector(state => state.product)
+  const productTenors = singleProduct ? singleProduct?.data?.body.tenors : [];
 
   const handleClick = (e) => {
     if (e.target.value === 'part') {
@@ -19,6 +47,7 @@ const Rollover = () => {
     if (e.target.value === 'full') {
       setFull('full');
       setPart('');
+      setAmount(plan?.planSummary?.principal)
     }
   };
 
@@ -63,19 +92,23 @@ const Rollover = () => {
               <div className="plan-top h-50 p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h4>Plan 1</h4>
-                    <p className="p-0 m-0">Product 1</p>
+                    <h4>{plan.planName}</h4>
+                    <p className="p-0 m-0">{plan?.product.productName}</p>
                   </div>
-                  <h4 className="Matured">Matured</h4>
+                  <h4 className="Matured">{plan.planStatus.toLowerCase()}</h4>
                 </div>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
                     <h4>Start date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
+                    <p className="p-0 m-0">
+                      {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
+                    </p>
                   </div>
                   <div>
                     <h4>End date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
+                    <p className="p-0 m-0">
+                      {moment(plan.planSummary.endDate).format("DD/MM/YYYY")}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -89,7 +122,9 @@ const Rollover = () => {
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
                     <h4>Balance</h4>
-                    <p className="p-0 m-0">2,000,000</p>
+                    <p className="p-0 m-0">
+                      ₦{plan.planSummary.principal?.toLocaleString()}
+                    </p>
                   </div>
                   {/* <i className"fa-solid fa-ellipsis"></i> */}
                 </div>
@@ -134,6 +169,9 @@ const Rollover = () => {
                     className="form-control"
                     placeholder="₦ 2,500,000"
                     type="text"
+                    value={amount}
+                    onChange={(e)=>setAmount(parseInt(e.target.value))}
+                    disabled={full==="full"}
                   />
                 </div>
                 <label>Amount for withdrawal is ₦0.00</label>
@@ -148,9 +186,16 @@ const Rollover = () => {
                     aria-label=".form-select-md"
                     name="Tenor" 
                   >
-                    <option>6 months</option>
+                    {/* <option>6 months</option>
                     <option>9 months</option>
-                    <option>12 months</option>
+                    <option>12 months</option> */}
+                    {
+                      productTenors.map(item => (
+                        <option key={item.id} value={item.id} >
+                          {item?.tenorName}
+                        </option>
+                      ))
+                    }
                   </select>
                 </div>
               </div>

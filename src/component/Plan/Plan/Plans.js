@@ -20,15 +20,18 @@ import {
   getSinglePlan ,
   getProductCategories,
   deletePlan,
+  planAction
 } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
 import { UserBankDetails } from "../Accesssories";
 import { Toaster } from "react-hot-toast";
+import { Notice } from "../../Accessories/BVNConfirm";
 import Spinner from "../../common/loading";
 
 export const Plans = () => {
   const [more, setMore] = useState(false);
   const [show, setShow] = useState(false);
+  const [debitPopup, setDebitPopup] = useState(false);
   const [bankDetail, setBankDetail] = useState(false);
   const [filter, setFilter] = useState({
     category: 0,
@@ -97,11 +100,11 @@ export const Plans = () => {
   const handleBankModal = async (id) => {
     await dispatch(getSinglePlan(id))
     setBankDetail(true);
-  }
+  };
 
   const removePlan = async (id) => {
     await dispatch(deletePlan(id));
-    dispatch(getPlans())
+    await dispatch(getPlans());
   };
 
   return (
@@ -123,6 +126,16 @@ export const Plans = () => {
       >
         <UserBankDetails 
           type="account-details"
+        />
+      </ModalComponent>
+      <ModalComponent
+        show={debitPopup}
+        size={'md'}
+        handleClose={() => setDebitPopup(false)}
+      >
+        <Notice 
+          handleClose={() => setDebitPopup(false)}
+          payType="withdraw-paystack"
         />
       </ModalComponent>
       <div className="row">
@@ -238,6 +251,7 @@ export const Plans = () => {
                           status={capitalise(item.planStatus)}
                           handleBankModal={handleBankModal} 
                           removePlan={removePlan}
+                          setDebit={setDebitPopup}
                         />
                       </div>
                     </div>
@@ -370,9 +384,34 @@ const Wrapper = styled.div`
   }
 `;
 
-export const DropDown = ({id, status, handleBankModal, removePlan}) => {
+export const DropDown = ({
+  id, 
+  status, 
+  handleBankModal, 
+  removePlan, 
+  setDebit
+}) => {
   const [menu, setMenu] = useState(false);
   const [checkRollover, setCheckRollover] = useState(false);
+  const dispatch = useDispatch();
+  const { plans } = useSelector((state) => state.plan);
+  const { products  } = useSelector((state) => state.product);
+
+  const userPlan = plans?.data.body ? plans?.data.body?.find(item=>item.id===id) : {};
+  const product = products?.data.body ? products?.data.body?.find(
+    item=>item.id===userPlan?.product?.id
+  ) : {}
+
+  const autoRollover = () => {
+    const data = {
+      completed: true,
+      plan: id,
+      planAction: "AUTO_ROLLOVER",
+    }
+    dispatch(planAction(data));
+    dispatch(getSinglePlan(id));
+  }
+
 
   const toggle = () => {
     setMenu(!menu);
@@ -397,8 +436,22 @@ export const DropDown = ({id, status, handleBankModal, removePlan}) => {
       <DropdownMenu end className="mt-1">
         {status === "Active" ? (
           <>
-            <DropdownItem tag={Link} to={`/plan-topup/${id}`}>Topup</DropdownItem>
-            <DropdownItem tag={Link} to={`/transfer/${id}`}>Transfer</DropdownItem>
+            <DropdownItem 
+              tag={Link} 
+              to={`/plan-topup/${id}`}
+              disabled={!(
+                product?.properties?.allowsTopUp && userPlan?.interestReceiptOption==="MATURITY"
+              )}
+            >
+              Topup
+            </DropdownItem>
+            <DropdownItem 
+              tag={Link} 
+              to={`/transfer/${id}`}
+              disabled={!(product?.properties?.allowsTransfer)}
+            >
+              Transfer
+            </DropdownItem>
             <DropdownItem tag={Link} to={`/withdrawal/${id}`}>Withdraw</DropdownItem>
             <DropdownItem>
               <div className="d-flex align-items-center justify-content-between" style={{width: "150px"}}>
@@ -406,8 +459,8 @@ export const DropDown = ({id, status, handleBankModal, removePlan}) => {
                 <Switch
                   className="mr-2 mt-1"
                   onColor="#111E6C"
-                  onChange={() => setCheckRollover(!checkRollover)}
-                  checked={checkRollover}
+                  onChange={autoRollover}
+                  checked={userPlan?.autoRenew}
                   uncheckedIcon={false}
                   width={35}
                   height={18}
@@ -419,13 +472,19 @@ export const DropDown = ({id, status, handleBankModal, removePlan}) => {
         ) : status === "Pending" ? (
           <>
             <DropdownItem onClick={()=>handleBankModal(id)}  >View account details</DropdownItem>
-            <DropdownItem>Pay with card</DropdownItem>
+            <DropdownItem onClick={()=>setDebit(true)} >Pay with card</DropdownItem>
             <DropdownItem onClick={() =>removePlan(id)} >Remove</DropdownItem>
           </>
         ) : status === "Matured" ? (
           <>
             <DropdownItem tag={Link} to="/rollover">Rollover</DropdownItem>
-            <DropdownItem tag={Link} to="/transfer">Transfer</DropdownItem>
+            <DropdownItem 
+              tag={Link} 
+              to={`/transfer/${id}`}
+              disabled={!(product?.properties?.allowsTransfer)}
+            >
+              Transfer
+            </DropdownItem>
             <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
             <DropdownItem tag={Link} to="/history">History</DropdownItem>
           </>

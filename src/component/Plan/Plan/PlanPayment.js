@@ -9,13 +9,24 @@ import MOneyTransfer from '../../../asset/money-transfer.png';
 // import { UserBankDetails } from '../Accesssories';
 import PlanBankTopup from './PlanBankTopup';
 import PlanCardTopup from './PlanCardTopup';
-import {  getSinglePlan } from "../../../store/actions";
+import {  
+  getSinglePlan, 
+  createDynamicAcc, 
+  planAction,
+  regTransaction
+} from "../../../store/actions";
+import { ProceedPayCard } from '../../Accessories/BVNConfirm';
+import ModalComponent from '../../ModalComponent';
+import { SuccessConfirm } from '../../Accessories/BVNConfirm';
 
 
 const PlanPayment = () => {
   const [card, setCard] = useState('');
   const [bank, setBank] = useState('');
+  const [amount, setAmount] = useState();
+  const [debitPopup, setDebitPopup] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -26,7 +37,21 @@ const PlanPayment = () => {
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
+    if(plan?.id===parseInt(id)) {
+      dispatch(createDynamicAcc(plan.planName))
+    }
   },[])
+
+  useEffect(() => {
+    const formData = {
+      amount: amount,
+      purposeOfPayment: "PLAN_CREATION"
+    }
+    if(card && isClicked) {
+      dispatch(regTransaction(formData))
+      setDebitPopup(true);
+    }
+  }, [isClicked])
 
   const handleClick = (e) => {
     if (e.target.value === 'card') {
@@ -48,17 +73,29 @@ const PlanPayment = () => {
         }}
       />
     );
+  };
+
+  const paymentSuccess = async () => {
+    const formData = {
+      amount: amount,
+      completed: true,
+      paymentType: "DEBIT_CARD",
+      plan: parseInt(id),
+      planToReceive: parseInt(id),
+      planAction: "TOP_UP",
+    }
+    await dispatch(planAction(formData))
+    await dispatch(getSinglePlan(parseInt(id)));
+    setSuccess(true);
   }
 
-  if (card && isClicked) {
-    return (
-      <PlanCardTopup
-        goBack={() => {
-          setCard('');
-          setIsClicked(false);
-        }}
-      />
-    );
+  const onSuccess = () => {
+    setDebitPopup(false);
+    paymentSuccess();
+  }
+
+  const onClose = () => {
+    console.log("Paystack closed")
   }
 
   const back = () => {
@@ -108,7 +145,9 @@ const PlanPayment = () => {
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
                           <h4>Balance</h4>
-                          <p className="p-0 m-0">2,000,000</p>
+                          <p className="p-0 m-0">
+                            {plan?.planSummary?.principal?.toLocaleString()} 
+                          </p>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}
                       </div>
@@ -124,7 +163,11 @@ const PlanPayment = () => {
                         <input
                           className="form-control"
                           placeholder="N  0.00"
-                          type="text"
+                          type="number"
+                          name="amount"
+                          value={amount}
+                          required
+                          onChange={(e)=>setAmount(parseInt(e.target.value))}
                         />
                       </div>
                     </div>
@@ -195,6 +238,29 @@ const PlanPayment = () => {
                 </div>
               </div>
             </WrapperFooter>
+            <ModalComponent
+              show={debitPopup}
+              size={'md'}
+              handleClose={() => setDebitPopup(false)}
+            >
+              <ProceedPayCard 
+                amount={amount}
+                payType="withdraw-paystack"
+                onSuccess={onSuccess}
+                onClose={onClose}
+                text="Proceed to pay with paystack"
+              />
+            </ModalComponent>
+            <ModalComponent
+              show={success}
+              size={'md'}
+              handleClose={() => setSuccess(false)}
+            >
+              <SuccessConfirm 
+                cardTopup="paid"
+                handleClose={() => setSuccess(false)}
+              />
+            </ModalComponent>
           </>
         )
       }

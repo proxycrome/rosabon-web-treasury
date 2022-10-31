@@ -5,6 +5,7 @@ import {
   GET_MY_REFERRALS,
   GET_WALLET_BALANCE,
   GET_WALLET_TRANSACTIONS,
+  POST_TRANSFER_TO_PLAN,
   REQUEST_WITHDRAWAL,
 } from "./actionTypes";
 
@@ -17,6 +18,8 @@ import {
   getWalletBalanceSuccess,
   getWalletTransactionsError,
   getWalletTransactionsSuccess,
+  postTransferToPlanError,
+  postTransferToPlanSuccess,
   requestWithdrawalError,
   requestWithdrawalSuccess,
 } from "./actions";
@@ -26,6 +29,7 @@ import {
   getMyReferralsService,
   getWalletBalanceService,
   getWalletTransactionsService,
+  postTransferToPlanService,
   requestWithdrawalService,
 } from "../../services/walletService";
 import toast from "react-hot-toast";
@@ -73,7 +77,7 @@ function* requestWithdrawal({ payload: { formData } }) {
   }
 }
 
-function* getEachWalletTransaction({payload: {transId}}) {
+function* getEachWalletTransaction({ payload: { transId } }) {
   try {
     const response = yield call(getEachWalletTransactionService, transId);
     console.log(response.data);
@@ -92,6 +96,27 @@ function* getMyReferrals() {
   } catch (error) {
     console.log(error?.response?.data);
     yield put(getMyReferralsError(error?.response?.data));
+  }
+}
+
+function* postTransferToPlan({ payload: { formData } }) {
+  try {
+    const response = yield call(postTransferToPlanService, formData);
+    console.log(response.data);
+    yield put(postTransferToPlanSuccess(response.data));
+    if (response) {
+      setTimeout(() => {
+        toast.success(response.data.message);
+      }, 1000);
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(postTransferToPlanError(error?.response?.data));
+    if (error?.response?.data?.message) {
+      setTimeout(() => {
+        toast.error(error?.response?.data?.message);
+      }, 1000);
+    }
   }
 }
 
@@ -115,6 +140,10 @@ export function* watchGetMyReferrals() {
   yield takeEvery(GET_MY_REFERRALS, getMyReferrals);
 }
 
+export function* watchPostTransferToPlan() {
+  yield takeEvery(POST_TRANSFER_TO_PLAN, postTransferToPlan);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
@@ -122,6 +151,7 @@ function* WalletSaga() {
     fork(watchRequestWithdrawal),
     fork(watchGetEachWalletTransaction),
     fork(watchGetMyReferrals),
+    fork(watchPostTransferToPlan),
   ]);
 }
 

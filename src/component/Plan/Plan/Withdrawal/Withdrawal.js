@@ -7,11 +7,12 @@ import moment from 'moment';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import FullWithdrawal from './FullWithdrawal';
 import PartWithdrawal from './PartWithdrawal';
-import {  getSinglePlan } from "../../../../store/actions";
+import {  getSinglePlan, getWithdrawReason } from "../../../../store/actions";
 
 const Withdrawal = () => {
   const [part, setPart] = useState('');
   const [full, setFull] = useState('');
+  const [amount, setAmount] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
   const [reason, setReason] = useState("")
   const [otherReasons, setOtherReasons] = useState("")
@@ -20,11 +21,13 @@ const Withdrawal = () => {
   const { id } = useParams();
 
   const { singlePlan } = useSelector((state) => state.plan);
+  const { withdrawReasons } = useSelector((state) => state.user_profile);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
   const planStatus = singlePlan?.data.statusCode
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
+    dispatch(getWithdrawReason());
   },[])
 
   const handleClick = (e) => {
@@ -35,12 +38,15 @@ const Withdrawal = () => {
     if (e.target.value === 'full') {
       setFull('full');
       setPart('');
+      setAmount(plan?.planSummary?.principal)
     }
   };
 
   if (full && isClicked) {
     return (
       <FullWithdrawal
+        amount={amount}
+        reason={reason}
         goBack={() => {
           setFull('');
           setIsClicked(false);
@@ -52,6 +58,8 @@ const Withdrawal = () => {
   if (part && isClicked) {
     return (
       <PartWithdrawal
+        amount={amount}
+        reason={reason}
         goBack={() => {
           setPart('');
           setIsClicked(false);
@@ -112,7 +120,9 @@ const Withdrawal = () => {
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
                           <h4>Balance</h4>
-                          <p className="p-0 m-0">2,000,000</p>
+                          <p className="p-0 m-0">
+                            ₦{plan.planSummary.principal?.toLocaleString()}
+                          </p>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}
                       </div>
@@ -156,10 +166,15 @@ const Withdrawal = () => {
                         <input
                           className="form-control"
                           placeholder="₦ 0.00"
-                          type="text"
+                          type="number"
+                          value={amount}
+                          onChange={(e)=>setAmount(parseInt(e.target.value))}
+                          disabled={full==="full"}
                         />
                       </div>
-                      <label>Balance is ₦2,500,000.00</label>
+                      <label>
+                        Balance is ₦{(plan?.planSummary?.principal - amount).toLocaleString()} 
+                      </label>
                     </div>
                   </div>
                   <div className="row my-4">
@@ -173,6 +188,13 @@ const Withdrawal = () => {
                           onChange={(e) => setReason(e.target.value)} 
                         >
                           <option>Select Reason for Withdrawal</option>
+                          {
+                            withdrawReasons?.data?.body?.map(item => (
+                              <option key={item.id} value={item.reason} >
+                                {item.reason}
+                              </option>
+                            ))
+                          }
                           <option>Others</option>
                         </select>
                       </div>
