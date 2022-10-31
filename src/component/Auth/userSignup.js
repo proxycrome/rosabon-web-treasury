@@ -235,7 +235,7 @@ function UserSignup() {
                             aria-label=".form-select-lg"
                             onChange={handleValueChange}
                             name="source"
-                            value={sourcer || ""}
+                            value={values.source}
                           >
                             <option value=""></option>
                             <option value="ROSABON_SALES">
@@ -283,7 +283,7 @@ function UserSignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy || referralCode}
+                              value={values.refferedBy}
                             />
                           )}
                         </div>

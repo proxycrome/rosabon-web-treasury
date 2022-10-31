@@ -67,3 +67,4 @@ export const CLEAR_MESSAGES = "CLEAR_MESSAGES"
 
 export const CLEAR_USERS = 'CLEAR_USERS';
 export const REMOVE_FOOTER = 'REMOVE_FOOTER';
+export const CLEAR_BVN = "CLEAR_BVN";

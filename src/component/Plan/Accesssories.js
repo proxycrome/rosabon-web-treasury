@@ -1925,8 +1925,6 @@ export const ReferalTable = () => {
   const { myReferrals, loading } = useSelector((state) => state.wallet);
   console.log(myReferrals);
 
-  const referrals = myReferrals?.filter((item) => item.dateOfReg).slice(0, 6);
-
   const handleClick = (id) => {
     dispatch(pokeUser(id));
   };
@@ -1964,7 +1962,7 @@ export const ReferalTable = () => {
         width: 100,
       },
     ],
-    rows: referrals?.map((data) => ({
+    rows: myReferrals?.entities?.map((data) => ({
       sn: `${data.id}`,
       date: `${data.dateOfReg}`,
       name: `${data.customerName}`,
@@ -1979,33 +1977,6 @@ export const ReferalTable = () => {
         </button>
       ),
     })),
-
-    // [
-    //   {
-
-    //   },
-    //   {
-    //     sn: 2,
-    //     date: "Apr 28 2022",
-    //     name: "Jane Doe",
-    //     status: "Active",
-    //     action: <button className="active">Poke User</button>,
-    //   },
-    //   {
-    //     sn: 3,
-    //     date: "Apr 28 2022",
-    //     name: "Jane Doe",
-    //     status: "Active",
-    //     action: <button className="active">Poke User</button>,
-    //   },
-    //   {
-    //     sn: 4,
-    //     date: "Apr 28 2022",
-    //     name: "Jane Doe",
-    //     status: "Active",
-    //     action: <button className="in-active">Poke User</button>,
-    //   },
-    // ],
   };
 
   return (
@@ -2036,7 +2007,7 @@ export const ReferalTable = () => {
             <div className="">
               <p className="p-0 m-0">Total Referrals</p>
               <div className="box-image">
-                <h3>{referrals?.length}</h3>
+                <h3>{myReferrals?.entities?.length}</h3>
               </div>
             </div>
           </div>

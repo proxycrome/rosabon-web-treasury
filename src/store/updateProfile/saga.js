@@ -133,8 +133,8 @@ function* updateDirectorDetails({ payload: { formData } }) {
   } catch (error) {
     console.log(error?.response?.data);
     yield put(updateDirectorDetailsError(error?.response?.data));
-    if (error?.response) {
-      toast.error(error?.response?.data);
+    if (error?.response?.data?.message) {
+      toast.error(error?.response?.data?.message);
     }
   }
 }

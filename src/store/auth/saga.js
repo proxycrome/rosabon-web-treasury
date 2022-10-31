@@ -86,7 +86,7 @@ function* registerUser({ payload: { formData, navigate } }) {
 		console.log(error);
 		console.log(error?.response);
 		yield put(registerUserError(error?.response?.data?.message));
-		if (error?.response) {
+		if (error?.response?.data?.message) {
 			toast.error(error?.response?.data?.message, {
 				position: "top-right",
 			});

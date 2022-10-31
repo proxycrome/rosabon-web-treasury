@@ -43,8 +43,13 @@ const MoreDetails = () => {
     photoEncodedString: "",
   });
 
-  const photoFileInputRef = useRef();
-  const frontFileInputRef = useRef();
+  console.log(base64File);
+
+  const photoFileInputRef = useRef(null);
+  const frontFileInputRef = useRef(null);
+  const imageInputRef = useRef(null);
+  const idCardInputRef = useRef(null);
+  const currIdCardInputRef = useRef(null);
 
   const {
     showBvnModal,
@@ -82,6 +87,8 @@ const MoreDetails = () => {
     }
   };
 
+  console.log(col2);
+
   const toggleEdit = () => {
     setShowEdit(!showEdit);
   };
@@ -107,6 +114,26 @@ const MoreDetails = () => {
     const { name, value } = e.target;
     setformData({
       ...formData,
+      [name]: value,
+    });
+  };
+
+  const [editFormData, setEditFormData] = useState({
+    [`firstName${col2}`]: "",
+    [`middleName${col2}`]: "",
+    [`lastName${col2}`]: "",
+    [`address${col2}`]: "",
+    [`email${col2}`]: "",
+    [`phone${col2}`]: "",
+    [`bvn${col2}`]: "",
+    [`idType${col2}`]: "",
+    [`idNumber${col2}`]: "",
+  });
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData({
+      ...editFormData,
       [name]: value,
     });
   };
@@ -138,9 +165,10 @@ const MoreDetails = () => {
     ) {
       encodedFileBase64(files[0]);
     }
+    e.target.value = null;
   };
 
-  const updateDirector = (values) => {
+  const updateMoreDirector = (values) => {
     const newDirector = {
       id: new Date().getTime().toString(),
       ...values,
@@ -191,7 +219,32 @@ const MoreDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (directors?.length > 0) {
+      const director = directors?.find((item) => item.id === col2);
+      const data = {
+        id: col2,
+        firstName: editFormData[`firstName${col2}`] || director?.firstName,
+        lastName: editFormData[`lastName${col2}`] || director?.lastName,
+        middleName: editFormData[`middleName${col2}`] || director?.middleName,
+        phone: editFormData[`phone${col2}`] || director?.phone,
+        email: editFormData[`email${col2}`] || director?.email,
+        address: editFormData[`address${col2}`] || director?.address,
+        bvn: editFormData[`bvn${col2}`] || director?.bvn,
+        idType: editFormData[`idType${col2}`] || director?.idType,
+        idNumber: editFormData[`idNumber${col2}`] || director?.idNumber,
+        idDocumentImage: {
+          encodedUpload: base64File[`frontEncodedString${col2}`],
+        },
+        passportImage: {
+          encodedUpload: base64File[`photoEncodedString${col2}`],
+        },
+      };
+      console.log(data);
+      dispatch(updateDirectorDetails(data));
+    }
+
+    if (directorField?.length > 0) {
       let formArr = [];
       formArr.push(...directorField);
 
@@ -266,13 +319,34 @@ const MoreDetails = () => {
     reference.current.click();
   };
 
-  const handleVerifyBVN = (e, id) => {
+  const handleVerifyBVN = (e, id, dirId, edit) => {
     e.preventDefault();
+
+    const director = directors?.find((item) => item.id === dirId);
+
+    if (directors.length > 0 && edit) {
+      const objData = {
+        firstName:
+          editFormData[`firstName${dirId}`]?.toUpperCase() ||
+          director?.firstName?.toUpperCase(),
+        lastName:
+          editFormData[`lastName${dirId}`]?.toUpperCase() ||
+          director?.lastName?.toUpperCase(),
+        id: editFormData[`bvn${dirId}`] || director?.bvn,
+        isSubjectConsent: true,
+        phoneNumber: editFormData[`phone${dirId}`] || director?.phone,
+      };
+
+      console.log(objData);
+      dispatch(verifyBvn(objData, id));
+      return;
+    }
+
     const { firstName, lastName, bvn, phone } = formData;
 
     const objData = {
-      firstName: firstName,
-      lastName: lastName,
+      firstName: firstName?.toUpperCase(),
+      lastName: lastName?.toUpperCase(),
       id: bvn,
       isSubjectConsent: true,
       phoneNumber: phone,
@@ -349,408 +423,466 @@ const MoreDetails = () => {
   return (
     <div>
       <Toaster />
-      <WrapperBody>
-        <div className="container-fluid">
-          {loading ? (
-            <div className="vh-100 w-100">
-              <Spinner />
+      <form autoComplete="off" onSubmit={handleSubmit}>
+        <WrapperBody>
+          <div className="container-fluid">
+            <div className="mt-2 d-flex justify-content-end">
+              {showEdit ? (
+                <button
+                  type="button"
+                  className="btn_bg_blue"
+                  onClick={handleSendOtp}
+                >
+                  Edit
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="grey-button"
+                  onClick={() => {
+                    toggleEdit();
+                    if (directorField?.length <= 0 && directors?.length <= 0) {
+                      reset();
+                    }
+                  }}
+                >
+                  Cancel
+                </button>
+              )}
+              <ModalComponent
+                show={showEmailOtpModal}
+                size={"md"}
+                handleClose={handleOTPModalClose}
+              >
+                <OTPVerify
+                  show={showEmailOtpModal}
+                  handleClose={handleOTPModalClose}
+                  emailOtp={true}
+                  updateOtp={(otp) => createOtp(otp)}
+                  otpData={otp?.data}
+                  company="company"
+                />
+              </ModalComponent>
             </div>
-          ) : directors?.length > 0 ? (
-            <>
-              {directors?.map((item, index) => (
-                <div key={item.id}>
-                  <div className="row mt-4">
-                    <div className="d-flex justify-content-between mt-2">
-                      <h4>
-                        Director {index + 1}{" "}
-                        <span className="pl-5" onClick={() => t_col2(item.id)}>
-                          {col2 ? (
-                            <i className="fa-solid fa-angle-down arrow"></i>
-                          ) : (
-                            <i className="fa-solid fa-angle-up arrow"></i>
-                          )}
-                        </span>
-                      </h4>
-                      <div>
-                        <button
-                          type="button"
-                          className="red-button"
-                          onClick={() => setShowModal(true)}
-                        >
-                          Delete Director
-                        </button>
+            {loading ? (
+              <div className="vh-100 w-100">
+                <Spinner />
+              </div>
+            ) : directors?.length > 0 ? (
+              <>
+                {directors?.map((item, index) => (
+                  <div key={item.id}>
+                    <div className="row mt-4">
+                      <div className="d-flex justify-content-between mt-2">
+                        <h4>
+                          Director {index + 1}{" "}
+                          <span
+                            className="pl-5"
+                            onClick={() => t_col2(item.id)}
+                          >
+                            {col2 === item.id ? (
+                              <i className="fa-solid fa-angle-up arrow"></i>
+                            ) : (
+                              <i className="fa-solid fa-angle-down arrow"></i>
+                            )}
+                          </span>
+                        </h4>
+                        <div className="d-flex flex-column align-items-end">
+                          <button
+                            type="button"
+                            className="red-button"
+                            onClick={() => setShowModal(true)}
+                          >
+                            Delete Director
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <ModalComponent
-                      show={showModal}
-                      size={"md"}
-                      handleClose={() => setShowModal(false)}
-                    >
-                      <div>
-                        <Wrapper>
-                          <div className="d-flex justify-content-center align-items-center">
-                            <WrappCongrate>
-                              <div className="container">
-                                <div className="row">
-                                  <div className="col text-center">
-                                    <div>
-                                      <img
-                                        className="congrate_confet"
-                                        src={Canceled}
-                                        alt="Canceled"
-                                      />
-                                    </div>
-                                    <p className="pt-5">
-                                      This action will delete the selected{" "}
-                                      <br />
-                                      director's details
-                                    </p>
-                                    <div className="pt-5 ">
-                                      <button
-                                        type="button"
-                                        className="btn grey_btn"
-                                        onClick={() => setShowModal(false)}
-                                      >
-                                        Cancel
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className="btn blue_btn"
-                                        onClick={() =>
-                                          handleDeleteDirector(item.id)
-                                        }
-                                      >
-                                        Okay
-                                      </button>
+                      <ModalComponent
+                        show={showModal}
+                        size={"md"}
+                        handleClose={() => setShowModal(false)}
+                      >
+                        <div>
+                          <Wrapper>
+                            <div className="d-flex justify-content-center align-items-center">
+                              <WrappCongrate>
+                                <div className="container">
+                                  <div className="row">
+                                    <div className="col text-center">
+                                      <div>
+                                        <img
+                                          className="congrate_confet"
+                                          src={Canceled}
+                                          alt="Canceled"
+                                        />
+                                      </div>
+                                      <p className="pt-5">
+                                        This action will delete the selected{" "}
+                                        <br />
+                                        director's details
+                                      </p>
+                                      <div className="pt-5 ">
+                                        <button
+                                          type="button"
+                                          className="btn grey_btn"
+                                          onClick={() => setShowModal(false)}
+                                        >
+                                          Cancel
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="btn blue_btn"
+                                          onClick={() =>
+                                            handleDeleteDirector(item.id)
+                                          }
+                                        >
+                                          Okay
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </WrappCongrate>
-                          </div>
-                        </Wrapper>
-                      </div>
-                    </ModalComponent>
-                  </div>
+                              </WrappCongrate>
+                            </div>
+                          </Wrapper>
+                        </div>
+                      </ModalComponent>
+                    </div>
+                    {item.id === col2 ? (
+                      <div className="details-content">
+                        {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
+                        <Collapse isOpen={col2 === item.id}>
+                          <div className="image-holder">
+                            <div className="row">
+                              <div className="d-flex align-items-center justify-content-between">
+                                <div className="d-flex align-items-center justify-content-center">
+                                  {base64File[`photoEncodedString${col2}`] &&
+                                  !showEdit ? (
+                                    <img
+                                      className="image-frame"
+                                      style={{
+                                        borderRadius: "50%",
+                                        border: "2px solid #FFFFFF",
+                                      }}
+                                      src={
+                                        base64File[`photoEncodedString${col2}`]
+                                          ? `data:image/jpeg;base64,${
+                                              base64File[
+                                                `photoEncodedString${col2}`
+                                              ]
+                                            }`
+                                          : User
+                                      }
+                                      alt="User"
+                                      width="125"
+                                      height="125"
+                                    />
+                                  ) : (
+                                    <img
+                                      className="image-frame"
+                                      style={{
+                                        borderRadius: "50%",
+                                        border: "2px solid #FFFFFF",
+                                      }}
+                                      src={
+                                        item?.passportImage?.imageUrl
+                                          ? item?.passportImage?.imageUrl
+                                          : User
+                                      }
+                                      alt="User"
+                                      width="125"
+                                      height="125"
+                                    />
+                                  )}
 
-                  <div className="details-content">
-                    <form autoComplete="off" onSubmit={handleSubmit}>
-                      <Collapse isOpen={col2 === item.id}>
-                        <div className="image-holder">
-                          <div className="row">
-                            <div className="d-flex align-items-center justify-content-between">
-                              <div className="d-flex align-items-center justify-content-center">
-                                <img
-                                  className="image-frame"
-                                  style={{
-                                    borderRadius: "50%",
-                                    border: "2px solid #FFFFFF",
-                                  }}
-                                  src={
-                                    item?.passportImage?.imageUrl
-                                      ? item?.passportImage?.imageUrl
-                                      : User
-                                  }
-                                  alt="User"
-                                  width="125"
-                                  height="125"
-                                />
-                                {base64File.photoEncodedString ? (
-                                  <img
-                                    className="image-fluid align-self-start"
-                                    src={Check}
-                                    alt="check"
-                                    width="15"
-                                  />
-                                ) : null}
+                                  {base64File[`photoEncodedString${col2}`] ? (
+                                    <img
+                                      className="image-fluid align-self-start"
+                                      src={Check}
+                                      alt="check"
+                                      width="15"
+                                    />
+                                  ) : null}
+                                  <div className="ml-2">
+                                    <h5 className="">
+                                      Upload Your Passport Photo
+                                    </h5>
+                                    <p className="">jpg, 2 MB</p>
+                                  </div>
+                                </div>
                                 <div>
-                                  <h5 className="">
-                                    Upload Your Passport Photo
-                                  </h5>
-                                  <p className="">jpg, 2 MB</p>
+                                  <input
+                                    type="file"
+                                    className="file"
+                                    accept="image/jpeg"
+                                    ref={imageInputRef}
+                                    onChange={(e) =>
+                                      handleFileChange(
+                                        e,
+                                        `photoEncodedString${col2}`
+                                      )
+                                    }
+                                    disabled={showEdit}
+                                  />
+                                  {!showEdit ? (
+                                    <button
+                                      type="button"
+                                      className="btn_bg_blue"
+                                      onClick={(e) =>
+                                        handleFileSelect(e, imageInputRef)
+                                      }
+                                    >
+                                      Choose file
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      className="normal-btn grey-button"
+                                      disabled={showEdit}
+                                    >
+                                      Choose file
+                                    </button>
+                                  )}
                                 </div>
                               </div>
-                              <div>
+                            </div>
+                          </div>
+
+                          <div className="row">
+                            <div className="col-md-4 mb-4">
+                              <label>First Name</label>
+                              <div className="input-group">
                                 <input
-                                  type="file"
-                                  className="file"
-                                  accept="image/jpeg"
-                                  ref={photoFileInputRef}
-                                  onChange={(e) =>
-                                    handleFileChange(e, "photoEncodedString")
-                                  }
+                                  type="text"
+                                  className="form-control"
+                                  placeholder={item?.firstName || "First Name"}
+                                  name={`firstName${col2}`}
+                                  value={editFormData[`firstName${col2}`]}
+                                  onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
-                                
-                                  <button
-                                    type="button"
-                                    className="grey-button"
-                                    disabled
-                                  >
-                                    Choose File
-                                  </button>
-                                
-                              </div>
-                              {/* <button>Choose file</button> */}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="row">
-                          <div className="col-md-4 mb-4">
-                            <label>First Name</label>
-                            <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="First Name"
-                                name="firstName"
-                                value={item?.firstName}
-                                disabled
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-4 mb-4">
-                            <label>Middle Name</label>
-                            <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Middle Name"
-                                name="middleName"
-                                value={item?.middleName}
-                                disabled
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-4">
-                            <label>Last Name</label>
-                            <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Last Name"
-                                name="lastName"
-                                value={item?.lastName}
-                                disabled
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col mb-4">
-                            <label>Address</label>
-                            <div className="input-group ">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Address"
-                                name="address"
-                                value={item?.address}
-                                disabled
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-md-8 mb-4">
-                            <label>Email Address</label>
-                            <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Email Address"
-                                name="email"
-                                value={item?.email}
-                                disabled
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-4 mb-4">
-                            <label>Phone Number</label>
-                            <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Phone Number"
-                                id="phone"
-                                name="phone"
-                                value={item?.phone}
-                                disabled
-                                readOnly
-                              />
-                              <UncontrolledTooltip
-                                placement="bottom"
-                                target="phone"
-                              >
-                                Please provide the Phone Number tied to the BVN
-                              </UncontrolledTooltip>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-lg-8">
-                            <div className="row d-flex">
-                              <div className="col-8 mb-4">
-                                <label>Bank verification number (BVN)</label>
-                                <div className="input-group">
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Bank verification number (BVN)"
-                                    name="bvn"
-                                    value={item?.bvn}
-                                    disabled
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-                              {formData.firstName &&
-                              formData.middleName &&
-                              formData.lastName &&
-                              formData.address &&
-                              formData.phone &&
-                              formData.email &&
-                              formData.bvn &&
-                              false ? (
-                                <div className="col-4 mt-3">
-                                  <button
-                                    type="button"
-                                    onClick={(e) => handleVerifyBVN(e, 1)}
-                                    className="profile_vify_btn"
-                                  >
-                                    Verify
-                                  </button>
-                                </div>
-                              ) : (
-                                <div className="col-4 mt-3">
-                                  <button
-                                    type="button"
-                                    disabled
-                                    className="grey_vify_btn"
-                                  >
-                                    Verify
-                                  </button>
-                                </div>
-                              )}
-
-                              <div>
-                                <div
-                                  style={{
-                                    position: "absolute",
-                                    top: "100px",
-                                    right: "300px",
-                                  }}
-                                >
-                                  <ModalComponent
-                                    show={showBvnModal}
-                                    size={"md"}
-                                    handleClose={handleBVNModalClose}
-                                  >
-                                    <BVNConfirm
-                                      show={showBvnModal}
-                                      handleClose={handleBVNModalClose}
-                                      name={`${bvnMessage?.data?.firstName} ${bvnMessage?.data?.lastName}`}
-                                      bvn={formData.bvn}
-                                      director="director"
-                                      nameMatch={bvnMessage?.isNameMatched}
-                                    />
-                                  </ModalComponent>
-                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-md-6 mb-3">
-                            <label>ID Type</label>
-                            <div className="input-group">
-                              <select
-                                className="form-select form-select-md"
-                                aria-label=".form-select-md"
-                                name="idType"
-                                value={item?.idType}
-                                disabled
-                                readOnly
-                              >
-                                <option value="">Select ID Type...</option>
-                                <option value="NATIONAL_IDENTITY_CARD">
-                                  National ID card
-                                </option>
-                                <option value="DRIVER_LICENSE">
-                                  Driver's License{" "}
-                                </option>
-                                <option value="INTERNATIONAL_PASSPORT">
-                                  International Passport
-                                </option>
-                                <option value="VOTER_CARD">
-                                  Voter's Card{" "}
-                                </option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="col-md-6 mb-4">
-                            <label>ID Number</label>
-                            <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="ID Number"
-                                name="idNumber"
-                                value={item?.idNumber}
-                                disabled
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        {item?.idDocumentImage?.imageUrl ? (
-                          <div className="row py-4 mb-5">
-                            <div className="d-flex align-items-center justify-content-between">
-                              <div className="d-flex align-items-center justify-content-center">
-                                <img
-                                  className="file-image image-fluid"
-                                  src={FileDoc}
-                                  alt="FileDoc"
+                            <div className="col-md-4 mb-4">
+                              <label>Middle Name</label>
+                              <div className="input-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder={
+                                    item?.middleName || "Middle Name"
+                                  }
+                                  name={`middleName${col2}`}
+                                  value={editFormData[`middleName${col2}`]}
+                                  onChange={handleEditChange}
+                                  disabled={showEdit}
                                 />
-                                <div
-                                  className="d-flex"
-                                  style={{ columnGap: "10px" }}
-                                >
-                                  <h5 className="image-fluid mr-3">ID Card</h5>
-                                  <img
-                                    // className="position-absolute"
-                                    src={Check}
-                                    alt="check"
-                                    width="15"
-                                    height="15"
-                                  />
-                                </div>
                               </div>
-                              <div className=" style-attachment">
-                                <a
-                                  href={item?.idDocumentImage?.imageUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  <button
-                                    type="button"
-                                    className="normal-btn grey-button"
-                                  >
-                                    View
-                                  </button>
-                                </a>
+                            </div>
+                            <div className="col-md-4">
+                              <label>Last Name</label>
+                              <div className="input-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder={item?.lastName || "Last Name"}
+                                  name={`lastName${col2}`}
+                                  value={editFormData[`lastName${col2}`]}
+                                  onChange={handleEditChange}
+                                  disabled={showEdit}
+                                />
                               </div>
                             </div>
                           </div>
-                        ) : (
-                          <div className="row pt-4 mb-5">
-                            {!base64File.frontEncodedString ? (
+                          <div className="row">
+                            <div className="col mb-4">
+                              <label>Address</label>
+                              <div className="input-group ">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder={item?.address || "Address"}
+                                  name={`address${col2}`}
+                                  value={editFormData[`address${col2}`]}
+                                  onChange={handleEditChange}
+                                  disabled={showEdit}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-md-8 mb-4">
+                              <label>Email Address</label>
+                              <div className="input-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder={item?.email || "Email Address"}
+                                  name={`email${col2}`}
+                                  value={editFormData[`email${col2}`]}
+                                  onChange={handleEditChange}
+                                  disabled={showEdit}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-md-4 mb-4">
+                              <label>Phone Number</label>
+                              <div className="input-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder={item?.phone || "Phone Number"}
+                                  id="phone"
+                                  name={`phone${col2}`}
+                                  value={editFormData[`phone${col2}`]}
+                                  onChange={handleEditChange}
+                                  disabled={showEdit}
+                                />
+                                <UncontrolledTooltip
+                                  placement="bottom"
+                                  target="phone"
+                                >
+                                  Please provide the Phone Number tied to the
+                                  BVN
+                                </UncontrolledTooltip>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-lg-9 mb-4">
+                              <div className="row d-flex">
+                                <div className="col-8">
+                                  <label>Bank verification number (BVN)</label>
+                                  <div className="input-group">
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder={
+                                        item?.bvn ||
+                                        "Bank verification number (BVN)"
+                                      }
+                                      name={`bvn${col2}`}
+                                      value={editFormData[`bvn${col2}`]}
+                                      onChange={handleEditChange}
+                                      disabled={showEdit}
+                                    />
+                                  </div>
+                                  {bvnError && bvnError.message && (
+                                    <small className="text-danger">
+                                      {bvnError?.message}
+                                    </small>
+                                  )}
+                                </div>
+                                {(editFormData[`firstName${col2}`] ||
+                                  item?.firstName) &&
+                                (editFormData[`lastName${col2}`] ||
+                                  item?.lastName) &&
+                                (editFormData[`address${col2}`] ||
+                                  item?.address) &&
+                                (editFormData[`phone${col2}`] || item?.phone) &&
+                                (editFormData[`email${col2}`] || item?.email) &&
+                                (editFormData[`bvn${col2}`] || item?.bvn) &&
+                                !bvnMessage?.isNameMatched &&
+                                !showEdit ? (
+                                  <div className="col-4 mt-3">
+                                    <button
+                                      type="button"
+                                      onClick={(e) =>
+                                        handleVerifyBVN(e, 1, col2, true)
+                                      }
+                                      className="profile_vify_btn"
+                                    >
+                                      Verify
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="col-4 mt-3">
+                                    <button
+                                      type="button"
+                                      disabled
+                                      className="grey_vify_btn"
+                                    >
+                                      Verify
+                                    </button>
+                                  </div>
+                                )}
+
+                                <div>
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      top: "100px",
+                                      right: "300px",
+                                    }}
+                                  >
+                                    <ModalComponent
+                                      show={showBvnModal}
+                                      size={"md"}
+                                      handleClose={handleBVNModalClose}
+                                    >
+                                      <BVNConfirm
+                                        show={showBvnModal}
+                                        handleClose={handleBVNModalClose}
+                                        firstName={bvnMessage?.data?.firstName}
+                                        lastName={bvnMessage?.data?.lastName}
+                                        bvn={editFormData[`bvn${col2}`]}
+                                        director="director"
+                                        nameMatch={bvnMessage?.isNameMatched}
+                                      />
+                                    </ModalComponent>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-md-6 mb-3">
+                              <label>ID Type</label>
+                              <div className="input-group">
+                                <select
+                                  className="form-select form-select-md"
+                                  aria-label=".form-select-md"
+                                  name={`idType${col2}`}
+                                  value={
+                                    editFormData[`idType${col2}`] ||
+                                    item?.idType
+                                  }
+                                  onChange={handleEditChange}
+                                  disabled={showEdit}
+                                >
+                                  <option value="">Select ID Type...</option>
+                                  <option value="NATIONAL_IDENTITY_CARD">
+                                    National ID card
+                                  </option>
+                                  <option value="DRIVER_LICENSE">
+                                    Driver's License{" "}
+                                  </option>
+                                  <option value="INTERNATIONAL_PASSPORT">
+                                    International Passport
+                                  </option>
+                                  <option value="VOTER_CARD">
+                                    Voter's Card{" "}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="col-md-6 mb-4">
+                              <label>ID Number</label>
+                              <div className="input-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder={item?.idNumber || "ID Number"}
+                                  name={`idNumber${col2}`}
+                                  value={editFormData[`idNumber${col2}`]}
+                                  onChange={handleEditChange}
+                                  disabled={showEdit}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          {item?.idDocumentImage?.imageUrl && showEdit ? (
+                            <div className="row py-4 mb-5">
                               <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center justify-content-center">
                                   <img
@@ -758,153 +890,208 @@ const MoreDetails = () => {
                                     src={FileDoc}
                                     alt="FileDoc"
                                   />
-                                  <div>
-                                    <h5 className="">Upload ID Card</h5>
-                                    <h5 className="">jpg, pdf, 2 MB</h5>
+                                  <div
+                                    className="d-flex"
+                                    style={{ columnGap: "10px" }}
+                                  >
+                                    <h5 className="image-fluid mr-3">
+                                      ID Card
+                                    </h5>
+                                    <img
+                                      // className="position-absolute"
+                                      src={Check}
+                                      alt="check"
+                                      width="15"
+                                      height="15"
+                                    />
                                   </div>
                                 </div>
                                 <div className=" style-attachment">
-                                  <input
-                                    type="file"
-                                    className="file"
-                                    ref={frontFileInputRef}
-                                    onChange={(e) =>
-                                      handleFileChange(e, "frontEncodedString")
-                                    }
-                                  />
-                                  {!showEdit ? (
-                                    <button
-                                      type="button"
-                                      className="btn_bg_blue"
-                                      onClick={(e) =>
-                                        handleFileSelect(e, frontFileInputRef)
-                                      }
-                                    >
-                                      Choose file
-                                    </button>
-                                  ) : (
+                                  <a
+                                    href={item?.idDocumentImage?.imageUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
                                     <button
                                       type="button"
                                       className="normal-btn grey-button"
-                                      disabled={showEdit}
                                     >
-                                      Choose file
+                                      View
                                     </button>
-                                  )}
+                                  </a>
                                 </div>
                               </div>
-                            ) : (
-                              <div className="d-flex align-items-center justify-content-between w-100">
-                                <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                                  <img
-                                    className="file-image image-fluid"
-                                    src={FileDoc}
-                                    alt="FileDoc"
-                                  />
-                                  <div className="progress-bar-style">
-                                    <h5 className="position-relative">
-                                      ID Card{" "}
-                                      <span
-                                        style={{
-                                          cursor: "pointer",
-                                          display: "flex",
-                                          justifyContent: "flex-end",
-                                        }}
-                                        onClick={() =>
-                                          setBase64File({
-                                            ...base64File,
-                                            frontEncodedString: "",
-                                          })
-                                        }
-                                      >
-                                        <i className="fa-solid fa-xmark"></i>
-                                      </span>
-                                    </h5>
-                                    <div
-                                      className="progress"
-                                      style={{ height: "3px" }}
-                                    >
-                                      <div
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        style={{ width: "75%" }}
-                                        aria-valuenow="25"
-                                        aria-valuemin="0"
-                                        aria-valuemax="100"
-                                      ></div>
+                            </div>
+                          ) : (
+                            <div className="row pt-4 mb-5">
+                              {!base64File[`frontEncodedString${col2}`] ? (
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <div className="d-flex align-items-center justify-content-center">
+                                    <img
+                                      className="file-image image-fluid"
+                                      src={FileDoc}
+                                      alt="FileDoc"
+                                    />
+                                    <div>
+                                      <h5 className="">Upload ID Card</h5>
+                                      <h5 className="">jpg, pdf, 2 MB</h5>
                                     </div>
                                   </div>
-                                </div>
-                                <div className=" style-attachment">
-                                  <input
-                                    type="file"
-                                    className="file"
-                                    ref={frontFileInputRef}
-                                    onChange={(e) =>
-                                      handleFileChange(e, "frontEncodedString")
-                                    }
-                                  />
-                                  {!showEdit ? (
-                                    <button
-                                      type="button"
-                                      className="btn_bg_blue"
-                                      onClick={(e) =>
-                                        handleFileSelect(e, frontFileInputRef)
+                                  <div className=" style-attachment">
+                                    <input
+                                      type="file"
+                                      className="file"
+                                      ref={currIdCardInputRef}
+                                      onChange={(e) =>
+                                        handleFileChange(
+                                          e,
+                                          `frontEncodedString${col2}`
+                                        )
                                       }
-                                    >
-                                      Choose file
-                                    </button>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      className="normal-btn grey-button"
-                                      disabled={showEdit}
-                                    >
-                                      Choose file
-                                    </button>
-                                  )}
+                                    />
+                                    {!showEdit ? (
+                                      <button
+                                        type="button"
+                                        className="btn_bg_blue"
+                                        onClick={(e) =>
+                                          handleFileSelect(
+                                            e,
+                                            currIdCardInputRef
+                                          )
+                                        }
+                                      >
+                                        Choose file
+                                      </button>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        className="normal-btn grey-button"
+                                        disabled={showEdit}
+                                      >
+                                        Choose file
+                                      </button>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </Collapse>
-                    </form>
+                              ) : (
+                                <div className="d-flex align-items-center justify-content-between w-100">
+                                  <div className="progress-bar-style d-flex align-items-center justify-content-start">
+                                    <img
+                                      className="file-image image-fluid"
+                                      src={FileDoc}
+                                      alt="FileDoc"
+                                    />
+                                    <div className="progress-bar-style">
+                                      <h5 className="position-relative">
+                                        ID Card{" "}
+                                        <span
+                                          style={{
+                                            cursor: "pointer",
+                                            display: "flex",
+                                            justifyContent: "flex-end",
+                                          }}
+                                          onClick={() =>
+                                            setBase64File({
+                                              ...base64File,
+                                              [`frontEncodedString${col2}`]: "",
+                                            })
+                                          }
+                                        >
+                                          <i className="fa-solid fa-xmark"></i>
+                                        </span>
+                                      </h5>
+                                      <div
+                                        className="progress"
+                                        style={{ height: "3px" }}
+                                      >
+                                        <div
+                                          className="progress-bar"
+                                          role="progressbar"
+                                          style={{ width: "75%" }}
+                                          aria-valuenow="25"
+                                          aria-valuemin="0"
+                                          aria-valuemax="100"
+                                        ></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className=" style-attachment">
+                                    <input
+                                      type="file"
+                                      className="file"
+                                      ref={currIdCardInputRef}
+                                      onChange={(e) =>
+                                        handleFileChange(
+                                          e,
+                                          `frontEncodedString${col2}`
+                                        )
+                                      }
+                                    />
+                                    {!showEdit ? (
+                                      <button
+                                        type="button"
+                                        className="btn_bg_blue"
+                                        onClick={(e) =>
+                                          handleFileSelect(
+                                            e,
+                                            currIdCardInputRef
+                                          )
+                                        }
+                                      >
+                                        Choose file
+                                      </button>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        className="normal-btn grey-button"
+                                        disabled={showEdit}
+                                      >
+                                        Choose file
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </Collapse>
+                        {/* </form> */}
+                      </div>
+                    ) : null}
+                    {/* <hr /> */}
                   </div>
-                  {/* <hr /> */}
-                </div>
-              ))}
-              {directorField?.length > 0 &&
-                directorField?.map((data) => (
-                  <div key={data.id}>
-                    <hr />
-                    <div className="row mt-5">
-                      <div className="d-flex justify-content-between mt-5">
-                        <h4>
-                          Director {data.no}{" "}
-                          <span
-                            className="pl-5"
-                            onClick={() => t_col1(data.id)}
-                          >
-                            {col1 ? (
-                              <i className="fa-solid fa-angle-down arrow"></i>
-                            ) : (
-                              <i className="fa-solid fa-angle-up arrow"></i>
-                            )}
-                          </span>
-                        </h4>
-                        <div>
-                          <button
-                            type="button"
-                            className="red-button"
-                            onClick={() => deleteDirectorDetails(data.id)}
-                          >
-                            Delete Director Details
-                          </button>
+                ))}
+                {directorField?.length > 0 &&
+                  directorField?.map((data) => (
+                   <div key={data.id}>
+                     <hr />
+                     <div className="row mt-5">
+                       <div className="d-flex justify-content-between mt-5">
+                         <h4>
+                           Director {data.no}{" "}
+                           <span
+                              className="pl-5"
+                              onClick={() => t_col1(data.id)}
+                            >
+                              {col1 === data.id ? (
+                                <i className="fa-solid fa-angle-down arrow"></i>
+                              ) : (
+                                <i className="fa-solid fa-angle-up arrow"></i>
+                              )}
+                            </span>
+                          </h4>
+                          <div>
+                            <button
+                              type="button"
+                              className="red-button"
+                              onClick={() => deleteDirectorDetails(data.id)}
+                            >
+                              Delete Director Details
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <form autoComplete="off" onSubmit={handleSubmit}>
+                      {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
                       <Collapse isOpen={col1 === data.id}>
                         <div className="image-holder">
                           <div className="row">
@@ -1063,7 +1250,7 @@ const MoreDetails = () => {
                           </div>
                         </div>
                         <div className="row">
-                          <div className="col-lg-8">
+                          <div className="col-lg-9">
                             <div className="row">
                               <div className="col-8 mb-4">
                                 <label>Bank verification number (BVN)</label>
@@ -1080,13 +1267,13 @@ const MoreDetails = () => {
                                 </div>
                               </div>
                               {data.firstName &&
-                              data.middleName &&
                               data.lastName &&
                               data.address &&
                               data.phone &&
                               data.email &&
                               data.bvn &&
-                              !showEdit ? (
+                              !showEdit &&
+                              !bvnMessage?.isNameMatched ? (
                                 <div className="col-4">
                                   <button
                                     type="button"
@@ -1124,9 +1311,11 @@ const MoreDetails = () => {
                                     <BVNConfirm
                                       show={showBvnModal}
                                       handleClose={handleBVNModalClose}
-                                      name={`${bvnMessage?.data?.firstName} ${bvnMessage?.data?.lastName}`}
-                                      bvn={formData.bvn}
+                                      firstName={bvnMessage?.data?.firstName}
+                                      lastName={bvnMessage?.data?.lastName}
+                                      bvn={data.bvn}
                                       director="director"
+                                      nameMatch={bvnMessage?.isNameMatched}
                                     />
                                   </ModalComponent>
                                 </div>
@@ -1282,89 +1471,70 @@ const MoreDetails = () => {
                           )}
                         </div>
                       </Collapse>
-                    </form>
-                  </div>
-                ))}
-              <Collapse isOpen={addDirectors}>
-                <AddDirectors
-                  updateDirector={updateDirector}
-                  countNumbers={countNumbers}
-                  number={
-                    directorField[directorField.length - 1]?.no ||
-                    directors?.length
-                  }
-                  removeForm={setAddDirectors}
-                />
-              </Collapse>
-              <div className="row">
-                <div
-                  className="d-flex align-items-center mt-5"
-                  onClick={() => setAddDirectors(!addDirectors)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <img src={plus} alt="plus" className="mx-2" />
-                  <span style={{ color: "#111E6C", marginRight: "30px" }}>
-                    {" "}
-                    Add More Directors
-                  </span>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div>
-              <div className="row">
-                <div className="d-flex justify-content-between mt-2">
-                  <h4>
-                    Director 1{" "}
-                    <span className="pl-5" onClick={() => setShowOne(!showOne)}>
-                      {showOne ? (
-                        <i className="fa-solid fa-angle-down arrow"></i>
-                      ) : (
-                        <i className="fa-solid fa-angle-up arrow"></i>
-                      )}
-                    </span>
-                  </h4>
-                  <div>
-                    {showEdit ? (
-                      <button
-                        type="button"
-                        className="btn_bg_blue"
-                        onClick={handleSendOtp}
-                      >
-                        Edit
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="grey-button"
-                        onClick={() => {
-                          toggleEdit();
-                          reset();
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <ModalComponent
-                  show={showEmailOtpModal}
-                  size={"md"}
-                  handleClose={handleOTPModalClose}
-                >
-                  <OTPVerify
-                    show={showEmailOtpModal}
-                    handleClose={handleOTPModalClose}
-                    emailOtp={true}
-                    updateOtp={(otp) => createOtp(otp)}
-                    otpData={otp?.data}
-                    company="company"
+                      {/* </form> */}
+                    </div>
+                  ))}
+                <Collapse isOpen={addDirectors}>
+                  <AddDirectors
+                    updateDirector={(data) => updateMoreDirector(data)}
+                    countNumbers={countNumbers}
+                    number={
+                      directorField[directorField.length - 1]?.no ||
+                      directors?.length
+                    }
+                    removeForm={setAddDirectors}
                   />
-                </ModalComponent>
-              </div>
+                </Collapse>
+                <div className="row">
+                  <div
+                    className="d-flex align-items-center mt-5"
+                    onClick={() => setAddDirectors(!addDirectors)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <img src={plus} alt="plus" className="mx-2" />
+                    <span style={{ color: "#111E6C", marginRight: "30px" }}>
+                      {" "}
+                      Add More Directors
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div>
+                <div className="row">
+                  <div className="d-flex justify-content-between mt-2">
+                    <h4>
+                      Director 1{" "}
+                      <span
+                        className="pl-5"
+                        onClick={() => setShowOne(!showOne)}
+                      >
+                        {showOne ? (
+                          <i className="fa-solid fa-angle-down arrow"></i>
+                        ) : (
+                          <i className="fa-solid fa-angle-up arrow"></i>
+                        )}
+                      </span>
+                    </h4>
+                  </div>
+                  <ModalComponent
+                    show={showEmailOtpModal}
+                    size={"md"}
+                    handleClose={handleOTPModalClose}
+                  >
+                    <OTPVerify
+                      show={showEmailOtpModal}
+                      handleClose={handleOTPModalClose}
+                      emailOtp={true}
+                      updateOtp={(otp) => createOtp(otp)}
+                      otpData={otp?.data}
+                      company="company"
+                    />
+                  </ModalComponent>
+                </div>
 
-              <div className="details-content">
-                <form autoComplete="off" onSubmit={handleSubmit}>
+                <div className="details-content">
+                  {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
                   <Collapse isOpen={showOne}>
                     <div className="image-holder">
                       <div className="row">
@@ -1554,7 +1724,7 @@ const MoreDetails = () => {
                       </div>
                     </div>
                     <div className="row">
-                      <div className="col-lg-8">
+                      <div className="col-lg-9">
                         <div className="row d-flex">
                           <div className="col-8 mb-4">
                             <label>Bank verification number (BVN)</label>
@@ -1579,13 +1749,13 @@ const MoreDetails = () => {
                             )}
                           </div>
                           {formData.firstName &&
-                          formData.middleName &&
                           formData.lastName &&
                           formData.address &&
                           formData.phone &&
                           formData.email &&
                           formData.bvn &&
-                          !showEdit ? (
+                          !showEdit &&
+                          !bvnMessage?.isNameMatched ? (
                             <div className="col-4 mt-3">
                               <button
                                 type="button"
@@ -1623,9 +1793,11 @@ const MoreDetails = () => {
                                 <BVNConfirm
                                   show={showBvnModal}
                                   handleClose={handleBVNModalClose}
-                                  name={`${bvnMessage?.data?.firstName} ${bvnMessage?.data?.lastName}`}
+                                  firstName={bvnMessage?.data?.firstName}
+                                  lastName={bvnMessage?.data?.lastName}
                                   bvn={formData.bvn}
                                   director="director"
+                                  nameMatch={bvnMessage?.isNameMatched}
                                 />
                               </ModalComponent>
                             </div>
@@ -1705,10 +1877,10 @@ const MoreDetails = () => {
                           </div>
                           <div className=" style-attachment">
                             {/* <a
-							href={companyDocs?.contactPersonIdImage?.imageUrl}
-							target="_blank"
-							rel="noreferrer"
-						> */}
+                                  href={companyDocs?.contactPersonIdImage?.imageUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                > */}
                             <button
                               type="button"
                               className="normal-btn grey-button"
@@ -1840,38 +2012,38 @@ const MoreDetails = () => {
                       </div>
                     )}
                   </Collapse>
-                </form>
-                {directorField?.length > 0 &&
-                  directorField?.map((data) => (
-                    <div key={data.id}>
-                      <hr />
-                      <div className="row mt-5">
-                        <div className="d-flex justify-content-between mt-5">
-                          <h4>
-                            Director {data.no}{" "}
-                            <span
-                              className="pl-5"
-                              onClick={() => t_col1(data.id)}
-                            >
-                              {col1 ? (
-                                <i className="fa-solid fa-angle-down arrow"></i>
-                              ) : (
-                                <i className="fa-solid fa-angle-up arrow"></i>
-                              )}
-                            </span>
-                          </h4>
-                          <div>
-                            <button
-                              type="button"
-                              className="red-button"
-                              onClick={() => deleteDirectorDetails(data.id)}
-                            >
-                              Delete Director Details
-                            </button>
+                  {/* </form> */}
+                  {directorField?.length > 0 &&
+                    directorField?.map((data) => (
+                      <div key={data.id}>
+                        <hr />
+                        <div className="row mt-5">
+                          <div className="d-flex justify-content-between mt-5">
+                            <h4>
+                              Director {data.no}{" "}
+                              <span
+                                className="pl-5"
+                                onClick={() => t_col1(data.id)}
+                              >
+                                {col1 ? (
+                                  <i className="fa-solid fa-angle-down arrow"></i>
+                                ) : (
+                                  <i className="fa-solid fa-angle-up arrow"></i>
+                                )}
+                              </span>
+                            </h4>
+                            <div>
+                              <button
+                                type="button"
+                                className="red-button"
+                                onClick={() => deleteDirectorDetails(data.id)}
+                              >
+                                Delete Director Details
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <form autoComplete="off" onSubmit={handleSubmit}>
+                        {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
                         <Collapse isOpen={col1 === data.id}>
                           <div className="image-holder">
                             <div className="row">
@@ -2031,7 +2203,7 @@ const MoreDetails = () => {
                             </div>
                           </div>
                           <div className="row">
-                            <div className="col-lg-8">
+                            <div className="col-lg-9">
                               <div className="row">
                                 <div className="col-8 mb-4">
                                   <label>Bank verification number (BVN)</label>
@@ -2048,13 +2220,13 @@ const MoreDetails = () => {
                                   </div>
                                 </div>
                                 {data.firstName &&
-                                data.middleName &&
                                 data.lastName &&
                                 data.address &&
                                 data.phone &&
                                 data.email &&
                                 data.bvn &&
-                                !showEdit ? (
+                                !showEdit &&
+                                !bvnMessage?.isNameMatched ? (
                                   <div className="col-4">
                                     <button
                                       type="button"
@@ -2092,9 +2264,11 @@ const MoreDetails = () => {
                                       <BVNConfirm
                                         show={showBvnModal}
                                         handleClose={handleBVNModalClose}
-                                        name={`${bvnMessage?.data?.firstName} ${bvnMessage?.data?.lastName}`}
+                                        firstName={bvnMessage?.data?.firstName}
+                                        lastName={bvnMessage?.data?.lastName}
                                         bvn={formData.bvn}
                                         director="director"
+                                        nameMatch={bvnMessage?.isNameMatched}
                                       />
                                     </ModalComponent>
                                   </div>
@@ -2170,10 +2344,10 @@ const MoreDetails = () => {
                                 </div>
                                 <div className=" style-attachment">
                                   {/* <a
-										href={companyDocs?.contactPersonIdImage?.imageUrl}
-										target="_blank"
-										rel="noreferrer"
-									> */}
+                                        href={companyDocs?.contactPersonIdImage?.imageUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      > */}
                                   <button
                                     type="button"
                                     className="normal-btn grey-button"
@@ -2301,46 +2475,47 @@ const MoreDetails = () => {
                             </div>
                           )}
                         </Collapse>
-                      </form>
+                        {/* </form> */}
+                      </div>
+                    ))}
+                  <Collapse isOpen={addDirectors}>
+                    <AddDirectors
+                      updateDirector={(data) => updateMoreDirector(data)}
+                      countNumbers={countNumbers}
+                      number={directorField[directorField.length - 1]?.no || 1}
+                      removeForm={setAddDirectors}
+                    />
+                  </Collapse>
+                  <div className="row">
+                    <div
+                      className="d-flex align-items-center mt-5"
+                      onClick={() => setAddDirectors(!addDirectors)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <img src={plus} alt="plus" className="mx-2" />
+                      <span style={{ color: "#111E6C", marginRight: "30px" }}>
+                        {" "}
+                        Add More Directors
+                      </span>
                     </div>
-                  ))}
-                <Collapse isOpen={addDirectors}>
-                  <AddDirectors
-                    updateDirector={updateDirector}
-                    countNumbers={countNumbers}
-                    number={directorField[directorField.length - 1]?.no || 1}
-                    removeForm={setAddDirectors}
-                  />
-                </Collapse>
-                <div className="row">
-                  <div
-                    className="d-flex align-items-center mt-5"
-                    onClick={() => setAddDirectors(!addDirectors)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <img src={plus} alt="plus" className="mx-2" />
-                    <span style={{ color: "#111E6C", marginRight: "30px" }}>
-                      {" "}
-                      Add More Directors
-                    </span>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      </WrapperBody>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-end footer-content">
-            <div>
-              <button type="button" className="blue-btn" onClick={handleSubmit}>
-                Save
-              </button>
+            )}
+          </div>
+        </WrapperBody>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-end footer-content">
+              <div>
+                <button type="submit" className="blue-btn">
+                  Save
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </div>
   );
 };
