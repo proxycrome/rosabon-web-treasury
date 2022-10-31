@@ -7,6 +7,7 @@ import {
 	GET_REPLIES,
 	GET_SINGLE_TICKET,
 	GET_TICKETS,
+	GET_TICKET_CATEGORIES,
 	POST_FEEDBACK,
 	POST_REPLY,
 } from "./actionTypes";
@@ -22,6 +23,8 @@ import {
 	getSingleTicketSuccess,
 	getTicketsError,
 	getTicketsSuccess,
+	getTicketCategoriesSuccess,
+	getTicketCategoriesError,
 	postFeedbackError,
 	postFeedbackSuccess,
 	postReplyError,
@@ -34,6 +37,7 @@ import {
 	getRepliesService,
 	getSingleTicketService,
 	getTicketsService,
+	getTicketCategoriesService,
 	postFeedbackService,
 	postReplyService,
 } from "../../services/feedbackService";
@@ -62,7 +66,7 @@ function* postFeedback({ payload: { formData, setShow } }) {
 			});
 		}
 	}
-}
+};
 
 function* getTickets() {
 	try {
@@ -140,6 +144,17 @@ function* getReplies({ payload: { id } }) {
 		console.log(error?.response?.data);
 		yield put(getRepliesError(error?.response?.data));
 	}
+};
+
+function* getTicketCategories() {
+	try {
+		const response = yield call(getTicketCategoriesService);
+		console.log(response.data);
+		yield put(getTicketCategoriesSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(getTicketCategoriesError(error?.response?.data));
+	}
 }
 
 export function* watchPostFeedback() {
@@ -164,11 +179,15 @@ export function* watchGetSingleTicket() {
 
 export function* watchPostReply() {
 	yield takeEvery(POST_REPLY, postReply);
-}
+};
 
 export function* watchGetReplies() {
 	yield takeEvery(GET_REPLIES, getReplies);
-}
+};
+
+export function* watchGetTicketCategories()  {
+	yield takeEvery(GET_TICKET_CATEGORIES, getTicketCategories);
+};
 
 function* FeedbackSaga() {
 	yield all([
@@ -179,6 +198,7 @@ function* FeedbackSaga() {
 		fork(watchGetSingleTicket),
 		fork(watchPostReply),
 		fork(watchGetReplies),
+		fork(watchGetTicketCategories)
 	]);
 }
 

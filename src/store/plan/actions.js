@@ -17,6 +17,9 @@ import {
     GET_INVESTMENT_RATES,
     GET_INVESTMENT_RATES_ERROR,
     GET_INVESTMENT_RATES_SUCCESS,
+    GET_PENAL_CHARGE,
+    GET_PENAL_CHARGE_ERROR,
+    GET_PENAL_CHARGE_SUCCESS,
     GET_PLAN_HISTORY,
     GET_PLAN_HISTORY_ERROR,
     GET_PLAN_HISTORY_SUCCESS,
@@ -327,5 +330,25 @@ export const viewBankDetailError = (error) => {
     return {
         type: VIEW_BANK_DETAIL_ERROR,
         payload: error,
+    }
+};
+
+export const getPenalCharge = () => {
+    return {
+        type: GET_PENAL_CHARGE
+    }
+};
+
+export const getPenalChargeSuccess = (data) => {
+    return {
+        type: GET_PENAL_CHARGE_SUCCESS,
+        payload: data
+    }
+};
+
+export const getPenalChargeError = (error) => {
+    return {
+        type: GET_PENAL_CHARGE_ERROR,
+        payload: error
     }
 };

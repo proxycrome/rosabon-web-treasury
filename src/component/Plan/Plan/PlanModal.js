@@ -14,6 +14,10 @@ const PlanModal = ({ handleClose }) => {
   const { currencies  } = useSelector((state) => state.currencies);
   const currencies_list = currencies?.data.body ? currencies?.data.body: []
   const current_currency = currencies_list.find(item=>item.id===plan?.currency?.id)?.name
+  const { products  } = useSelector((state) => state.product);
+  const planProduct = products ? products?.data?.body?.find(item => item.id === plan?.product?.id) 
+  : {};
+  console.log("planProd", planProduct?.properties?.hasTargetAmount)
 
   useEffect(() => {
     dispatch(getProducts());
@@ -68,7 +72,11 @@ const PlanModal = ({ handleClose }) => {
               <div>
                 <p className='p-light' >Target</p>
                 <p className='p-dark flex' >
-                  {getCurrIcon(current_currency)}{plan.targetAmount} 
+                  {getCurrIcon(current_currency)}
+                  { 
+                    planProduct?.properties?.hasTargetAmount ? 
+                    plan.targetAmount : plan.amountToBePlaced
+                  } 
                 </p>
               </div>
               <div className='right' >

@@ -29,6 +29,7 @@ import UserWallet from "./component/Plan/wallet/UserWallet";
 import Feedback from "./component/Plan/feedback/Feedback";
 import AdminMessage from "./component/Plan/feedback/AdminMessage";
 import Help from "./component/Plan/help/Help";
+import PayWithCard from "./component/Plan/Plan/PayWithCard";
 import {
 	HistoryTable,
 	ReferalTable,
@@ -138,6 +139,16 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
+				path="/pay-with-card/:id"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<PayWithCard />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
 				path="/withdrawal/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
@@ -148,7 +159,7 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
-				path="/history"
+				path="/history/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>

@@ -5,7 +5,7 @@ import img1 from "../../../asset/checkboard.png";
 import { useSelector } from 'react-redux';
 
 const EmptyPlan = () => {
-  const { fullName } = useSelector((state) => state.auth?.login)
+  const { fullName } = useSelector((state) => state.auth?.login);
   return (
     <Wrapper>
       <div className='row justify-content-center' >
