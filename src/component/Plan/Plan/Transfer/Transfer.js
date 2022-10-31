@@ -114,8 +114,12 @@ const Transfer = () => {
                           {
                             userPlans.filter(
                               item => item.id !== plan.id && item.planStatus === "ACTIVE"
-                              ).map(item => (
-                              <option key={item.id} value={JSON.stringify(item)} >{item.planName}</option>
+                              ).map(item => (item?.allowsLiquidation && 
+                                item?.interestReceiptOption === "MATURITY") 
+                              && (
+                              <option key={item.id} value={JSON.stringify(item)} >
+                                {item.planName}
+                              </option>
                             ))
                           }
                         </select>
