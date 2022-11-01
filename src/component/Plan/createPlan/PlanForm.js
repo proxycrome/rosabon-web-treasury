@@ -136,7 +136,7 @@ const PlanForm = () => {
     })
   },[isClicked])
 
-  // function to get the auto computed contribution value
+  // function to compute target amount and computed value
   const contribValue = () => {
     const selectedTenor = product.tenors?.filter(item => item.id === parseInt(formData.tenor))[0]
     if(product?.properties?.hasTargetAmount) {
@@ -317,6 +317,7 @@ const PlanForm = () => {
     formData.amount
   ])
 
+  // Update interest rate
   useEffect(() => {
     setFormData({
       ...formData,
@@ -332,6 +333,7 @@ const PlanForm = () => {
     formData.directDebit
   ])
 
+  // Update number of tickets based on target amount or amount to be placed value
   const updateNumOfTickets = (value) => {
     let ticketNo;
     if (product?.properties?.allowsMonthlyDraw) {
@@ -514,6 +516,7 @@ const PlanForm = () => {
     }
   }
 
+  // validate plan form
   const handleValidate = () => {
     setValidate(true);
   };
@@ -585,20 +588,6 @@ const PlanForm = () => {
                 />
                 <div>
                   <div>
-                    {/* <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{" "}
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      {" "}
-                      printing and typesetting industry.
-                    </p>
-                    <p className="p-0 m-0 pb-2">
-                      Lorem Ipsum is simply dummy text of the{" "}
-                    </p> */}
-                    {/* <p className="p-0 m-0 pb-2">
-                      {" "}
-                      {product.productDescription}
-                    </p> */}
                     {
                       product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
                         <p key={id} className="p-0 m-0 pb-2" >{item} </p>

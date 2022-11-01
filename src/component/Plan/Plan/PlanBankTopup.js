@@ -39,15 +39,6 @@ const PlanBankTopup = ({ goBack }) => {
       planToReceive: parseInt(id),
     }
     await dispatch(planAction(planForm))
-    if(!loading) {
-      if(plan_action_error !== null) {
-        toast.error(plan_action_error,{position:'top-right'})
-        navigate("/plan-list")
-      } else if(plan_action?.statusCode==="CREATED") {
-        toast.success("Top-up saved",{position:'top-right'})
-        navigate("/plan-list")
-      }
-    }
   }
   
   return (
