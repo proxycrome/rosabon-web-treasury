@@ -182,7 +182,7 @@ const PersonalKYC = () => {
                 <div>
                   <div>
                     <div className="d-flex justify-content-between align-items-center">
-                      <h3>Hello {user_details.individualUser.firstName},</h3>
+                      <h3>Hello {user_details?.individualUser?.firstName},</h3>
                     </div>
 
                     <p>

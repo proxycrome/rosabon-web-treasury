@@ -38,6 +38,8 @@ import {
   getMyReferrals,
   pokeUser,
   getAuthUsers,
+  getMyReferralActivities,
+  redeemReferralBonus,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -386,14 +388,6 @@ export const UserBankDetails = ({ type = null }) => {
   const expire_date = moment(add_hours).format("DD/MM/YYYY");
 
   const account = type === null ? dynamic_account : bank_detail;
-
-  let text = `Account Name: ${account?.accountName},
-  Account Number: ${account?.accountNumber},
-  Bank: Providus Bank`
-
-  const copied = () => {
-    toast.success("Account Details Copied", {position: "top-right"})
-  };
 
   let text = `Account Name: ${account?.accountName},
   Account Number: ${account?.accountNumber},
@@ -2138,6 +2132,19 @@ const ReferalTableWarapper = styled.div`
 `;
 
 export const ReferralBonus = () => {
+  const dispatch = useDispatch();
+  const { refActivities, refRedeemMsg } = useSelector(state => state.wallet)
+  console.log(refActivities);
+  console.log(refRedeemMsg);
+
+  const handleRedeemClick = () => {
+    dispatch(redeemReferralBonus())
+  }
+
+
+  useEffect(() => {
+    dispatch(getMyReferralActivities());
+  }, [dispatch])
   const data = {
     columns: [
       {
@@ -2206,7 +2213,7 @@ export const ReferralBonus = () => {
                 <h4 className="py-4">₦ 0.00</h4>
               </div>
               <div>
-                <button>Redeem</button>
+                <button className="btn btn-primary" onClick={handleRedeemClick}>Redeem</button>
               </div>
             </div>
             <div className="d-flex align-items-content justify-content-center">

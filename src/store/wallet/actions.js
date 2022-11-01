@@ -5,6 +5,9 @@ import {
   GET_MY_REFERRALS,
   GET_MY_REFERRALS_ERROR,
   GET_MY_REFERRALS_SUCCESS,
+  GET_MY_REFERRAL_ACTIVITIES,
+  GET_MY_REFERRAL_ACTIVITIES_ERROR,
+  GET_MY_REFERRAL_ACTIVITIES_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -17,6 +20,9 @@ import {
   POST_TRANSFER_TO_PLAN,
   POST_TRANSFER_TO_PLAN_ERROR,
   POST_TRANSFER_TO_PLAN_SUCCESS,
+  REDEEM_REFERRAL_BONUS,
+  REDEEM_REFERRAL_BONUS_ERROR,
+  REDEEM_REFERRAL_BONUS_SUCCESS,
   REQUEST_WITHDRAWAL,
   REQUEST_WITHDRAWAL_ERROR,
   REQUEST_WITHDRAWAL_SUCCESS,
@@ -162,6 +168,46 @@ export const pokeUserSuccess = (data) => {
 export const pokeUserError = (error) => {
   return {
     type: POKE_USER_ERROR,
+    payload: error,
+  };
+};
+
+export const getMyReferralActivities = () => {
+  return {
+    type: GET_MY_REFERRAL_ACTIVITIES,
+  };
+};
+
+export const getMyReferralActivitiesSuccess = (data) => {
+  return {
+    type: GET_MY_REFERRAL_ACTIVITIES_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getMyReferralActivitiesError = (error) => {
+  return {
+    type: GET_MY_REFERRAL_ACTIVITIES_ERROR,
+    payload: error,
+  };
+};
+
+export const redeemReferralBonus = () => {
+  return {
+    type: REDEEM_REFERRAL_BONUS,
+  };
+};
+
+export const redeemReferralBonusSuccess = (data) => {
+  return {
+    type: REDEEM_REFERRAL_BONUS_SUCCESS,
+    payload: data,
+  };
+};
+
+export const redeemReferralBonusError = (error) => {
+  return {
+    type: REDEEM_REFERRAL_BONUS_ERROR,
     payload: error,
   };
 };

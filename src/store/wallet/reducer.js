@@ -7,6 +7,9 @@ import {
   GET_MY_REFERRALS,
   GET_MY_REFERRALS_ERROR,
   GET_MY_REFERRALS_SUCCESS,
+  GET_MY_REFERRAL_ACTIVITIES,
+  GET_MY_REFERRAL_ACTIVITIES_ERROR,
+  GET_MY_REFERRAL_ACTIVITIES_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -19,6 +22,9 @@ import {
   POST_TRANSFER_TO_PLAN,
   POST_TRANSFER_TO_PLAN_ERROR,
   POST_TRANSFER_TO_PLAN_SUCCESS,
+  REDEEM_REFERRAL_BONUS,
+  REDEEM_REFERRAL_BONUS_ERROR,
+  REDEEM_REFERRAL_BONUS_SUCCESS,
   REQUEST_WITHDRAWAL,
   REQUEST_WITHDRAWAL_ERROR,
   REQUEST_WITHDRAWAL_SUCCESS,
@@ -40,6 +46,10 @@ const initialState = {
   transferMsgError: null,
   pokeMsg: null,
   pokeMsgError: null,
+  refActivities: null,
+  refActivitiesError: null,
+  refRedeemMsg: null,
+  refRedeemError: null,
 };
 
 const wallet = (state = initialState, action) => {
@@ -236,6 +246,60 @@ const wallet = (state = initialState, action) => {
         loading: false,
         pokeMsg: null,
         pokeMsgError: action.payload,
+      };
+      break;
+
+    case GET_MY_REFERRAL_ACTIVITIES:
+      state = {
+        ...state,
+        loading: true,
+        refActivities: null,
+        refActivitiesError: null,
+      };
+      break;
+
+    case GET_MY_REFERRAL_ACTIVITIES_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        refActivities: action.payload,
+        refActivitiesError: null,
+      };
+      break;
+
+    case GET_MY_REFERRAL_ACTIVITIES_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        refActivities: null,
+        refActivitiesError: action.payload,
+      };
+      break;
+
+    case REDEEM_REFERRAL_BONUS:
+      state = {
+        ...state,
+        loading: true,
+        refRedeemMsg: null,
+        refRedeemError: null,
+      };
+      break;
+
+    case REDEEM_REFERRAL_BONUS_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        refRedeemMsg: action.payload,
+        refRedeemError: null,
+      };
+      break;
+
+    case REDEEM_REFERRAL_BONUS_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        refRedeemMsg: null,
+        refRedeemError: action.payload,
       };
       break;
 
