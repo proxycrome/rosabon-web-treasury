@@ -846,7 +846,7 @@ export const RolloverWithdrawMethod = ({
                     <h4>{bankDetails?.bank?.name} </h4>
                   </div>
                 </div>
-              ) : user_role==="COMPANY" ? (<div>
+              ) : (withdrawTo === "TO_BANK" && user_role==="COMPANY") ? (<div>
                 <div className="d-flex justify-content-between" >
                   <div>
                     <p>Upload withdrawal mandate instruction</p>

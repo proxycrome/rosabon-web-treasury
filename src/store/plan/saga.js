@@ -15,6 +15,7 @@ import {
 	GET_SINGLE_PLAN_HISTORY,
     GET_TENOR,
 	GET_WITHHOLDING_TAX,
+	PAY_WITH_CARD,
 	PLAN_ACTION,
 	VIEW_BANK_DETAIL,
 } from "./actionTypes";
@@ -32,6 +33,8 @@ import {
 	getExRatesSuccess,
 	getInvestmentRatesError,
 	getInvestmentRatesSuccess,
+	payWithCardError,
+	payWithCardSuccess,
 	getPenalChargeSuccess,
 	getPenalChargeError,
 	getPlanHistoryError,
@@ -64,6 +67,7 @@ import {
 	getSinglePlanService,
     getTenorService,
 	getWithholdingTaxService,
+	payWithCardService,
 	penalChargeService,
 	planActionService,
 	singlePlanHistoryService,
@@ -203,20 +207,36 @@ function* deletePlan({ payload: { id } }) {
 	}
 };
 
-function* planAction({ payload: { formData } }) {
+function* planAction({ payload: { formData, onSuccess } }) {
+	const { planAction, paymentType } = formData;
 	try {
 		const response = yield call(planActionService, formData);
 		console.log(response.data);
 		yield put(planActionSuccess(response.data));
+		if(response) {
+			if(planAction==="WITHDRAW") {
+				onSuccess(true);
+			} else if(planAction==="TOP_UP" && paymentType==="BANK_TRANSFER") {
+				toast.success("Top-up saved",{position:'top-right'})
+        		window.location.replace("/plan-list")
+			} else if(planAction==="TOP_UP" && paymentType==="DEBIT_CARD") {
+				onSuccess(true)
+			}
+		}
 	} catch (error) {
 		console.log(error?.response?.data);
 		yield put(planActionError(error?.response?.data));
 		const message = error?.response?.data ? error?.response?.data?.message : 
 		"Unable to Withdraw"
 		if (message) {
-			toast.error(message, {
-				position: "top-right",
-			});
+			if(planAction==="TOP_UP" && paymentType==="BANK_TRANSFER") {
+				toast.error(message,{position:'top-right'})
+				window.location.replace("/plan-list")
+			}else {
+				toast.error(message, {
+					position: "top-right",
+				});
+			}
 		}
 	}
 };
@@ -262,6 +282,17 @@ function* getPenalCharge() {
 	} catch (error) {
 		console.log(error?.response?.data);
 		yield put(getPenalChargeError(error?.response?.data));
+	}
+};
+
+function* payWithCard({ payload: { id } }) {
+	try {
+		const response = yield call(payWithCardService, id);
+		console.log(response.data);
+		yield put(payWithCardSuccess(response.data));
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(payWithCardError(error?.response?.data));
 	}
 };
 
@@ -324,6 +355,10 @@ export function* watchGetPenalCharge() {
 	yield takeEvery(GET_PENAL_CHARGE, getPenalCharge);
 };
 
+export function* watchPayWithCard() {
+	yield takeEvery(PAY_WITH_CARD, payWithCard);
+};
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -341,6 +376,7 @@ function* PlanSaga() {
 		fork(watchGetSinglePlanHistory),
 		fork(watchViewBankDetail),
 		fork(watchGetPenalCharge),
+		fork(payWithCard),
 	]);
 }
 

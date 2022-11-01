@@ -15,21 +15,18 @@ import Spinner from '../../common/loading';
 const PlanCardPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
   const [modalCount, setModalCount] = useState(0);
-  const { form, setForm } = useContext(PlanContext);
+  const { form } = useContext(PlanContext);
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user_profile);
   const { reg_transaction } = useSelector((state) => state.paystack);
   const navigate = useNavigate();
 
+  // register transaction and fetch transaction reference 
   useEffect(() => {
     const formData = {
       amount: form?.planSummary.principal,
       purposeOfPayment: "PLAN_CREATION"
     }
-    setForm({
-      ...form,
-      planStatus: "ACTIVE",
-    });
     dispatch(regTransaction(formData))
   }, [])
 

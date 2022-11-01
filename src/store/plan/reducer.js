@@ -26,6 +26,9 @@ import {
     GET_ELIGIBLE_PLANS,
     GET_ELIGIBLE_PLANS_SUCCESS,
     GET_ELIGIBLE_PLANS_ERROR,
+    PAY_WITH_CARD,
+    PAY_WITH_CARD_ERROR,
+    PAY_WITH_CARD_SUCCESS,
     PLAN_ACTION,
     PLAN_ACTION_ERROR,
     PLAN_ACTION_SUCCESS,
@@ -73,6 +76,8 @@ import {
     bank_detail_err: null,
     penal_charge: null,
     penal_charge_error: null,
+    pay_with_card: null,
+    pay_with_card_err: null,
   }
   
   const plan = ( state=initialState, action ) => {
@@ -91,6 +96,7 @@ import {
       case GET_SINGLE_PLAN_HISTORY:
       case VIEW_BANK_DETAIL:
       case GET_PENAL_CHARGE:
+      case PAY_WITH_CARD:
         state = {
           ...state,
           loading: true
@@ -346,6 +352,23 @@ import {
           penal_charge_error: action.payload
         };
         break;
+
+      case PAY_WITH_CARD_SUCCESS:
+        state = {
+          ...state,
+          loading: false,
+          pay_with_card: action.payload,
+          pay_with_card_err: null
+        };
+        break;
+
+      case PAY_WITH_CARD_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          pay_with_card: null,
+          pay_with_card_err: action.payload
+        }
   
       default:
         state = { ...state }
