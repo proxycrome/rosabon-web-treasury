@@ -11,7 +11,6 @@ import {  planAction, getPenalCharge } from "../../../../store/actions";
 const WithdrawalChannel = ({goBack, amount, type}) => {
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   const [base64File, setBase64File] = useState({
     corporateUserWithdrawalMandate: ""
   });
@@ -27,12 +26,6 @@ const WithdrawalChannel = ({goBack, amount, type}) => {
     dispatch(getPenalCharge());
   },[])
 
-  useEffect(() => {
-    if(plan_action !== null && plan_action_error===null && submitted) {
-      setModalState(true)
-    }
-  },[plan_action,plan_action_error])
-
   const submit = async() => {
     const { corporateUserWithdrawalMandate } = base64File;
     const formData = {
@@ -44,8 +37,7 @@ const WithdrawalChannel = ({goBack, amount, type}) => {
       withdrawTo: withdrawTo,
       withdrawType: type
     }
-    await dispatch(planAction(formData))
-    setSubmitted(true);
+    await dispatch(planAction(formData, setModalState))
   }
 
   return (

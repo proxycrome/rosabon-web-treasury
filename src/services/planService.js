@@ -106,3 +106,9 @@ export const penalChargeService = () => {
   const url = `auth/trpenal-charge`;
   return http.getData(url);
 };
+
+export const payWithCardService = (id) => {
+  const http = new HttpService();
+  const url = `auth/trplan-action/pay-with-card?planId=${id}`;
+  return http.getData(url);
+};

@@ -711,8 +711,8 @@ export function Notice({
       // withdrawTo: null,
       // withdrawType: null
     }
-    await dispatch(planAction(formData));
-    await handleShowModalTwo("modal-two");
+    await dispatch(planAction(formData, handleShowModalTwo("modal-two")));
+    // await handleShowModalTwo("modal-two");
   }
   return (
     <>
