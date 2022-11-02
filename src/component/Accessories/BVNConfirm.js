@@ -711,7 +711,7 @@ export function Notice({
       // withdrawTo: null,
       // withdrawType: null
     }
-    await dispatch(planAction(formData, handleShowModalTwo("modal-two")));
+    dispatch(planAction(formData, null, handleShowModalTwo, dispatch));
     // await handleShowModalTwo("modal-two");
   }
   return (
@@ -726,8 +726,8 @@ export function Notice({
                   {transferNotice === "transfer" ? (
                     <p className="">
                       You are about to transfer ₦{receive_amount?.toLocaleString()} 
-                      {" "}from your {receiving_plan?.planName} plan
-                      into {plan?.planName} plan
+                      {" "}from your {plan?.planName} plan
+                      into {receiving_plan?.planName} plan
                     </p>
                   ) : payType==="pay-card" ? (
                     <p className="">

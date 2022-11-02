@@ -8,11 +8,12 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Collapse,
 } from "reactstrap";
 // import {
 //   getAuthUsers,
 // } from '../../redux/actions/personalInfo/userProfile.actions';
-import { getAuthUsers, logout } from "../../store/actions";
+import { getAuthUsers, getNotification, logout } from "../../store/actions";
 import arrow from "../../asset/Arrow.png";
 import avatar from "../../asset/avi.jpg";
 
@@ -23,6 +24,8 @@ export function ProfileNavBar({ children }) {
 
   const profile = useSelector((state) => state.user_profile);
   const { users } = profile;
+
+  const { notifications } = useSelector((state) => state.notification);
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
 
@@ -41,6 +44,7 @@ export function ProfileNavBar({ children }) {
     } else {
       navigate("/login");
     }
+    dispatch(getNotification());
   }, [dispatch]);
 
   // const user =
@@ -66,7 +70,7 @@ export function ProfileNavBar({ children }) {
           <div className="page-title mx-3">{children}</div>
           <ul>
             <li className="profile_nav_bel">
-              <DropDown />
+              <DropDown notifications={notifications} />
             </li>
             <li>
               <Dropdown
@@ -166,18 +170,32 @@ const WrappeNavBar = styled.div`
 
 const Notification = styled.div`
   width: 360px;
+  height: 70vh;
+  overflow-Y: scroll;
   header {
     padding: 20px;
   }
 `;
 
-export const DropDown = ({ status }) => {
+export const DropDown = ({ status, notifications }) => {
   const [menu, setMenu] = useState(false);
   const { users } = useSelector((state) => state.user_profile);
+
+  const [col1, setCol1] = useState("");
+
+  const t_col1 = (val) => {
+    if (col1 === val) {
+      setCol1("");
+    } else {
+      setCol1(val);
+    }
+  };
 
   const toggle = () => {
     setMenu(!menu);
   };
+
+  console.log(notifications);
 
   return (
     <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
@@ -198,17 +216,19 @@ export const DropDown = ({ status }) => {
             </div>
           </header>
           <hr />
-          <div style={{ padding: "20px 30px" }}>
-            <h6 className="pb-3" style={{fontWeight: "600"}}>
-              Dear{" "}
-              {users && users.role === "COMPANY"
-                ? users.company.name
-                : users && users.role === "INDIVIDUAL_USER"
-                ? users.individualUser.firstName
-                : ""}{","}
-            </h6>
-            <p className="pb-3">You have successfully topped up your Plan1 plan with ₦ 300,000</p>
-          </div>
+          {notifications?.map((data) => (
+            <div style={{ padding: "20px 30px", }} key={data.id}>
+              <h6 className="pb-3" style={{ fontWeight: "600" }} onClick={() => t_col1(data.id)}>
+                {data.message.slice(0, 50)}...
+              </h6>
+              <Collapse isOpen={col1 === data.id}>
+                <p className="pb-3">
+                  {data.message}
+                </p>
+              </Collapse>
+              <hr/>
+            </div>
+          ))}
         </Notification>
       </DropdownMenu>
     </Dropdown>

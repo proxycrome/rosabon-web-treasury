@@ -40,6 +40,7 @@ import {
   getAuthUsers,
   getMyReferralActivities,
   redeemReferralBonus,
+  getMyDepositActivities,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -391,10 +392,10 @@ export const UserBankDetails = ({ type = null }) => {
 
   let text = `Account Name: ${account?.accountName},
   Account Number: ${account?.accountNumber},
-  Bank: PROVIDUS BANK`
+  Bank: PROVIDUS BANK`;
 
   const copied = () => {
-    toast.success("Account Details Copied", {position: "top-right"})
+    toast.success("Account Details Copied", { position: "top-right" });
   };
 
   return (
@@ -416,7 +417,7 @@ export const UserBankDetails = ({ type = null }) => {
               <p className="p-0 m-0 bold-text">{account?.accountNumber} </p>
             </div>
             <div>
-              <CopyToClipboard text={text} onCopy={copied} >
+              <CopyToClipboard text={text} onCopy={copied}>
                 <img src={Copy} alt="copy" className="copy" />
               </CopyToClipboard>
             </div>
@@ -748,20 +749,21 @@ const RolloverSummaryWrapper = styled.div`
   }
 `;
 
-export const RolloverWithdrawMethod = ({ 
+export const RolloverWithdrawMethod = ({
   withdrawTo,
   setWithdrawTo,
   base64File,
-  setBase64File }) => {
+  setBase64File,
+}) => {
   const [withdraw, setWithdraw] = useState("");
-  const { login } = useSelector(state => state.auth);
-  
+  const { login } = useSelector((state) => state.auth);
+
   const user_role = login ? login?.role?.name : "";
   const { bankDetails, bankDetailsError } = useSelector(
     (state) => state.user_profile
   );
   const corporateUserWithdrawalMandateRef = useRef();
-  console.log("bank dets", bankDetails)
+  console.log("bank dets", bankDetails);
 
   const handleFileChange = (e, name) => {
     const { files } = e.target;
@@ -798,7 +800,7 @@ export const RolloverWithdrawMethod = ({
     reference.current.click();
   };
 
-  console.log("hhh", withdrawTo)
+  console.log("hhh", withdrawTo);
 
   return (
     <div>
@@ -826,58 +828,71 @@ export const RolloverWithdrawMethod = ({
                   </div>
                 </div>
               </div>
-              {withdrawTo === "TO_BANK" && user_role==="INDIVIDUAL_USER" ? 
-              bankDetailsError?.message === "Bank Account not available for this user" ? (
-                <span className="text-danger">
-                  No Registered Bank Account Details
-                </span>
-              ) : (
-                <div className="mt-3">
-                  <div className="pt-4">
-                    <p className="p-0 m-0">Account Number</p>
-                    <h4>{bankDetails?.accountNumber} </h4>
-                  </div>
-                  <div className="pt-4">
-                    <p className="p-0 m-0">Account Name</p>
-                    <h4>{bankDetails?.accountName} </h4>
-                  </div>
-                  <div className="pt-4">
-                    <p className="p-0 m-0">Bank Name</p>
-                    <h4>{bankDetails?.bank?.name} </h4>
-                  </div>
-                </div>
-              ) : (withdrawTo === "TO_BANK" && user_role==="COMPANY") ? (<div>
-                <div className="d-flex justify-content-between" >
-                  <div>
-                    <p>Upload withdrawal mandate instruction</p>
-                    <p>png</p>
-                  </div>
-                  <div>
-                    <div className=" style-attachment">
-                      <input
-                        type="file"
-                        className="file"
-                        ref={corporateUserWithdrawalMandateRef}
-                        onChange={(e) =>
-                          handleFileChange(e, "corporateUserWithdrawalMandate")
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="normal-btn grey-button"
-                        onClick={(e) =>
-                          handleFileSelect(e, corporateUserWithdrawalMandateRef)
-                        }
-                      >
-                        Choose file
-                      </button>
+              {withdrawTo === "TO_BANK" && user_role === "INDIVIDUAL_USER" ? (
+                bankDetailsError?.message ===
+                "Bank Account not available for this user" ? (
+                  <span className="text-danger">
+                    No Registered Bank Account Details
+                  </span>
+                ) : (
+                  <div className="mt-3">
+                    <div className="pt-4">
+                      <p className="p-0 m-0">Account Number</p>
+                      <h4>{bankDetails?.accountNumber} </h4>
+                    </div>
+                    <div className="pt-4">
+                      <p className="p-0 m-0">Account Name</p>
+                      <h4>{bankDetails?.accountName} </h4>
+                    </div>
+                    <div className="pt-4">
+                      <p className="p-0 m-0">Bank Name</p>
+                      <h4>{bankDetails?.bank?.name} </h4>
                     </div>
                   </div>
+                )
+              ) : withdrawTo === "TO_BANK" && user_role === "COMPANY" ? (
+                <div>
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <p>Upload withdrawal mandate instruction</p>
+                      <p>png</p>
+                    </div>
+                    <div>
+                      <div className=" style-attachment">
+                        <input
+                          type="file"
+                          className="file"
+                          ref={corporateUserWithdrawalMandateRef}
+                          onChange={(e) =>
+                            handleFileChange(
+                              e,
+                              "corporateUserWithdrawalMandate"
+                            )
+                          }
+                        />
+                        <button
+                          type="button"
+                          className="normal-btn grey-button"
+                          onClick={(e) =>
+                            handleFileSelect(
+                              e,
+                              corporateUserWithdrawalMandateRef
+                            )
+                          }
+                        >
+                          Choose file
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <p>
+                    Letter must be on a company’s letter head and also carry
+                    bank account details
+                  </p>
                 </div>
-                <p>
-                  Letter must be on a company’s letter head and also carry bank account details
-                </p>
-              </div>) : (<></>)}
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>
@@ -886,7 +901,7 @@ export const RolloverWithdrawMethod = ({
   );
 };
 
-export const WithdrawalSummary = ({amount=0, reason=""}) => {
+export const WithdrawalSummary = ({ amount = 0, reason = "" }) => {
   const { singlePlan, penal_charge } = useSelector((state) => state.plan);
 
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
@@ -1013,7 +1028,7 @@ export const PlanSummary = ({ planPay }) => {
         Number.EPSILON
     ) / 100;
 
-    console.log("form check", form)
+  console.log("form check", form);
 
   return (
     <div>
@@ -1945,7 +1960,7 @@ const HistoryTableWarapper = styled.div`
 
 export const ReferalTable = () => {
   const dispatch = useDispatch();
-  const { users } = useSelector(state => state.user_profile);
+  const { users } = useSelector((state) => state.user_profile);
   const { myReferrals, loading } = useSelector((state) => state.wallet);
   console.log(myReferrals);
 
@@ -1955,7 +1970,7 @@ export const ReferalTable = () => {
 
   useEffect(() => {
     dispatch(getMyReferrals());
-    dispatch(getAuthUsers())
+    dispatch(getAuthUsers());
   }, [dispatch]);
 
   const data = {
@@ -2022,7 +2037,12 @@ export const ReferalTable = () => {
             <div className="padd-referal">
               <label>Referral Link</label>
               <div className="input-group mb-3">
-                <input type="text" className="form-control" value={users?.referralLink} readOnly />
+                <input
+                  type="text"
+                  className="form-control"
+                  value={users?.referralLink}
+                  readOnly
+                />
                 <div className="input-group-text">
                   <i className="fa-solid fa-key"></i>
                 </div>
@@ -2133,18 +2153,17 @@ const ReferalTableWarapper = styled.div`
 
 export const ReferralBonus = () => {
   const dispatch = useDispatch();
-  const { refActivities, refRedeemMsg } = useSelector(state => state.wallet)
+  const { refActivities, refRedeemMsg } = useSelector((state) => state.wallet);
   console.log(refActivities);
   console.log(refRedeemMsg);
 
   const handleRedeemClick = () => {
-    dispatch(redeemReferralBonus())
-  }
-
+    dispatch(redeemReferralBonus());
+  };
 
   useEffect(() => {
     dispatch(getMyReferralActivities());
-  }, [dispatch])
+  }, [dispatch]);
   const data = {
     columns: [
       {
@@ -2213,7 +2232,9 @@ export const ReferralBonus = () => {
                 <h4 className="py-4">₦ 0.00</h4>
               </div>
               <div>
-                <button className="btn btn-primary" onClick={handleRedeemClick}>Redeem</button>
+                <button className="btn btn-primary" onClick={handleRedeemClick}>
+                  Redeem
+                </button>
               </div>
             </div>
             <div className="d-flex align-items-content justify-content-center">
@@ -2330,7 +2351,51 @@ const ReferalTableBonusWarapper = styled.div`
 export const TransferDeposit = () => {
   const [bank, setBank] = useState(false);
   const [credit, setCredit] = useState(false);
-  const [transfer, setTransfer] = useState(false);
+  const [plan, setPlan] = useState(false);
+
+  const dispatch = useDispatch();
+  const { loading, depositActivites } = useSelector((state) => state.wallet);
+  const activedeposits = depositActivites?.entities;
+  const bankDeposits = depositActivites?.entities.filter(
+    (item) => item.category === "BANK_ACCOUNT_TO_WALLET_FUNDING"
+  );
+  // console.log(depositActivites);
+
+  const [deposits, setDeposits] = useState(bankDeposits);
+
+  useEffect(() => {
+    dispatch(getMyDepositActivities());
+  }, [dispatch]);
+
+  const handleClick = (values, category) => {
+    if (values === "bank" && category === "BANK_ACCOUNT_TO_WALLET_FUNDING") {
+      setBank(true);
+      setCredit(false);
+      setPlan(false);
+      const deposit = activedeposits?.filter(
+        (item) => item.category === category
+      );
+      setDeposits(deposit);
+    }
+    if (values === "credit" && category === "WALLET_FUNDING_BY_CREDIT_WALLET") {
+      setBank(false);
+      setCredit(true);
+      setPlan(false);
+      const deposit = activedeposits?.filter(
+        (item) => item.category === category
+      );
+      setDeposits(deposit);
+    }
+    if (values === "plan" && category === "FUND_REVERSAL_TO_WALLET") {
+      setBank(false);
+      setCredit(false);
+      setPlan(true);
+      const deposit = activedeposits?.filter(
+        (item) => item.category === category
+      );
+      setDeposits(deposit);
+    }
+  };
 
   const data = {
     columns: [
@@ -2365,80 +2430,14 @@ export const TransferDeposit = () => {
         width: 100,
       },
     ],
-    rows: [
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-    ],
-  };
-
-  const handleClick = (values) => {
-    if (values === "bank") {
-      setBank(true);
-      setCredit(false);
-      setTransfer(false);
-    } else if (values === "credit") {
-      setBank(false);
-      setCredit(true);
-      setTransfer(false);
-    } else if (values === "transfer") {
-      setBank(false);
-      setCredit(false);
-      setTransfer(true);
-    }
+    rows: deposits?.map(data => ({
+        sn: `${data.transactionId}`,
+        date: `${data.transactionDate}`,
+        description: `${data.description}`,
+        type: `${data.transactionType}`,
+        amount: ` + ${data.amount}`,
+        balance: `₦ ${data.balance}`,
+    })) 
   };
 
   return (
@@ -2453,19 +2452,19 @@ export const TransferDeposit = () => {
         <div className="d-flex align-items-content justify-content-around pb-5">
           <h3
             className={bank ? "" : "grey-text"}
-            onClick={() => handleClick("bank")}
+            onClick={() => handleClick("bank", "BANK_ACCOUNT_TO_WALLET_FUNDING")}
           >
             Bank Transfer Deposit
           </h3>
           <h3
             className={credit ? "" : "grey-text"}
-            onClick={() => handleClick("credit")}
+            onClick={() => handleClick("credit", "WALLET_FUNDING_BY_CREDIT_WALLET")}
           >
             Credit Wallet Transfer Deposit
           </h3>
           <h3
-            className={transfer ? "" : "grey-text"}
-            onClick={() => handleClick("transfer")}
+            className={plan ? "" : "grey-text"}
+            onClick={() => handleClick("plan", "FUND_REVERSAL_TO_WALLET")}
           >
             Plan Transfer Deposit
           </h3>

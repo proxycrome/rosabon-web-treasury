@@ -98,7 +98,7 @@ export const viewBankDetailService = (id) => {
 export const completeTransferService = (id) => {
   const http = new HttpService();
   const url = `auth/trplan-action/complete-transfer?id=${id}`;
-  return http.getData(url);
+  return http.postDataWithToken(url);
 };
 
 export const penalChargeService = () => {

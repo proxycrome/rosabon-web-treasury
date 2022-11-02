@@ -2,6 +2,9 @@ import {
   GET_EACH_WALLET_TRANSACTION,
   GET_EACH_WALLET_TRANSACTION_ERROR,
   GET_EACH_WALLET_TRANSACTION_SUCCESS,
+  GET_MY_DEPOSIT_ACTIVITIES,
+  GET_MY_DEPOSIT_ACTIVITIES_ERROR,
+  GET_MY_DEPOSIT_ACTIVITIES_SUCCESS,
   GET_MY_REFERRALS,
   GET_MY_REFERRALS_ERROR,
   GET_MY_REFERRALS_SUCCESS,
@@ -211,3 +214,23 @@ export const redeemReferralBonusError = (error) => {
     payload: error,
   };
 };
+
+export const getMyDepositActivities = () => {
+  return {
+    type: GET_MY_DEPOSIT_ACTIVITIES,
+  }
+}
+
+export const getMyDepositActivitiesSuccess = (data) => {
+  return {
+    type: GET_MY_DEPOSIT_ACTIVITIES_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getMyDepositActivitiesError = (error) => {
+  return {
+    type: GET_MY_DEPOSIT_ACTIVITIES_ERROR,
+    payload: error,
+  }
+}

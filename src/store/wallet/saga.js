@@ -2,6 +2,7 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects";
 
 import {
   GET_EACH_WALLET_TRANSACTION,
+  GET_MY_DEPOSIT_ACTIVITIES,
   GET_MY_REFERRALS,
   GET_MY_REFERRAL_ACTIVITIES,
   GET_WALLET_BALANCE,
@@ -15,10 +16,13 @@ import {
 import {
   getEachWalletTransactionError,
   getEachWalletTransactionSuccess,
+  getMyDepositActivitiesError,
+  getMyDepositActivitiesSuccess,
   getMyReferralActivitiesError,
   getMyReferralActivitiesSuccess,
   getMyReferralsError,
   getMyReferralsSuccess,
+  getWalletBalance,
   getWalletBalanceError,
   getWalletBalanceSuccess,
   getWalletTransactionsError,
@@ -35,6 +39,7 @@ import {
 
 import {
   getEachWalletTransactionService,
+  getMyDepositActivitiesService,
   getMyReferralActivitiesService,
   getMyReferralsService,
   getWalletBalanceService,
@@ -46,7 +51,7 @@ import {
 } from "../../services/walletService";
 import toast from "react-hot-toast";
 
-function* getWalletBalance() {
+function* getWalletBalancer() {
   try {
     const response = yield call(getWalletBalanceService);
     console.log(response.data);
@@ -74,6 +79,7 @@ function* requestWithdrawal({ payload: { formData } }) {
     console.log(response.data);
     yield put(requestWithdrawalSuccess(response.data));
     if (response) {
+      yield put(getWalletBalance());
       setTimeout(() => {
         toast.success(response.data.message);
       }, 1000);
@@ -117,6 +123,7 @@ function* postTransferToPlan({ payload: { formData } }) {
     console.log(response.data);
     yield put(postTransferToPlanSuccess(response.data));
     if (response) {
+      yield put(getWalletBalance());
       setTimeout(() => {
         toast.success(response.data.message);
       }, 1000);
@@ -185,8 +192,19 @@ function* redeemReferralBonus() {
   }
 }
 
+function* getMyDepositActivities() {
+  try {
+    const response = yield call(getMyDepositActivitiesService);
+    console.log(response.data);
+    yield put(getMyDepositActivitiesSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getMyDepositActivitiesError(error?.response?.data));
+  }
+}
+
 export function* watchGetWalletBalance() {
-  yield takeEvery(GET_WALLET_BALANCE, getWalletBalance);
+  yield takeEvery(GET_WALLET_BALANCE, getWalletBalancer);
 }
 
 export function* watchGetWalletTransactions() {
@@ -221,6 +239,10 @@ export function* watchRedeemReferralBonus() {
   yield takeEvery(REDEEM_REFERRAL_BONUS, redeemReferralBonus);
 }
 
+export function* watchGetMyDepositActivities() {
+  yield takeEvery(GET_MY_DEPOSIT_ACTIVITIES, getMyDepositActivities);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
@@ -232,6 +254,7 @@ function* WalletSaga() {
     fork(watchPokeUser),
     fork(watchGetMyReferralActivities),
     fork(watchRedeemReferralBonus),
+    fork(watchGetMyDepositActivities),
   ]);
 }
 

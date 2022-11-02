@@ -4,6 +4,9 @@ import {
   GET_EACH_WALLET_TRANSACTION,
   GET_EACH_WALLET_TRANSACTION_ERROR,
   GET_EACH_WALLET_TRANSACTION_SUCCESS,
+  GET_MY_DEPOSIT_ACTIVITIES,
+  GET_MY_DEPOSIT_ACTIVITIES_ERROR,
+  GET_MY_DEPOSIT_ACTIVITIES_SUCCESS,
   GET_MY_REFERRALS,
   GET_MY_REFERRALS_ERROR,
   GET_MY_REFERRALS_SUCCESS,
@@ -50,6 +53,8 @@ const initialState = {
   refActivitiesError: null,
   refRedeemMsg: null,
   refRedeemError: null,
+  depositActivites: null,
+  depositActivitesError: null,
 };
 
 const wallet = (state = initialState, action) => {
@@ -300,6 +305,33 @@ const wallet = (state = initialState, action) => {
         loading: false,
         refRedeemMsg: null,
         refRedeemError: action.payload,
+      };
+      break;
+
+    case GET_MY_DEPOSIT_ACTIVITIES:
+      state = {
+        ...state,
+        loading: true,
+        depositActivites: null,
+        depositActivitesError: null,
+      };
+      break;
+
+    case GET_MY_DEPOSIT_ACTIVITIES_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        depositActivites: action.payload,
+        depositActivitesError: null,
+      };
+      break;
+
+    case GET_MY_DEPOSIT_ACTIVITIES_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        depositActivites: null,
+        depositActivitesError: action.payload,
       };
       break;
 

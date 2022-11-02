@@ -11,6 +11,7 @@ import ProvidusSaga from "./providus/saga";
 import UpdateProfileSaga from "./updateProfile/saga";
 import WalletSaga from "./wallet/saga";
 import HelpSaga from "./help/saga";
+import NotificationSaga from "./notification/saga";
 
 export default function* rootSaga() {
 	yield all([
@@ -25,5 +26,6 @@ export default function* rootSaga() {
         CurrencySaga(),
         ProvidusSaga(),
         HelpSaga(),
+        NotificationSaga(),
     ]);
 }

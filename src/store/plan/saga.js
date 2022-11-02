@@ -18,6 +18,7 @@ import {
 	PAY_WITH_CARD,
 	PLAN_ACTION,
 	VIEW_BANK_DETAIL,
+	COMPLETE_TRANSFER,
 } from "./actionTypes";
 
 import {
@@ -53,9 +54,13 @@ import {
 	planActionSuccess,
 	viewBankDetailError,
 	viewBankDetailSuccess,
+	completeTransferSuccess,
+	completeTransferError,
+	completeTransfer,
 } from "./actions";
 
 import {
+	completeTransferService,
 	createPlanService,
 	deletePlanService,
 	getAllPlanHistoryService,
@@ -84,6 +89,21 @@ function* getContribVal() {
 		yield put(getContribValError(error?.response?.data));
 	}
 }
+
+function* completeTransfers({ payload: { data } }) {
+	const {id, handleShowModalTwo} = data;
+	try {	
+		const response = yield call(completeTransferService, id);
+		console.log(response.data);
+		yield put(completeTransferSuccess(response.data));
+		if(response){
+			handleShowModalTwo("modal-two");
+		}
+	} catch (error) {
+		console.log(error?.response?.data);
+		yield put(completeTransferError(error?.response?.data));
+	}
+};
 
 function* getExRates() {
 	try {
@@ -207,7 +227,7 @@ function* deletePlan({ payload: { id } }) {
 	}
 };
 
-function* planAction({ payload: { formData, onSuccess } }) {
+function* planAction({ payload: { formData, onSuccess, handleShowModalTwo, dispatch } }) {
 	const { planAction, paymentType } = formData;
 	try {
 		const response = yield call(planActionService, formData);
@@ -221,6 +241,12 @@ function* planAction({ payload: { formData, onSuccess } }) {
         		window.location.replace("/plan-list")
 			} else if(planAction==="TOP_UP" && paymentType==="DEBIT_CARD") {
 				onSuccess(true)
+			} else if(planAction === "TRANSFER"){
+				const data = {
+					id: response.data.object.actionLogId,
+					handleShowModalTwo,
+				}
+				dispatch(completeTransfer(data))
 			}
 		}
 	} catch (error) {
@@ -296,6 +322,8 @@ function* payWithCard({ payload: { id } }) {
 	}
 };
 
+
+
 export function* watchGetContribVal() {
 	yield takeEvery(GET_CONTRIB_VAL, getContribVal);
 }
@@ -359,6 +387,10 @@ export function* watchPayWithCard() {
 	yield takeEvery(PAY_WITH_CARD, payWithCard);
 };
 
+export function* watchCompleteTransfer() {
+	yield takeEvery(COMPLETE_TRANSFER, completeTransfers);
+};
+
 function* PlanSaga() {
 	yield all([
 		fork(watchGetContribVal),
@@ -376,7 +408,8 @@ function* PlanSaga() {
 		fork(watchGetSinglePlanHistory),
 		fork(watchViewBankDetail),
 		fork(watchGetPenalCharge),
-		fork(payWithCard),
+		fork(watchPayWithCard),
+		fork(watchCompleteTransfer),
 	]);
 }
 

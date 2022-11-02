@@ -175,23 +175,25 @@ const UserWallet = () => {
     dispatch(postTransferToPlan(transferFormData));
   };
 
+  const tokenObj = JSON.parse(localStorage.getItem("token"));
+  console.log(tokenObj);
+
   useEffect(() => {
     dispatch(getWalletBalance());
     dispatch(getAuthUsers());
     dispatch(getWithdrawReason());
-    if (users?.role !== "COMPANY") {
+    if (tokenObj?.role?.name !== "COMPANY") {
       dispatch(getBankDetails());
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    if (withdrawMsg) {
-      dispatch(getWalletBalance());
-    }
-  }, [withdrawMsg]);
+  // useEffect(() => {
+  //   if (withdrawMsg) {
+  //     dispatch(getWalletBalance());
+  //   }
+  // }, [withdrawMsg]);
 
-  const tokenObj = JSON.parse(localStorage.getItem("token"));
-  console.log(tokenObj);
+  
 
   return (
     <div>
@@ -227,11 +229,12 @@ const UserWallet = () => {
                       <p className="p-0 m-0">₦</p>
                     </div>
                   </div>
+                  <div>Providus Bank</div>
                   <h3 className="pt-1 pb-3 accountDet">
                     {tokenObj?.virtualAccountNo} ({tokenObj?.virtualAccountName}
                     )
                   </h3>
-                  <div className="down-button pt-4 mt-5">
+                  <div className="down-button pt-4 mt-4">
                     <p className="p-0 m-0">Balance</p>
                     <h5>
                       ₦{" "}

@@ -54,3 +54,10 @@ export const redeemReferralBonusService = () => {
   const url = `auth/referrals/redeem-bonus`;
   return http.postDataWithToken(null, url);
 }
+
+export const getMyDepositActivitiesService = () => {
+  const http = new HttpService();
+  const url = `auth/my-deposits/activities`;
+  return http.getData(url);
+}
+
