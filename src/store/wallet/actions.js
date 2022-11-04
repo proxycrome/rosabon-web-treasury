@@ -11,6 +11,9 @@ import {
   GET_MY_REFERRAL_ACTIVITIES,
   GET_MY_REFERRAL_ACTIVITIES_ERROR,
   GET_MY_REFERRAL_ACTIVITIES_SUCCESS,
+  GET_REFERRAL_REDEEM_THRESHOLD,
+  GET_REFERRAL_REDEEM_THRESHOLD_ERROR,
+  GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -231,6 +234,26 @@ export const getMyDepositActivitiesSuccess = (data) => {
 export const getMyDepositActivitiesError = (error) => {
   return {
     type: GET_MY_DEPOSIT_ACTIVITIES_ERROR,
+    payload: error,
+  }
+}
+
+export const getReferralRedeemThreshold = () => {
+  return {
+    type: GET_REFERRAL_REDEEM_THRESHOLD,
+  }
+}
+
+export const getReferralRedeemThresholdSuccess = (data) => {
+  return {
+    type: GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getReferralRedeemThresholdError = (error) => {
+  return {
+    type: GET_REFERRAL_REDEEM_THRESHOLD_ERROR,
     payload: error,
   }
 }

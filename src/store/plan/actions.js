@@ -359,10 +359,10 @@ export const getPenalChargeError = (error) => {
   };
 };
 
-export const payWithCard = (id) => {
+export const payWithCard = (id, setSuccess) => {
   return {
     type: PAY_WITH_CARD,
-    payload: { id },
+    payload: { id, setSuccess },
   };
 };
 

@@ -41,6 +41,7 @@ import {
   getMyReferralActivities,
   redeemReferralBonus,
   getMyDepositActivities,
+  getReferralRedeemThreshold,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -805,7 +806,7 @@ export const RolloverWithdrawMethod = ({
   return (
     <div>
       <RolloverSummaryWrapper>
-        <h4 className="">
+        <h4 className="pt-5">
           Kindly select beneficiary account to receive the withdrawal
         </h4>
         <div className="plan-content">
@@ -908,7 +909,7 @@ export const WithdrawalSummary = ({ amount = 0, reason = "" }) => {
   return (
     <div>
       <RolloverSummaryWrapper>
-        <h4 className="">Withdrawal Summary</h4>
+        <h4 className="pt-5">Withdrawal Summary</h4>
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
@@ -932,7 +933,7 @@ export const WithdrawalSummary = ({ amount = 0, reason = "" }) => {
                   <p className="p-0 m-0">
                     Balance before <br /> Liquidation{" "}
                   </p>
-                  <h4> ₦{plan?.planSummary?.principal}</h4>
+                  <h4> ₦{plan?.planSummary?.principal?.toLocaleString()}</h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Withdrawal Amount</p>
@@ -953,8 +954,8 @@ export const WithdrawalSummary = ({ amount = 0, reason = "" }) => {
                     ₦
                     {(
                       plan?.planSummary?.principal -
-                      (amount + 40000)
-                    ).toLocaleString()}
+                      (amount)
+                    )?.toLocaleString()}
                   </h4>
                 </div>
               </div>
@@ -2153,7 +2154,8 @@ const ReferalTableWarapper = styled.div`
 
 export const ReferralBonus = () => {
   const dispatch = useDispatch();
-  const { refActivities, refRedeemMsg } = useSelector((state) => state.wallet);
+  const { loading, refActivities, refRedeemMsg, referralThreshold } =
+    useSelector((state) => state.wallet);
   console.log(refActivities);
   console.log(refRedeemMsg);
 
@@ -2163,6 +2165,7 @@ export const ReferralBonus = () => {
 
   useEffect(() => {
     dispatch(getMyReferralActivities());
+    dispatch(getReferralRedeemThreshold());
   }, [dispatch]);
   const data = {
     columns: [
@@ -2187,32 +2190,12 @@ export const ReferralBonus = () => {
         width: 100,
       },
     ],
-    rows: [
-      {
-        id: 1,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-      {
-        id: 2,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-      {
-        id: 3,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-      {
-        id: 4,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-    ],
+    rows: refActivities?.entities?.map((data) => ({
+      id: data.id,
+      date: `${data.createdAt}`,
+      description: `${data.description}`,
+      balance: `₦ ${data.amount}`,
+    })),
   };
 
   return (
@@ -2222,35 +2205,45 @@ export const ReferralBonus = () => {
           <span className="fw-bold">Wallet</span>
         </NavTitle>
       </ProfileNavBar>
-      <ReferalTableBonusWarapper>
-        <h3>My Referral Bonus</h3>
-        <div className="bonus-card d-flex justify-content-between aligin-items-center">
-          <div className="earn-bonus">
-            <div className="d-flex justify-content-between aligin-items-center">
-              <div>
-                <p className="m-0 p-0">Earned Referral Bonus</p>
-                <h4 className="py-4">₦ 0.00</h4>
-              </div>
-              <div>
-                <button className="btn btn-primary" onClick={handleRedeemClick}>
-                  Redeem
-                </button>
-              </div>
-            </div>
-            <div className="d-flex align-items-content justify-content-center">
-              <p className="m-0 p-0">0 out of ₦100,000 Earned</p>
-            </div>
-          </div>
-          <div className="total-bonus">
-            <p className="p-0 m-0">Total Redeemed Bonus :</p>
-            <h4 className="total-amount">₦ 0.00</h4>
-          </div>
+      <Toaster/>
+      {loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
         </div>
+      ) : (
+        <ReferalTableBonusWarapper>
+          <h3>My Referral Bonus</h3>
+          <div className="bonus-card d-flex justify-content-between aligin-items-center">
+            <div className="earn-bonus">
+              <div className="d-flex justify-content-between aligin-items-center">
+                <div>
+                  <p className="m-0 p-0">Earned Referral Bonus</p>
+                  <h4 className="py-4">₦ 0.00</h4>
+                </div>
+                <div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleRedeemClick}
+                  >
+                    Redeem
+                  </button>
+                </div>
+              </div>
+              <div className="d-flex align-items-content justify-content-center">
+                <p className="m-0 p-0">0 out of ₦{referralThreshold?.amount} Earned</p>
+              </div>
+            </div>
+            <div className="total-bonus">
+              <p className="p-0 m-0">Total Redeemed Bonus :</p>
+              <h4 className="total-amount">₦ 0.00</h4>
+            </div>
+          </div>
 
-        <div>
-          <MDBDataTable responsive striped data={data} searching={false} />
-        </div>
-      </ReferalTableBonusWarapper>
+          <div>
+            <MDBDataTable responsive striped data={data} searching={false} />
+          </div>
+        </ReferalTableBonusWarapper>
+      )}
     </div>
   );
 };
@@ -2430,14 +2423,14 @@ export const TransferDeposit = () => {
         width: 100,
       },
     ],
-    rows: deposits?.map(data => ({
-        sn: `${data.transactionId}`,
-        date: `${data.transactionDate}`,
-        description: `${data.description}`,
-        type: `${data.transactionType}`,
-        amount: ` + ${data.amount}`,
-        balance: `₦ ${data.balance}`,
-    })) 
+    rows: deposits?.map((data) => ({
+      sn: `${data.transactionId}`,
+      date: `${data.transactionDate}`,
+      description: `${data.description}`,
+      type: `${data.transactionType}`,
+      amount: ` + ${data.amount}`,
+      balance: `₦ ${data.balance}`,
+    })),
   };
 
   return (
@@ -2452,13 +2445,17 @@ export const TransferDeposit = () => {
         <div className="d-flex align-items-content justify-content-around pb-5">
           <h3
             className={bank ? "" : "grey-text"}
-            onClick={() => handleClick("bank", "BANK_ACCOUNT_TO_WALLET_FUNDING")}
+            onClick={() =>
+              handleClick("bank", "BANK_ACCOUNT_TO_WALLET_FUNDING")
+            }
           >
             Bank Transfer Deposit
           </h3>
           <h3
             className={credit ? "" : "grey-text"}
-            onClick={() => handleClick("credit", "WALLET_FUNDING_BY_CREDIT_WALLET")}
+            onClick={() =>
+              handleClick("credit", "WALLET_FUNDING_BY_CREDIT_WALLET")
+            }
           >
             Credit Wallet Transfer Deposit
           </h3>

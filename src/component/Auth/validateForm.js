@@ -20,7 +20,7 @@ export const ValidateCompanyForm = (
     password: "",
     phone: "",
     source: "" || sourcer,
-    sourceOthers: "",
+    sourceOthers: "" || sourcer === "OTHER" ? referralCode : null,
     contactFirstName: "",
     contactLastName: "",
     contactMiddleName: "",

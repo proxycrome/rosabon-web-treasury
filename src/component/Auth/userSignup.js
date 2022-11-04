@@ -266,6 +266,7 @@ function UserSignup() {
                               onChange={handleValueChange}
                               name="refferedBy"
                               value={values.refferedBy}
+                              disabled={referralCode}
                             />
                           ) : values.source === "ROSABON_SALES" ? (
                             <Input
@@ -275,6 +276,7 @@ function UserSignup() {
                               onChange={handleValueChange}
                               name="refferedBy"
                               value={values.refferedBy}
+                              disabled={referralCode}
                             />
                           ) : (
                             <Input
@@ -283,7 +285,8 @@ function UserSignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy || referralCode}
+                              disabled={referralCode}
                             />
                           )}
                         </div>

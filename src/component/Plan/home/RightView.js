@@ -25,6 +25,8 @@ export const RightView = () => {
   const cat_products = catWithProducts?.data?.body;
   const cat_products_status = catWithProducts?.statusCode;
   const planList = plans?.data?.body ? plans?.data?.body : [];
+  console.log(planList);
+  const activePlanList = planList.filter(data => data.planStatus === "ACTIVE");
 
   useEffect(() => {
     dispatch(getCatWithProducts());
@@ -44,7 +46,7 @@ export const RightView = () => {
   };
 
   let totalnetWorth = 0;
-  planList.forEach(item => item?.currency?.name === "NGN" ?
+  activePlanList.forEach(item => item?.currency?.name === "NGN" ?
    totalnetWorth += item?.planSummary?.principal : 
    totalnetWorth += (item?.planSummary?.principal * item?.exchangeRate));
 
@@ -75,7 +77,7 @@ export const RightView = () => {
             <div className="d-flex justify-content-between">
               <div className="d-flex  align-items-center justify-content-between active-box">
                 <div className="sqr-box">
-                  <p className="p-0 m-0">{planList.length.toString().padStart(2,"0")}</p>
+                  <p className="p-0 m-0">{activePlanList.length.toString().padStart(2,"0")}</p>
                 </div>
                 <p className="p-0 m-0">Active Plans</p>
               </div>

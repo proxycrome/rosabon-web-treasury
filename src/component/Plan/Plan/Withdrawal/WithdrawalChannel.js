@@ -8,7 +8,7 @@ import { RolloverWithdrawMethod, WithdrawalSummary } from '../../Accesssories';
 import { Toaster } from 'react-hot-toast';
 import {  planAction, getPenalCharge } from "../../../../store/actions";
 
-const WithdrawalChannel = ({goBack, amount, type}) => {
+const WithdrawalChannel = ({goBack, amount, type, reason}) => {
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
   const [base64File, setBase64File] = useState({
@@ -51,7 +51,7 @@ const WithdrawalChannel = ({goBack, amount, type}) => {
       <Wrapper>
         <LeftView>
           <h4 className="pb-3">Withdrawal</h4>
-          <WithdrawalSummary />
+          <WithdrawalSummary amount={amount} reason={reason}/>
         </LeftView> 
         <RightView>
           <div className="bank-details">

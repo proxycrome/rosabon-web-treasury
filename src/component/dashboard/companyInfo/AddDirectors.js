@@ -224,7 +224,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
         frontEncodedString: "",
         photoEncodedString: "",
       });
-      
+
       dispatch({type: CLEAR_BVN})
       removeForm(false);
     }
@@ -271,6 +271,14 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
       handleOTPModalClose();
     }
   }, [validateEmailOtp]);
+
+  const confirmName = () => {
+    setformData({
+      ...formData,
+      firstName: bvnMessage?.data?.firstName,
+      lastName: bvnMessage?.data?.lastName,
+    })
+  }
 
   const reset = () => {
     setformData({
@@ -605,6 +613,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                               firstName={bvnMessage?.data?.firstName}
                               lastName={bvnMessage?.data?.lastName}
                               bvn={formData.bvn}
+                              confirmName={confirmName}
                               director="director"
                               nameMatch={bvnMessage?.isNameMatched}
                             />

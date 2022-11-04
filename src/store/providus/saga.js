@@ -13,9 +13,9 @@ function* createDynamicAcc({ payload: { planName } }) {
     try {
         const response = yield call(createDynamicAccService, planName);
         yield put(createDynamicAccSuccess(response.data));
-        console.log(response)
+        console.log(response?.data)
     } catch (error) {
-        console.log(error)
+        console.log(error?.response?.data)
         yield put(createDynamicAccError(error?.response?.data))
     }
 };

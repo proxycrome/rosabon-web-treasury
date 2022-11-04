@@ -10,7 +10,7 @@ import WithdrawalChannel from './WithdrawalChannel';
 import { Toaster } from 'react-hot-toast';
 import { getBankDetails } from '../../../../store/actions';
 
-const FullWithdrawal = ({goBack, amount, reason}) => {
+const PartWithdrawal = ({goBack, amount, reason}) => {
   const dispatch = useDispatch();
   const [isClicked, setIsClicked] = useState(false);
   const { singlePlan, loading } = useSelector((state) => state.plan);
@@ -21,7 +21,7 @@ const FullWithdrawal = ({goBack, amount, reason}) => {
   },[])
 
   if (isClicked) {
-    return <WithdrawalChannel amount={amount} type="PARTIAL" goBack={() => setIsClicked(false)} />;
+    return <WithdrawalChannel amount={amount} type="PARTIAL" reason={reason} goBack={() => setIsClicked(false)} />;
   };
 
   return (
@@ -118,7 +118,7 @@ const FullWithdrawal = ({goBack, amount, reason}) => {
   );
 };
 
-export default FullWithdrawal;
+export default PartWithdrawal;
 
 const LeftView = styled.div`
   width: 50%;

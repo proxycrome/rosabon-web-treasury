@@ -14,7 +14,7 @@ const CompanyKYC = () => {
 
   console.log(users);
 
-  const [formData, setformData] = useState({
+  const data = {
     rcNumber: "",
     natureOfBusiness: "",
     companyType: "",
@@ -25,7 +25,9 @@ const CompanyKYC = () => {
     contactLastName: "",
     email: "",
     phone: "",
-  });
+  };
+
+  const [formData, setformData] = useState(data);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -68,7 +70,9 @@ const CompanyKYC = () => {
           ? natureOfBusiness
           : users?.company?.natureOfBusiness,
         companyType: companyType ? companyType : users?.company?.companyType,
-        dateOfInco: dateOfInco ? dateOfInco : users?.company?.dateOfInco,
+        dateOfInco: dateOfInco
+          ? String(moment(dateOfInco, "YYYY-MM-DD").format("DD-MM-YYYY"))
+          : users?.company?.dateOfInco,
         companyAddress: companyAddress
           ? companyAddress
           : users?.company?.companyAddress,
@@ -134,15 +138,12 @@ const CompanyKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder={
-                                  users &&
-                                  users?.company?.name
-                                }
+                                placeholder={users?.company?.name}
                                 type="text"
                                 name="name"
                                 onChange={handleChange}
-                                value={formData.name}
-                                // disabled
+                                value={users?.company?.name}
+                                disabled
                               />
                             </div>
                           </div>
@@ -154,13 +155,15 @@ const CompanyKYC = () => {
                               <input
                                 className="form-control"
                                 placeholder={
-                                  (users && users?.company?.rcNumber) ||
+                                  users?.company?.rcNumber ||
                                   "Company RC number"
                                 }
                                 type="text"
                                 onChange={handleChange}
                                 name="rcNumber"
-                                value={formData.rcNumber}
+                                defaultValue={
+                                  formData.rcNumber || users?.company?.rcNumber
+                                }
                               />
                             </div>
                           </div>
@@ -169,13 +172,17 @@ const CompanyKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder={
-                                  users?.company?.dateOfInco || "DD-MM-YYYY"
-                                }
-                                type="text"
+                                placeholder=""
+                                type="date"
                                 onChange={handleChange}
                                 name="dateOfInco"
-                                value={formData.dateOfInco}
+                                value={
+                                  formData.dateOfInco ||
+                                  moment(
+                                    users?.company?.dateOfInco,
+                                    "DD-MM-YYYY"
+                                  ).format("YYYY-MM-DD")
+                                }
                               />
                             </div>
                           </div>
@@ -193,7 +200,7 @@ const CompanyKYC = () => {
                                 }
                                 onChange={handleChange}
                                 name="companyAddress"
-                                value={formData.companyAddress}
+                                defaultValue={formData.companyAddress || users?.company?.companyAddress}
                               />
                             </div>
                           </div>
@@ -211,7 +218,7 @@ const CompanyKYC = () => {
                                 type="text"
                                 onChange={handleChange}
                                 name="natureOfBusiness"
-                                value={formData.natureOfBusiness}
+                                defaultValue={formData.natureOfBusiness || users?.company?.natureOfBusiness}
                               />
                             </div>
                           </div>
@@ -227,9 +234,7 @@ const CompanyKYC = () => {
                               }
                               name="companyType"
                             >
-                              <option value="">
-                                Company Type...
-                              </option>
+                              <option value="">Company Type...</option>
                               <option value="SOLE_PROPRIETORSHIP">
                                 Sole proprietorship
                               </option>
@@ -252,12 +257,12 @@ const CompanyKYC = () => {
                                 className="form-control"
                                 placeholder={
                                   users?.company?.contactFirstName ||
-                                  'First name'
+                                  "First name"
                                 }
                                 type="text"
                                 name="contactFirstName"
                                 onChange={handleChange}
-                                value={formData.contactFirstName}
+                                defaultValue={formData.contactFirstName || users?.company?.contactFirstName}
                               />
                             </div>
                           </div>
@@ -267,13 +272,12 @@ const CompanyKYC = () => {
                               <input
                                 className="form-control"
                                 placeholder={
-                                  users?.company?.contactLastName ||
-                                  'Last Name'
+                                  users?.company?.contactLastName || "Last Name"
                                 }
                                 type="text"
                                 name="contactLastName"
                                 onChange={handleChange}
-                                value={formData.contactLastName}
+                                defaultValue={formData.contactLastName || users?.company?.contactLastName}
                               />
                             </div>
                           </div>
@@ -288,7 +292,7 @@ const CompanyKYC = () => {
                                 type="text"
                                 name="email"
                                 onChange={handleChange}
-                                value={formData.email}
+                                defaultValue={formData.email || users?.email}
                               />
                             </div>
                           </div>
@@ -301,7 +305,7 @@ const CompanyKYC = () => {
                                 type="text"
                                 name="phone"
                                 onChange={handleChange}
-                                value={formData.phone}
+                                defaultValue={formData.phone || users?.phone}
                               />
                             </div>
                           </div>

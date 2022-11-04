@@ -122,13 +122,14 @@ function* updateContactDetails({ payload: { formData } }) {
   }
 }
 
-function* updateDirectorDetails({ payload: { formData } }) {
+function* updateDirectorDetails({ payload: { formData, reset } }) {
   try {
     const response = yield call(updateDirectorDetailsService, formData);
     console.log(response.data);
     yield put(updateDirectorDetailsSuccess(response.data));
     if (response) {
       toast.success("Director Details Updated Successfully");
+      reset();
     }
   } catch (error) {
     console.log(error?.response?.data);

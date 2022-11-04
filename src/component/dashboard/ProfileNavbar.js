@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-// import storage from 'redux-persist/lib/storage';
+import Badge from "@mui/material/Badge";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
@@ -10,9 +10,6 @@ import {
   DropdownItem,
   Collapse,
 } from "reactstrap";
-// import {
-//   getAuthUsers,
-// } from '../../redux/actions/personalInfo/userProfile.actions';
 import { getAuthUsers, getNotification, logout } from "../../store/actions";
 import arrow from "../../asset/Arrow.png";
 import avatar from "../../asset/avi.jpg";
@@ -70,7 +67,9 @@ export function ProfileNavBar({ children }) {
           <div className="page-title mx-3">{children}</div>
           <ul>
             <li className="profile_nav_bel">
-              <DropDown notifications={notifications} />
+              <Badge badgeContent={notifications?.length} color="primary">
+                <DropDown notifications={notifications} />
+              </Badge>
             </li>
             <li>
               <Dropdown
@@ -83,7 +82,7 @@ export function ProfileNavBar({ children }) {
                   className="btn header-item waves-effect border-0"
                   id="page-header-user-dropdown"
                 >
-                  <span className="d-none d-xl-inline-block ml-1 text-transform me-2">
+                  <span className="d-none d-xl-inline-block ml-1 text-transform mx-2">
                     {users && users.role === "COMPANY"
                       ? users.company.name
                       : users && users.role === "INDIVIDUAL_USER"
@@ -110,10 +109,6 @@ export function ProfileNavBar({ children }) {
                   <DropdownItem className="d-block">Settings</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem className="text-danger" onClick={handleLogout}>
-                    {/* <div className="d-flex align-items-center justify-content-between">
-                    <i className="fa fa-sign-out mr-5 text-danger"></i>
-                    <span style={{marginLeft: "20px"}}>Logout</span>
-                   </div> */}
                     <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{" "}
                     Logout
                   </DropdownItem>
@@ -170,8 +165,8 @@ const WrappeNavBar = styled.div`
 
 const Notification = styled.div`
   width: 360px;
-  height: 70vh;
-  overflow-Y: scroll;
+  height: 50vh;
+  overflow-y: scroll;
   header {
     padding: 20px;
   }
@@ -179,7 +174,6 @@ const Notification = styled.div`
 
 export const DropDown = ({ status, notifications }) => {
   const [menu, setMenu] = useState(false);
-  const { users } = useSelector((state) => state.user_profile);
 
   const [col1, setCol1] = useState("");
 
@@ -198,7 +192,11 @@ export const DropDown = ({ status, notifications }) => {
   console.log(notifications);
 
   return (
-    <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
+    <Dropdown
+      isOpen={menu}
+      toggle={toggle}
+      className="d-inline-block user-dropdown"
+    >
       <DropdownToggle
         tag="button"
         className="btn waves-effect outline-0 border-0"
@@ -208,27 +206,35 @@ export const DropDown = ({ status, notifications }) => {
           <i className="fas fa-bell"></i>
         </span>
       </DropdownToggle>
-      <DropdownMenu end className="mt-1">
+      <DropdownMenu end className="">
         <Notification>
           <header>
             <div>
               <img src={arrow} alt="arrow" onClick={() => setMenu(false)} />
             </div>
           </header>
-          <hr />
-          {notifications?.map((data) => (
-            <div style={{ padding: "20px 30px", }} key={data.id}>
-              <h6 className="pb-3" style={{ fontWeight: "600" }} onClick={() => t_col1(data.id)}>
-                {data.message.slice(0, 50)}...
+
+          {notifications?.length > 0 ? notifications?.map((data) => (
+            <div
+              style={{
+                padding: "10px 20px",
+                border: "1px solid #ccc",
+              }}
+              className="mb-1 mx-1"
+              key={data.id}
+            >
+              <h6 className="pb-3" style={{cursor: "pointer"}} onClick={() => t_col1(data.id)}>
+                {data.message.slice(0, 60)}...
               </h6>
               <Collapse isOpen={col1 === data.id}>
-                <p className="pb-3">
-                  {data.message}
-                </p>
+                <p className="pb-3">{data.message}</p>
               </Collapse>
-              <hr/>
             </div>
-          ))}
+          )) : (
+            <div className="d-flex justify-content-end align-items-center" style={{width: "100%", height: "70%"}}>
+              <h3 style={{textAlign: "center", color: "#ccc"}}>No Available Notifications</h3>
+            </div>
+          )}
         </Notification>
       </DropdownMenu>
     </Dropdown>

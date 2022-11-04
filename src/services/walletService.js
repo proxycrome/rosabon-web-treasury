@@ -61,3 +61,8 @@ export const getMyDepositActivitiesService = () => {
   return http.getData(url);
 }
 
+export const getReferralRedeemThresholdService = () => {
+  const http = new HttpService();
+  const url = `auth/wallets/get-referral-redeem-threshold`;
+  return http.getData(url);
+}

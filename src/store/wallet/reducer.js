@@ -13,6 +13,9 @@ import {
   GET_MY_REFERRAL_ACTIVITIES,
   GET_MY_REFERRAL_ACTIVITIES_ERROR,
   GET_MY_REFERRAL_ACTIVITIES_SUCCESS,
+  GET_REFERRAL_REDEEM_THRESHOLD,
+  GET_REFERRAL_REDEEM_THRESHOLD_ERROR,
+  GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -55,6 +58,8 @@ const initialState = {
   refRedeemError: null,
   depositActivites: null,
   depositActivitesError: null,
+  referralThreshold: null,
+  referralThresholdError: null,
 };
 
 const wallet = (state = initialState, action) => {
@@ -332,6 +337,33 @@ const wallet = (state = initialState, action) => {
         loading: false,
         depositActivites: null,
         depositActivitesError: action.payload,
+      };
+      break;
+
+    case GET_REFERRAL_REDEEM_THRESHOLD:
+      state = {
+        ...state,
+        loading: true,
+        referralThreshold: null,
+        referralThresholdError: null,
+      };
+      break;
+
+    case GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        referralThreshold: action.payload,
+        referralThresholdError: null,
+      };
+      break;
+
+    case GET_REFERRAL_REDEEM_THRESHOLD_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        referralThreshold: null,
+        referralThresholdError: action.payload,
       };
       break;
 

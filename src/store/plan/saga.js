@@ -311,11 +311,14 @@ function* getPenalCharge() {
 	}
 };
 
-function* payWithCard({ payload: { id } }) {
+function* payWithCard({ payload: { id, setSuccess } }) {
 	try {
 		const response = yield call(payWithCardService, id);
 		console.log(response.data);
 		yield put(payWithCardSuccess(response.data));
+		if(response){
+			setSuccess(true);
+		}
 	} catch (error) {
 		console.log(error?.response?.data);
 		yield put(payWithCardError(error?.response?.data));

@@ -5,6 +5,7 @@ import {
   GET_MY_DEPOSIT_ACTIVITIES,
   GET_MY_REFERRALS,
   GET_MY_REFERRAL_ACTIVITIES,
+  GET_REFERRAL_REDEEM_THRESHOLD,
   GET_WALLET_BALANCE,
   GET_WALLET_TRANSACTIONS,
   POKE_USER,
@@ -22,6 +23,8 @@ import {
   getMyReferralActivitiesSuccess,
   getMyReferralsError,
   getMyReferralsSuccess,
+  getReferralRedeemThresholdError,
+  getReferralRedeemThresholdSuccess,
   getWalletBalance,
   getWalletBalanceError,
   getWalletBalanceSuccess,
@@ -42,6 +45,7 @@ import {
   getMyDepositActivitiesService,
   getMyReferralActivitiesService,
   getMyReferralsService,
+  getReferralRedeemThresholdService,
   getWalletBalanceService,
   getWalletTransactionsService,
   pokeUserService,
@@ -203,6 +207,17 @@ function* getMyDepositActivities() {
   }
 }
 
+function* getReferralRedeemThreshold() {
+  try {
+    const response = yield call(getReferralRedeemThresholdService);
+    console.log(response.data);
+    yield put(getReferralRedeemThresholdSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getReferralRedeemThresholdError(error?.response?.data));
+  }
+}
+
 export function* watchGetWalletBalance() {
   yield takeEvery(GET_WALLET_BALANCE, getWalletBalancer);
 }
@@ -243,6 +258,10 @@ export function* watchGetMyDepositActivities() {
   yield takeEvery(GET_MY_DEPOSIT_ACTIVITIES, getMyDepositActivities);
 }
 
+export function* watchGetReferralRedeemThreshold() {
+  yield takeEvery(GET_REFERRAL_REDEEM_THRESHOLD, getReferralRedeemThreshold);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
@@ -255,6 +274,7 @@ function* WalletSaga() {
     fork(watchGetMyReferralActivities),
     fork(watchRedeemReferralBonus),
     fork(watchGetMyDepositActivities),
+    fork(watchGetReferralRedeemThreshold),
   ]);
 }
 

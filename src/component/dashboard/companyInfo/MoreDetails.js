@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UncontrolledTooltip, Alert } from "reactstrap";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import { Collapse } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
@@ -117,6 +117,16 @@ const MoreDetails = () => {
       [name]: value,
     });
   };
+
+  const updateNames = (firstName, lastName) => {
+    setformData({
+      ...formData,
+      firstName,
+      lastName,
+    });
+    console.log("tesssssssssst");
+    console.log(firstName, lastName);
+  }
 
   const [editFormData, setEditFormData] = useState({
     [`firstName${col2}`]: "",
@@ -264,9 +274,13 @@ const MoreDetails = () => {
     let formArr = [];
     if (
       Object.keys(errors).length === 0 &&
-      isSubmitted // &&
-      //   bvnMessage?.isNameMatched
+      isSubmitted 
+      
     ) {
+      if(!bvnMessage?.isNameMatched){
+        toast.error("Verify Your BVN")
+        return;
+      }
       const {
         firstName,
         middleName,
@@ -309,8 +323,8 @@ const MoreDetails = () => {
         return { ...others };
       });
 
-      dispatch(updateDirectorDetails(otherArr));
-      console.log(otherArr);
+     dispatch(updateDirectorDetails(otherArr, reset));
+      
     }
   }, [errors]);
 
@@ -415,6 +429,10 @@ const MoreDetails = () => {
     setDirectorField(rem);
   };
 
+  
+
+  console.log(formData);
+
   useEffect(() => {
     dispatch(getDirectorDetails());
     setDirectorField([]);
@@ -426,50 +444,53 @@ const MoreDetails = () => {
       <form autoComplete="off" onSubmit={handleSubmit}>
         <WrapperBody>
           <div className="container-fluid">
-            <div className="mt-2 d-flex justify-content-end">
-              {showEdit ? (
-                <button
-                  type="button"
-                  className="btn_bg_blue"
-                  onClick={handleSendOtp}
-                >
-                  Edit
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="grey-button"
-                  onClick={() => {
-                    toggleEdit();
-                    if (directorField?.length <= 0 && directors?.length <= 0) {
-                      reset();
-                    }
-                  }}
-                >
-                  Cancel
-                </button>
-              )}
-              <ModalComponent
-                show={showEmailOtpModal}
-                size={"md"}
-                handleClose={handleOTPModalClose}
-              >
-                <OTPVerify
-                  show={showEmailOtpModal}
-                  handleClose={handleOTPModalClose}
-                  emailOtp={true}
-                  updateOtp={(otp) => createOtp(otp)}
-                  otpData={otp?.data}
-                  company="company"
-                />
-              </ModalComponent>
-            </div>
             {loading ? (
               <div className="vh-100 w-100">
                 <Spinner />
               </div>
             ) : directors?.length > 0 ? (
               <>
+                <div className="mt-2 d-flex justify-content-end">
+                  {showEdit ? (
+                    <button
+                      type="button"
+                      className="btn_bg_blue"
+                      onClick={handleSendOtp}
+                    >
+                      Edit
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="grey-button"
+                      onClick={() => {
+                        toggleEdit();
+                        if (
+                          directorField?.length <= 0 &&
+                          directors?.length <= 0
+                        ) {
+                          reset();
+                        }
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <ModalComponent
+                    show={showEmailOtpModal}
+                    size={"md"}
+                    handleClose={handleOTPModalClose}
+                  >
+                    <OTPVerify
+                      show={showEmailOtpModal}
+                      handleClose={handleOTPModalClose}
+                      emailOtp={true}
+                      updateOtp={(otp) => createOtp(otp)}
+                      otpData={otp?.data}
+                      company="company"
+                    />
+                  </ModalComponent>
+                </div>
                 {directors?.map((item, index) => (
                   <div key={item.id}>
                     <div className="row mt-4">
@@ -657,7 +678,7 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.firstName || "First Name"}
                                   name={`firstName${col2}`}
-                                  value={editFormData[`firstName${col2}`]}
+                                  defaultValue={editFormData[`firstName${col2}`] || item?.firstName}
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -673,7 +694,7 @@ const MoreDetails = () => {
                                     item?.middleName || "Middle Name"
                                   }
                                   name={`middleName${col2}`}
-                                  value={editFormData[`middleName${col2}`]}
+                                  defaultValue={editFormData[`middleName${col2}`] || item?.middleName}
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -687,7 +708,7 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.lastName || "Last Name"}
                                   name={`lastName${col2}`}
-                                  value={editFormData[`lastName${col2}`]}
+                                  defaultValue={editFormData[`lastName${col2}`] || item?.lastName }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -703,7 +724,7 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.address || "Address"}
                                   name={`address${col2}`}
-                                  value={editFormData[`address${col2}`]}
+                                  defaultValue={editFormData[`address${col2}`] || item?.address}
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -719,7 +740,7 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.email || "Email Address"}
                                   name={`email${col2}`}
-                                  value={editFormData[`email${col2}`]}
+                                  defaultValue={editFormData[`email${col2}`] || item?.email}
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -734,7 +755,7 @@ const MoreDetails = () => {
                                   placeholder={item?.phone || "Phone Number"}
                                   id="phone"
                                   name={`phone${col2}`}
-                                  value={editFormData[`phone${col2}`]}
+                                  defaultValue={editFormData[`phone${col2}`] || item?.phone}
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -762,7 +783,7 @@ const MoreDetails = () => {
                                         "Bank verification number (BVN)"
                                       }
                                       name={`bvn${col2}`}
-                                      value={editFormData[`bvn${col2}`]}
+                                      defaultValue={editFormData[`bvn${col2}`] || item?.bvn}
                                       onChange={handleEditChange}
                                       disabled={showEdit}
                                     />
@@ -874,7 +895,7 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.idNumber || "ID Number"}
                                   name={`idNumber${col2}`}
-                                  value={editFormData[`idNumber${col2}`]}
+                                  defaultValue={editFormData[`idNumber${col2}`] || item?.idNumber}
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -1063,13 +1084,13 @@ const MoreDetails = () => {
                 ))}
                 {directorField?.length > 0 &&
                   directorField?.map((data) => (
-                   <div key={data.id}>
-                     <hr />
-                     <div className="row mt-5">
-                       <div className="d-flex justify-content-between mt-5">
-                         <h4>
-                           Director {data.no}{" "}
-                           <span
+                    <div key={data.id}>
+                      <hr />
+                      <div className="row mt-5">
+                        <div className="d-flex justify-content-between mt-5">
+                          <h4>
+                            Director {data.no}{" "}
+                            <span
                               className="pl-5"
                               onClick={() => t_col1(data.id)}
                             >
@@ -1516,6 +1537,28 @@ const MoreDetails = () => {
                         )}
                       </span>
                     </h4>
+                    <div>
+                      {showEdit ? (
+                        <button
+                          type="button"
+                          className="btn_bg_blue"
+                          onClick={handleSendOtp}
+                        >
+                          Edit
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="grey-button"
+                          onClick={() => {
+                            toggleEdit();
+                            reset();
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <ModalComponent
                     show={showEmailOtpModal}
@@ -1796,6 +1839,7 @@ const MoreDetails = () => {
                                   firstName={bvnMessage?.data?.firstName}
                                   lastName={bvnMessage?.data?.lastName}
                                   bvn={formData.bvn}
+                                  confirmName={(firstName, lastName) => updateNames(firstName, lastName)}
                                   director="director"
                                   nameMatch={bvnMessage?.isNameMatched}
                                 />
