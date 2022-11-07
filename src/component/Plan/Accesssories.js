@@ -2526,7 +2526,7 @@ export const TransferDeposit = () => {
         width: 100,
       },
     ],
-    rows: deposits?.map((data) => ({
+    rows: deposits?.reverse()?.map((data) => ({
       sn: `${data.transactionId}`,
       date: `${data.transactionDate}`,
       description: `${data.description}`,
