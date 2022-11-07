@@ -30,6 +30,7 @@ import Feedback from "./component/Plan/feedback/Feedback";
 import AdminMessage from "./component/Plan/feedback/AdminMessage";
 import Help from "./component/Plan/help/Help";
 import PayWithCard from "./component/Plan/Plan/PayWithCard";
+import Statement from "./component/Plan/statement";
 import {
 	HistoryTable,
 	ReferalTable,
@@ -294,6 +295,16 @@ function PageRoutes({ login, isAuth }) {
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>
 							<Help />
+						</PlanHome>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/statement"
+				element={
+					<ProtectedRoute isAuth={isAuth}>
+						<PlanHome>
+							<Statement />
 						</PlanHome>
 					</ProtectedRoute>
 				}

@@ -236,10 +236,22 @@ export const getWithholdingTaxError = (error) => {
   };
 };
 
-export const planAction = (formData, onSuccess, handleShowModalTwo, dispatch) => {
+export const planAction = (
+  formData,
+  onSuccess,
+  handleShowModalTwo,
+  dispatch,
+  setDebitPopup
+) => {
   return {
     type: PLAN_ACTION,
-    payload: { formData, onSuccess, handleShowModalTwo, dispatch },
+    payload: {
+      formData,
+      onSuccess,
+      handleShowModalTwo,
+      dispatch,
+      setDebitPopup,
+    },
   };
 };
 

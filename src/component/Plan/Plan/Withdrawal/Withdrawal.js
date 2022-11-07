@@ -1,54 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { FormGroup, Input } from 'reactstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { FormGroup, Input } from "reactstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import moment from 'moment';
+import moment from "moment";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
-import FullWithdrawal from './FullWithdrawal';
-import PartWithdrawal from './PartWithdrawal';
-import {  getSinglePlan, getWithdrawReason } from "../../../../store/actions";
+import FullWithdrawal from "./FullWithdrawal";
+import PartWithdrawal from "./PartWithdrawal";
+import { getSinglePlan, getWithdrawReason } from "../../../../store/actions";
+import { getCurrIcon } from "../../Accesssories";
 
 const Withdrawal = () => {
-  const [part, setPart] = useState('');
-  const [full, setFull] = useState('');
-  const [amount, setAmount] = useState(0);
+  const [part, setPart] = useState("");
+  const [full, setFull] = useState("");
+  const [amount, setAmount] = useState("");
   const [isClicked, setIsClicked] = useState(false);
-  const [reason, setReason] = useState("")
-  const [otherReasons, setOtherReasons] = useState("")
+  const [reason, setReason] = useState("");
+  const [otherReasons, setOtherReasons] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
   const { singlePlan } = useSelector((state) => state.plan);
   const { withdrawReasons } = useSelector((state) => state.user_profile);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
-  const planStatus = singlePlan?.data.statusCode
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+  const planStatus = singlePlan?.data.statusCode;
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
     dispatch(getWithdrawReason());
-  },[])
+  }, []);
 
   const handleClick = (e) => {
-    if (e.target.value === 'part') {
-      setPart('part');
-      setFull('');
+    if (e.target.value === "part") {
+      setPart("part");
+      setFull("");
     }
-    if (e.target.value === 'full') {
-      setFull('full');
-      setPart('');
-      setAmount(plan?.planSummary?.principal)
+    if (e.target.value === "full") {
+      setFull("full");
+      setPart("");
+      setAmount(plan?.planSummary?.principal);
     }
   };
 
   if (full && isClicked) {
     return (
       <FullWithdrawal
-        amount={amount}
+        amount={parseFloat(amount)?.toFixed(2)}
         reason={reason}
         goBack={() => {
-          setFull('');
+          setFull("");
           setIsClicked(false);
         }}
       />
@@ -58,10 +59,10 @@ const Withdrawal = () => {
   if (part && isClicked) {
     return (
       <PartWithdrawal
-        amount={amount}
+        amount={parseFloat(amount)?.toFixed(2)}
         reason={reason}
         goBack={() => {
-          setPart('');
+          setPart("");
           setIsClicked(false);
         }}
       />
@@ -69,194 +70,204 @@ const Withdrawal = () => {
   }
 
   const back = () => {
-    navigate('/plan-list');
+    navigate("/plan-list");
   };
 
   return (
     <>
-      {
-        planStatus === "OK" && (
-          <>
-            <ProfileNavBar>
-              <NavTitle>
-                <span className="fw-bold">Plan</span>
-              </NavTitle>
-            </ProfileNavBar>
-            <Wrapper>
-              <LeftView>
-                <h4 className="pb-3">Withdrawal</h4>
-                <div className="plan-content">
-                  <div className="plan">
-                    <div className="plan-top h-50 p-4">
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <h4>{plan.planName}</h4>
-                          <p className="p-0 m-0">{plan?.product.productName}</p>
-                        </div>
-                        <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+      {planStatus === "OK" && (
+        <>
+          <ProfileNavBar>
+            <NavTitle>
+              <span className="fw-bold">Plan</span>
+            </NavTitle>
+          </ProfileNavBar>
+          <Wrapper>
+            <LeftView>
+              <h4 className="pb-3">Withdrawal</h4>
+              <div className="plan-content">
+                <div className="plan">
+                  <div className="plan-top h-50 p-4">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h4>{plan.planName}</h4>
+                        <p className="p-0 m-0">{plan?.product.productName}</p>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between pt-4">
-                        <div>
-                          <h4>Start date</h4>
-                          <p className="p-0 m-0">
-                            {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
-                          </p>
-                        </div>
-                        <div>
-                          <h4>End date</h4>
-                          <p className="p-0 m-0">
-                            {moment(plan.planSummary.endDate).format("DD/MM/YYYY")} 
-                          </p>
-                        </div>
+                      <h4 className="Active">
+                        {plan.planStatus.toLowerCase()}
+                      </h4>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between pt-4">
+                      <div>
+                        <h4>Start date</h4>
+                        <p className="p-0 m-0">
+                          {moment(plan.planSummary.startDate).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <h4>End date</h4>
+                        <p className="p-0 m-0">
+                          {moment(plan.planSummary.endDate).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
                       </div>
                     </div>
-                    <div className="d-flex position-relative horizontal-line">
-                      <div className="position-absolute horizontal-circle-left"></div>
-                      <hr className="dotted" />
-                      <div className="position-absolute end-0 horizontal-circle-right"></div>
-                    </div>
+                  </div>
+                  <div className="d-flex position-relative horizontal-line">
+                    <div className="position-absolute horizontal-circle-left"></div>
+                    <hr className="dotted" />
+                    <div className="position-absolute end-0 horizontal-circle-right"></div>
+                  </div>
 
-                    <div className="plan-top h-50 py-1 px-4">
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <h4>Balance</h4>
-                          <p className="p-0 m-0">
-                            ₦{plan.planSummary.principal?.toLocaleString()}
-                          </p>
-                        </div>
-                        {/* <i className="fa-solid fa-ellipsis"></i> */}
+                  <div className="plan-top h-50 py-1 px-4">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h4>Balance</h4>
+                        <p className="p-0 m-0 d-flex gap-1">
+                          {getCurrIcon(plan?.currency?.name)}
+                          {plan.planSummary.principal?.toLocaleString()}
+                        </p>
                       </div>
+                      {/* <i className="fa-solid fa-ellipsis"></i> */}
                     </div>
                   </div>
                 </div>
-                
-                <div className="plan-payment">
-                  <div>
-                    <div className="d-flex align-items-center justify-content-between my-5">
-                      <div className="d-flex align-items-center">
-                        <p className="p-0 m-0">Partial Withdrawal</p>
+              </div>
+
+              <div className="plan-payment">
+                <div>
+                  <div className="d-flex align-items-center justify-content-between my-5">
+                    <div className="d-flex align-items-center">
+                      <p className="p-0 m-0">Partial Withdrawal</p>
+                    </div>
+                    <input
+                      type="radio"
+                      id="part"
+                      name="rolloverType"
+                      value="part"
+                      onClick={handleClick}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="d-flex align-items-center justify-content-between mb-4">
+                    <div className="d-flex align-items-center">
+                      <p className="p-0 m-0">Full Withdrawal</p>
+                    </div>
+                    <input
+                      type="radio"
+                      id="full"
+                      name="rolloverType"
+                      value="full"
+                      onClick={handleClick}
+                    />
+                  </div>
+                </div>
+                <div className="row my-4">
+                  <div className="col ">
+                    <label>Amount to Liquidate</label>
+                    <div className="input-group">
+                      <div className=" input-group-prepend curr-icon">
+                        {getCurrIcon(plan?.currency?.name)}
                       </div>
                       <input
-                        type="radio"
-                        id="part"
-                        name="rolloverType"
-                        value="part"
-                        onClick={handleClick}
+                        className="form-control curr-input"
+                        placeholder={`${plan.planSummary.principal?.toFixed(2)}`}
+                        type="number"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        disabled={full === "full"}
                       />
                     </div>
+                    <label className="d-flex gap-1">
+                      Balance is {getCurrIcon(plan?.currency?.name)}
+                      {(
+                        plan?.planSummary?.principal -
+                        (amount ? parseFloat(amount) : 0)
+                      ).toFixed(2)}
+                    </label>
                   </div>
-                  <div>
-                    <div className="d-flex align-items-center justify-content-between mb-4">
-                      <div className="d-flex align-items-center">
-                        <p className="p-0 m-0">Full Withdrawal</p>
-                      </div>
-                      <input
-                        type="radio"
-                        id="full"
-                        name="rolloverType"
-                        value="full"
-                        onClick={handleClick}
-                      />
+                </div>
+                <div className="row my-4">
+                  <div className="col ">
+                    <label>Reason for Withdrawal</label>
+                    <div className="input-group">
+                      <select
+                        className="form-select form-select-md"
+                        aria-label=".form-select-md"
+                        name="reason"
+                        onChange={(e) => setReason(e.target.value)}
+                      >
+                        <option>Select Reason for Withdrawal</option>
+                        {withdrawReasons?.data?.body?.map((item) => (
+                          <option key={item.id} value={item.reason}>
+                            {item.reason}
+                          </option>
+                        ))}
+                        <option>Others</option>
+                      </select>
                     </div>
                   </div>
+                </div>
+                {reason === "Others" ? (
                   <div className="row my-4">
                     <div className="col ">
-                      <label>Amount to Liquidate</label>
-                      <div className="input-group">
-                        <input
+                      <FormGroup className="form-group-custom mb-4">
+                        <Input
+                          name="otherReasons"
+                          type="textarea"
+                          rows={5}
+                          value={otherReasons}
                           className="form-control"
-                          placeholder="₦ 0.00"
-                          type="number"
-                          value={amount}
-                          onChange={(e)=>setAmount(parseInt(e.target.value))}
-                          disabled={full==="full"}
+                          onChange={(e) => setOtherReasons(e.target.value)}
+                          id="otherReasons"
+                          placeholder="Please provide reason for withdrawal"
                         />
-                      </div>
-                      <label>
-                        Balance is ₦{(plan?.planSummary?.principal - amount).toLocaleString()} 
-                      </label>
+                      </FormGroup>
                     </div>
                   </div>
-                  <div className="row my-4">
-                    <div className="col ">
-                      <label>Reason for Withdrawal</label>
-                      <div className="input-group">
-                        <select
-                          className="form-select form-select-md"
-                          aria-label=".form-select-md"
-                          name="reason"
-                          onChange={(e) => setReason(e.target.value)} 
-                        >
-                          <option>Select Reason for Withdrawal</option>
-                          {
-                            withdrawReasons?.data?.body?.map(item => (
-                              <option key={item.id} value={item.reason} >
-                                {item.reason}
-                              </option>
-                            ))
-                          }
-                          <option>Others</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  {reason === "Others" ? (
-                    <div className="row my-4">
-                      <div className="col ">
-                        <FormGroup className="form-group-custom mb-4">
-                          <Input
-                            name="otherReasons"
-                            type="textarea"
-                            rows={5}
-                            value={otherReasons}
-                            className="form-control"
-                            onChange={(e) => setOtherReasons(e.target.value)}
-                            id="otherReasons"
-                            placeholder="Please provide reason for withdrawal"
-                          />
-                        </FormGroup>
-                      </div>
-                    </div>
-                  ) : null} 
-                </div>
-              </LeftView>
-              <RightView>
+                ) : null}
+              </div>
+            </LeftView>
+            <RightView>
               <div className="bank-details">
                 {/* <div className="bank-detail-content"> */}
-                  {/* <UserBankDetails /> */}
+                {/* <UserBankDetails /> */}
                 {/* </div> */}
               </div>
             </RightView>
-            </Wrapper>
-            <WrapperFooter>
-              <div className="footer-body">
-                <div className="d-flex align-items-center justify-content-between footer-content">
-                  <div>
-                    <button
-                      style={{ color: '#111E6C', width: '300px' }}
-                      onClick={back}
-                    >
-                      Back
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      style={{
-                        backgroundColor: '#111E6C',
-                        color: '#FFFFFF',
-                        width: '300px',
-                      }}
-                      onClick={() => setIsClicked(true)}
-                    >
-                      Next
-                    </button>
-                  </div>
+          </Wrapper>
+          <WrapperFooter>
+            <div className="footer-body">
+              <div className="d-flex align-items-center justify-content-between footer-content">
+                <div>
+                  <button
+                    style={{ color: "#111E6C", width: "300px" }}
+                    onClick={back}
+                  >
+                    Back
+                  </button>
+                </div>
+                <div>
+                  <button
+                    style={{
+                      backgroundColor: "#111E6C",
+                      color: "#FFFFFF",
+                      width: "300px",
+                    }}
+                    onClick={() => setIsClicked(true)}
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
-            </WrapperFooter>
-          </>
-        )
-      }
+            </div>
+          </WrapperFooter>
+        </>
+      )}
     </>
   );
 };
@@ -299,7 +310,9 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active, .Pending, .Matured {
+  .Active,
+  .Pending,
+  .Matured {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
@@ -310,10 +323,20 @@ const LeftView = styled.div`
     color: #219653;
   }
   .Pending {
-    color: #F2994A;
+    color: #f2994a;
   }
   .Matured {
-    color: #2D9CDB;
+    color: #2d9cdb;
+  }
+
+  .curr-icon {
+    position: absolute;
+    margin-top: 6px;
+    margin-left: 22px;
+    z-index: 10;
+  }
+  .curr-input {
+    padding-left: 34px;
   }
 `;
 

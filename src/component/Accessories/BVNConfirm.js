@@ -5,6 +5,8 @@ import Checked from "../../asset/checked.png";
 import Caneled from "../../asset/cnaceled.png";
 import OtpInput from "react18-input-otp";
 import JsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import html2canvas from 'html2canvas';
 import {
   updateUserKyc,
   sendOtp,
@@ -19,6 +21,7 @@ import { Link, useNavigate, NavLink } from "react-router-dom";
 import { usePaystackPayment } from "react-paystack";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { CLEAR_MESSAGES } from "../../store/updateProfile/actionTypes";
+import { getCurrIcon } from "../Plan/Accesssories";
 
 export function BVNConfirm({
   bank,
@@ -717,7 +720,7 @@ export function Notice({
 
   const submit = async () => {
     const formData = {
-      amount: receive_amount,
+      amount: parseFloat(receive_amount).toFixed(2),
       completed: true,
       // corporateUserWithdrawalMandate: null,
       // extraDetails: null,
@@ -742,8 +745,8 @@ export function Notice({
                   <h5>Note</h5>
                   {transferNotice === "transfer" ? (
                     <p className="">
-                      You are about to transfer ₦
-                      {receive_amount?.toLocaleString()} from your{" "}
+                      You are about to transfer {getCurrIcon(plan?.currency?.name)}
+                      {parseFloat(receive_amount).toFixed(2)} from your{" "} 
                       {plan?.planName} plan into {receiving_plan?.planName} plan
                     </p>
                   ) : payType === "pay-card" ? (
@@ -778,10 +781,40 @@ export function Notice({
 
 export function TransactionPreview({ handleClose, transaction }) {
   const generatePDF = () => {
-    const transaction = new JsPDF({ orientation: "portrait", unit: "pt" });
-    transaction.html(document.querySelector("#print")).then(() => {
-      transaction.save("transaction.pdf");
-    });
+    
+    const input = document.getElementById('print');
+    const pxToMm = (px) => {
+      return Math.floor(px/document.getElementById('print')?.offsetHeight);
+    };
+    
+    const mmToPx = (mm) => {
+      return document.getElementById('print')?.offsetHeight*mm;
+    };
+
+    const a4WidthMm = 210;
+      const a4HeightMm = 297; 
+      const a4HeightPx = mmToPx(a4HeightMm); 
+      const inputHeightMm = pxToMm(input?.offsetHeight);
+      const numPages = inputHeightMm <= a4HeightMm ? 1 : Math.floor(inputHeightMm/a4HeightMm) + 1;
+
+    
+    html2canvas(input)
+        .then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
+          
+          // Document of a4WidthMm wide and inputHeightMm high
+          // if (inputHeightMm > a4HeightMm) {
+          //   // elongated a4 (system print dialog will handle page breaks)
+          //   var pdf = new JsPDF('p', 'mm', [inputHeightMm+16, a4WidthMm]);
+          // } else {
+            // standard a4
+            var pdf = new JsPDF();
+          // }
+          
+          pdf.addImage(imgData, 'PNG', 65, 20 );
+          pdf.save(`transaction.pdf`);
+        });
+    ;
   };
 
   return (
@@ -791,7 +824,7 @@ export function TransactionPreview({ handleClose, transaction }) {
           <WrapDetails>
             <div className="container">
               <div className="row">
-                <div className="col" id="print">
+                <div className="col" id="print" style={{border: "1px solid black"}}>
                   <div className="d-flex flex-column justify-content-center align-items-center pb-5">
                     <h4>
                       {transaction?.transactionType === "CREDIT" ? "+" : "-"}{" "}
@@ -874,6 +907,8 @@ export function ProceedPayCard({
   amount,
   onSuccess,
   onClose,
+  text,
+  setIsClicked
 }) {
   const { reg_transaction, loading } = useSelector((state) => state.paystack);
   const { users } = useSelector((state) => state.user_profile);
@@ -884,6 +919,10 @@ export function ProceedPayCard({
     amount: JSON.stringify(amount) + "00",
     publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
   };
+
+  useEffect(() => {
+    setIsClicked(false);
+  }, [])
 
   const initializePayment = usePaystackPayment(config);
 
@@ -902,12 +941,15 @@ export function ProceedPayCard({
                           backgroundColor: "#111E6C",
                           color: "#FFFFFF",
                           width: "300px",
+                          height: "41px",
+                          borderRadius: "10px"
                         }}
                         onClick={() => {
                           initializePayment(onSuccess, onClose);
                         }}
+                        disabled={loading || !reg_transaction}
                       >
-                        {loading ? "Loading" : "Submit"}
+                        {loading || !reg_transaction ? "Loading" : text}
                       </button>
                     </div>
                   </div>

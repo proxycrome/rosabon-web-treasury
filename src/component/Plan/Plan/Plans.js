@@ -5,7 +5,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Input
+  Input,
 } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import plus from "../../../asset/plus.svg";
@@ -14,14 +14,14 @@ import moment from "moment";
 import ModalComponent from "../../ModalComponent";
 import PlanModal from "./PlanModal";
 import { useDispatch, useSelector } from "react-redux";
-import { 
-  getProducts, 
-  getPlans, 
-  getSinglePlan ,
+import {
+  getProducts,
+  getPlans,
+  getSinglePlan,
   getProductCategories,
   deletePlan,
   planAction,
-  viewBankDetail
+  viewBankDetail,
 } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
 import { UserBankDetails } from "../Accesssories";
@@ -37,66 +37,70 @@ export const Plans = () => {
   const [filter, setFilter] = useState({
     category: 0,
     startDate: "",
-    endDate: ""
+    endDate: "",
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { plans, loading } = useSelector((state) => state.plan);
-  const { products, categories  } = useSelector((state) => state.product);
+  const { plans, loading, deletePlanMsg } = useSelector((state) => state.plan);
+  const { products, categories } = useSelector((state) => state.product);
   const userPlans = plans?.data.body ? plans?.data.body : [];
-  const prodCategories = categories?.data.body ? categories?.data.body : []
+  const prodCategories = categories?.data.body ? categories?.data.body : [];
   const planStatus = plans?.statusCode;
-  const product = products?.data.body ? products?.data.body : []
+  const product = products?.data.body ? products?.data.body : [];
+
+  console.log(deletePlanMsg);
 
   let filterPlans = userPlans;
   // filter list of plans
-  if((filter.category===0) || (filter.category===9999999 )) {
+  if (filter.category === 0 || filter.category === 9999999) {
     filterPlans = userPlans;
   }
-  if((filter.category>0) && (filter.category < 9999999)) {
-    filterPlans = filterPlans.filter(item => item.productCategory?.id===filter.category);
-  }
-  if(filter.startDate !== "") {
+  if (filter.category > 0 && filter.category < 9999999) {
     filterPlans = filterPlans.filter(
-      item => moment(filter.startDate) >= moment(item.planSummary.startDate)
-    )
+      (item) => item.productCategory?.id === filter.category
+    );
   }
-  if(filter.endDate !== "") {
+  if (filter.startDate !== "") {
     filterPlans = filterPlans.filter(
-      item => moment(filter.endDate) <= moment(item.planSummary.endDate)
-    )
+      (item) => moment(filter.startDate) >= moment(item.planSummary.startDate)
+    );
+  }
+  if (filter.endDate !== "") {
+    filterPlans = filterPlans.filter(
+      (item) => moment(filter.endDate) <= moment(item.planSummary.endDate)
+    );
   }
 
   const currentPlans = more ? filterPlans : filterPlans.slice(0, 6);
 
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
+  };
 
   useEffect(() => {
     dispatch(getPlans());
     dispatch(getProducts());
     dispatch(getProductCategories());
-  },[])
+  }, []);
 
   const handleChange = (e) => {
-    if(e.target.name==="category") {
+    if (e.target.name === "category") {
       setFilter({
         ...filter,
-        category: Number(e.target.value)
-      })
+        category: Number(e.target.value),
+      });
     } else {
       setFilter({
         ...filter,
-        [e.target.name]: e.target.value
-      })
+        [e.target.name]: e.target.value,
+      });
     }
-  }
+  };
 
   const handlePlanModal = async (id) => {
-    await dispatch(getSinglePlan(id))
+    await dispatch(getSinglePlan(id));
     setShow(true);
-  }
+  };
 
   const handleBankModal = async (id) => {
     await dispatch(getSinglePlan(id));
@@ -114,31 +118,24 @@ export const Plans = () => {
       <Toaster />
       <ModalComponent
         show={show}
-        size={'md'}
+        size={"md"}
         handleClose={() => setShow(false)}
       >
-        <PlanModal 
-          handleClose={() => setShow(false)}
-        />
+        <PlanModal handleClose={() => setShow(false)} />
       </ModalComponent>
       <ModalComponent
         show={bankDetail}
-        size={'md'}
+        size={"md"}
         handleClose={() => setBankDetail(false)}
       >
-        <UserBankDetails 
-          type="account-details"
-        />
+        <UserBankDetails type="account-details" />
       </ModalComponent>
       <ModalComponent
         show={debitPopup}
-        size={'md'}
+        size={"md"}
         handleClose={() => setDebitPopup(false)}
       >
-        <Notice 
-          handleClose={() => setDebitPopup(false)}
-          payType="pay-card"
-        />
+        <Notice handleClose={() => setDebitPopup(false)} payType="pay-card" />
       </ModalComponent>
       <div className="row">
         <div className="col-md-6 col-sm-12">
@@ -150,13 +147,15 @@ export const Plans = () => {
               name="category"
               onChange={handleChange}
             >
-              <option value={0} hidden disabled selected >Choose Investment Category</option>
+              <option value={0} hidden disabled selected>
+                Choose Investment Category
+              </option>
               <option value={9999999}>All</option>
-              {
-                prodCategories.map(item => (
-                  <option value={item.id} key={item.id} >{item.name}</option>
-                ))
-              }
+              {prodCategories.map((item) => (
+                <option value={item.id} key={item.id}>
+                  {item.name}
+                </option>
+              ))}
             </Input>
           </div>
         </div>
@@ -192,86 +191,108 @@ export const Plans = () => {
       <div className="row">
         <div className="d-flex justify-content-between mb-3">
           <h4>Here are your investments at a glance</h4>
-          <div 
-            className="d-flex align-items-center" 
-            style={{cursor:"pointer"}} 
-            onClick={()=>navigate("/plan-product")}
+          <div
+            className="d-flex align-items-center"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/plan-product")}
           >
-            <img src={plus} alt="plus" className="mx-2"/>
-            <span style={{color: '#111E6C', marginRight: '30px'}}> Add More</span>
+            <img src={plus} alt="plus" className="mx-2" />
+            <span style={{ color: "#111E6C", marginRight: "30px" }}>
+              {" "}
+              Add More
+            </span>
           </div>
         </div>
       </div>
-      {
-        filterPlans.length > 0 ? (
-          <>
-            <div className="plan-content">
-              {
-                planStatus === "OK" && currentPlans.map((item) => (
-                  <div className="plan" key={item.id} >
-                    <div className="plan-top h-50 p-4" onClick={() => handlePlanModal(item.id)} >
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <h4>{item.planName} </h4>
-                          <p className="p-0 m-0">
-                            {product?.find((product)=>product.id===item.productId)?.productName}
-                          </p>
-                        </div>
-                        <h4 className={capitalise(item.planStatus)} >{capitalise(item.planStatus)} </h4>
+      {filterPlans.length > 0 ? (
+        <>
+          <div className="plan-content">
+            {planStatus === "OK" &&
+              currentPlans.map((item) => (
+                <div className="plan" key={item.id}>
+                  <div
+                    className="plan-top h-50 p-4"
+                    onClick={() => handlePlanModal(item.id)}
+                  >
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h4>{item.planName} </h4>
+                        <p className="p-0 m-0">
+                          {
+                            product?.find(
+                              (product) => product.id === item.productId
+                            )?.productName
+                          }
+                        </p>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between pt-4">
-                        <div>
-                          <h4>Start date</h4>
-                          <p className="p-0 m-0">
-                            {moment(item.planSummary.startDate).format("DD/MM/YYYY")} 
-                          </p>
-                        </div>
-                        <div>
-                          <h4>End date</h4>
-                          <p className="p-0 m-0">
-                            {moment(item.planSummary.endDate).format("DD/MM/YYYY")} 
-                          </p>
-                        </div>
+                      <h4 className={capitalise(item.planStatus)}>
+                        {capitalise(item.planStatus)}{" "}
+                      </h4>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between pt-4">
+                      <div>
+                        <h4>Start date</h4>
+                        <p className="p-0 m-0">
+                          {moment(item.planSummary.startDate).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
                       </div>
-                    </div>
-                    <div className="d-flex position-relative horizontal-line">
-                      <div className="position-absolute horizontal-circle-left"></div>
-                      <hr className="dotted" />
-                      <div className="position-absolute end-0 horizontal-circle-right"></div>
-                    </div>
-
-                    <div className=" h-50 py-1 px-4">
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <h4>{item.planName} </h4>
-                          <p className="p-0 m-0">
-                            {product.find((product)=>product.id===item.productId)?.productName}
-                          </p>
-                        </div>
-                        <DropDown 
-                          id={item.id} 
-                          status={capitalise(item.planStatus)}
-                          handleBankModal={handleBankModal} 
-                          removePlan={removePlan}
-                        />
+                      <div>
+                        <h4>End date</h4>
+                        <p className="p-0 m-0">
+                          {moment(item.planSummary.endDate).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>
-                ))
-              }
+                  <div className="d-flex position-relative horizontal-line">
+                    <div className="position-absolute horizontal-circle-left"></div>
+                    <hr className="dotted" />
+                    <div className="position-absolute end-0 horizontal-circle-right"></div>
+                  </div>
+
+                  <div className=" h-50 py-1 px-4">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h4>{item.planName} </h4>
+                        <p className="p-0 m-0">
+                          {
+                            product.find(
+                              (product) => product.id === item.productId
+                            )?.productName
+                          }
+                        </p>
+                      </div>
+                      <DropDown
+                        id={item.id}
+                        status={capitalise(item.planStatus)}
+                        handleBankModal={handleBankModal}
+                        removePlan={removePlan}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+          <div
+            className="row"
+            style={{
+              display: more || filterPlans.length < 7 ? "none" : "auto",
+            }}
+          >
+            <div className="d-flex justify-content-center my-5">
+              <button className="btn-view" onClick={() => setMore(true)}>
+                View all
+              </button>
             </div>
-            <div 
-              className="row" 
-              style={{display: (more || filterPlans.length < 7) ? "none":"auto"}} 
-            >
-              <div className="d-flex justify-content-center my-5">
-                <button className="btn-view" onClick={()=>setMore(true)} >View all</button>
-              </div>  
-            </div> 
-          </>
-        ) : 
+          </div>
+        </>
+      ) : (
         <EmptyPlan />
-      }
+      )}
     </Wrapper>
   );
 };
@@ -385,76 +406,87 @@ const Wrapper = styled.div`
   }
 `;
 
-export const DropDown = ({
-  id, 
-  status, 
-  handleBankModal, 
-  removePlan, 
-}) => {
+export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
   const [menu, setMenu] = useState(false);
   const [checkRollover, setCheckRollover] = useState(false);
   const dispatch = useDispatch();
   const { plans } = useSelector((state) => state.plan);
-  const { products  } = useSelector((state) => state.product);
+  const { products } = useSelector((state) => state.product);
 
-  const userPlan = plans?.data.body ? plans?.data.body?.find(item=>item.id===id) : {};
-  const product = products?.data.body ? products?.data.body?.find(
-    item=>item.id===userPlan?.product?.id
-  ) : {}
+  const userPlan = plans?.data.body
+    ? plans?.data.body?.find((item) => item.id === id)
+    : {};
+  const product = products?.data.body
+    ? products?.data.body?.find((item) => item.id === userPlan?.product?.id)
+    : {};
+
+  console.log("plan", userPlan);
+  console.log("product", product);
 
   const autoRollover = () => {
     const data = {
       completed: true,
       plan: id,
       planAction: "AUTO_ROLLOVER",
-    }
+    };
     dispatch(planAction(data));
     dispatch(getSinglePlan(id));
-  }
-
+  };
 
   const toggle = () => {
     setMenu(!menu);
   };
 
-
   return (
-    <Dropdown
-      isOpen={menu}
-      toggle={toggle}
-      className="d-inline-block"
-    >
+    <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
       <DropdownToggle
         tag="button"
         className="btn header-item waves-effect"
         id="page-header-user-dropdown"
       >
-        <div style={{width: "100%", height: "100%"}}>
+        <div style={{ width: "100%", height: "100%" }}>
           <i className="fa-solid fa-ellipsis"></i>
-        </div>  
+        </div>
       </DropdownToggle>
       <DropdownMenu end className="mt-1">
         {status === "Active" ? (
           <>
-            <DropdownItem 
-              tag={Link} 
+            <DropdownItem
+              tag={Link}
               to={`/plan-topup/${id}`}
-              disabled={!(
-                product?.properties?.allowsTopUp && userPlan?.interestReceiptOption==="MATURITY"
-              )}
+              disabled={
+                !(
+                  product?.properties?.allowsTopUp &&
+                  userPlan?.interestReceiptOption === "MATURITY"
+                )
+              }
             >
               Topup
             </DropdownItem>
-            <DropdownItem 
-              tag={Link} 
+            <DropdownItem
+              tag={Link}
               to={`/transfer/${id}`}
-              disabled={!(product?.properties?.allowsTransfer)}
+              disabled={!(product?.properties?.allowsTransfer && userPlan?.allowsLiquidation)}
             >
               Transfer
             </DropdownItem>
-            <DropdownItem tag={Link} to={`/withdrawal/${id}`}>Withdraw</DropdownItem>
+            <DropdownItem
+              tag={Link}
+              to={`/withdrawal/${id}`}
+              disabled={
+                !(
+                  userPlan?.allowsLiquidation &&
+                  product?.properties?.allowsLiquidation
+                )
+              }
+            >
+              Withdraw
+            </DropdownItem>
             <DropdownItem>
-              <div className="d-flex align-items-center justify-content-between" style={{width: "150px"}}>
+              <div
+                className="d-flex align-items-center justify-content-between"
+                style={{ width: "150px" }}
+              >
                 <div>Auto rollover</div>{" "}
                 <Switch
                   className="mr-2 mt-1"
@@ -467,31 +499,45 @@ export const DropDown = ({
                 />
               </div>
             </DropdownItem>
-            <DropdownItem tag={Link} to={`/history/${id}`}>History</DropdownItem>
+            <DropdownItem tag={Link} to={`/history/${id}`}>
+              History
+            </DropdownItem>
           </>
         ) : status === "Pending" ? (
           <>
-            <DropdownItem onClick={()=>handleBankModal(id)}  >View account details</DropdownItem>
-            <DropdownItem tag={Link} to={`/pay-with-card/${id}`} >Pay with card</DropdownItem>
-            <DropdownItem onClick={() =>removePlan(id)} >Remove</DropdownItem>
+            <DropdownItem onClick={() => handleBankModal(id)}>
+              View account details
+            </DropdownItem>
+            <DropdownItem tag={Link} to={`/pay-with-card/${id}`}>
+              Pay with card
+            </DropdownItem>
+            <DropdownItem onClick={() => removePlan(id)}>Remove</DropdownItem>
           </>
         ) : status === "Matured" ? (
           <>
-            <DropdownItem tag={Link} to="/rollover">Rollover</DropdownItem>
-            <DropdownItem 
-              tag={Link} 
+            <DropdownItem tag={Link} to="/rollover">
+              Rollover
+            </DropdownItem>
+            <DropdownItem
+              tag={Link}
               to={`/transfer/${id}`}
-              disabled={!(product?.properties?.allowsTransfer)}
+              disabled={!product?.properties?.allowsTransfer}
             >
               Transfer
             </DropdownItem>
-            <DropdownItem tag={Link} to="/withdrawal">Withdraw</DropdownItem>
-            <DropdownItem tag={Link} to={`/history/${id}`}>History</DropdownItem>
+            <DropdownItem tag={Link} to="/withdrawal">
+              Withdraw
+            </DropdownItem>
+            <DropdownItem tag={Link} to={`/history/${id}`}>
+              History
+            </DropdownItem>
           </>
         ) : status === "Closed" ? (
-          <DropdownItem tag={Link} to={`/history/${id}`}>History</DropdownItem>
+          <DropdownItem tag={Link} to={`/history/${id}`}>
+            History
+          </DropdownItem>
         ) : null}
       </DropdownMenu>
     </Dropdown>
-  )
-}
+  );
+};

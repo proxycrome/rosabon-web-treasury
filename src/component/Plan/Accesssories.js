@@ -283,6 +283,7 @@ const RightWrapper = styled.div`
 export const MakePayment = ({ setPaymentType }) => {
   const [card, setCard] = useState("");
   const [bank, setBank] = useState("");
+  const [isTerms, setIsTerms] = useState(false);
   const { form, setForm } = useContext(PlanContext);
   const directDebit = form.directDebit;
 
@@ -311,9 +312,10 @@ export const MakePayment = ({ setPaymentType }) => {
     const values = {
       bank,
       card,
+      isTerms,
     };
     setPaymentType(values);
-  }, [card, bank, setPaymentType]);
+  }, [card, bank, setPaymentType, isTerms]);
 
   return (
     <PaymentTypeWrapper>
@@ -352,7 +354,15 @@ export const MakePayment = ({ setPaymentType }) => {
         </div>
       </div>
       <div className="py-5 check-box-bank">
-        <input type="checkbox" id="scales" name="scales" />
+        <input
+          type="checkbox"
+          id="scales"
+          name="scales"
+          value={isTerms}
+          checked={isTerms}
+          onChange={() => setIsTerms(!isTerms)}
+          required
+        />
         <label htmlFor="scales">I agree to the Terms and Condition</label>
       </div>
     </PaymentTypeWrapper>
@@ -887,7 +897,7 @@ export const RolloverWithdrawMethod = ({
                     </div>
                   </div>
                   <p>
-                    Letter must be on a company’s letter head and also carry
+                    Letter must be on a company's letter head and also carry
                     bank account details
                   </p>
                 </div>
@@ -902,10 +912,95 @@ export const RolloverWithdrawMethod = ({
   );
 };
 
-export const WithdrawalSummary = ({ amount = 0, reason = "" }) => {
+export const WithdrawalSummary = ({
+  amount = 0,
+  reason = "",
+  compPenalCharge,
+}) => {
+  const [penalty, setPenalty] = useState(null);
   const { singlePlan, penal_charge } = useSelector((state) => state.plan);
 
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+  const plan = singlePlan?.data?.body ? singlePlan?.data.body : {};
+  const penalCharge = penal_charge?.data?.body ? penal_charge?.data?.body : [];
+
+  let date = new Date();
+  const recentDate = moment(date).format("YYYY-MM-DD");
+
+  console.log(penalCharge);
+  console.log(plan);
+  const planProductCharges = penalCharge?.filter(
+    (data) => data.product.id === plan.product.id
+  );
+
+  const computePenalCharge = useCallback(
+    (intRecOption) => {
+      let penalRate = 0;
+      let penalCharge;
+      const currentNumberOfDays = moment(recentDate).diff(
+        plan?.planSummary?.startDate,
+        "days"
+      );
+
+      planProductCharges.forEach((item) => {
+        const maxDays = Math.round(
+          (item.maxDaysElapsed * plan?.tenor?.tenorDays) / 100
+        );
+        const minDays = Math.round(
+          (item.minDaysElapsed * plan?.tenor?.tenorDays) / 100
+        );
+        if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
+          penalRate = item.penalRate;
+        }
+      });
+
+      switch (intRecOption) {
+        case "MATURITY":
+          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+            penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
+          } else if (
+            plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
+          ) {
+            const totalEarnedInt =
+              (plan?.plansummary?.principal *
+                plan?.interestRate *
+                currentNumberOfDays) /
+              365;
+            penalCharge = totalEarnedInt * penalRate;
+          }
+          break;
+
+        case "UPFRONT":
+          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+            const excessIntPaid =
+              amount * plan?.interestRate * (plan?.tenor?.tenorDays / 365) -
+              amount * plan?.interestRate * (currentNumberOfDays / 365);
+            penalCharge =
+              (currentNumberOfDays / 365) * penalRate * amount + excessIntPaid;
+          }
+          break;
+
+        case "MONTHLY":
+        case "QUARTERLY":
+        case "BI_ANNUAL":
+          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+            penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
+          }
+          break;
+
+        default:
+          penalCharge = 0;
+          break;
+      }
+      return penalCharge.toFixed(2);
+    },
+    [plan, amount, recentDate, planProductCharges]
+  );
+
+  useEffect(() => {
+    setPenalty(computePenalCharge(plan?.interestReceiptOption));
+  }, [computePenalCharge, plan]);
+
+
   return (
     <div>
       <RolloverSummaryWrapper>
@@ -928,34 +1023,40 @@ export const WithdrawalSummary = ({ amount = 0, reason = "" }) => {
                   </h4>
                 </div>
               </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
+              <div className="d-flex align-items-end justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">
                     Balance before <br /> Liquidation{" "}
                   </p>
-                  <h4> ₦{plan?.planSummary?.principal?.toLocaleString()}</h4>
+                  <h4 className="d-flex gap-1">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {plan?.planSummary?.principal?.toLocaleString()}
+                  </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Withdrawal Amount</p>
-                  <h4 className=""> ₦{amount.toLocaleString()}</h4>
+                  <h4 className="d-flex gap-1 justify-content-end">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {amount.toLocaleString()}
+                  </h4>
                 </div>
               </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
+              <div className="d-flex align-items-end justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Penal Charges </p>
-                  <h4>₦0</h4>
+                  <h4 className="d-flex gap-1">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {computePenalCharge(plan?.interestReceiptOption)}
+                  </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">
                     Available Plan
                     <br /> Balance{" "}
                   </p>
-                  <h4 className="">
-                    ₦
-                    {(
-                      plan?.planSummary?.principal -
-                      (amount)
-                    )?.toLocaleString()}
+                  <h4 className="d-flex gap-1 justify-content-end">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {(plan?.planSummary?.principal - amount).toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -984,32 +1085,32 @@ export const getCurrIcon = (currency) => {
   switch (currency) {
     case "YEN":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#165;
-        </p>
+        </span>
       );
     case "USD":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</span>
       );
     case "CAD":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</span>
       );
     case "NGN":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#8358;
-        </p>
+        </span>
       );
     case "EURO":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#163;
-        </p>
+        </span>
       );
     default:
-      return <p></p>;
+      return <span></span>;
   }
 };
 
@@ -2205,7 +2306,7 @@ export const ReferralBonus = () => {
           <span className="fw-bold">Wallet</span>
         </NavTitle>
       </ProfileNavBar>
-      <Toaster/>
+      <Toaster />
       {loading ? (
         <div className="vh-100 w-100">
           <Spinner />
@@ -2230,7 +2331,9 @@ export const ReferralBonus = () => {
                 </div>
               </div>
               <div className="d-flex align-items-content justify-content-center">
-                <p className="m-0 p-0">0 out of ₦{referralThreshold?.amount} Earned</p>
+                <p className="m-0 p-0">
+                  0 out of ₦{referralThreshold?.amount} Earned
+                </p>
               </div>
             </div>
             <div className="total-bonus">
@@ -2342,17 +2445,17 @@ const ReferalTableBonusWarapper = styled.div`
 `;
 
 export const TransferDeposit = () => {
-  const [bank, setBank] = useState(false);
+  const [bank, setBank] = useState(true);
   const [credit, setCredit] = useState(false);
   const [plan, setPlan] = useState(false);
 
   const dispatch = useDispatch();
   const { loading, depositActivites } = useSelector((state) => state.wallet);
-  const activedeposits = depositActivites?.entities;
+  const activedeposits = depositActivites ? depositActivites?.entities : [];
   const bankDeposits = depositActivites?.entities.filter(
     (item) => item.category === "BANK_ACCOUNT_TO_WALLET_FUNDING"
   );
-  // console.log(depositActivites);
+  console.log(depositActivites);
 
   const [deposits, setDeposits] = useState(bankDeposits);
 
@@ -2536,30 +2639,30 @@ export const SpecialEarnings = () => {
       },
     ],
     rows: [
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        amount: "₦1,500,000",
-      },
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        amount: "₦1,500,000",
-      },
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        amount: "₦1,500,000",
-      },
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        amount: "₦1,500,000",
-      },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Referral Bonus for Jane Doe first activation",
+      //   amount: "₦1,500,000",
+      // },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Part withdrawal",
+      //   amount: "₦1,500,000",
+      // },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Part withdrawal",
+      //   amount: "₦1,500,000",
+      // },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Part withdrawal",
+      //   amount: "₦1,500,000",
+      // },
     ],
   };
 

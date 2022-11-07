@@ -102,7 +102,7 @@ const PlanBankPayment = ({goBack}) => {
                       // onClick={() => setShow(true)}
                       onClick={handleSubmit}
                     >
-                      {loading ? 'LOADING...' : 'Pay'}
+                      {loading ? 'LOADING...' : 'Save'}
                     </button>
                     <ModalComponent
                       show={show}

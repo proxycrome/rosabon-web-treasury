@@ -10,11 +10,16 @@ import {
   DropdownItem,
   Collapse,
 } from "reactstrap";
-import { getAuthUsers, getNotification, logout } from "../../store/actions";
+import {
+  getAuthUsers,
+  getNotification,
+  logout,
+  readNotification,
+} from "../../store/actions";
 import arrow from "../../asset/Arrow.png";
 import avatar from "../../asset/avi.jpg";
 
-export function ProfileNavBar({ children }) {
+export function ProfileNavBar({ children, view }) {
   const [menu, setMenu] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,6 +28,7 @@ export function ProfileNavBar({ children }) {
   const { users } = profile;
 
   const { notifications } = useSelector((state) => state.notification);
+  const unreadNotifications = notifications?.filter(item => item.readStatus === "UNREAD")
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
 
@@ -67,8 +73,8 @@ export function ProfileNavBar({ children }) {
           <div className="page-title mx-3">{children}</div>
           <ul>
             <li className="profile_nav_bel">
-              <Badge badgeContent={notifications?.length} color="primary">
-                <DropDown notifications={notifications} />
+              <Badge badgeContent={unreadNotifications?.length} color="primary">
+                <DropDown notifications={unreadNotifications} viewNote={view} />
               </Badge>
             </li>
             <li>
@@ -78,7 +84,7 @@ export function ProfileNavBar({ children }) {
                 className="d-inline-block user-dropdown"
               >
                 <DropdownToggle
-                  tag="button"
+                  tag="a"
                   className="btn header-item waves-effect border-0"
                   id="page-header-user-dropdown"
                 >
@@ -172,18 +178,27 @@ const Notification = styled.div`
   }
 `;
 
-export const DropDown = ({ status, notifications }) => {
+export const DropDown = ({ status, notifications, viewNote }) => {
+  const dispatch = useDispatch();
   const [menu, setMenu] = useState(false);
+  const [getStatus, setGetStatus] = useState("");
 
   const [col1, setCol1] = useState("");
 
   const t_col1 = (val) => {
     if (col1 === val) {
       setCol1("");
+      setGetStatus("");
     } else {
       setCol1(val);
+      setGetStatus("READ");
+      dispatch(readNotification(val));
     }
   };
+
+  useEffect(() => {
+    setMenu(viewNote);
+  }, [viewNote]);
 
   const toggle = () => {
     setMenu(!menu);
@@ -198,7 +213,7 @@ export const DropDown = ({ status, notifications }) => {
       className="d-inline-block user-dropdown"
     >
       <DropdownToggle
-        tag="button"
+        tag="a"
         className="btn waves-effect outline-0 border-0"
         id="page-header-user-dropdown"
       >
@@ -214,25 +229,52 @@ export const DropDown = ({ status, notifications }) => {
             </div>
           </header>
 
-          {notifications?.length > 0 ? notifications?.map((data) => (
+          {notifications?.length > 0 ? (
+            notifications?.map((data) => (
+              <div
+                style={{
+                  padding: "10px 20px",
+                  border: "1px solid #ccc",
+                }}
+                className="mb-1 mx-1"
+                key={data.id}
+              >
+                <h6
+                  className="pb-3 d-flex gap-1"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => t_col1(data.id)}
+                >
+                  <small
+                    className={
+                      data.readStatus === "READ" ||
+                      (data.readStatus === "READ" &&
+                        getStatus === "READ" &&
+                        col1 === data.id)
+                        ? "text-success"
+                        : data.readStatus === "UNREAD" &&
+                          getStatus === "READ" &&
+                          col1 === data.id
+                        ? "text-success"
+                        : "text-danger"
+                    }
+                  >
+                    {getStatus === "READ" && col1 === data.id ? getStatus : data.readStatus}:
+                  </small>
+                  {data?.message?.split(" ")?.slice(0, 7)?.join(" ")}...
+                </h6>
+                <Collapse isOpen={col1 === data.id}>
+                  <p className="pb-3">{data.message}</p>
+                </Collapse>
+              </div>
+            ))
+          ) : (
             <div
-              style={{
-                padding: "10px 20px",
-                border: "1px solid #ccc",
-              }}
-              className="mb-1 mx-1"
-              key={data.id}
+              className="d-flex justify-content-end align-items-center"
+              style={{ width: "100%", height: "70%" }}
             >
-              <h6 className="pb-3" style={{cursor: "pointer"}} onClick={() => t_col1(data.id)}>
-                {data.message.slice(0, 60)}...
-              </h6>
-              <Collapse isOpen={col1 === data.id}>
-                <p className="pb-3">{data.message}</p>
-              </Collapse>
-            </div>
-          )) : (
-            <div className="d-flex justify-content-end align-items-center" style={{width: "100%", height: "70%"}}>
-              <h3 style={{textAlign: "center", color: "#ccc"}}>No Available Notifications</h3>
+              <h3 style={{ textAlign: "center", color: "#ccc" }}>
+                No Available Notifications
+              </h3>
             </div>
           )}
         </Notification>

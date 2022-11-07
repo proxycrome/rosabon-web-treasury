@@ -47,6 +47,9 @@ import {
   COMPLETE_TRANSFER,
   COMPLETE_TRANSFER_SUCCESS,
   COMPLETE_TRANSFER_ERROR,
+  DELETE_PLAN,
+  DELETE_PLAN_SUCCESS,
+  DELETE_PLAN_ERROR,
 } from "./actionTypes";
 
 const initialState = {
@@ -83,6 +86,8 @@ const initialState = {
   pay_with_card_err: null,
   transferSuccess: null,
   transferError: null,
+  deletePlanMsg: null,
+  deletePlanError: null,
 };
 
 const plan = (state = initialState, action) => {
@@ -103,6 +108,7 @@ const plan = (state = initialState, action) => {
     case GET_PENAL_CHARGE:
     case PAY_WITH_CARD:
     case COMPLETE_TRANSFER:
+    case DELETE_PLAN:
       state = {
         ...state,
         loading: true,
@@ -392,6 +398,24 @@ const plan = (state = initialState, action) => {
         loading: false,
         transferSuccess: null,
         transferError: action.payload,
+      };
+      break;
+
+    case DELETE_PLAN_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        deletePlanMsg: action.payload,
+        deletePlanError: null,
+      };
+      break;
+
+    case DELETE_PLAN_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        deletePlanMsg: null,
+        deletePlanError: action.payload,
       };
       break;
 

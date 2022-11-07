@@ -7,62 +7,78 @@ import {
   REGISTER_TRANSACTION_ERROR,
   VERIFY_PAYSTACK,
   VERIFY_PAYSTACK_SUCCESS,
-  VERIFY_PAYSTACK_ERROR
+  VERIFY_PAYSTACK_ERROR,
 } from "./actionTypes";
 
 export const initPayment = (formData) => {
-	return {
-		type: INITIALIZE_PAYMENT,
-		payload: { formData },
-	};
+  return {
+    type: INITIALIZE_PAYMENT,
+    payload: { formData },
+  };
 };
 
 export const initPaymentSuccess = (data) => {
-	return {
-		type: INITIALIZE_PAYMENT_SUCCESS,
-		payload: data,
-	};
+  return {
+    type: INITIALIZE_PAYMENT_SUCCESS,
+    payload: data,
+  };
 };
 
 export const initPaymentError = (error) => {
-	return {
-		type: INITIALIZE_PAYMENT_ERROR,
-		payload: error,
-	};
+  return {
+    type: INITIALIZE_PAYMENT_ERROR,
+    payload: error,
+  };
 };
 
 export const regTransaction = (formData) => {
-	return {
-		type: REGISTER_TRANSACTION,
-		payload: { formData },
-	};
+  return {
+    type: REGISTER_TRANSACTION,
+    payload: { formData },
+  };
 };
 
 export const regTransactionSuccess = (data) => {
-	return {
-		type: REGISTER_TRANSACTION_SUCCESS,
-		payload: data,
-	};
+  return {
+    type: REGISTER_TRANSACTION_SUCCESS,
+    payload: data,
+  };
 };
 
 export const regTransactionError = (error) => {
-	return {
-		type: REGISTER_TRANSACTION_ERROR,
-		payload: error,
-	};
+  return {
+    type: REGISTER_TRANSACTION_ERROR,
+    payload: error,
+  };
 };
 
-export const verifyPaystack = (paymentGateway, transactionRef, dispatch, form, setShow) => {
+export const verifyPaystack = (
+  paymentGateway,
+  transactionRef,
+  dispatch,
+  form,
+  setShow,
+  setDebitPopup,
+  action
+) => {
   return {
     type: VERIFY_PAYSTACK,
-    payload: { paymentGateway, transactionRef, dispatch, form, setShow },
+    payload: {
+      paymentGateway,
+      transactionRef,
+      dispatch,
+      form,
+      setShow,
+      setDebitPopup,
+      action,
+    },
   };
 };
 
 export const verifyPaystackSuccess = (data) => {
   return {
     type: VERIFY_PAYSTACK_SUCCESS,
-    payload: data
+    payload: data,
   };
 };
 

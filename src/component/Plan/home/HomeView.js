@@ -5,12 +5,11 @@ import { RightView } from "./RightView";
 import { LeftView } from "./LeftView";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-// import {
-//   updateUserCompanyKYC,
-//   getAuthUsers,
-// } from "../../../redux/actions/personalInfo/userProfile.actions";
+import { Toaster } from "react-hot-toast";
+
 
 function HomeView() {
+  const [sendView, setSendView] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.user_profile);
@@ -20,7 +19,9 @@ function HomeView() {
   
 
   
-  
+  const handleView = (data) => {
+    setSendView(data);
+  }
 
   // useEffect(() => {
   //   if(login){
@@ -57,7 +58,7 @@ function HomeView() {
 
   return (
     <div>
-      <ProfileNavBar className="shadow-lg">
+      <ProfileNavBar className="shadow-lg" view={sendView}>
         <NavTitle>
           <span>
             Welcome back{" "}
@@ -72,12 +73,13 @@ function HomeView() {
           </span>
         </NavTitle>
       </ProfileNavBar>
+      <Toaster/>
       <Wrapper>
         <div className="right-content">
           <RightView />
         </div>
         <div className="left-content">
-          <LeftView />
+          <LeftView view={(data) => handleView(data)}/>
         </div>
       </Wrapper>
     </div>

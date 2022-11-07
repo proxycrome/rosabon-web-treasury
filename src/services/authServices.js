@@ -16,7 +16,7 @@ export const loginService = (formData) => {
 
 export const resetPasswordService = (formData) => {
 	const http = new HttpService();
-	const url = `users/${formData.email}/reset-password`;
+	const url = `users/reset-password`;
 
 	return http.postData(formData, url);
 };

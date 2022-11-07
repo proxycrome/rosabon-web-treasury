@@ -51,6 +51,8 @@ const PlanForm = () => {
   const recentDate = moment(date).format("YYYY-MM-DD");
 
   console.log(inv_rates);
+  console.log(product);
+  console.log(product.tenors)
 
   useEffect(() => {
     dispatch(getExRates());
@@ -113,11 +115,30 @@ const PlanForm = () => {
     paymentMaturity: 0.0,
   });
 
+  // const computeCustomTenorDays = () => {
+  //   const customTenorDays = moment(formData.actualMaturityDate).diff(recentDate, "days");
+    
+  //   let tenor;
+  //   const selectedTenor = product?.tenors?.filter(item => customTenorDays < item.tenorDays)
+
+  //   const newtenorDays =  selectedTenor?.length > 1 ? selectedTenor?.reduce((a, b) => Math.min(a.tenorDays, b.tenorDays)) : selectedTenor?.tenorDays
+    
+  //   return newtenorDays;
+  // } 
+
+  // console.log(computeCustomTenorDays());
+
   // final update on the user plan details before switching to next screen
   useEffect(() => {
     let selectedTenor = product?.tenors?.find(
       (item) => item.id === parseInt(formData.tenor)
     );
+    const selectedCustomTenor = () => {
+      const customTenorDays = moment(formData.actualMaturityDate).diff(recentDate, "days");
+      let tenor;
+      const selectedTenor = product.tenors.filter(item => customTenorDays < item.tenorDays)
+      const newtenorDays =  selectedTenor.reduce((a, b) => Math.min(a.tenorDays, b.tenorDays))
+    } 
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, "days")?._d;
     setFormData({
       ...formData,
@@ -157,9 +178,9 @@ const PlanForm = () => {
 
   // function to compute target amount and computed value
   const contribValue = () => {
-    const selectedTenor = product.tenors?.filter(
+    const selectedTenor = product.tenors?.find(
       (item) => item.id === parseInt(formData.tenor)
-    )[0];
+    );
     if (product?.properties?.hasTargetAmount) {
       if (formData.savingFrequency !== "") {
         if (conValue === "targetAmount") {
@@ -171,8 +192,12 @@ const PlanForm = () => {
               break;
 
             case "WEEKLY":
-              computedValue =
+              if(selectedTenor?.tenorDays < 7){
+                computedValue = undefined;
+              } else {
+                computedValue =
                 formData.targetAmount / (selectedTenor?.tenorDays / 7);
+              } 
               break;
 
             case "MONTHLY":
@@ -233,10 +258,10 @@ const PlanForm = () => {
       ?.find((item) => item.currency.name === formData.currency)?.currency?.name;
       console.log(invRateCurrency); 
     const currency = ex_rates?.find((item) => item.name === formData.currency);
-    const newSellingPrice = currency?.sellingPrice;
-    const oldSellingPrice = ex_rates?.find(
-      (item) => item.name === invRateCurrency
-    )?.sellingPrice;
+    // const newSellingPrice = currency?.sellingPrice;
+    // const oldSellingPrice = ex_rates?.find(
+    //   (item) => item.name === invRateCurrency
+    // )?.sellingPrice;
     const convPrincipal = () => {
       let convertPrincipal;
       if (invRateCurrency === currency?.name) {
@@ -285,6 +310,7 @@ const PlanForm = () => {
       }
       if (interestRate === null) {
         interestRate = formData.directDebit ? 0 + directDebitRate : 0;
+        // interestRate = formData.directDebit ? 0 : 0;
         return interestRate;
       } else {
         interestRate =
@@ -951,13 +977,14 @@ const PlanForm = () => {
               </div>
               <div className="input-group mb-4">
                 <Input
-                  className="form-control"
+                  className={`form-control ${validate && "validate"}`}
                   name="contributionValue"
                   placeholder=""
-                  type="number"
+                  type="number"     
                   value={formData.contributionValue}
                   onChange={handleChange}
                   disabled={!product?.properties?.hasSavingFrequency}
+                  required={product?.properties?.hasTargetAmount}
                 />
               </div>
               {product?.properties?.hasSavingFrequency && (
@@ -1220,7 +1247,7 @@ const Wrapper = styled.div`
   }
   .curr-icon {
     position: absolute;
-    margin-top: 17px;
+    margin-top: 15px;
     margin-left: 20px;
     z-index: 10;
   }

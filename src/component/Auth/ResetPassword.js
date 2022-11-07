@@ -49,11 +49,7 @@ function ResetPassword() {
   return (
     <WrapperContainer>
       <div className="view_content"></div>
-      <Toaster
-        toastOptions={{
-          className: 'bg-danger text-white',
-        }}
-      />
+      <Toaster/>
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">
           <WrappCongrate>

@@ -12,23 +12,26 @@ const PlanPay = ({ goBack }) => {
   const [isBank, setIsBank] = useState(false);
   const [isCard, setIsCard] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [isTermsChecked, setIsTermsChecked] = useState(false)
 
   const { singleProduct } = useSelector((state) => state.product);
   const product = singleProduct?.data.body ? singleProduct?.data.body : {}
 
   const checkDetails = (values) => {
-    const { bank, card } = values;
+    const { bank, card, isTerms } = values;
     if (bank) {
       setIsBank(true);
       setIsCard(false);
+      setIsTermsChecked(isTerms)
     }
     if (card) {
       setIsCard(true);
       setIsBank(false);
+      setIsTermsChecked(isTerms)
     }
   };
 
-  if (isClicked && isBank) {
+  if (isClicked && isBank && isTermsChecked) {
     return (
       <PlanBankPayment
         goBack={() => {
@@ -39,7 +42,7 @@ const PlanPay = ({ goBack }) => {
     );
   }
 
-  if (isClicked && isCard) {
+  if (isClicked && isCard && isTermsChecked) {
     return (
       <PlanCardPayment
         goBack={() => {

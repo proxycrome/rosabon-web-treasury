@@ -274,15 +274,15 @@ export const ValidatePasswordForm = (validatePassword, email, token) => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { newPassword } = values;
+      const { newPassword, c_password } = values;
       const formData = {
         email,
         newPassword,
-        token,
+        confirmPassword: c_password,
       }
 
       console.log(formData);
-      dispatch(resetPassword(formData));
+      dispatch(resetPassword(formData, navigate));
     }
   }, [errors]);
 

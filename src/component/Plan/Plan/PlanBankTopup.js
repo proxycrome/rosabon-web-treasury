@@ -1,100 +1,106 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import moment from 'moment';
-import { UserBankDetails } from '../Accesssories';
+import moment from "moment";
+import { getCurrIcon, UserBankDetails } from "../Accesssories";
 import { createDynamicAcc, planAction } from "../../../store/actions";
 import Spinner from "../../common/loading";
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
-const PlanBankTopup = ({ goBack }) => {
+const PlanBankTopup = ({ goBack, amount }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { 
-    singlePlan, 
-    plan_action, 
-    loading, 
-    plan_action_error 
-  } = useSelector((state) => state.plan);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const { singlePlan, plan_action, loading, plan_action_error } = useSelector(
+    (state) => state.plan
+  );
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const { dynamic_account } = useSelector((state) => state.providus);
-  const planStatus = singlePlan?.data.statusCode
+  const planStatus = singlePlan?.data.statusCode;
 
   useEffect(() => {
-    dispatch(createDynamicAcc(plan?.planName))
-  },[])
+    dispatch(createDynamicAcc(plan?.planName));
+  }, []);
 
-  useEffect(() => {},[])
+  useEffect(() => {}, []);
 
-  const save = async() => {
+  const save = async () => {
     const planForm = {
-      amount: 20000,
+      amount: amount,
       completed: true,
       paymentType: "BANK_TRANSFER",
       plan: parseInt(id),
       planAction: "TOP_UP",
       planToReceive: parseInt(id),
-    }
-    await dispatch(planAction(planForm))
-  }
-  
+    };
+    await dispatch(planAction(planForm));
+  };
+
   return (
     <>
       <Toaster />
-      {
-        dynamic_account !== null ? (
-          <>
-            {
-              planStatus === "OK" && (
-                <Wrapper>
-                  <LeftView>
-                    <h4 className="pb-5">Top up</h4>
-                    <div className="plan-content">
-                      <div className="plan">
-                        <div className="plan-top h-50 p-4">
-                          <div className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <h4>{plan?.planName} </h4>
-                              <p className="p-0 m-0">{plan?.product?.productName} </p>
-                            </div>
-                            <h4 style={{textTransform:"capitalize"}} >{plan?.planStatus?.toLowerCase()} </h4>
-                          </div>
-                          <div className="d-flex align-items-center justify-content-between pt-4">
-                            <div>
-                              <h4>Start date</h4>
-                              <p className="p-0 m-0">
-                                {moment(plan?.planSummary?.startDate).format("DD/MM/YYYY")}
-                              </p>
-                            </div>
-                            <div>
-                              <h4>End date</h4>
-                              <p className="p-0 m-0">
-                                {moment(plan?.planSummary?.endDate).format("DD/MM/YYYY")}
-                              </p>
-                            </div>
-                          </div>
+      {dynamic_account !== null ? (
+        <>
+          {planStatus === "OK" && (
+            <Wrapper>
+              <LeftView>
+                <h4 className="pb-5">Top up</h4>
+                <div className="plan-content">
+                  <div className="plan">
+                    <div className="plan-top h-50 p-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{plan?.planName} </h4>
+                          <p className="p-0 m-0">
+                            {plan?.product?.productName}{" "}
+                          </p>
                         </div>
-                        <div className="d-flex position-relative horizontal-line">
-                          <div className="position-absolute horizontal-circle-left"></div>
-                          <hr className="dotted" />
-                          <div className="position-absolute end-0 horizontal-circle-right"></div>
+                        <h4 style={{ textTransform: "capitalize" }}>
+                          {plan?.planStatus?.toLowerCase()}{" "}
+                        </h4>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between pt-4">
+                        <div>
+                          <h4>Start date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan?.planSummary?.startDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </p>
                         </div>
-
-                        <div className="plan-top h-50 py-1 px-4">
-                          <div className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <h4>Balance</h4>
-                              <p className="p-0 m-0">{plan?.planSummary?.principal} </p>
-                            </div>
-                            {/* <i className="fa-solid fa-ellipsis"></i> */}
-                          </div>
+                        <div>
+                          <h4>End date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan?.planSummary?.endDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </p>
                         </div>
                       </div>
                     </div>
-                    {/* <h4 className="pt-5">Choose Payment Type</h4>
+                    <div className="d-flex position-relative horizontal-line">
+                      <div className="position-absolute horizontal-circle-left"></div>
+                      <hr className="dotted" />
+                      <div className="position-absolute end-0 horizontal-circle-right"></div>
+                    </div>
+
+                    <div className="plan-top h-50 py-1 px-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>Balance</h4>
+                          <div className="p-0 m-0 d-flex gap-1">
+                            {getCurrIcon(plan?.currency?.name)}
+                            {plan?.planSummary?.principal.toLocaleString()}
+                          </div>
+                        </div>
+                        {/* <i className="fa-solid fa-ellipsis"></i> */}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* <h4 className="pt-5">Choose Payment Type</h4>
                     <div className="plan-payment">
                       <div className="row">
                         <div className="col ">
@@ -139,50 +145,48 @@ const PlanBankTopup = ({ goBack }) => {
                         </div>
                       </div>
                     </div> */}
-                  </LeftView>
-                  <RightView>
-                    <div className="bank-details">
-                      <div className="bank-detail-content">
-                        <UserBankDetails />
-                      </div>
-                    </div>
-                  </RightView>
-                </Wrapper>
-              )
-            }
-            <WrapperFooter>
-              <div className="footer-body">
-                <div className="d-flex align-items-center justify-content-between footer-content">
-                  <div>
-                    <button
-                      style={{ color: '#111E6C', width: '300px' }}
-                      onClick={goBack}
-                    >
-                      Back
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      style={{
-                        backgroundColor: '#111E6C',
-                        color: '#FFFFFF',
-                        width: '300px',
-                      }}
-                      onClick={save}
-                    >
-                      Save
-                    </button>
+              </LeftView>
+              <RightView>
+                <div className="bank-details">
+                  <div className="bank-detail-content">
+                    <UserBankDetails />
                   </div>
                 </div>
+              </RightView>
+            </Wrapper>
+          )}
+          <WrapperFooter>
+            <div className="footer-body">
+              <div className="d-flex align-items-center justify-content-between footer-content">
+                <div>
+                  <button
+                    style={{ color: "#111E6C", width: "300px" }}
+                    onClick={goBack}
+                  >
+                    Back
+                  </button>
+                </div>
+                <div>
+                  <button
+                    style={{
+                      backgroundColor: "#111E6C",
+                      color: "#FFFFFF",
+                      width: "300px",
+                    }}
+                    onClick={save}
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
-            </WrapperFooter>
-          </>
-        ) : (
-          <div className='w-100 vh-100'>
-            <Spinner />
-          </div>
-        )
-      }
+            </div>
+          </WrapperFooter>
+        </>
+      ) : (
+        <div className="w-100 vh-100">
+          <Spinner />
+        </div>
+      )}
     </>
   );
 };
@@ -219,7 +223,6 @@ const RightView = styled.div`
   }
   .bank-details {
     padding: 40px;
-    margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
     justify-content: center;

@@ -5,3 +5,15 @@ export const getNotificationService = () => {
     const url = `notification`;
     return http.getData(url);
 }
+
+export const readNotificationService = (id) => {
+    const http = new HttpService();
+    const url = `notification/${id}`;
+    return http.getData(url);
+}
+
+export const readAllNotificationsService = () => {
+    const http = new HttpService();
+    const url = `notification`;
+    return http.putData(null, url);
+}
