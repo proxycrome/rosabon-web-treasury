@@ -44,9 +44,9 @@ export const getSinglePlanService = (id) => {
 
 export const deletePlanService = (id) => {
     const http = new HttpService();
-    const url = `auth/trcreate-plan/${id}`;
+    const url = `auth/trplan-action/${id}`;
 
-    return http.deleteData(url)
+    return http.deleteData(url);
 }
 
 export const getTenorService = () => {
@@ -98,7 +98,7 @@ export const viewBankDetailService = (id) => {
 export const completeTransferService = (id) => {
   const http = new HttpService();
   const url = `auth/trplan-action/complete-transfer?id=${id}`;
-  return http.getData(url);
+  return http.postDataWithToken(null, url);
 };
 
 export const penalChargeService = () => {

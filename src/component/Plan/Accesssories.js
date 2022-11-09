@@ -38,6 +38,10 @@ import {
   getMyReferrals,
   pokeUser,
   getAuthUsers,
+  getMyReferralActivities,
+  redeemReferralBonus,
+  getMyDepositActivities,
+  getReferralRedeemThreshold,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -279,6 +283,7 @@ const RightWrapper = styled.div`
 export const MakePayment = ({ setPaymentType }) => {
   const [card, setCard] = useState("");
   const [bank, setBank] = useState("");
+  const [isTerms, setIsTerms] = useState(false);
   const { form, setForm } = useContext(PlanContext);
   const directDebit = form.directDebit;
 
@@ -307,9 +312,10 @@ export const MakePayment = ({ setPaymentType }) => {
     const values = {
       bank,
       card,
+      isTerms,
     };
     setPaymentType(values);
-  }, [card, bank, setPaymentType]);
+  }, [card, bank, setPaymentType, isTerms]);
 
   return (
     <PaymentTypeWrapper>
@@ -348,7 +354,15 @@ export const MakePayment = ({ setPaymentType }) => {
         </div>
       </div>
       <div className="py-5 check-box-bank">
-        <input type="checkbox" id="scales" name="scales" />
+        <input
+          type="checkbox"
+          id="scales"
+          name="scales"
+          value={isTerms}
+          checked={isTerms}
+          onChange={() => setIsTerms(!isTerms)}
+          required
+        />
         <label htmlFor="scales">I agree to the Terms and Condition</label>
       </div>
     </PaymentTypeWrapper>
@@ -389,10 +403,10 @@ export const UserBankDetails = ({ type = null }) => {
 
   let text = `Account Name: ${account?.accountName},
   Account Number: ${account?.accountNumber},
-  Bank: PROVIDUS BANK`
+  Bank: PROVIDUS BANK`;
 
   const copied = () => {
-    toast.success("Account Details Copied", {position: "top-right"})
+    toast.success("Account Details Copied", { position: "top-right" });
   };
 
   return (
@@ -414,7 +428,7 @@ export const UserBankDetails = ({ type = null }) => {
               <p className="p-0 m-0 bold-text">{account?.accountNumber} </p>
             </div>
             <div>
-              <CopyToClipboard text={text} onCopy={copied} >
+              <CopyToClipboard text={text} onCopy={copied}>
                 <img src={Copy} alt="copy" className="copy" />
               </CopyToClipboard>
             </div>
@@ -746,20 +760,21 @@ const RolloverSummaryWrapper = styled.div`
   }
 `;
 
-export const RolloverWithdrawMethod = ({ 
+export const RolloverWithdrawMethod = ({
   withdrawTo,
   setWithdrawTo,
   base64File,
-  setBase64File }) => {
+  setBase64File,
+}) => {
   const [withdraw, setWithdraw] = useState("");
-  const { login } = useSelector(state => state.auth);
-  
+  const { login } = useSelector((state) => state.auth);
+
   const user_role = login ? login?.role?.name : "";
   const { bankDetails, bankDetailsError } = useSelector(
     (state) => state.user_profile
   );
   const corporateUserWithdrawalMandateRef = useRef();
-  console.log("bank dets", bankDetails)
+  console.log("bank dets", bankDetails);
 
   const handleFileChange = (e, name) => {
     const { files } = e.target;
@@ -796,12 +811,12 @@ export const RolloverWithdrawMethod = ({
     reference.current.click();
   };
 
-  console.log("hhh", withdrawTo)
+  console.log("hhh", withdrawTo);
 
   return (
     <div>
       <RolloverSummaryWrapper>
-        <h4 className="">
+        <h4 className="pt-5">
           Kindly select beneficiary account to receive the withdrawal
         </h4>
         <div className="plan-content">
@@ -824,58 +839,71 @@ export const RolloverWithdrawMethod = ({
                   </div>
                 </div>
               </div>
-              {withdrawTo === "TO_BANK" && user_role==="INDIVIDUAL_USER" ? 
-              bankDetailsError?.message === "Bank Account not available for this user" ? (
-                <span className="text-danger">
-                  No Registered Bank Account Details
-                </span>
-              ) : (
-                <div className="mt-3">
-                  <div className="pt-4">
-                    <p className="p-0 m-0">Account Number</p>
-                    <h4>{bankDetails?.accountNumber} </h4>
-                  </div>
-                  <div className="pt-4">
-                    <p className="p-0 m-0">Account Name</p>
-                    <h4>{bankDetails?.accountName} </h4>
-                  </div>
-                  <div className="pt-4">
-                    <p className="p-0 m-0">Bank Name</p>
-                    <h4>{bankDetails?.bank?.name} </h4>
-                  </div>
-                </div>
-              ) : (withdrawTo === "TO_BANK" && user_role==="COMPANY") ? (<div>
-                <div className="d-flex justify-content-between" >
-                  <div>
-                    <p>Upload withdrawal mandate instruction</p>
-                    <p>png</p>
-                  </div>
-                  <div>
-                    <div className=" style-attachment">
-                      <input
-                        type="file"
-                        className="file"
-                        ref={corporateUserWithdrawalMandateRef}
-                        onChange={(e) =>
-                          handleFileChange(e, "corporateUserWithdrawalMandate")
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="normal-btn grey-button"
-                        onClick={(e) =>
-                          handleFileSelect(e, corporateUserWithdrawalMandateRef)
-                        }
-                      >
-                        Choose file
-                      </button>
+              {withdrawTo === "TO_BANK" && user_role === "INDIVIDUAL_USER" ? (
+                bankDetailsError?.message ===
+                "Bank Account not available for this user" ? (
+                  <span className="text-danger">
+                    No Registered Bank Account Details
+                  </span>
+                ) : (
+                  <div className="mt-3">
+                    <div className="pt-4">
+                      <p className="p-0 m-0">Account Number</p>
+                      <h4>{bankDetails?.accountNumber} </h4>
+                    </div>
+                    <div className="pt-4">
+                      <p className="p-0 m-0">Account Name</p>
+                      <h4>{bankDetails?.accountName} </h4>
+                    </div>
+                    <div className="pt-4">
+                      <p className="p-0 m-0">Bank Name</p>
+                      <h4>{bankDetails?.bank?.name} </h4>
                     </div>
                   </div>
+                )
+              ) : withdrawTo === "TO_BANK" && user_role === "COMPANY" ? (
+                <div>
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <p>Upload withdrawal mandate instruction</p>
+                      <p>png</p>
+                    </div>
+                    <div>
+                      <div className=" style-attachment">
+                        <input
+                          type="file"
+                          className="file"
+                          ref={corporateUserWithdrawalMandateRef}
+                          onChange={(e) =>
+                            handleFileChange(
+                              e,
+                              "corporateUserWithdrawalMandate"
+                            )
+                          }
+                        />
+                        <button
+                          type="button"
+                          className="normal-btn grey-button"
+                          onClick={(e) =>
+                            handleFileSelect(
+                              e,
+                              corporateUserWithdrawalMandateRef
+                            )
+                          }
+                        >
+                          Choose file
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <p>
+                    Letter must be on a company's letter head and also carry
+                    bank account details
+                  </p>
                 </div>
-                <p>
-                  Letter must be on a company’s letter head and also carry bank account details
-                </p>
-              </div>) : (<></>)}
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>
@@ -884,14 +912,99 @@ export const RolloverWithdrawMethod = ({
   );
 };
 
-export const WithdrawalSummary = ({amount=0, reason=""}) => {
+export const WithdrawalSummary = ({
+  amount = 0,
+  reason = "",
+  compPenalCharge,
+}) => {
+  const [penalty, setPenalty] = useState(null);
   const { singlePlan, penal_charge } = useSelector((state) => state.plan);
 
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+  const plan = singlePlan?.data?.body ? singlePlan?.data.body : {};
+  const penalCharge = penal_charge?.data?.body ? penal_charge?.data?.body : [];
+
+  let date = new Date();
+  const recentDate = moment(date).format("YYYY-MM-DD");
+
+  console.log(penalCharge);
+  console.log(plan);
+  const planProductCharges = penalCharge?.filter(
+    (data) => data.product.id === plan.product.id
+  );
+
+  const computePenalCharge = useCallback(
+    (intRecOption) => {
+      let penalRate = 0;
+      let penalCharge;
+      const currentNumberOfDays = moment(recentDate).diff(
+        plan?.planSummary?.startDate,
+        "days"
+      );
+
+      planProductCharges.forEach((item) => {
+        const maxDays = Math.round(
+          (item.maxDaysElapsed * plan?.tenor?.tenorDays) / 100
+        );
+        const minDays = Math.round(
+          (item.minDaysElapsed * plan?.tenor?.tenorDays) / 100
+        );
+        if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
+          penalRate = item.penalRate;
+        }
+      });
+
+      switch (intRecOption) {
+        case "MATURITY":
+          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+            penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
+          } else if (
+            plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
+          ) {
+            const totalEarnedInt =
+              (plan?.plansummary?.principal *
+                plan?.interestRate *
+                currentNumberOfDays) /
+              365;
+            penalCharge = totalEarnedInt * penalRate;
+          }
+          break;
+
+        case "UPFRONT":
+          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+            const excessIntPaid =
+              amount * plan?.interestRate * (plan?.tenor?.tenorDays / 365) -
+              amount * plan?.interestRate * (currentNumberOfDays / 365);
+            penalCharge =
+              (currentNumberOfDays / 365) * penalRate * amount + excessIntPaid;
+          }
+          break;
+
+        case "MONTHLY":
+        case "QUARTERLY":
+        case "BI_ANNUAL":
+          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+            penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
+          }
+          break;
+
+        default:
+          penalCharge = 0;
+          break;
+      }
+      return penalCharge.toFixed(2);
+    },
+    [plan, amount, recentDate, planProductCharges]
+  );
+
+  useEffect(() => {
+    setPenalty(computePenalCharge(plan?.interestReceiptOption));
+  }, [computePenalCharge, plan]);
+
+
   return (
     <div>
       <RolloverSummaryWrapper>
-        <h4 className="">Withdrawal Summary</h4>
+        <h4 className="pt-5">Withdrawal Summary</h4>
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
@@ -910,34 +1023,40 @@ export const WithdrawalSummary = ({amount=0, reason=""}) => {
                   </h4>
                 </div>
               </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
+              <div className="d-flex align-items-end justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">
                     Balance before <br /> Liquidation{" "}
                   </p>
-                  <h4> ₦{plan?.planSummary?.principal}</h4>
+                  <h4 className="d-flex gap-1">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {plan?.planSummary?.principal?.toLocaleString()}
+                  </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Withdrawal Amount</p>
-                  <h4 className=""> ₦{amount.toLocaleString()}</h4>
+                  <h4 className="d-flex gap-1 justify-content-end">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {amount.toLocaleString()}
+                  </h4>
                 </div>
               </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
+              <div className="d-flex align-items-end justify-content-between pt-4">
                 <div>
                   <p className="p-0 m-0">Penal Charges </p>
-                  <h4>₦0</h4>
+                  <h4 className="d-flex gap-1">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {computePenalCharge(plan?.interestReceiptOption)}
+                  </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">
                     Available Plan
                     <br /> Balance{" "}
                   </p>
-                  <h4 className="">
-                    ₦
-                    {(
-                      plan?.planSummary?.principal -
-                      (amount + 40000)
-                    ).toLocaleString()}
+                  <h4 className="d-flex gap-1 justify-content-end">
+                    {getCurrIcon(plan?.currency?.name)}
+                    {(plan?.planSummary?.principal - amount).toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -966,32 +1085,32 @@ export const getCurrIcon = (currency) => {
   switch (currency) {
     case "YEN":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#165;
-        </p>
+        </span>
       );
     case "USD":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</span>
       );
     case "CAD":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</p>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</span>
       );
     case "NGN":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#8358;
-        </p>
+        </span>
       );
     case "EURO":
       return (
-        <p style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
           &#163;
-        </p>
+        </span>
       );
     default:
-      return <p></p>;
+      return <span></span>;
   }
 };
 
@@ -1011,7 +1130,7 @@ export const PlanSummary = ({ planPay }) => {
         Number.EPSILON
     ) / 100;
 
-    console.log("form check", form)
+  console.log("form check", form);
 
   return (
     <div>
@@ -1943,11 +2062,9 @@ const HistoryTableWarapper = styled.div`
 
 export const ReferalTable = () => {
   const dispatch = useDispatch();
-  const { users } = useSelector(state => state.user_profile);
+  const { users } = useSelector((state) => state.user_profile);
   const { myReferrals, loading } = useSelector((state) => state.wallet);
   console.log(myReferrals);
-
-  const referrals = myReferrals?.filter((item) => item.dateOfReg).slice(0, 6);
 
   const handleClick = (id) => {
     dispatch(pokeUser(id));
@@ -1955,7 +2072,7 @@ export const ReferalTable = () => {
 
   useEffect(() => {
     dispatch(getMyReferrals());
-    dispatch(getAuthUsers())
+    dispatch(getAuthUsers());
   }, [dispatch]);
 
   const data = {
@@ -1986,7 +2103,7 @@ export const ReferalTable = () => {
         width: 100,
       },
     ],
-    rows: referrals?.map((data) => ({
+    rows: myReferrals?.entities?.map((data) => ({
       sn: `${data.id}`,
       date: `${data.dateOfReg}`,
       name: `${data.customerName}`,
@@ -2001,33 +2118,6 @@ export const ReferalTable = () => {
         </button>
       ),
     })),
-
-    // [
-    //   {
-
-    //   },
-    //   {
-    //     sn: 2,
-    //     date: "Apr 28 2022",
-    //     name: "Jane Doe",
-    //     status: "Active",
-    //     action: <button className="active">Poke User</button>,
-    //   },
-    //   {
-    //     sn: 3,
-    //     date: "Apr 28 2022",
-    //     name: "Jane Doe",
-    //     status: "Active",
-    //     action: <button className="active">Poke User</button>,
-    //   },
-    //   {
-    //     sn: 4,
-    //     date: "Apr 28 2022",
-    //     name: "Jane Doe",
-    //     status: "Active",
-    //     action: <button className="in-active">Poke User</button>,
-    //   },
-    // ],
   };
 
   return (
@@ -2049,7 +2139,12 @@ export const ReferalTable = () => {
             <div className="padd-referal">
               <label>Referral Link</label>
               <div className="input-group mb-3">
-                <input type="text" className="form-control" value={users?.referralLink} readOnly />
+                <input
+                  type="text"
+                  className="form-control"
+                  value={users?.referralLink}
+                  readOnly
+                />
                 <div className="input-group-text">
                   <i className="fa-solid fa-key"></i>
                 </div>
@@ -2058,7 +2153,7 @@ export const ReferalTable = () => {
             <div className="">
               <p className="p-0 m-0">Total Referrals</p>
               <div className="box-image">
-                <h3>{referrals?.length}</h3>
+                <h3>{myReferrals?.entities?.length}</h3>
               </div>
             </div>
           </div>
@@ -2159,6 +2254,20 @@ const ReferalTableWarapper = styled.div`
 `;
 
 export const ReferralBonus = () => {
+  const dispatch = useDispatch();
+  const { loading, refActivities, refRedeemMsg, referralThreshold } =
+    useSelector((state) => state.wallet);
+  console.log(refActivities);
+  console.log(refRedeemMsg);
+
+  const handleRedeemClick = () => {
+    dispatch(redeemReferralBonus());
+  };
+
+  useEffect(() => {
+    dispatch(getMyReferralActivities());
+    dispatch(getReferralRedeemThreshold());
+  }, [dispatch]);
   const data = {
     columns: [
       {
@@ -2182,32 +2291,12 @@ export const ReferralBonus = () => {
         width: 100,
       },
     ],
-    rows: [
-      {
-        id: 1,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-      {
-        id: 2,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-      {
-        id: 3,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-      {
-        id: 4,
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        balance: "₦1,000,000",
-      },
-    ],
+    rows: refActivities?.entities?.map((data) => ({
+      id: data.id,
+      date: `${data.createdAt}`,
+      description: `${data.description}`,
+      balance: `₦ ${data.amount}`,
+    })),
   };
 
   return (
@@ -2217,33 +2306,47 @@ export const ReferralBonus = () => {
           <span className="fw-bold">Wallet</span>
         </NavTitle>
       </ProfileNavBar>
-      <ReferalTableBonusWarapper>
-        <h3>My Referral Bonus</h3>
-        <div className="bonus-card d-flex justify-content-between aligin-items-center">
-          <div className="earn-bonus">
-            <div className="d-flex justify-content-between aligin-items-center">
-              <div>
-                <p className="m-0 p-0">Earned Referral Bonus</p>
-                <h4 className="py-4">₦ 0.00</h4>
-              </div>
-              <div>
-                <button>Redeem</button>
-              </div>
-            </div>
-            <div className="d-flex align-items-content justify-content-center">
-              <p className="m-0 p-0">0 out of ₦100,000 Earned</p>
-            </div>
-          </div>
-          <div className="total-bonus">
-            <p className="p-0 m-0">Total Redeemed Bonus :</p>
-            <h4 className="total-amount">₦ 0.00</h4>
-          </div>
+      <Toaster />
+      {loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
         </div>
+      ) : (
+        <ReferalTableBonusWarapper>
+          <h3>My Referral Bonus</h3>
+          <div className="bonus-card d-flex justify-content-between aligin-items-center">
+            <div className="earn-bonus">
+              <div className="d-flex justify-content-between aligin-items-center">
+                <div>
+                  <p className="m-0 p-0">Earned Referral Bonus</p>
+                  <h4 className="py-4">₦ 0.00</h4>
+                </div>
+                <div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleRedeemClick}
+                  >
+                    Redeem
+                  </button>
+                </div>
+              </div>
+              <div className="d-flex align-items-content justify-content-center">
+                <p className="m-0 p-0">
+                  0 out of ₦{referralThreshold?.amount} Earned
+                </p>
+              </div>
+            </div>
+            <div className="total-bonus">
+              <p className="p-0 m-0">Total Redeemed Bonus :</p>
+              <h4 className="total-amount">₦ 0.00</h4>
+            </div>
+          </div>
 
-        <div>
-          <MDBDataTable responsive striped data={data} searching={false} />
-        </div>
-      </ReferalTableBonusWarapper>
+          <div>
+            <MDBDataTable responsive striped data={data} searching={false} />
+          </div>
+        </ReferalTableBonusWarapper>
+      )}
     </div>
   );
 };
@@ -2342,9 +2445,53 @@ const ReferalTableBonusWarapper = styled.div`
 `;
 
 export const TransferDeposit = () => {
-  const [bank, setBank] = useState(false);
+  const [bank, setBank] = useState(true);
   const [credit, setCredit] = useState(false);
-  const [transfer, setTransfer] = useState(false);
+  const [plan, setPlan] = useState(false);
+
+  const dispatch = useDispatch();
+  const { loading, depositActivites } = useSelector((state) => state.wallet);
+  const activedeposits = depositActivites ? depositActivites?.entities : [];
+  const bankDeposits = depositActivites?.entities.filter(
+    (item) => item.category === "BANK_ACCOUNT_TO_WALLET_FUNDING"
+  );
+  console.log(depositActivites);
+
+  const [deposits, setDeposits] = useState(bankDeposits);
+
+  useEffect(() => {
+    dispatch(getMyDepositActivities());
+  }, [dispatch]);
+
+  const handleClick = (values, category) => {
+    if (values === "bank" && category === "BANK_ACCOUNT_TO_WALLET_FUNDING") {
+      setBank(true);
+      setCredit(false);
+      setPlan(false);
+      const deposit = activedeposits?.filter(
+        (item) => item.category === category
+      );
+      setDeposits(deposit);
+    }
+    if (values === "credit" && category === "WALLET_FUNDING_BY_CREDIT_WALLET") {
+      setBank(false);
+      setCredit(true);
+      setPlan(false);
+      const deposit = activedeposits?.filter(
+        (item) => item.category === category
+      );
+      setDeposits(deposit);
+    }
+    if (values === "plan" && category === "FUND_REVERSAL_TO_WALLET") {
+      setBank(false);
+      setCredit(false);
+      setPlan(true);
+      const deposit = activedeposits?.filter(
+        (item) => item.category === category
+      );
+      setDeposits(deposit);
+    }
+  };
 
   const data = {
     columns: [
@@ -2379,80 +2526,14 @@ export const TransferDeposit = () => {
         width: 100,
       },
     ],
-    rows: [
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-      {
-        sn: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        type: "Debit",
-        amount: " - ₦1,500,000",
-        balance: "₦1,000,000",
-      },
-    ],
-  };
-
-  const handleClick = (values) => {
-    if (values === "bank") {
-      setBank(true);
-      setCredit(false);
-      setTransfer(false);
-    } else if (values === "credit") {
-      setBank(false);
-      setCredit(true);
-      setTransfer(false);
-    } else if (values === "transfer") {
-      setBank(false);
-      setCredit(false);
-      setTransfer(true);
-    }
+    rows: deposits?.map((data) => ({
+      sn: `${data.transactionId}`,
+      date: `${data.transactionDate}`,
+      description: `${data.description}`,
+      type: `${data.transactionType}`,
+      amount: ` + ${data.amount}`,
+      balance: `₦ ${data.balance}`,
+    })),
   };
 
   return (
@@ -2467,19 +2548,23 @@ export const TransferDeposit = () => {
         <div className="d-flex align-items-content justify-content-around pb-5">
           <h3
             className={bank ? "" : "grey-text"}
-            onClick={() => handleClick("bank")}
+            onClick={() =>
+              handleClick("bank", "BANK_ACCOUNT_TO_WALLET_FUNDING")
+            }
           >
             Bank Transfer Deposit
           </h3>
           <h3
             className={credit ? "" : "grey-text"}
-            onClick={() => handleClick("credit")}
+            onClick={() =>
+              handleClick("credit", "WALLET_FUNDING_BY_CREDIT_WALLET")
+            }
           >
             Credit Wallet Transfer Deposit
           </h3>
           <h3
-            className={transfer ? "" : "grey-text"}
-            onClick={() => handleClick("transfer")}
+            className={plan ? "" : "grey-text"}
+            onClick={() => handleClick("plan", "FUND_REVERSAL_TO_WALLET")}
           >
             Plan Transfer Deposit
           </h3>
@@ -2554,30 +2639,30 @@ export const SpecialEarnings = () => {
       },
     ],
     rows: [
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Referral Bonus for Jane Doe first activation",
-        amount: "₦1,500,000",
-      },
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        amount: "₦1,500,000",
-      },
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        amount: "₦1,500,000",
-      },
-      {
-        id: "N0_1947034",
-        date: "Apr 28 2022",
-        description: "Part withdrawal",
-        amount: "₦1,500,000",
-      },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Referral Bonus for Jane Doe first activation",
+      //   amount: "₦1,500,000",
+      // },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Part withdrawal",
+      //   amount: "₦1,500,000",
+      // },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Part withdrawal",
+      //   amount: "₦1,500,000",
+      // },
+      // {
+      //   id: "N0_1947034",
+      //   date: "Apr 28 2022",
+      //   description: "Part withdrawal",
+      //   amount: "₦1,500,000",
+      // },
     ],
   };
 

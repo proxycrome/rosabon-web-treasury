@@ -71,6 +71,12 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     <span>Wallet</span>
                   </li>
                 </NavLink>
+                <NavLink style={{ textDecoration: 'none' }} to="/statement">
+                  <li>
+                    <i className="fa fa-envelope"></i>
+                    <span>Statement</span>
+                  </li>
+                </NavLink>
                 <NavLink
                   className={
                     isTicket || isOpenTicket || isCloseTicket

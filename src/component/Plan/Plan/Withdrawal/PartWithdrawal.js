@@ -1,32 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import moment from 'moment';
+import moment from "moment";
 // import { SuccessConfirm } from '../../../Accessories/BVNConfirm';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 // import ModalComponent from '../../../ModalComponent';
-import { WithdrawalSummary } from '../../Accesssories';
-import WithdrawalChannel from './WithdrawalChannel';
-import { Toaster } from 'react-hot-toast';
-import { getBankDetails } from '../../../../store/actions';
+import { getCurrIcon, WithdrawalSummary } from "../../Accesssories";
+import WithdrawalChannel from "./WithdrawalChannel";
+import { Toaster } from "react-hot-toast";
+import { getBankDetails, getPenalCharge } from "../../../../store/actions";
 
-const FullWithdrawal = ({goBack, amount, reason}) => {
+const PartWithdrawal = ({ goBack, amount, reason }) => {
   const dispatch = useDispatch();
   const [isClicked, setIsClicked] = useState(false);
-  const { singlePlan, loading } = useSelector((state) => state.plan);
+  const { singlePlan, loading, penal_charge } = useSelector(
+    (state) => state.plan
+  );
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
   useEffect(() => {
     dispatch(getBankDetails());
-  },[])
+    dispatch(getPenalCharge());
+  }, []);
 
   if (isClicked) {
-    return <WithdrawalChannel amount={amount} type="PARTIAL" goBack={() => setIsClicked(false)} />;
-  };
+    return (
+      <WithdrawalChannel
+        amount={amount}
+        type="PARTIAL"
+        reason={reason}
+        goBack={() => setIsClicked(false)}
+      />
+    );
+  }
 
   return (
     <>
-    <Toaster />
+      <Toaster />
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Plan</span>
@@ -70,8 +80,9 @@ const FullWithdrawal = ({goBack, amount, reason}) => {
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
                     <h4>Balance</h4>
-                    <p className="p-0 m-0">
-                      ₦{plan?.planSummary?.principal?.toLocaleString()}
+                    <p className="p-0 m-0 d-flex gap-1">
+                      {getCurrIcon(plan?.currency?.name)}
+                      {plan?.planSummary?.principal?.toLocaleString()}
                     </p>
                   </div>
                   {/* <i className="fa-solid fa-ellipsis"></i> */}
@@ -81,19 +92,19 @@ const FullWithdrawal = ({goBack, amount, reason}) => {
           </div>
         </LeftView>
         <RightView>
-        <div className="bank-details">
-          <div className="bank-detail-content">
-            <WithdrawalSummary amount={amount} reason={reason} />
+          <div className="bank-details">
+            <div className="bank-detail-content">
+              <WithdrawalSummary amount={amount} reason={reason} />
+            </div>
           </div>
-        </div>
-      </RightView>
+        </RightView>
       </Wrapper>
       <WrapperFooter>
         <div className="footer-body">
           <div className="d-flex align-items-center justify-content-between footer-content">
             <div>
               <button
-                style={{ color: '#111E6C', width: '300px' }}
+                style={{ color: "#111E6C", width: "300px" }}
                 onClick={goBack}
               >
                 Back
@@ -102,13 +113,13 @@ const FullWithdrawal = ({goBack, amount, reason}) => {
             <div>
               <button
                 style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
+                  backgroundColor: "#111E6C",
+                  color: "#FFFFFF",
+                  width: "300px",
                 }}
-                onClick={()=>setIsClicked(true)}
+                onClick={() => setIsClicked(true)}
               >
-                { loading ? "Loading..." : "Proceed" }
+                {loading ? "Loading..." : "Proceed"}
               </button>
             </div>
           </div>
@@ -118,7 +129,7 @@ const FullWithdrawal = ({goBack, amount, reason}) => {
   );
 };
 
-export default FullWithdrawal;
+export default PartWithdrawal;
 
 const LeftView = styled.div`
   width: 50%;
@@ -141,7 +152,9 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active, .Pending, .Matured {
+  .Active,
+  .Pending,
+  .Matured {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
@@ -152,10 +165,10 @@ const LeftView = styled.div`
     color: #219653;
   }
   .Pending {
-    color: #F2994A;
+    color: #f2994a;
   }
   .Matured {
-    color: #2D9CDB;
+    color: #2d9cdb;
   }
 `;
 

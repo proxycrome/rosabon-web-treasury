@@ -122,19 +122,20 @@ function* updateContactDetails({ payload: { formData } }) {
   }
 }
 
-function* updateDirectorDetails({ payload: { formData } }) {
+function* updateDirectorDetails({ payload: { formData, reset } }) {
   try {
     const response = yield call(updateDirectorDetailsService, formData);
     console.log(response.data);
     yield put(updateDirectorDetailsSuccess(response.data));
     if (response) {
       toast.success("Director Details Updated Successfully");
+      reset();
     }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(updateDirectorDetailsError(error?.response?.data));
-    if (error?.response) {
-      toast.error(error?.response?.data);
+    if (error?.response?.data?.message) {
+      toast.error(error?.response?.data?.message);
     }
   }
 }

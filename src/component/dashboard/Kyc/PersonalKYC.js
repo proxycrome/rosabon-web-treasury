@@ -26,7 +26,7 @@ const PersonalKYC = () => {
   const { login, isLoggedIn } = auth;
 
   const user_profile = useSelector((state) => state.user_profile);
-  const { showBvnModal, bvnError, bvnMessage, countries, states } =
+  const { loading, showBvnModal, bvnError, bvnMessage, countries, states } =
     user_profile;
 
   console.log(user_details);
@@ -134,14 +134,14 @@ const PersonalKYC = () => {
 
     const objData = {
       firstName: firstName
-        ? firstName.toUpperCase()
-        : user_details?.individualUser?.firstName.toUpperCase(),
-      lastName: lastName.toUpperCase()
-        ? lastName
-        : user_details?.individualUser?.lastName.toUpperCase(),
+        ? firstName?.toUpperCase()
+        : user_details?.individualUser?.firstName?.toUpperCase(),
+      lastName: lastName
+        ? lastName?.toUpperCase()
+        : user_details?.individualUser?.lastName?.toUpperCase(),
       id: bvn ? bvn : user_details.individualUser.bvn,
       isSubjectConsent: true,
-      phoneNumber: phone ? phone : user_details && user_details?.phone,
+      phoneNumber: phone ? phone : user_details?.phone,
     };
 
     console.log(objData);
@@ -171,7 +171,7 @@ const PersonalKYC = () => {
 
   return (
     <div>
-      {user_details ? (
+      {user_details || !loading ? (
         <div className="">
           <div>
             <Toaster />
@@ -182,10 +182,7 @@ const PersonalKYC = () => {
                 <div>
                   <div>
                     <div className="d-flex justify-content-between align-items-center">
-                      <h3>Hello {user_details.individualUser.firstName},</h3>
-                      {/* <Link to="/">
-                        <button className="dashboard">Dashboard</button>
-                      </Link> */}
+                      <h3>Hello {user_details?.individualUser?.firstName},</h3>
                     </div>
 
                     <p>
@@ -208,7 +205,7 @@ const PersonalKYC = () => {
                                   "Enter first name"
                                 }
                                 name="firstName"
-                                value={user_details?.individualUser?.firstName}
+                                defaultValue={formData.firstName || user_details?.individualUser?.firstName}
                                 onChange={handleChange}
                                 disabled
                               />
@@ -226,7 +223,7 @@ const PersonalKYC = () => {
                                 }
                                 name="middleName"
                                 onChange={handleChange}
-                                value={formData.middleName}
+                                defaultValue={formData.middleName || user_details?.individualUser?.middleName}
                               />
                             </div>
                           </div>
@@ -241,7 +238,7 @@ const PersonalKYC = () => {
                                   "Enter last name"
                                 }
                                 name="lastName"
-                                value={user_details?.individualUser?.lastName}
+                                defaultValue={formData.lastName || user_details?.individualUser?.lastName}
                                 onChange={handleChange}
                                 disabled
                               />
@@ -300,7 +297,9 @@ const PersonalKYC = () => {
                                 id="phone"
                                 onChange={handleChange}
                                 name="phone"
-                                value={formData.phone}
+                                defaultValue={
+                                  formData.phone || user_details?.phone
+                                }
                               />
                             </div>
                             <UncontrolledTooltip
@@ -317,14 +316,14 @@ const PersonalKYC = () => {
                             <div className="input-group">
                               <input
                                 className="form-control"
-                                placeholder={
-                                  user_details?.individualUser?.bvn ||
-                                  "Bank verification number (BVN)"
-                                }
+                                placeholder="Bank verification number (BVN)"
                                 type="text"
                                 onChange={handleChange}
                                 name="bvn"
-                                value={formData.bvn}
+                                defaultValue={
+                                  formData.bvn ||
+                                  user_details?.individualUser?.bvn
+                                }
                               />
                             </div>
                           </div>
@@ -342,9 +341,11 @@ const PersonalKYC = () => {
                               Verify
                             </button>
                           </div>
-                          <small className="text-danger">
-                            {bvnError?.message ? bvnError?.message : ""}
-                          </small>
+                          {bvnError && bvnError.message && (
+                            <small className="text-danger">
+                              {bvnError?.message}
+                            </small>
+                          )}
                           <div>
                             <div
                               style={{
@@ -384,9 +385,7 @@ const PersonalKYC = () => {
                               <input
                                 className="form-control"
                                 type="text"
-                                placeholder={
-                                  user_details?.email || "Enter your email"
-                                }
+                                placeholder="Enter your email"
                                 onChange={handleChange}
                                 name="email"
                                 value={user_details?.email}
@@ -407,7 +406,6 @@ const PersonalKYC = () => {
                                     ?.coutryOfResidence?.id
                                 }
                                 name="countryId"
-                                // value={1}
                               >
                                 <option value={0}></option>
                                 {countries?.map((country) => (
@@ -425,14 +423,15 @@ const PersonalKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder={
-                                  user_details?.individualUser?.address
-                                    ?.houseNoAddress || "Contact Address"
-                                }
+                                placeholder="Contact Address"
                                 type="text"
                                 onChange={handleChange}
                                 name="houseNoAddress"
-                                value={formData.houseNoAddress}
+                                defaultValue={
+                                  formData.houseNoAddress ||
+                                  user_details?.individualUser?.address
+                                    ?.houseNoAddress
+                                }
                               />
                             </div>
                           </div>
@@ -465,14 +464,14 @@ const PersonalKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder={
-                                  user_details?.individualUser?.address?.city ||
-                                  "City"
-                                }
+                                placeholder="City"
                                 type="text"
                                 onChange={handleChange}
                                 name="city"
-                                value={formData.city}
+                                value={
+                                  formData.city ||
+                                  user_details?.individualUser?.address?.city
+                                }
                               />
                             </div>
                           </div>

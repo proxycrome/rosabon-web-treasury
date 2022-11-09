@@ -230,7 +230,7 @@ function CompanySignup() {
                             aria-label=".form-select-md"
                             onChange={handleValueChange}
                             name="source"
-                            value={sourcer}
+                            value={values.source}
                           >
                             <option value=""></option>
                             <option value="ROSABON_SALES">
@@ -244,7 +244,7 @@ function CompanySignup() {
                       </div>
                       <div className="referal-link pb-5">
                         <div className="input-group">
-                          {values.source == 'OTHER' ? (
+                          {values.source === 'OTHER' ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -253,7 +253,7 @@ function CompanySignup() {
                               name="sourceOthers"
                               value={values.sourceOthers}
                             />
-                          ) : values.source == 'ANOTHER_USER' ? (
+                          ) : values.source === 'ANOTHER_USER' ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -261,8 +261,9 @@ function CompanySignup() {
                               onChange={handleValueChange}
                               name="refferedBy"
                               value={values.refferedBy}
+                              disabled={referralCode}
                             />
-                          ) : values.source == 'ROSABON_SALES' ? (
+                          ) : values.source === 'ROSABON_SALES' ? (
                             <Input
                               type="text"
                               className="form-control"
@@ -270,6 +271,7 @@ function CompanySignup() {
                               onChange={handleValueChange}
                               name="refferedBy"
                               value={values.refferedBy}
+                              disabled={referralCode}
                             />
                           ) : (
                             <Input
@@ -278,7 +280,8 @@ function CompanySignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy || referralCode}
+                              value={values.refferedBy}
+                              disabled={referralCode}
                             />
                           )}
                         </div>

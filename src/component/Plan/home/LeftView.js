@@ -1,18 +1,25 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import styled from 'styled-components';
-import { Collapse, Input } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { 
-  getProducts, 
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import styled from "styled-components";
+import { Collapse, Input } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getProducts,
   getCatWithProducts,
   getInvestmentRates,
   getWithholdingTax,
-  getAuthUsers
-} from '../../../store/actions';
-import { paymentAtMaturity } from '../Accesssories';
+  getAuthUsers,
+  getNotification,
+  readAllNotifications,
+} from "../../../store/actions";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { paymentAtMaturity } from "../Accesssories";
+import Copy from "../../../asset/copy-2.png";
+import Note from "../../../asset/NotifyIcon.png";
+import toast from "react-hot-toast";
 
-export const LeftView = () => {
+export const LeftView = ({ view }) => {
   const dispatch = useDispatch();
+  const [isView, setIsView] = useState(false);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState({
     product: 0,
@@ -20,14 +27,21 @@ export const LeftView = () => {
     tenor: 0,
   });
   const [result, setResult] = useState();
-  const {users} = useSelector(state => state.user_profile);
-  const { products  } = useSelector((state) => state.product);
-  const { investment_rates,withholding_tax  } = useSelector((state) => state.plan);
+  const { notifications } = useSelector((state) => state.notification);
+  const { users } = useSelector((state) => state.user_profile);
+  const { products } = useSelector((state) => state.product);
+  const { investment_rates, withholding_tax } = useSelector(
+    (state) => state.plan
+  );
 
   const productList = products?.data?.body;
   const productStatus = products?.statusCode;
-  const withhold_tax = withholding_tax?.data.body ? withholding_tax?.data.body : []
-  const inv_rates = investment_rates?.data.body ? investment_rates?.data.body: []
+  const withhold_tax = withholding_tax?.data.body
+    ? withholding_tax?.data.body
+    : [];
+  const inv_rates = investment_rates?.data.body
+    ? investment_rates?.data.body
+    : [];
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
 
@@ -35,12 +49,15 @@ export const LeftView = () => {
 
   // fetch interest rate
   const interest_rate = useMemo(() => {
-    let rate =  inv_rates?.find((
-      item => { return (item.product.id === data.product) && 
-      (data.amount >= item.minimumAmount) && (data.amount <= item.maximumAmount)}
-    ))
-    if(rate !== undefined) {
-      if(rate?.maturityRate === null) {
+    let rate = inv_rates?.find((item) => {
+      return (
+        item.product.id === data.product &&
+        data.amount >= item.minimumAmount &&
+        data.amount <= item.maximumAmount
+      );
+    });
+    if (rate !== undefined) {
+      if (rate?.maturityRate === null) {
         return 1;
       } else {
         return rate?.maturityRate;
@@ -48,13 +65,18 @@ export const LeftView = () => {
     } else {
       return 1;
     }
-  }, [data.product, data.amount])
+  }, [data.product, data.amount]);
+
+  useEffect(() => {
+    view(isView);
+  }, [isView]);
 
   const calculateSI = (principal, rate, time) => {
-    const SI = (principal*rate*(((time/365) * 100 + Number.EPSILON) / 100)) / 100
-    return Math.round(SI * 100 + Number.EPSILON) / 100
+    const SI =
+      (principal * rate * (((time / 365) * 100 + Number.EPSILON) / 100)) / 100;
+    return Math.round(SI * 100 + Number.EPSILON) / 100;
     // return Number((SI * 100 + Number.EPSILON) / 100).toFixed(2)
-  }
+  };
 
   useEffect(() => {
     dispatch(getProducts());
@@ -62,34 +84,37 @@ export const LeftView = () => {
     dispatch(getInvestmentRates());
     dispatch(getWithholdingTax());
     dispatch(getAuthUsers());
-  },[]);
+    dispatch(getNotification());
+  }, [dispatch]);
 
   // useEffect(() => {},[data.tenor])
   useEffect(() => {
     setData({
       ...data,
-      tenor: 0
-    })
-  },[data.product])
+      tenor: 0,
+    });
+  }, [data.product]);
 
   const tenors = useMemo(() => {
-    if(productStatus === "OK") {
-      let tenorList = productList.find(item => item.id === data.product)?.tenors
-      return tenorList
+    if (productStatus === "OK") {
+      let tenorList = productList.find(
+        (item) => item.id === data.product
+      )?.tenors;
+      return tenorList;
     }
-  }, [data.product])
+  }, [data.product]);
 
   const handleChange = (e) => {
-    if(e.target.name === "amount") {
+    if (e.target.name === "amount") {
       setData({
         ...data,
-        [e.target.name]: Number(parseFloat(e.target.value).toFixed(2))
-      })
+        [e.target.name]: Number(parseFloat(e.target.value).toFixed(2)),
+      });
     } else {
       setData({
         ...data,
-        [e.target.name]: Number(e.target.value)
-      })
+        [e.target.name]: Number(e.target.value),
+      });
     }
   };
 
@@ -100,14 +125,22 @@ export const LeftView = () => {
         data.amount,
         withhold_tax[0]?.rate,
         0,
-        calculateSI(
-          data.amount, 
-          interest_rate,
-          data.tenor
-        )
+        calculateSI(data.amount, interest_rate, data.tenor)
       )
-    )
-  }
+    );
+  };
+
+  const handleReadAll = () => {
+    dispatch(readAllNotifications());
+  };
+
+  const copyReferralLink = () => {
+    toast.success("Referral Link Copied");
+  };
+
+  const copyReferralCode = () => {
+    toast.success("Referral Code Copied");
+  };
 
   return (
     <LeftWrapper className="ms-4">
@@ -132,19 +165,20 @@ export const LeftView = () => {
                   <Input
                     className="form-control"
                     placeholder="Select Product"
-                    type='select'
+                    type="select"
                     name="product"
                     value={data.product}
                     onChange={handleChange}
                   >
-                    <option hidden selected disabled value={0} >Select Product</option>
-                    {
-                      productStatus === "OK" && productList.map((item) => (
+                    <option hidden selected disabled value={0}>
+                      Select Product
+                    </option>
+                    {productStatus === "OK" &&
+                      productList.map((item) => (
                         <option key={item.id} value={item.id}>
                           {item.productName}
                         </option>
-                      ))
-                    }
+                      ))}
                   </Input>
                 </div>
               </div>
@@ -174,22 +208,21 @@ export const LeftView = () => {
                     value={data.tenor}
                     onChange={handleChange}
                   >
-                    <option hidden value={0} disabled>Select Tenor</option>
-                    {
-                      productStatus === "OK" && tenors?.map(item => (
-                        <option key={item.id} value={item.tenorDays} >
+                    <option hidden value={0} disabled>
+                      Select Tenor
+                    </option>
+                    {productStatus === "OK" &&
+                      tenors?.map((item) => (
+                        <option key={item.id} value={item.tenorDays}>
                           {item.tenorName}
                         </option>
-                      ))
-                    }
+                      ))}
                   </Input>
                 </div>
               </div>
             </div>
             <div className="text-center calc-mty">
-              <button onClick={calculate} >
-                Calculate Amount at maturity
-              </button>
+              <button onClick={calculate}>Calculate Amount at maturity</button>
             </div>
             <div className="row pt-4">
               <div className=" ">
@@ -203,50 +236,65 @@ export const LeftView = () => {
                 </div>
               </div>
             </div>
-            <div className="row" >
-              <p className='disclaimer' >
-                Please note that this is an estimate and final value is subject to withholding tax
+            <div className="row">
+              <p className="disclaimer">
+                Please note that this is an estimate and final value is subject
+                to withholding tax
               </p>
             </div>
           </Collapse>
         </div>
       </div>
+
       <div className="left-content-notify">
-        <div className="notification">
-          <div className="d-flex align-items-center justify-content-between">
-            <h5 className="mb-2 fw-bold">Categories</h5>
-            <p className="p-0 m-0">Mark all as read</p>
-          </div>
-        </div>
-        <div>
-          <div className="d-flex align-items-center mt-3">
-            <div className="circle-notification p-2">
-              <i className="fa-solid fa-key"></i>
+        {notifications?.filter((data) => data.readStatus === "UNREAD")?.length >
+        0 ? (
+          <>
+            <div className="notification">
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="mb-2 fw-bold">Notifications</h5>
+                <p
+                  className="p-0 m-0"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleReadAll}
+                >
+                  Mark all as read
+                </p>
+              </div>
             </div>
+
             <div>
-              <p className="p-0 m-0 para-header">
-                Dear Ekiyee, You have Initiated a top-up into your Plan titled
-              </p>
-              <p className="p-0 m-0 para-text">July 23, 2021 at 9:15 AM</p>
+              {notifications
+                ?.filter((data) => data.readStatus === "UNREAD")
+                ?.slice(0, 2)
+                ?.map((data) => (
+                  <div className="d-flex align-items-center mt-3" key={data.id}>
+                    <div className="circle-notification p-2">
+                      <img src={Note} alt="Note" width="25" />
+                    </div>
+                    <div>
+                      <p className="p-0 m-0 para-header text-primary">
+                        {data.message}
+                      </p>
+                      <p className="p-0 m-0 para-text">{data.dateSent}</p>
+                    </div>
+                  </div>
+                ))}
             </div>
-          </div>
-          <div className="d-flex align-items-center  mt-3">
-            <div className="circle-notification p-2">
-              <i className="fa-solid fa-key"></i>
-            </div>
-            <div>
-              <p className="p-0 m-0 para-header">
-                Dear Ekiyee, You have Initiated a top-up into your Plan titled
-              </p>
-              <p className="p-0 m-0 para-text">July 23, 2021 at 9:15 AM</p>
-            </div>
-          </div>
-        </div>
-        <p className="py-2">View all Notifications</p>
+            <p
+              className="py-2"
+              onClick={() => setIsView(!isView)}
+              style={{ cursor: "pointer" }}
+            >
+              View all Notifications
+            </p>
+          </>
+        ) : null}
+
         <div>
           <div className="d-flex align-items-center justify-content-between mt-5">
             <h4>My Referral Link</h4>
-            <i className="fa-solid fa-key"></i>
+            {/* <i className="fa-solid fa-key"></i> */}
           </div>
         </div>
         <div>
@@ -259,7 +307,12 @@ export const LeftView = () => {
               value={users?.referralLink}
             />
             <div className="input-group-text">
-              <i className="fa-solid fa-key"></i>
+              <CopyToClipboard
+                text={users?.referralLink}
+                onCopy={copyReferralLink}
+              >
+                <img src={Copy} alt="copy" className="copy" />
+              </CopyToClipboard>
             </div>
           </div>
         </div>
@@ -273,14 +326,19 @@ export const LeftView = () => {
               value={users?.myReferralCode}
             />
             <div className="input-group-text">
-              <i className="fa-solid fa-key"></i>
+              <CopyToClipboard
+                text={users?.myReferralCode}
+                onCopy={copyReferralCode}
+              >
+                <img src={Copy} alt="copy" className="copy" />
+              </CopyToClipboard>
             </div>
           </div>
         </div>
       </div>
     </LeftWrapper>
-  )
-}
+  );
+};
 
 const LeftWrapper = styled.div`
   .left-content-notify {
@@ -316,7 +374,7 @@ const LeftWrapper = styled.div`
     margin-right: 20px;
   }
   .para-header {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -325,7 +383,7 @@ const LeftWrapper = styled.div`
     color: #000000;
   }
   .para-text {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 400;
     font-size: 11px;
@@ -337,7 +395,7 @@ const LeftWrapper = styled.div`
     color: #4f4f4f;
   }
   h4 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 600;
     font-size: 17px;
@@ -346,7 +404,7 @@ const LeftWrapper = styled.div`
     color: #242424;
   }
   label {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -359,7 +417,7 @@ const LeftWrapper = styled.div`
       padding: 0.7rem;
       background: #f2f2f2;
       border-radius: 10px;
-      font-family: 'Montserrat';
+      font-family: "Montserrat";
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -373,11 +431,15 @@ const LeftWrapper = styled.div`
     -webkit-appearance: none;
     margin: 0;
   }
-  input[type=number] {
+  input[type="number"] {
     -moz-appearance: textfield;
   }
   .disclaimer {
     font-size: 10px;
     color: #828282;
   }
-`
+
+  .copy {
+    cursor: pointer;
+  }
+`;

@@ -8,9 +8,10 @@ import { RolloverWithdrawMethod, WithdrawalSummary } from '../../Accesssories';
 import { Toaster } from 'react-hot-toast';
 import {  planAction, getPenalCharge } from "../../../../store/actions";
 
-const WithdrawalChannel = ({goBack, amount, type}) => {
+const WithdrawalChannel = ({goBack, amount, type, reason}) => {
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
+  const [penalCharge, setPenalCharge] = useState();
   const [base64File, setBase64File] = useState({
     corporateUserWithdrawalMandate: ""
   });
@@ -19,12 +20,17 @@ const WithdrawalChannel = ({goBack, amount, type}) => {
   const { singlePlan, loading, plan_action, plan_action_error } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
 
+
   const { login } = useSelector(state => state.auth);
   const user_role = login ? login?.role?.name : "";
 
   useEffect(() => {
     dispatch(getPenalCharge());
   },[])
+
+  const handlePenalCharge = (data) => {
+    setPenalCharge(data);
+  }
 
   const submit = async() => {
     const { corporateUserWithdrawalMandate } = base64File;
@@ -51,7 +57,7 @@ const WithdrawalChannel = ({goBack, amount, type}) => {
       <Wrapper>
         <LeftView>
           <h4 className="pb-3">Withdrawal</h4>
-          <WithdrawalSummary />
+          <WithdrawalSummary amount={amount} reason={reason} compPenalCharge={(data) => handlePenalCharge(data)}/>
         </LeftView> 
         <RightView>
           <div className="bank-details">

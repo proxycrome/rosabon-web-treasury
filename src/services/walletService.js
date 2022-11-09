@@ -42,3 +42,27 @@ export const pokeUserService = (id) => {
   const url = `auth/referrals/poke/${id}`;
   return http.postDataWithToken(null, url);
 }
+
+export const getMyReferralActivitiesService = () => {
+  const http = new HttpService();
+  const url = `auth/referrals/activities`;
+  return http.getData(url);
+}
+
+export const redeemReferralBonusService = () => {
+  const http = new HttpService();
+  const url = `auth/referrals/redeem-bonus`;
+  return http.postDataWithToken(null, url);
+}
+
+export const getMyDepositActivitiesService = () => {
+  const http = new HttpService();
+  const url = `auth/my-deposits/activities`;
+  return http.getData(url);
+}
+
+export const getReferralRedeemThresholdService = () => {
+  const http = new HttpService();
+  const url = `auth/wallets/get-referral-redeem-threshold`;
+  return http.getData(url);
+}

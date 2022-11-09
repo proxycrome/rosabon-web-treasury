@@ -73,7 +73,7 @@ const CreatePlan = () => {
                         </p> */}
                         {
                           product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
-                            <p key={id} className="p-0 m-0 pb-2" >{item} </p>
+                            <p key={id} className="p-0 m-0 pb-2" >{item}. </p>
                           ))
                         }
                       </div>

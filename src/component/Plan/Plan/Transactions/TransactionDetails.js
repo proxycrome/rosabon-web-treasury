@@ -1,75 +1,138 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Input, Label, InputGroup } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { MDBDataTable } from 'mdbreact';
-import ModalComponent from '../../../ModalComponent';
-import { TransactionPreview } from '../../../Accessories/BVNConfirm';
-import { getSinglePlanHistory } from '../../../../store/actions';
-
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Input, Label, InputGroup } from "reactstrap";
+import { Link } from "react-router-dom";
+import { MDBDataTable } from "mdbreact";
+import ModalComponent from "../../../ModalComponent";
+import { TransactionPreview } from "../../../Accessories/BVNConfirm";
+import { getSinglePlanHistory } from "../../../../store/actions";
+import moment from "moment";
 
 const TransactionDetails = () => {
+  const date = {
+    startDate: "",
+    endDate: "",
+  };
   const [modalState, setModalState] = useState(false);
+  const [formData, setFormData] = useState(date);
+  const [filteredHistory, setFilteredHistory] = useState([]);
   const dispatch = useDispatch();
   const { id } = useParams();
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   useEffect(() => {
     dispatch(getSinglePlanHistory(parseInt(id)));
-  },[])
+  }, []);
 
-  const { single_plan_history } = useSelector(state => state.plan);
+  const { single_plan_history } = useSelector((state) => state.plan);
   const history = single_plan_history ? single_plan_history?.content : [];
+  console.log(history);
 
-  const history_list = history?.map(item => ({
-    id: item?.id,
-    date: item?.dateOfTransaction[0] + "-" + item?.dateOfTransaction[1] + "-" 
-    + item?.dateOfTransaction[2],
-    description: item?.description,
-    type: item?.type,
-    amount: "₦"+item?.amount,
-    balance: "₦"+item?.balance
-  }));
+  useEffect(() => {
+    const filteredPlanHistory = history?.filter((item) => {
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+
+      const itemDate = moment(item.dateOfTransaction, "YYYY-MM-DD").format(
+        "YYYY-MM-DD"
+      );
+
+      // console.log(itemDate);
+      const date = new Date(itemDate);
+
+      return date >= startDate && date <= endDate;
+    });
+    setFilteredHistory(filteredPlanHistory);
+  }, [formData]);
+
+  const month = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const history_list =
+    filteredHistory.length > 0
+      ? filteredHistory.map((item) => ({
+          id: `${item?.transactionId}`,
+          date: `${moment(item.dateOfTransaction, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )}`,
+          description: `${item?.description}`,
+          type: `${item?.type}`,
+          amount: `₦ ${item?.amount}`,
+          balance: `₦ ${item?.balance}`,
+        }))
+      : history?.map((item) => ({
+          id: `${item?.transactionId}`,
+          date: `${moment(item.dateOfTransaction, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )}`,
+          description: `${item?.description}`,
+          type: `${item?.type}`,
+          amount: `₦ ${item?.amount}`,
+          balance: `₦ ${item?.balance}`,
+        }));
 
   const data = {
     columns: [
       {
-        label: 'ID',
-        field: 'id',
+        label: "ID",
+        field: "id",
         width: 150,
       },
       {
-        label: 'Date',
-        field: 'date',
+        label: "Date",
+        field: "date",
         width: 100,
       },
       {
-        label: 'Description',
-        field: 'description',
+        label: "Description",
+        field: "description",
         width: 100,
       },
       {
-        label: 'Type',
-        field: 'type',
+        label: "Type",
+        field: "type",
         width: 100,
       },
       {
-        label: 'Amount',
-        field: 'amount',
+        label: "Amount",
+        field: "amount",
         width: 100,
       },
       {
-        label: 'Balance',
-        field: 'balance',
+        label: "Balance",
+        field: "balance",
         width: 100,
       },
     ],
-    rows: history_list
+    rows: history_list,
   };
 
+  const startDate = new Date(formData.startDate);
+  const endDate = new Date(formData.endDate);
+
   return (
-    <> 
+    <>
       <Wrapper>
         <div className="row top d-flex justify-content-between">
           <div className="col-md-6 col-sm-12">
@@ -82,8 +145,12 @@ const TransactionDetails = () => {
                   <Label htmlFor="startDate">Start Date</Label>
                   <Input
                     className="form-control"
+                    placeholder="Start date"
                     type="date"
+                    name="startDate"
                     id="startDate"
+                    value={formData.startDate}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -91,9 +158,13 @@ const TransactionDetails = () => {
                 <div className="d-flex flex-column">
                   <Label htmlFor="endDate">End Date</Label>
                   <Input
-                    type="date"
                     className="form-control"
+                    placeholder="End date"
+                    type="date"
+                    name="endDate"
                     id="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -102,7 +173,13 @@ const TransactionDetails = () => {
         </div>
         <div className="row">
           <div className="mb-3">
-            <h4>April 28 - May 13</h4>
+            <h4>
+              {formData.startDate &&
+                formData.endDate &&
+                `${month[startDate.getMonth()]} ${startDate.getDate()} - ${
+                  month[endDate.getMonth()]
+                } ${endDate.getDate()}`}
+            </h4>
           </div>
         </div>
         <div>
@@ -110,12 +187,10 @@ const TransactionDetails = () => {
         </div>
         <ModalComponent
           show={modalState}
-          size={'md'}
+          size={"md"}
           handleClose={() => setModalState(false)}
         >
-          <TransactionPreview
-            handleClose={() => setModalState(false)}
-          />
+          <TransactionPreview handleClose={() => setModalState(false)} />
         </ModalComponent>
       </Wrapper>
     </>

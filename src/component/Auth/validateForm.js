@@ -19,12 +19,12 @@ export const ValidateCompanyForm = (
     email: "",
     password: "",
     phone: "",
-    source: "",
-    sourceOthers: "",
+    source: "" || sourcer,
+    sourceOthers: "" || sourcer === "OTHER" ? referralCode : null,
     contactFirstName: "",
     contactLastName: "",
     contactMiddleName: "",
-    refferedBy: "",
+    refferedBy: "" || referralCode,
     c_password: "",
     name: "",
   });
@@ -142,12 +142,12 @@ export const ValidateUserForm = (
     email: "",
     password: "",
     phone: "",
-    source: "",
-    sourceOthers: "",
+    source: "" || sourcer,
+    sourceOthers: "" || sourcer === "OTHER" ? referralCode : null,
     firstName: "",
     lastName: "",
     middleName: "",
-    refferedBy: "",
+    refferedBy: "" || referralCode,
     c_password: "",
   });
 
@@ -274,15 +274,15 @@ export const ValidatePasswordForm = (validatePassword, email, token) => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { newPassword } = values;
+      const { newPassword, c_password } = values;
       const formData = {
         email,
         newPassword,
-        token,
+        confirmPassword: c_password,
       }
 
       console.log(formData);
-      dispatch(resetPassword(formData));
+      dispatch(resetPassword(formData, navigate));
     }
   }, [errors]);
 

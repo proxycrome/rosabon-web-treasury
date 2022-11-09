@@ -16,6 +16,7 @@ import {
   CLEAR_OTP,
   CLOSE_MODAL,
   CLEAR_MESSAGES,
+  CLEAR_BVN,
 } from "../../../store/profile/actionTypes";
 
 const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
@@ -100,8 +101,8 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
       (files[0]?.type === "image/jpeg" || files[0]?.type === "application/pdf")
     ) {
       encodedFileBase64(files[0]);
-      e.target.files = null;
     }
+    e.target.value = null;
   };
 
   function validateform(values) {
@@ -145,7 +146,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
     return errors;
   }
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     setErrors(validateform(formData));
     setIsSubmitted(true);
@@ -166,8 +167,8 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
   useEffect(() => {
     if (
       Object.keys(errors).length === 0 &&
-      isSubmitted // &&
-    //   bvnMessage?.isNameMatched
+      isSubmitted  &&
+      bvnMessage?.isNameMatched
     ) {
       const {
         firstName,
@@ -202,7 +203,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
         },
       };
       console.log(data);
-      // dispatch(changePersonalPassword(data));
+
       updateDirector(data);
 
       setformData({
@@ -223,6 +224,8 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
         frontEncodedString: "",
         photoEncodedString: "",
       });
+
+      dispatch({type: CLEAR_BVN})
       removeForm(false);
     }
   }, [errors]);
@@ -237,8 +240,8 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
     const { firstName, lastName, bvn, phone } = formData;
 
     const objData = {
-      firstName: firstName,
-      lastName: lastName,
+      firstName: firstName?.toUpperCase(),
+      lastName: lastName?.toUpperCase(),
       id: bvn,
       isSubjectConsent: true,
       phoneNumber: phone,
@@ -269,6 +272,14 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
     }
   }, [validateEmailOtp]);
 
+  const confirmName = () => {
+    setformData({
+      ...formData,
+      firstName: bvnMessage?.data?.firstName,
+      lastName: bvnMessage?.data?.lastName,
+    })
+  }
+
   const reset = () => {
     setformData({
       ...formData,
@@ -292,7 +303,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
 
   return (
     <div className="mt-5">
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      <form autoComplete="off">
         <WrapperBody>
           <hr />
           <div className="container-fluid">
@@ -530,7 +541,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-lg-8">
+                  <div className="col-lg-9">
                     <div className="row d-flex">
                       <div className="col-8 mb-4">
                         <label>Bank verification number (BVN)</label>
@@ -555,12 +566,12 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                         )}
                       </div>
                       {formData.firstName &&
-                      formData.middleName &&
                       formData.lastName &&
                       formData.address &&
                       formData.phone &&
                       formData.email &&
                       formData.bvn &&
+                      !bvnMessage?.isNameMatched &&
                       !showEdit ? (
                         <div className="col-4 mt-3">
                           <button
@@ -599,9 +610,12 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                             <BVNConfirm
                               show={showBvnModal}
                               handleClose={handleBVNModalClose}
-                              name={`${bvnMessage?.data?.firstName} ${bvnMessage?.data?.lastName}`}
+                              firstName={bvnMessage?.data?.firstName}
+                              lastName={bvnMessage?.data?.lastName}
                               bvn={formData.bvn}
+                              confirmName={confirmName}
                               director="director"
+                              nameMatch={bvnMessage?.isNameMatched}
                             />
                           </ModalComponent>
                         </div>
@@ -811,7 +825,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                 )}
                 <div className="row">
                   <div className="col-md-12 d-flex justify-content-center mt-5">
-                    <button type="submit" className="btn_bg_blue">
+                    <button type="button" className="btn_bg_blue" onClick={handleFormSubmit}>
                       Add to List of Directors
                     </button>
                   </div>

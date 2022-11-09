@@ -2,9 +2,18 @@ import {
   GET_EACH_WALLET_TRANSACTION,
   GET_EACH_WALLET_TRANSACTION_ERROR,
   GET_EACH_WALLET_TRANSACTION_SUCCESS,
+  GET_MY_DEPOSIT_ACTIVITIES,
+  GET_MY_DEPOSIT_ACTIVITIES_ERROR,
+  GET_MY_DEPOSIT_ACTIVITIES_SUCCESS,
   GET_MY_REFERRALS,
   GET_MY_REFERRALS_ERROR,
   GET_MY_REFERRALS_SUCCESS,
+  GET_MY_REFERRAL_ACTIVITIES,
+  GET_MY_REFERRAL_ACTIVITIES_ERROR,
+  GET_MY_REFERRAL_ACTIVITIES_SUCCESS,
+  GET_REFERRAL_REDEEM_THRESHOLD,
+  GET_REFERRAL_REDEEM_THRESHOLD_ERROR,
+  GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -17,6 +26,9 @@ import {
   POST_TRANSFER_TO_PLAN,
   POST_TRANSFER_TO_PLAN_ERROR,
   POST_TRANSFER_TO_PLAN_SUCCESS,
+  REDEEM_REFERRAL_BONUS,
+  REDEEM_REFERRAL_BONUS_ERROR,
+  REDEEM_REFERRAL_BONUS_SUCCESS,
   REQUEST_WITHDRAWAL,
   REQUEST_WITHDRAWAL_ERROR,
   REQUEST_WITHDRAWAL_SUCCESS,
@@ -165,3 +177,83 @@ export const pokeUserError = (error) => {
     payload: error,
   };
 };
+
+export const getMyReferralActivities = () => {
+  return {
+    type: GET_MY_REFERRAL_ACTIVITIES,
+  };
+};
+
+export const getMyReferralActivitiesSuccess = (data) => {
+  return {
+    type: GET_MY_REFERRAL_ACTIVITIES_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getMyReferralActivitiesError = (error) => {
+  return {
+    type: GET_MY_REFERRAL_ACTIVITIES_ERROR,
+    payload: error,
+  };
+};
+
+export const redeemReferralBonus = () => {
+  return {
+    type: REDEEM_REFERRAL_BONUS,
+  };
+};
+
+export const redeemReferralBonusSuccess = (data) => {
+  return {
+    type: REDEEM_REFERRAL_BONUS_SUCCESS,
+    payload: data,
+  };
+};
+
+export const redeemReferralBonusError = (error) => {
+  return {
+    type: REDEEM_REFERRAL_BONUS_ERROR,
+    payload: error,
+  };
+};
+
+export const getMyDepositActivities = () => {
+  return {
+    type: GET_MY_DEPOSIT_ACTIVITIES,
+  }
+}
+
+export const getMyDepositActivitiesSuccess = (data) => {
+  return {
+    type: GET_MY_DEPOSIT_ACTIVITIES_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getMyDepositActivitiesError = (error) => {
+  return {
+    type: GET_MY_DEPOSIT_ACTIVITIES_ERROR,
+    payload: error,
+  }
+}
+
+export const getReferralRedeemThreshold = () => {
+  return {
+    type: GET_REFERRAL_REDEEM_THRESHOLD,
+  }
+}
+
+export const getReferralRedeemThresholdSuccess = (data) => {
+  return {
+    type: GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getReferralRedeemThresholdError = (error) => {
+  return {
+    type: GET_REFERRAL_REDEEM_THRESHOLD_ERROR,
+    payload: error,
+  }
+}

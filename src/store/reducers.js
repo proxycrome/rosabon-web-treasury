@@ -11,7 +11,7 @@ import providus from './providus/reducer';
 import updateProfile from './updateProfile/reducer';
 import wallet from './wallet/reducer';
 import help from './help/reducer';
-
+import notification from './notification/reducer';
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -25,6 +25,7 @@ const rootReducer = combineReducers({
     currencies,
     providus,
     help,
+    notification,
 });
 
 export default rootReducer;

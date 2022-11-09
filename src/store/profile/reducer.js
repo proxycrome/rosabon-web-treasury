@@ -1,4 +1,5 @@
 import {
+  CLEAR_BVN,
   CLEAR_MESSAGES,
   CLEAR_OTP,
   CLEAR_USERS,
@@ -529,6 +530,14 @@ const userProfileReducer = (state = initialState, action) => {
         documents: null,
         documentsError: action.payload,
       };
+      break;
+
+    case CLEAR_BVN:
+      state = {
+        ...state,
+        bvnMessage: null,
+        bvnError: null,
+      }
       break;
 
     default:

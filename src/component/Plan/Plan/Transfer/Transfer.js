@@ -1,206 +1,240 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import moment from 'moment';
+import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
-import {  getSinglePlan, getPlans } from "../../../../store/actions";
+import { getSinglePlan, getPlans } from "../../../../store/actions";
+import { Toaster } from "react-hot-toast";
+import { getCurrIcon } from "../../Accesssories";
 
 const Transfer = () => {
   const [modalState, setModalState] = useState("Close");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [receive, setReceive] = useState({
     name: "",
-    id: ""
+    id: "",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
   const { singlePlan, plans } = useSelector((state) => state.plan);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const userPlans = plans?.data.body ? plans?.data.body : [];
-  const planStatus = singlePlan?.data.statusCode
+  const planStatus = singlePlan?.data.statusCode;
+
+  console.log(userPlans);
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
     dispatch(getPlans());
-  },[])
+  }, []);
 
   const back = () => {
     navigate("/plan-list");
   };
 
-
   return (
     <>
-      {
-        planStatus === "OK" && (
-          <>
-            <ProfileNavBar>
-              <NavTitle>
-                <span className="fw-bold">Plan</span>
-              </NavTitle>
-            </ProfileNavBar>
-            <Wrapper>
-              <LeftView>
-                <h4 className="pb-3">Transfer</h4>
-                <div className="plan-content">
-                  <div className="plan">
-                    <div className="plan-top h-50 p-4">
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <h4>{plan.planName}</h4>
-                          <p className="p-0 m-0">{plan?.product.productName}</p>
-                        </div>
-                        <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+      {planStatus === "OK" && (
+        <>
+          <ProfileNavBar>
+            <NavTitle>
+              <span className="fw-bold">Plan</span>
+            </NavTitle>
+          </ProfileNavBar>
+          <Toaster />
+          <Wrapper>
+            <LeftView>
+              <h4 className="pb-3">Transfer</h4>
+              <div className="plan-content">
+                <div className="plan">
+                  <div className="plan-top h-50 p-4">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h4>{plan.planName}</h4>
+                        <p className="p-0 m-0">{plan?.product.productName}</p>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between pt-4">
-                        <div>
-                          <h4>Start date</h4>
-                          <p className="p-0 m-0">
-                            {moment(plan.planSummary.startDate).format("DD/MM/YYYY")} 
-                          </p>
-                        </div>
-                        <div>
-                          <h4>End date</h4>
-                          <p className="p-0 m-0">
-                            {moment(plan.planSummary.endDate).format("DD/MM/YYYY")} 
-                          </p>
-                        </div>
-                      </div>
+                      <h4 className="Active">
+                        {plan.planStatus.toLowerCase()}
+                      </h4>
                     </div>
-                    <div className="d-flex position-relative horizontal-line">
-                      <div className="position-absolute horizontal-circle-left"></div>
-                      <hr className="dotted" />
-                      <div className="position-absolute end-0 horizontal-circle-right"></div>
-                    </div>
-
-                    <div className="plan-top h-50 py-1 px-4">
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <h4>Balance</h4>
-                          <p className="p-0 m-0">{plan?.planSummary?.principal.toLocaleString()} </p>
-                        </div>
-                        {/* <i className="fa-solid fa-ellipsis"></i> */}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="plan-payment">
-                  <div className="row my-4 pt-4">
-                    <div className="col ">
-                      <label>Select an active plan to transfer into</label>
-                      <div className="input-group">
-                        <select
-                          className="form-select form-select-md"
-                          aria-label=".form-select-md"
-                          name="planName"
-                          value={receive}
-                          onChange={(e) => setReceive(
-                            e.target.value
+                    <div className="d-flex align-items-center justify-content-between pt-4">
+                      <div>
+                        <h4>Start date</h4>
+                        <p className="p-0 m-0">
+                          {moment(plan.planSummary.startDate).format(
+                            "DD/MM/YYYY"
                           )}
-                        >
-                          <option selected hidden value={{
-                            name: "",
-                            id: ""
-                            }} disabled
-                          >
-                            Select an active plan to transfer into
-                          </option>
-                          {
-                            userPlans.filter(
-                              item => item.id !== plan.id && item.planStatus === "ACTIVE"
-                              ).map(item => (item?.allowsLiquidation && 
-                                item?.interestReceiptOption === "MATURITY") 
-                              && (
-                              <option key={item.id} value={JSON.stringify(item)} >
-                                {item.planName}
-                              </option>
-                            ))
-                          }
-                        </select>
+                        </p>
+                      </div>
+                      <div>
+                        <h4>End date</h4>
+                        <p className="p-0 m-0">
+                          {moment(plan.planSummary.endDate).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>
-                  <div className="row my-4">
-                    <div className="col ">
-                      <label>Amount to Send</label>
-                      <div className="input-group">
-                        <input
-                          className="form-control pl-5"
-                          placeholder="₦ 1,000,000"
-                          type="number"
-                          value={amount}
-                          onChange={(e)=>setAmount(parseInt(e.target.value))}
-                          max={plan.planSummary.principal}
-                        />
-                      </div>
-                      <label>Balance is ₦{plan.planSummary.principal - amount}</label>
-                    </div>
+                  <div className="d-flex position-relative horizontal-line">
+                    <div className="position-absolute horizontal-circle-left"></div>
+                    <hr className="dotted" />
+                    <div className="position-absolute end-0 horizontal-circle-right"></div>
                   </div>
-                </div>
-              </LeftView>
-              <RightView>
-                <div className="bank-details">
-                  {/* <div className="bank-detail-content"> */}
-                  {/* <UserBankDetails /> */}
-                  {/* </div> */}
-                </div>
-              </RightView>
-            </Wrapper>
-            <WrapperFooter>
-              <div className="footer-body">
-                <div className="d-flex align-items-center justify-content-between footer-content">
-                  <div>
-                    <button
-                      style={{ color: "#111E6C", width: "300px" }}
-                      onClick={back}>
-                      Back
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      style={{
-                        backgroundColor: "#111E6C",
-                        color: "#FFFFFF",
-                        width: "300px",
-                      }}
-                      onClick={() => setModalState("modal-one")}>
-                      Submit
-                    </button>
-                    <ModalComponent
-                      show={modalState === "modal-one"}
-                      size={"md"}
-                      handleClose={() => setModalState("close")}>
-                      <Notice
-                        handleClose={() => setModalState("close")}
-                        handleShowModalTwo={setModalState}
-                        transferForm={{receive, amount}}
-                        plan={plan}
-                        transferNotice="transfer"
-                      />
-                    </ModalComponent>
 
-                    <ModalComponent
-                      show={modalState === "modal-two"}
-                      size={"md"}
-                      handleClose={() => setModalState("close")}>
-                      <SuccessConfirm
-                        transferNotice="transfer"
-                        handleClose={() => setModalState("close")}
-                      />
-                    </ModalComponent>
+                  <div className="plan-top h-50 py-1 px-4">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h4>Balance</h4>
+                        <p className="p-0 m-0 d-flex gap-1">
+                          {getCurrIcon(plan?.currency?.name)}
+                          {plan?.planSummary?.principal.toLocaleString()}{" "}
+                        </p>
+                      </div>
+                      {/* <i className="fa-solid fa-ellipsis"></i> */}
+                    </div>
                   </div>
                 </div>
               </div>
-            </WrapperFooter>
-          </>
-        )
-      }
+
+              <div className="plan-payment">
+                <div className="row my-4 pt-4">
+                  <div className="col ">
+                    <label>Select an active plan to transfer into</label>
+                    <div className="input-group">
+                      <select
+                        className="form-select form-select-md"
+                        aria-label=".form-select-md"
+                        name="planName"
+                        value={receive}
+                        onChange={(e) => setReceive(e.target.value)}
+                      >
+                        <option
+                          selected
+                          hidden
+                          value={{
+                            name: "",
+                            id: "",
+                          }}
+                          disabled
+                        >
+                          Select an active plan to transfer into
+                        </option>
+                        {userPlans
+                          .filter(
+                            (item) =>
+                              item.id !== plan.id &&
+                              item.planStatus === "ACTIVE"
+                          )
+                          .map(
+                            (item) =>
+                              item?.product?.properties?.allowsTopUp &&
+                              item?.interestReceiptOption === "MATURITY" && (
+                                <option
+                                  key={item.id}
+                                  value={JSON.stringify(item)}
+                                >
+                                  {item.planName}
+                                </option>
+                              )
+                          )}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="row my-4">
+                  <div className="col ">
+                    <label>Amount to Send</label>
+                    <div className="input-group">
+                      <div className=" input-group-prepend curr-icon">
+                        {getCurrIcon(plan?.currency?.name)}
+                      </div>
+                      <input
+                        className="form-control pl-5 curr-input"
+                        placeholder={`${plan.planSummary.principal?.toFixed(2)}`}
+                        type="number"
+                        value={amount}
+                        min={0}
+                        onChange={(e) => setAmount(e.target.value)}
+                        max={plan.planSummary.principal}
+                      />
+                    </div>
+                    <label className="d-flex gap-1">
+                      Balance is {getCurrIcon(plan?.currency?.name)}
+                      {(
+                        plan?.planSummary?.principal -
+                        (amount ? parseFloat(amount) : 0)
+                      ).toFixed(2)}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </LeftView>
+            <RightView>
+              <div className="bank-details">
+                {/* <div className="bank-detail-content"> */}
+                {/* <UserBankDetails /> */}
+                {/* </div> */}
+              </div>
+            </RightView>
+          </Wrapper>
+          <WrapperFooter>
+            <div className="footer-body">
+              <div className="d-flex align-items-center justify-content-between footer-content">
+                <div>
+                  <button
+                    style={{ color: "#111E6C", width: "300px" }}
+                    onClick={back}
+                  >
+                    Back
+                  </button>
+                </div>
+                <div>
+                  <button
+                    style={{
+                      backgroundColor: "#111E6C",
+                      color: "#FFFFFF",
+                      width: "300px",
+                    }}
+                    onClick={() => setModalState("modal-one")}
+                  >
+                    Submit
+                  </button>
+                  <ModalComponent
+                    show={modalState === "modal-one"}
+                    size={"md"}
+                    handleClose={() => setModalState("close")}
+                  >
+                    <Notice
+                      handleClose={() => setModalState("close")}
+                      handleShowModalTwo={setModalState}
+                      transferForm={{ receive, amount }}
+                      plan={plan}
+                      transferNotice="transfer"
+                    />
+                  </ModalComponent>
+
+                  <ModalComponent
+                    show={modalState === "modal-two"}
+                    size={"md"}
+                    handleClose={() => setModalState("close")}
+                  >
+                    <SuccessConfirm
+                      transferNotice="transfer"
+                      handleClose={() => setModalState("close")}
+                    />
+                  </ModalComponent>
+                </div>
+              </div>
+            </div>
+          </WrapperFooter>
+        </>
+      )}
     </>
   );
 };
@@ -235,7 +269,7 @@ const LeftView = styled.div`
     font-size: 13px;
     line-height: 16px;
     letter-spacing: -0.01em;
-    text-transform : capitalize;
+    text-transform: capitalize;
   }
   .Active {
     color: #219653;
@@ -245,6 +279,16 @@ const LeftView = styled.div`
   }
   .Matured {
     color: #2d9cdb;
+  }
+
+  .curr-icon {
+    position: absolute;
+    margin-top: 6px;
+    margin-left: 22px;
+    z-index: 10;
+  }
+  .curr-input {
+    padding-left: 34px;
   }
 `;
 
@@ -256,7 +300,6 @@ const RightView = styled.div`
   .bank-details {
     height: 70vh;
     padding: 40px;
-    margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
     justify-content: center;

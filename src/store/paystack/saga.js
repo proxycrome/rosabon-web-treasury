@@ -17,6 +17,8 @@ import {
 
 import { createPlan } from "../actions";  
 
+import { planAction } from "../plan/actions"
+
 import { 
   initializePaymentService, 
   registerTransService,
@@ -42,12 +44,20 @@ function* verifyPaystack({ payload: {
   transactionRef, 
   dispatch, 
   form, 
-  setShow 
+  setShow, 
+  setDebitPopup, 
+  action,
 } }) {
   try {
     const response = yield call(verifyPaymentService, paymentGateway, transactionRef);
     yield put(verifyPaystackSuccess(response.data));
-    dispatch(createPlan(form, setShow));
+    if(response){
+      if(action === "TOP_UP"){
+        dispatch(planAction(form, setShow, null, dispatch, setDebitPopup))
+      }else{
+        dispatch(createPlan(form, setShow));
+      }
+    }
   } catch (error) {
     yield put(verifyPaystackError(error?.response?.data))
     toast.error("Payment not verified", {
@@ -64,6 +74,9 @@ function* regTransaction({ payload: { formData } }) {
 	} catch (error) {
 		console.log(error?.response?.data);
 		yield put(regTransactionError(error?.response?.data));
+    if(error?.response?.data?.message){
+      toast.error(error?.response?.data?.message, {position: "top-right"})
+    }
 	};
 };
 

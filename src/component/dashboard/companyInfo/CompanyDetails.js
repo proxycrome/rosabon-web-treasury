@@ -40,6 +40,8 @@ const CompanyDetails = () => {
     contactLastName: "",
     email: "",
     phone: "",
+    companyAddress: "",
+    natureOfBusiness: "",
   };
   const [formData, setformData] = useState(data);
 
@@ -63,6 +65,20 @@ const CompanyDetails = () => {
       !users?.company?.contactFirstName
     ) {
       errors.contactFirstName = "Contact person first name field is required";
+    }
+
+    if (
+      (!values.companyAddress && !users?.company?.companyAddress) ||
+      !users?.company?.companyAddress
+    ) {
+      errors.companyAddress = "Company Address field is required";
+    }
+
+    if (
+      (!values.natureOfBusiness && !users?.company?.natureOfBusiness) ||
+      !users?.company?.natureOfBusiness
+    ) {
+      errors.natureOfBusiness = "Nature of Business field is required";
     }
 
     if (
@@ -94,7 +110,7 @@ const CompanyDetails = () => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { contactFirstName, contactLastName, email, phone, companyType } =
+      const { contactFirstName, contactLastName, email, phone, companyType, natureOfBusiness, companyAddress } =
         formData;
       const data = {
         contactFirstName: contactFirstName
@@ -106,6 +122,8 @@ const CompanyDetails = () => {
         email: email ? email : users?.email,
         phone: phone ? phone : users?.phone,
         companyType: companyType ? companyType : users?.company?.companyType,
+        natureOfBusiness: natureOfBusiness ? natureOfBusiness : users?.company?.natureOfBusiness,
+        companyAddress: companyAddress ? companyAddress : users?.company?.companyAddress,
       };
       console.log(data);
       dispatch(updateCompanyDetails(data));
@@ -159,7 +177,7 @@ const CompanyDetails = () => {
                         placeholder=""
                         type="text"
                         value={users?.company?.name}
-                        disabled={showEditDetail}
+                        disabled
                       />
                     </div>
                   </div>
@@ -171,7 +189,7 @@ const CompanyDetails = () => {
                         placeholder=""
                         type="text"
                         value={users?.company?.rcNumber}
-                        disabled={showEditDetail}
+                        disabled
                       />
                     </div>
                   </div>
@@ -183,7 +201,7 @@ const CompanyDetails = () => {
                         className="form-control"
                         placeholder=""
                         value={users?.company?.dateOfInco}
-                        disabled={showEditDetail}
+                        disabled
                       />
                       {/* <span className=" input-font-awe">
                         <i className="fa-solid fa-calendar"></i>
@@ -197,12 +215,22 @@ const CompanyDetails = () => {
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder=""
+                        placeholder={
+                          users?.company?.companyAddress ||
+                          "Company Address"
+                        }
                         type="text"
-                        value={users?.company?.companyAddress}
+                        name="companyAddress"
+                        onChange={handleChange}
+                        defaultValue={formData.companyAddress || users?.company?.companyAddress}
                         disabled={showEditDetail}
                       />
                     </div>
+                    {errors && errors?.companyAddress && (
+                      <span className="text-danger">
+                        {errors?.companyAddress}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="row">
@@ -213,7 +241,7 @@ const CompanyDetails = () => {
                         className="form-control"
                         placeholder=""
                         type="text"
-                        disabled={showEditDetail}
+                        disabled
                         value={users?.id}
                       />
                       {/* <span className=" input-font-awe">
@@ -226,12 +254,22 @@ const CompanyDetails = () => {
                     <div className="input-group mb-4">
                       <input
                         className="form-control"
-                        placeholder=""
+                        placeholder={
+                          users?.company?.natureOfBusiness ||
+                          "Nature of Business"
+                        }
                         type="text"
-                        value={users?.company?.natureOfBusiness}
+                        name="natureOfBusiness"
+                        onChange={handleChange}
+                        defaultValue={formData.natureOfBusiness || users?.company?.natureOfBusiness}
                         disabled={showEditDetail}
                       />
                     </div>
+                    {errors && errors?.natureOfBusiness && (
+                      <span className="text-danger">
+                        {errors?.natureOfBusiness}
+                      </span>
+                    )}
                   </div>
                   <div className="col-md-8 col-lg-4 mb-4">
                     <label>Company Type</label>
@@ -301,7 +339,7 @@ const CompanyDetails = () => {
                         }
                         type="text"
                         name="contactFirstName"
-                        value={formData.contactFirstName}
+                        defaultValue={formData.contactFirstName || users?.company?.contactFirstName}
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -323,7 +361,7 @@ const CompanyDetails = () => {
                           "Contact Person Last Name"
                         }
                         name="contactLastName"
-                        value={formData.contactLastName}
+                        defaultValue={formData.contactLastName || users?.company?.contactLastName}
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -344,7 +382,7 @@ const CompanyDetails = () => {
                         placeholder={users?.email || "Email Address"}
                         type="email"
                         name="email"
-                        value={formData.email}
+                        defaultValue={formData.email || users?.email}
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -361,7 +399,7 @@ const CompanyDetails = () => {
                         placeholder={users?.phone || "Phone Number"}
                         type="number"
                         name="phone"
-                        value={formData.phone}
+                        defaultValue={formData.phone || users?.phone}
                         onChange={handleChange}
                         disabled={showEditCont}
                       />

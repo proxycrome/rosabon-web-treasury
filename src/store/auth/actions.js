@@ -78,10 +78,10 @@ export const refreshUser = () => {
   };
 };
 
-export const resetPassword = (formData) => {
+export const resetPassword = (formData, navigate) => {
   return {
     type: RESET_PASSWORD,
-    payload: { formData },
+    payload: { formData, navigate },
   };
 };
 
