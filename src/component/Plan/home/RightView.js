@@ -27,6 +27,7 @@ export const RightView = () => {
   const planList = plans?.data?.body ? plans?.data?.body : [];
   console.log(planList);
   const activePlanList = planList.filter(data => data.planStatus === "ACTIVE");
+  const newWorthPlanList = planList.filter(data => data.planStatus === "ACTIVE" || data.planStatus === "MATURED");
 
   useEffect(() => {
     dispatch(getCatWithProducts());
@@ -46,7 +47,7 @@ export const RightView = () => {
   };
 
   let totalnetWorth = 0;
-  activePlanList.forEach(item => item?.currency?.name === "NGN" ?
+  newWorthPlanList.forEach(item => item?.currency?.name === "NGN" ?
    totalnetWorth += item?.planSummary?.principal : 
    totalnetWorth += (item?.planSummary?.principal * item?.exchangeRate));
 

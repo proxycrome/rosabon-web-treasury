@@ -19,6 +19,7 @@ import {
   PLAN_ACTION,
   VIEW_BANK_DETAIL,
   COMPLETE_TRANSFER,
+  GET_CLOSED_PLANS,
 } from "./actionTypes";
 
 import {
@@ -57,6 +58,8 @@ import {
   completeTransferSuccess,
   completeTransferError,
   completeTransfer,
+  getClosedPlansSuccess,
+  getClosedPlansError,
 } from "./actions";
 
 import {
@@ -64,6 +67,7 @@ import {
   createPlanService,
   deletePlanService,
   getAllPlanHistoryService,
+  getClosedPlansService,
   getContribValService,
   getEligiblePlansService,
   getExRatesService,
@@ -240,6 +244,7 @@ function* planAction({
     if (response) {
       if (planAction === "WITHDRAW") {
         onSuccess(true);
+        toast.success(response.data.message);
       } else if (planAction === "TOP_UP" && paymentType === "BANK_TRANSFER") {
         toast.success("Top-up saved", { position: "top-right" });
         setTimeout(() => {
@@ -334,6 +339,17 @@ function* payWithCard({ payload: { id, setSuccess } }) {
   }
 }
 
+function* getClosedPlans() {
+  try {
+    const response = yield call(getClosedPlansService);
+    console.log(response.data);
+    yield put(getClosedPlansSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getClosedPlansError(error?.response?.data));
+  }
+}
+
 export function* watchGetContribVal() {
   yield takeEvery(GET_CONTRIB_VAL, getContribVal);
 }
@@ -401,6 +417,10 @@ export function* watchCompleteTransfer() {
   yield takeEvery(COMPLETE_TRANSFER, completeTransfers);
 }
 
+export function* watchGetClosedPlans() {
+  yield takeEvery(GET_CLOSED_PLANS, getClosedPlans);
+}
+
 function* PlanSaga() {
   yield all([
     fork(watchGetContribVal),
@@ -420,6 +440,7 @@ function* PlanSaga() {
     fork(watchGetPenalCharge),
     fork(watchPayWithCard),
     fork(watchCompleteTransfer),
+    fork(watchGetClosedPlans),
   ]);
 }
 

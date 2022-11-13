@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { FormGroup, Input } from "reactstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,8 +11,7 @@ import { getSinglePlan, getWithdrawReason } from "../../../../store/actions";
 import { getCurrIcon } from "../../Accesssories";
 
 const Withdrawal = () => {
-  const [part, setPart] = useState("");
-  const [full, setFull] = useState("");
+  const [withdrawType, setWithdrawType] = useState("");
   const [amount, setAmount] = useState("");
   const [isClicked, setIsClicked] = useState(false);
   const [reason, setReason] = useState("");
@@ -24,7 +23,11 @@ const Withdrawal = () => {
   const { singlePlan } = useSelector((state) => state.plan);
   const { withdrawReasons } = useSelector((state) => state.user_profile);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
-  const planStatus = singlePlan?.data.statusCode;
+  const planStatus = singlePlan?.data?.statusCode;
+
+  const capitalise = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
@@ -32,37 +35,40 @@ const Withdrawal = () => {
   }, []);
 
   const handleClick = (e) => {
-    if (e.target.value === "part") {
-      setPart("part");
-      setFull("");
+    const { name, value } = e.target;
+    if (name === "withdrawType") {
+      setWithdrawType(value);
     }
-    if (e.target.value === "full") {
-      setFull("full");
-      setPart("");
+    if (value === "full") {
       setAmount(plan?.planSummary?.principal);
     }
   };
 
-  if (full && isClicked) {
+  const handleNext = (e) => {
+    e.preventDefault();
+    setIsClicked(true);
+  };
+
+  if (withdrawType === "full" && isClicked && reason && amount) {
     return (
       <FullWithdrawal
         amount={parseFloat(amount)?.toFixed(2)}
         reason={reason}
         goBack={() => {
-          setFull("");
+          setWithdrawType("");
           setIsClicked(false);
         }}
       />
     );
   }
 
-  if (part && isClicked) {
+  if (withdrawType === "part" && isClicked && reason && amount) {
     return (
       <PartWithdrawal
         amount={parseFloat(amount)?.toFixed(2)}
         reason={reason}
         goBack={() => {
-          setPart("");
+          setWithdrawType("");
           setIsClicked(false);
         }}
       />
@@ -82,190 +88,208 @@ const Withdrawal = () => {
               <span className="fw-bold">Plan</span>
             </NavTitle>
           </ProfileNavBar>
-          <Wrapper>
-            <LeftView>
-              <h4 className="pb-3">Withdrawal</h4>
-              <div className="plan-content">
-                <div className="plan">
-                  <div className="plan-top h-50 p-4">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div>
-                        <h4>{plan.planName}</h4>
-                        <p className="p-0 m-0">{plan?.product.productName}</p>
+          <form autoCorrect="off" autoComplete="off" onSubmit={handleNext}>
+            <Wrapper>
+              <LeftView>
+                <h4 className="pb-3">Withdrawal</h4>
+                <div className="plan-content">
+                  <div className="plan">
+                    <div className="plan-top h-50 p-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{plan?.planName}</h4>
+                          <p className="p-0 m-0">
+                            {plan?.product?.productName}
+                          </p>
+                        </div>
+                        <h4 className={capitalise(plan?.planStatus)}>
+                          {capitalise(plan?.planStatus)}
+                        </h4>
                       </div>
-                      <h4 className="Active">
-                        {plan.planStatus.toLowerCase()}
-                      </h4>
+                      <div className="d-flex align-items-center justify-content-between pt-4">
+                        <div>
+                          <h4>Start date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan?.planSummary?.startDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </p>
+                        </div>
+                        <div>
+                          <h4>End date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan?.planSummary?.endDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="d-flex align-items-center justify-content-between pt-4">
-                      <div>
-                        <h4>Start date</h4>
-                        <p className="p-0 m-0">
-                          {moment(plan.planSummary.startDate).format(
-                            "DD/MM/YYYY"
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <h4>End date</h4>
-                        <p className="p-0 m-0">
-                          {moment(plan.planSummary.endDate).format(
-                            "DD/MM/YYYY"
-                          )}
-                        </p>
-                      </div>
+                    <div className="d-flex position-relative horizontal-line">
+                      <div className="position-absolute horizontal-circle-left"></div>
+                      <hr className="dotted" />
+                      <div className="position-absolute end-0 horizontal-circle-right"></div>
                     </div>
-                  </div>
-                  <div className="d-flex position-relative horizontal-line">
-                    <div className="position-absolute horizontal-circle-left"></div>
-                    <hr className="dotted" />
-                    <div className="position-absolute end-0 horizontal-circle-right"></div>
-                  </div>
 
-                  <div className="plan-top h-50 py-1 px-4">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div>
-                        <h4>Balance</h4>
-                        <p className="p-0 m-0 d-flex gap-1">
-                          {getCurrIcon(plan?.currency?.name)}
-                          {plan.planSummary.principal?.toLocaleString()}
-                        </p>
+                    <div className="plan-top h-50 py-1 px-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>Balance</h4>
+                          <p className="p-0 m-0 d-flex gap-1">
+                            {getCurrIcon(plan?.currency?.name)}
+                            {plan?.planSummary?.principal?.toLocaleString()}
+                          </p>
+                        </div>
+                        {/* <i className="fa-solid fa-ellipsis"></i> */}
                       </div>
-                      {/* <i className="fa-solid fa-ellipsis"></i> */}
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="plan-payment">
-                <div>
-                  <div className="d-flex align-items-center justify-content-between my-5">
-                    <div className="d-flex align-items-center">
-                      <p className="p-0 m-0">Partial Withdrawal</p>
-                    </div>
-                    <input
-                      type="radio"
-                      id="part"
-                      name="rolloverType"
-                      value="part"
-                      onClick={handleClick}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div className="d-flex align-items-center justify-content-between mb-4">
-                    <div className="d-flex align-items-center">
-                      <p className="p-0 m-0">Full Withdrawal</p>
-                    </div>
-                    <input
-                      type="radio"
-                      id="full"
-                      name="rolloverType"
-                      value="full"
-                      onClick={handleClick}
-                    />
-                  </div>
-                </div>
-                <div className="row my-4">
-                  <div className="col ">
-                    <label>Amount to Liquidate</label>
-                    <div className="input-group">
-                      <div className=" input-group-prepend curr-icon">
-                        {getCurrIcon(plan?.currency?.name)}
+                <div className="plan-payment">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between my-5">
+                      <div className="d-flex align-items-center">
+                        <p className="p-0 m-0">Partial Withdrawal</p>
                       </div>
                       <input
-                        className="form-control curr-input"
-                        placeholder={`${plan.planSummary.principal?.toFixed(2)}`}
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        disabled={full === "full"}
+                        type="radio"
+                        id="part"
+                        name="withdrawType"
+                        value="part"
+                        onClick={handleClick}
+                        required
                       />
                     </div>
-                    <label className="d-flex gap-1">
-                      Balance is {getCurrIcon(plan?.currency?.name)}
-                      {(
-                        plan?.planSummary?.principal -
-                        (amount ? parseFloat(amount) : 0)
-                      ).toFixed(2)}
-                    </label>
                   </div>
-                </div>
-                <div className="row my-4">
-                  <div className="col ">
-                    <label>Reason for Withdrawal</label>
-                    <div className="input-group">
-                      <select
-                        className="form-select form-select-md"
-                        aria-label=".form-select-md"
-                        name="reason"
-                        onChange={(e) => setReason(e.target.value)}
-                      >
-                        <option>Select Reason for Withdrawal</option>
-                        {withdrawReasons?.data?.body?.map((item) => (
-                          <option key={item.id} value={item.reason}>
-                            {item.reason}
-                          </option>
-                        ))}
-                        <option>Others</option>
-                      </select>
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                      <div className="d-flex align-items-center">
+                        <p className="p-0 m-0">Full Withdrawal</p>
+                      </div>
+                      <input
+                        type="radio"
+                        id="full"
+                        name="withdrawType"
+                        value="full"
+                        onClick={handleClick}
+                        disabled={plan?.planStatus === "ACTIVE"}
+                        required
+                      />
                     </div>
                   </div>
-                </div>
-                {reason === "Others" ? (
                   <div className="row my-4">
                     <div className="col ">
-                      <FormGroup className="form-group-custom mb-4">
-                        <Input
-                          name="otherReasons"
-                          type="textarea"
-                          rows={5}
-                          value={otherReasons}
-                          className="form-control"
-                          onChange={(e) => setOtherReasons(e.target.value)}
-                          id="otherReasons"
-                          placeholder="Please provide reason for withdrawal"
+                      <label>Amount to Liquidate</label>
+                      <div className="input-group">
+                        <div className=" input-group-prepend curr-icon">
+                          {getCurrIcon(plan?.currency?.name)}
+                        </div>
+                        <input
+                          className="form-control curr-input"
+                          placeholder={plan?.planSummary?.principal?.toFixed(2)}
+                          type="number"
+                          name="amount"
+                          defaultValue={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                          max={plan?.planSummary?.principal}
+                          required
+                          disabled={withdrawType === "full"}
                         />
-                      </FormGroup>
+                      </div>
+                      <label className="d-flex gap-1">
+                        Balance is{" "}
+                        <span className="d-flex">
+                          {getCurrIcon(plan?.currency?.name)}
+                          {(
+                            plan?.planSummary?.principal -
+                            (amount ? parseFloat(amount) : 0)
+                          ).toFixed(2)}
+                        </span>
+                      </label>
                     </div>
                   </div>
-                ) : null}
-              </div>
-            </LeftView>
-            <RightView>
-              <div className="bank-details">
-                {/* <div className="bank-detail-content"> */}
-                {/* <UserBankDetails /> */}
-                {/* </div> */}
-              </div>
-            </RightView>
-          </Wrapper>
-          <WrapperFooter>
-            <div className="footer-body">
-              <div className="d-flex align-items-center justify-content-between footer-content">
-                <div>
-                  <button
-                    style={{ color: "#111E6C", width: "300px" }}
-                    onClick={back}
-                  >
-                    Back
-                  </button>
+                  <div className="row my-4">
+                    <div className="col ">
+                      <label>Reason for Withdrawal</label>
+                      <div className="input-group">
+                        <select
+                          className="form-select form-select-md"
+                          aria-label=".form-select-md"
+                          name="reason"
+                          value={reason}
+                          onChange={(e) => setReason(e.target.value)}
+                          required
+                        >
+                          <option value="" hidden>
+                            Select Reason for Withdrawal
+                          </option>
+                          {withdrawReasons?.data?.body?.map((item) => (
+                            <option key={item.id} value={item.reason}>
+                              {item.reason}
+                            </option>
+                          ))}
+                          <option>Others</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  {reason === "Others" ? (
+                    <div className="row my-4">
+                      <div className="col ">
+                        <FormGroup className="form-group-custom mb-4">
+                          <Input
+                            name="otherReasons"
+                            type="textarea"
+                            rows={5}
+                            value={otherReasons}
+                            className="form-control"
+                            onChange={(e) => setOtherReasons(e.target.value)}
+                            id="otherReasons"
+                            placeholder="Please provide reason for withdrawal"
+                          />
+                        </FormGroup>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
-                <div>
-                  <button
-                    style={{
-                      backgroundColor: "#111E6C",
-                      color: "#FFFFFF",
-                      width: "300px",
-                    }}
-                    onClick={() => setIsClicked(true)}
-                  >
-                    Next
-                  </button>
+              </LeftView>
+              <RightView>
+                <div className="bank-details">
+                  {/* <div className="bank-detail-content"> */}
+                  {/* <UserBankDetails /> */}
+                  {/* </div> */}
+                </div>
+              </RightView>
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button
+                      type="button"
+                      style={{ color: "#111E6C", width: "300px" }}
+                      onClick={back}
+                    >
+                      Back
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      type="submit"
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </WrapperFooter>
+            </WrapperFooter>
+          </form>
         </>
       )}
     </>
@@ -332,11 +356,11 @@ const LeftView = styled.div`
   .curr-icon {
     position: absolute;
     margin-top: 6px;
-    margin-left: 22px;
+    margin-left: 12px;
     z-index: 10;
   }
   .curr-input {
-    padding-left: 34px;
+    padding-left: 24px;
   }
 `;
 

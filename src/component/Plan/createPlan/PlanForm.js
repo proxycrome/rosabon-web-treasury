@@ -52,7 +52,7 @@ const PlanForm = () => {
 
   console.log(inv_rates);
   console.log(product);
-  console.log(product.tenors)
+  console.log(product.tenors);
 
   useEffect(() => {
     dispatch(getExRates());
@@ -74,11 +74,11 @@ const PlanForm = () => {
     exchangeRate: 0.0,
     amount: 0.0,
     targetAmount: null,
-    tenor: "",
+    tenor: null,
     planDate: recentDate,
     savingFrequency: null,
-    weeklyContributionDay: "MONDAY",
-    monthlyContributionDay: 1,
+    weeklyContributionDay: "",
+    monthlyContributionDay: "",
     interestReceiptOption: "",
     planStatus: "ACTIVE",
     contributionValue: 0.0,
@@ -115,94 +115,173 @@ const PlanForm = () => {
     paymentMaturity: 0.0,
   });
 
-  // const computeCustomTenorDays = () => {
-  //   const customTenorDays = moment(formData.actualMaturityDate).diff(recentDate, "days");
-    
-  //   let tenor;
-  //   const selectedTenor = product?.tenors?.filter(item => customTenorDays < item.tenorDays)
+  // calculate minimum and maximum tenor
+  let minTenor = { tenorDays: Infinity };
+  let maxTenor = { tenorDays: 0 };
+  if (product?.tenors) {
+    if (product.tenors?.length > 1) {
+      product.tenors?.forEach((item) =>
+        item.tenorDays < minTenor.tenorDays ? (minTenor = item) : null
+      );
+      product.tenors?.forEach((item) =>
+        item.tenorDays > maxTenor.tenorDays ? (maxTenor = item) : null
+      );
+    } else {
+      minTenor = product?.tenors[0]?.tenorDays;
+      maxTenor = product?.tenors[0]?.tenorDays;
+    }
+    minTenor = moment(recentDate).add(minTenor?.tenorDays, "days")?._d;
+    maxTenor = moment(recentDate).add(maxTenor?.tenorDays, "days")?._d;
+  }
 
-  //   const newtenorDays =  selectedTenor?.length > 1 ? selectedTenor?.reduce((a, b) => Math.min(a.tenorDays, b.tenorDays)) : selectedTenor?.tenorDays
-    
-  //   return newtenorDays;
-  // } 
+  const checkAtMaturity =
+    formData.actualMaturityDate &&
+    (formData.tenor === 0 || formData.tenor === null);
 
-  // console.log(computeCustomTenorDays());
+  const computeTenorDays = useCallback(() => {
+    if (checkAtMaturity) {
+      const customTenorDays = moment(formData.actualMaturityDate).diff(
+        recentDate,
+        "days"
+      );
+
+      const selectedTenor = product?.tenors?.filter(
+        (item) => customTenorDays < item.tenorDays
+      );
+
+      function findMinValue(arr) {
+        if (arr?.length) {
+          let min = Infinity;
+
+          for (let obj of arr) {
+            min = obj?.tenorDays < min ? obj?.tenorDays : min;
+          }
+
+          return min;
+        }
+      }
+
+      return findMinValue(selectedTenor);
+    } else {
+      return product?.tenors?.find(
+        (item) => item.id === parseInt(formData.tenor)
+      )?.tenorDays;
+    }
+  }, [formData.actualMaturityDate, formData.tenor]);
+
+  console.log(computeTenorDays());
 
   // final update on the user plan details before switching to next screen
   useEffect(() => {
-    let selectedTenor = product?.tenors?.find(
-      (item) => item.id === parseInt(formData.tenor)
-    );
-    const selectedCustomTenor = () => {
-      const customTenorDays = moment(formData.actualMaturityDate).diff(recentDate, "days");
-      let tenor;
-      const selectedTenor = product.tenors.filter(item => customTenorDays < item.tenorDays)
-      const newtenorDays =  selectedTenor.reduce((a, b) => Math.min(a.tenorDays, b.tenorDays))
-    } 
-    let endDate = moment(recentDate).add(selectedTenor?.tenorDays, "days")?._d;
-    setFormData({
-      ...formData,
-      // amount: product.hasTargetAmount !== null ? null : formData.amount,
-      product: product.id,
-      productCategory: product.productCategory?.id,
-      exchangeRate: formData.currency === "NGN" ? 1 : formData.exchangeRate,
-      actualMaturityDate:
-        formData.actualMaturityDate === ""
-          ? moment(endDate).format("YYYY-MM-DD")
-          : formData.actualMaturityDate,
-      contributionValue: formData.contributionValue,
-      currency: currencies_list.find((item) => item.name === formData.currency)
-        ?.id,
-      numberOfTickets: updateNumOfTickets(
-        product?.properties?.hasTargetAmount
-          ? formData.targetAmount
-          : formData.amount
-      ),
-      planSummary: summary,
-      directDebit:
-        formData.directDebit === "true" || formData.directDebit === true
-          ? true
-          : false,
-      autoRenew:
-        formData.autoRenew === "true" || formData.autoRenew === true
-          ? true
-          : false,
-      allowsLiquidation:
-        formData.allowsLiquidation === "true" ||
-        formData.allowsLiquidation === true
-          ? true
-          : false,
-      interestRate: fetchIntRate(formData.interestReceiptOption),
-    });
+    if (isClicked) {
+      let selectedTenor = product?.tenors?.find(
+        (item) => item.id === parseInt(formData.tenor)
+      );
+
+      let endDate = moment(recentDate).add(
+        selectedTenor?.tenorDays,
+        "days"
+      )?._d;
+      setFormData({
+        ...formData,
+        // amount: product.hasTargetAmount !== null ? null : formData.amount,
+        product: product.id,
+        productCategory: product.productCategory?.id,
+        exchangeRate: formData.currency === "NGN" ? 1 : formData.exchangeRate,
+        actualMaturityDate: checkAtMaturity
+          ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
+          : moment(endDate).format("YYYY-MM-DD"),
+        contributionValue: formData.contributionValue,
+        currency: currencies_list.find(
+          (item) => item.name === formData.currency
+        )?.id,
+        numberOfTickets: updateNumOfTickets(
+          product?.properties?.hasTargetAmount
+            ? formData.targetAmount
+            : formData.amount
+        ),
+        tenor: checkAtMaturity ? null : formData.tenor,
+        planSummary: summary,
+        directDebit:
+          formData.directDebit === "true" || formData.directDebit === true
+            ? true
+            : false,
+        autoRenew:
+          formData.autoRenew === "true" || formData.autoRenew === true
+            ? true
+            : false,
+        allowsLiquidation:
+          formData.allowsLiquidation === "true" ||
+          formData.allowsLiquidation === true
+            ? true
+            : false,
+        interestRate: fetchIntRate(formData.interestReceiptOption),
+      });
+    } else {
+      setFormData({
+        ...formData,
+        tenor: checkAtMaturity ? null : formData.tenor,
+        currency: currencies_list.find((item) => item.id === formData.currency)
+          ?.name,
+      });
+    }
   }, [isClicked]);
+
+  const [validSavingsFreq, setValidSavingsFreq] = useState(true);
 
   // function to compute target amount and computed value
   const contribValue = () => {
     const selectedTenor = product.tenors?.find(
       (item) => item.id === parseInt(formData.tenor)
     );
+
+    const customTenorDays = moment(formData.actualMaturityDate).diff(
+      recentDate,
+      "days"
+    );
+
     if (product?.properties?.hasTargetAmount) {
       if (formData.savingFrequency !== "") {
         if (conValue === "targetAmount") {
           let computedValue;
           switch (formData.savingFrequency) {
             case "DAILY":
-              computedValue = formData.targetAmount / selectedTenor?.tenorDays;
-              // computedValue = return (SI * 100 + Number.EPSILON) / 100
+              computedValue =
+                formData.targetAmount /
+                (checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays);
+              setValidSavingsFreq(true);
               break;
 
             case "WEEKLY":
-              if(selectedTenor?.tenorDays < 7){
+              if (customTenorDays < 7 || selectedTenor?.tenorDays < 7) {
                 computedValue = undefined;
+                setValidSavingsFreq(false);
               } else {
-                computedValue =
-                formData.targetAmount / (selectedTenor?.tenorDays / 7);
-              } 
+                if (checkAtMaturity) {
+                  computedValue =
+                    formData.targetAmount / Math.floor(customTenorDays / 7);
+                } else {
+                  computedValue =
+                    formData.targetAmount /
+                    Math.floor(selectedTenor?.tenorDays / 7);
+                }
+              }
               break;
 
             case "MONTHLY":
-              computedValue =
-                formData.targetAmount / selectedTenor?.tenorMonths;
+              if (customTenorDays < 30 || selectedTenor?.tenorDays < 30) {
+                computedValue = undefined;
+                setValidSavingsFreq(false);
+              } else {
+                if (checkAtMaturity) {
+                  computedValue =
+                    formData.targetAmount / Math.floor(customTenorDays / 30);
+                } else {
+                  computedValue =
+                    formData.targetAmount /
+                    Math.floor(selectedTenor?.tenorDays / 30);
+                }
+              }
               break;
 
             default:
@@ -210,7 +289,6 @@ const PlanForm = () => {
           }
           setFormData({
             ...formData,
-            // contributionValue: Number(parseFloat(computedValue).toFixed(2))
             contributionValue: (computedValue * 100 + Number.EPSILON) / 100,
           });
         } else {
@@ -219,17 +297,46 @@ const PlanForm = () => {
             switch (formData.savingFrequency) {
               case "DAILY":
                 computedValue =
-                  formData.contributionValue * selectedTenor?.tenorDays;
+                  formData.contributionValue *
+                  (checkAtMaturity
+                    ? customTenorDays
+                    : selectedTenor?.tenorDays);
+                setValidSavingsFreq(true);
                 break;
 
               case "WEEKLY":
-                computedValue =
-                  formData.contributionValue * (selectedTenor?.tenorDays / 7);
+                if (customTenorDays < 7 || selectedTenor?.tenorDays < 7) {
+                  computedValue = undefined;
+                  setValidSavingsFreq(false);
+                } else {
+                  if (checkAtMaturity) {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(customTenorDays / 7);
+                  } else {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(selectedTenor?.tenorDays / 7);
+                  }
+                }
+
                 break;
 
               case "MONTHLY":
-                computedValue =
-                  formData.contributionValue * selectedTenor?.tenorMonths;
+                if (customTenorDays < 30 || selectedTenor?.tenorDays < 30) {
+                  computedValue = undefined;
+                  setValidSavingsFreq(false);
+                } else {
+                  if (checkAtMaturity) {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(customTenorDays / 30);
+                  } else {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(selectedTenor?.tenorDays / 30);
+                  }
+                }
                 break;
 
               default:
@@ -238,7 +345,6 @@ const PlanForm = () => {
             setFormData({
               ...formData,
               targetAmount: (computedValue * 100 + Number.EPSILON) / 100,
-              // targetAmount: Number(parseInt(computedValue))
             });
           }
         }
@@ -246,6 +352,9 @@ const PlanForm = () => {
     }
   };
 
+  console.log("targetAmount", formData.targetAmount);
+  console.log("contributionValue", formData.contributionValue);
+  console.log("valid", validSavingsFreq);
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
     let interestRate;
@@ -253,30 +362,46 @@ const PlanForm = () => {
       ? formData.targetAmount
       : formData.amount;
 
+    const customTenorDays = moment(formData.actualMaturityDate).diff(
+      recentDate,
+      "days"
+    );
+
+    const selectedTenor = product.tenors?.find(
+      (item) => item.id === parseInt(formData.tenor)
+    );
+
+    const maxTenorDays = () => {
+      if (checkAtMaturity) {
+        return customTenorDays;
+      } else {
+        return selectedTenor?.tenorDays;
+      }
+    };
+
     const invRateCurrency = inv_rates
       ?.filter((data) => data.product.id === parseInt(id))
-      ?.find((item) => item.currency.name === formData.currency)?.currency?.name;
-      console.log(invRateCurrency); 
+      ?.find((item) => item.currency.name === formData.currency)
+      ?.currency?.name;
+    console.log(invRateCurrency);
     const currency = ex_rates?.find((item) => item.name === formData.currency);
-    // const newSellingPrice = currency?.sellingPrice;
-    // const oldSellingPrice = ex_rates?.find(
-    //   (item) => item.name === invRateCurrency
-    // )?.sellingPrice;
+
     const convPrincipal = () => {
       let convertPrincipal;
       if (invRateCurrency === currency?.name) {
         convertPrincipal = principal;
-      } 
-      // else {
-      //   convertPrincipal = (newSellingPrice / oldSellingPrice) * principal;
-      // }
+      }
       return convertPrincipal;
     };
+
     let rate = inv_rates?.find((item) => {
       return (
-        item.product.id === parseInt(id) && item.currency.name === formData.currency &&
-        (convPrincipal() >= item.minimumAmount &&
-        convPrincipal() <= item.maximumAmount)
+        item.product.id === parseInt(id) &&
+        item.currency.name === formData.currency &&
+        convPrincipal() >= item.minimumAmount &&
+        convPrincipal() <= item.maximumAmount &&
+        maxTenorDays() >= item.minimumTenor &&
+        maxTenorDays() <= item.maximumTenor
       );
     });
     let directDebitRate = rate?.percentDirectDebit
@@ -344,6 +469,7 @@ const PlanForm = () => {
       formData.tenor,
       formData.targetAmount,
       formData.contributionValue,
+      formData.actualMaturityDate,
     ]
   );
 
@@ -361,12 +487,19 @@ const PlanForm = () => {
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, "days")?._d;
     // calculate principal
 
+    const customTenorDays = moment(formData.actualMaturityDate).diff(
+      recentDate,
+      "days"
+    );
+
     // }
     setSummary({
       ...summary,
       planName: formData.planName,
       startDate: formData.dateCreated,
-      endDate: moment(endDate).format("YYYY-MM-DD"),
+      endDate: checkAtMaturity
+        ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
+        : moment(endDate).format("YYYY-MM-DD"),
       interestRate: formData.interestRate,
       principal: product?.properties?.hasTargetAmount
         ? formData.targetAmount
@@ -379,7 +512,7 @@ const PlanForm = () => {
           ? formData.targetAmount
           : formData.amount,
         formData.interestRate,
-        selectedTenor?.tenorDays
+        checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
       ),
       paymentMaturity: paymentAtMaturity(
         formData.interestReceiptOption,
@@ -387,13 +520,17 @@ const PlanForm = () => {
           ? formData.targetAmount
           : formData.amount,
         withhold_tax[0]?.rate,
-        selectedTenor?.tenorMonths,
+        checkAtMaturity
+          ? Math.floor(
+              moment(formData.actualMaturityDate).diff(recentDate, "days") / 30
+            )
+          : Math.floor(selectedTenor?.tenorDays / 30),
         calculateSI(
           product?.properties?.hasTargetAmount
             ? formData.targetAmount
             : formData.amount,
           formData.interestRate,
-          selectedTenor?.tenorDays
+          checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
         )
       ),
     });
@@ -405,6 +542,7 @@ const PlanForm = () => {
     formData.interestReceiptOption,
     formData.targetAmount,
     formData.amount,
+    formData.actualMaturityDate,
   ]);
 
   // side effect Update interest rate and exchange rate
@@ -429,6 +567,8 @@ const PlanForm = () => {
     formData.amount,
     formData.directDebit,
     formData.currency,
+    formData.tenor,
+    formData.actualMaturityDate,
   ]);
 
   // Update number of tickets based on target amount or amount to be placed value
@@ -499,25 +639,6 @@ const PlanForm = () => {
     );
   }
 
-  // calculate minimum and maximum tenor
-  let minTenor = { tenorDays: 999999 };
-  let maxTenor = { tenorDays: 0 };
-  if (product?.tenors) {
-    if (product.tenors?.length > 1) {
-      product.tenors?.forEach((item) =>
-        item.tenorDays < minTenor.tenorDays ? (minTenor = item) : null
-      );
-      product.tenors?.forEach((item) =>
-        item.tenorDays > maxTenor.tenorDays ? (maxTenor = item) : null
-      );
-    } else {
-      minTenor = product?.tenors[0]?.tenorDays;
-      maxTenor = product?.tenors[0]?.tenorDays;
-    }
-    minTenor = moment(recentDate).add(minTenor?.tenorDays, "days")?._d;
-    maxTenor = moment(recentDate).add(maxTenor?.tenorDays, "days")?._d;
-  }
-
   const back = () => {
     navigate("/plan-product");
   };
@@ -538,9 +659,9 @@ const PlanForm = () => {
   const calculateMinContribVal = (contribVal) => {
     if (contribVal !== null) {
       if (formData.tenor !== "") {
-        let selectedTenor = product?.tenors?.filter(
+        let selectedTenor = product?.tenors?.find(
           (item) => item.id === parseInt(formData.tenor)
-        )[0];
+        );
         let minContrib;
         switch (formData.savingFrequency) {
           case "DAILY":
@@ -558,7 +679,7 @@ const PlanForm = () => {
           case "MONTHLY":
             minContrib =
               (product?.minTransactionLimit * selectedTenor?.tenorMonths) /
-              selectedTenor?.tenorMonths;
+              Math.floor(selectedTenor?.tenorDays / 30);
             break;
 
           default:
@@ -598,10 +719,17 @@ const PlanForm = () => {
           [e.target.name]: e.target.value,
         });
       } else if (e.target.name === "tenor") {
-        setFormData({
-          ...formData,
-          [e.target.name]: Number(e.target.value),
-        });
+        if (typeof e.target.value === "number" && e.target.value) {
+          setFormData({
+            ...formData,
+            [e.target.name]: Number(e.target.value),
+          });
+        } else {
+          setFormData({
+            ...formData,
+            [e.target.name]: Number(e.target.value),
+          });
+        }
       } else if (e.target.name === "monthlyContributionDay") {
         setFormData({
           ...formData,
@@ -627,7 +755,11 @@ const PlanForm = () => {
     if (!product?.properties?.hasSavingFrequency) {
       setIsClicked(true);
     } else {
-      if (confirmPeriodicPay) {
+      if (
+        confirmPeriodicPay &&
+        summary.paymentMaturity !== null &&
+        validSavingsFreq
+      ) {
         setIsClicked(true);
       }
     }
@@ -849,7 +981,7 @@ const PlanForm = () => {
                   Customize Tenor
                 </option>
               </Input>
-              {formData.tenor === 0 && (
+              {(formData.tenor === 0 ) && (
                 <Input
                   className={`form-control mb-3`}
                   style={{ width: "100%" }}
@@ -858,9 +990,7 @@ const PlanForm = () => {
                   type="date"
                   min={moment(minTenor).format("YYYY-MM-DD")}
                   max={moment(maxTenor).format("YYYY-MM-DD")}
-                  value={moment(formData.actualMaturityDate).format(
-                    "YYYY-MM-DD"
-                  )}
+                  value={formData.actualMaturityDate}
                   onChange={handleChange}
                 />
               )}
@@ -879,7 +1009,7 @@ const PlanForm = () => {
                 style={{ gap: 14 }}
               >
                 <Input
-                  className={`form-select form-select-md mb-3 ${
+                  className={`form-select form-select-md ${
                     validate && "validate"
                   }`}
                   type="select"
@@ -898,14 +1028,17 @@ const PlanForm = () => {
                 </Input>
                 {formData.savingFrequency === "WEEKLY" && (
                   <Input
-                    className="form-select form-select-md option-select mb-3"
+                    className={`form-select form-select-md option-select ${
+                      validate && "validate"
+                    }`}
                     name="weeklyContributionDay"
                     type="select"
                     onChange={handleChange}
-                    value={formData.weeklyContributionDay}
+                    defaultValue={formData.weeklyContributionDay}
+                    required={formData.savingFrequency === "WEEKLY"}
                   >
-                    <option value="" selected hidden disabled>
-                      Set weekly contribution day
+                    <option value="" hidden disabled>
+                      Set Weekly Contribution Day
                     </option>
                     <option value="MONDAY">MONDAY</option>
                     <option value="TUESDAY">TUESDAY</option>
@@ -918,34 +1051,47 @@ const PlanForm = () => {
                 )}
                 {formData.savingFrequency === "MONTHLY" && (
                   <Input
-                    className="form-select form-select-md option-select mb-3"
+                    className={`form-select form-select-md option-select ${
+                      validate && "validate"
+                    }`}
                     name="monthlyContributionDay"
                     type="select"
                     onChange={handleChange}
-                    value={formData.monthlyContributionDay}
+                    defaultValue={formData.monthlyContributionDay}
+                    required={formData.savingFrequency === "MONTHLY"}
                   >
-                    <option value="" selected hidden disabled>
-                      Set monthly contribution day
+                    <option value="" hidden disabled>
+                      Set Monthly Contibution Day
                     </option>
                     {[...Array(28).keys()].map((item) => (
-                      <option key={item + 1} value={item + 1}>
+                      <option key={item + 1} value={String(item + 1)}>
                         {item + 1}{" "}
                       </option>
                     ))}
                   </Input>
                 )}
               </div>
+              {validSavingsFreq === false ? (
+                <small className="helper-text text-danger">
+                  Select a Valid Savings Frequency
+                </small>
+              ) : (
+                <></>
+              )}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-6 mb-5">
               <label>Interest Reciept Option</label>
-              <div className="input-group mb-4">
+              <div className="input-group">
                 <Input
-                  className={`form-select form-select-md mb-3 ${
+                  className={`form-select form-select-md ${
                     validate && "validate"
                   }`}
                   name="interestReceiptOption"
                   type="select"
-                  required
+                  required={
+                    !formData.interestReceiptOption ||
+                    summary.paymentMaturity === null
+                  }
                   onChange={handleChange}
                   id="intRecOpt"
                   value={formData.interestReceiptOption}
@@ -968,6 +1114,13 @@ const PlanForm = () => {
                     )}
                 </Input>
               </div>
+              {summary.paymentMaturity === null ? (
+                <small className="helper-text text-danger">
+                  Select a valid Interest receipt option
+                </small>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
           <div className="row">
@@ -980,7 +1133,7 @@ const PlanForm = () => {
                   className={`form-control ${validate && "validate"}`}
                   name="contributionValue"
                   placeholder=""
-                  type="number"     
+                  type="number"
                   value={formData.contributionValue}
                   onChange={handleChange}
                   disabled={!product?.properties?.hasSavingFrequency}

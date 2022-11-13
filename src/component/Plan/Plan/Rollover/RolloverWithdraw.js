@@ -5,7 +5,13 @@ import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
 import { RolloverSummary, RolloverWithdrawMethod } from "../../Accesssories";
 
-const RolloverWithdraw = ({ goBack }) => {
+const RolloverWithdraw = ({
+  goBack,
+  amount,
+  tenor,
+  interestRate,
+  withholdTax,
+}) => {
   const [modalState, setModalState] = useState(false);
 
   return (
@@ -18,7 +24,12 @@ const RolloverWithdraw = ({ goBack }) => {
       <Wrapper>
         <LeftView>
           <h4 className="pb-3">Rollover</h4>
-          <RolloverSummary />
+          <RolloverSummary
+            amount={amount}
+            tenor={tenor}
+            interestRate={interestRate}
+            withholdTax={withholdTax}
+          />
         </LeftView>
         <RightView>
           <div className="bank-details">
@@ -34,7 +45,8 @@ const RolloverWithdraw = ({ goBack }) => {
             <div>
               <button
                 style={{ color: "#111E6C", width: "300px" }}
-                onClick={goBack}>
+                onClick={goBack}
+              >
                 Back
               </button>
             </div>
@@ -45,13 +57,15 @@ const RolloverWithdraw = ({ goBack }) => {
                   color: "#FFFFFF",
                   width: "300px",
                 }}
-                onClick={() => setModalState(true)}>
+                onClick={() => setModalState(true)}
+              >
                 Submit
               </button>
               <ModalComponent
                 show={modalState}
                 size={"md"}
-                handleClose={() => setModalState(false)}>
+                handleClose={() => setModalState(false)}
+              >
                 <SuccessConfirm
                   confirmNotice="rollover"
                   handleClose={() => setModalState(false)}

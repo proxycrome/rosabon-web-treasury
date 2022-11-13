@@ -112,3 +112,9 @@ export const payWithCardService = (id) => {
   const url = `auth/trplan-action/pay-with-card?planId=${id}`;
   return http.getData(url);
 };
+
+export const getClosedPlansService = () => {
+  const http = new HttpService();
+  const url = `auth/trcreate-plan/get-all-closed-plans`;
+  return http.getData(url);
+};

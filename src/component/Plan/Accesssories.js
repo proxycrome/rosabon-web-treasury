@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useContext,
   useRef,
+  useMemo,
   useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -42,6 +43,10 @@ import {
   redeemReferralBonus,
   getMyDepositActivities,
   getReferralRedeemThreshold,
+  redeemSpecialEarning,
+  getSpecialEarningActivities,
+  getTotalEarning,
+  getTotalRedeemedEarning,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -281,41 +286,38 @@ const RightWrapper = styled.div`
 `;
 
 export const MakePayment = ({ setPaymentType }) => {
-  const [card, setCard] = useState("");
-  const [bank, setBank] = useState("");
+  const [paymentType, SetPaymentType] = useState("");
   const [isTerms, setIsTerms] = useState(false);
   const { form, setForm } = useContext(PlanContext);
   const directDebit = form.directDebit;
 
   const handleClick = (e) => {
-    if (e.target.value === "card") {
+    const { value } = e.target;
+    if (value === "card") {
       setForm({
         ...form,
         paymentMethod: "DEBIT_CARD",
         planStatus: "ACTIVE",
       });
-      setCard("card");
-      setBank("");
+      SetPaymentType(value);
     }
-    if (e.target.value === "bank") {
+    if (value === "bank") {
       setForm({
         ...form,
         paymentMethod: "BANK_TRANSFER",
         planStatus: "PENDING",
       });
-      setBank("bank");
-      setCard("");
+      SetPaymentType(value);
     }
   };
 
   useEffect(() => {
     const values = {
-      bank,
-      card,
+      paymentType,
       isTerms,
     };
     setPaymentType(values);
-  }, [card, bank, setPaymentType, isTerms]);
+  }, [paymentType, setPaymentType, isTerms]);
 
   return (
     <PaymentTypeWrapper>
@@ -333,6 +335,7 @@ export const MakePayment = ({ setPaymentType }) => {
               name="paymentType"
               value="card"
               onClick={handleClick}
+              required
             />
           </div>
         </div>
@@ -349,6 +352,7 @@ export const MakePayment = ({ setPaymentType }) => {
               disabled={directDebit === true ? true : false}
               value="bank"
               onClick={handleClick}
+              required
             />
           </div>
         </div>
@@ -357,7 +361,7 @@ export const MakePayment = ({ setPaymentType }) => {
         <input
           type="checkbox"
           id="scales"
-          name="scales"
+          name="term"
           value={isTerms}
           checked={isTerms}
           onChange={() => setIsTerms(!isTerms)}
@@ -619,74 +623,180 @@ const InterestCalculatorWrapper = styled.div`
   }
 `;
 
-export const RolloverSummary = () => {
+export const RolloverSummary = ({ amount, tenor, interestRate, withholdTax }) => {
+  const { singlePlan, investment_rates } = useSelector((state) => state.plan);
+  const plan = useMemo(
+    () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
+    [singlePlan]
+  );
+  const planStatus = singlePlan?.data.statusCode;
+  const { singleProduct } = useSelector((state) => state.product);
+  const productTenors = useMemo(
+    () => (singleProduct ? singleProduct?.data?.body.tenors : []),
+    [singleProduct]
+  );
+
+  const date = new Date();
+  const startDate = moment(date).format("DD/MM/YYYY")
+
+  
+  let selectedTenor = productTenors?.find(
+    (item) => item.id === tenor
+  );
+
+  // const contribValue = (savingFrequency) => {
+  //   const selectedTenor = productTenors?.find(
+  //     (item) => item.id === parseInt(tenor)
+  //   );
+
+  //   const customTenorDays = moment(formData.actualMaturityDate).diff(
+  //     recentDate,
+  //     "days"
+  //   );
+
+  //   if (singleProduct?.properties?.hasTargetAmount) {
+  //     if (plan?.savingFrequency !== "") {
+  //         let computedValue;
+  //         switch (savingFrequency) {
+  //           case "DAILY":
+  //             computedValue =
+  //               amount / selectedTenor?.tenorDays;
+  //             break;
+
+  //           case "WEEKLY":
+  //             if (selectedTenor?.tenorDays < 7) {
+  //               computedValue = undefined;
+  //               setValidSavingsFreq(false);
+  //             } else {
+                
+  //                 computedValue =
+  //                   amount /
+  //                   Math.floor(selectedTenor?.tenorDays / 7);
+    
+  //             }
+  //             break;
+
+  //           case "MONTHLY":
+  //             if (selectedTenor?.tenorDays < 30) {
+  //               computedValue = undefined;
+  //               setValidSavingsFreq(false);
+  //             } else {
+                
+              
+  //                 computedValue =
+  //                   formData.targetAmount /
+  //                   Math.floor(selectedTenor?.tenorDays / 30);
+            
+  //             }
+  //             break;
+
+  //           default:
+  //             break;
+  //         }
+          
+  //       } 
+  //     }
+  //   }
+  // };
+
+  
+
+  let addedDate = moment(date).add(selectedTenor?.tenorDays, "days")?._d;
+  let endDate = moment(addedDate).format("DD/MM/YYYY");
+
+  const calculateSI = (principal, rate, time) => {
+    const SI = (principal * rate * (time / 365)) / 100;
+    return Math.round(SI * 100 + Number.EPSILON) / 100;
+  };
+
+  const calculatedInterest = calculateSI(amount, interestRate, selectedTenor?.tenorDays);
+  
+  const calc_withholding_tax =
+    Math.round(
+      calculateSI(amount, interestRate, selectedTenor?.tenorDays) *
+        (withholdTax[0]?.rate / 100) *
+        100 +
+        Number.EPSILON
+    ) / 100;
+
+  const maturityPayment = paymentAtMaturity(
+    plan?.interestReceiptOption,
+    amount,
+    withholdTax[0]?.rate,
+    (selectedTenor?.tenorDays / 30),
+    calculateSI(amount, interestRate, selectedTenor?.tenorDays)
+  );
+    
+
   return (
     <div>
-      <RolloverSummaryWrapper>
-        <h4 className="">Rollover Summary</h4>
-        <div className="plan-content">
-          <div className="rollover">
-            <div className="plan-top h-50 p-4">
-              <h4>Plan 1</h4>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">Start date </p>
-                  <h4>24/06/2023</h4>
+      {planStatus === "OK" && (
+        <RolloverSummaryWrapper>
+          <h4 className="pt-4">Rollover Summary</h4>
+          <div className="plan-content">
+            <div className="rollover">
+              <div className="plan-top h-50 p-4">
+                <h4>{plan?.planName}</h4>
+                <div className="d-flex align-items-center justify-content-between pt-4">
+                  <div>
+                    <p className="p-0 m-0">Start date </p>
+                    <h4>{startDate}</h4>
+                  </div>
+                  <div className="rollover-text-left">
+                    <p className="p-0 m-0">End date </p>
+                    <h4>{endDate}</h4>
+                  </div>
                 </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">End date </p>
-                  <h4>24/06/2023</h4>
+                <div className="d-flex align-items-center justify-content-between pt-4">
+                  <div>
+                    <p className="p-0 m-0">Principal </p>
+                    <h4>₦{amount}</h4>
+                  </div>
+                  <div className="rollover-text-left">
+                    <p className="p-0 m-0">Amount for Withdrawal </p>
+                    <h4 className=""> ₦{(plan?.planSummary?.principal - amount)?.toFixed(2)}</h4>
+                  </div>
                 </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">Principal </p>
-                  <h4> ₦2,500,000</h4>
+                <div className="d-flex align-items-end justify-content-between pt-4">
+                  <div>
+                    <p className="p-0 m-0">Interst Rate </p>
+                    <h4>{interestRate.toFixed(2)} %</h4>
+                  </div>
+                  <div className="rollover-text-left">
+                    <p className="p-0 m-0">
+                      Interest Payment <br /> frequency{" "}
+                    </p>
+                    <h4 className="">{plan?.interestReceiptOption}</h4>
+                  </div>
                 </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">Amount for Withdrawal </p>
-                  <h4 className=""> ₦0.00</h4>
+                <div className="d-flex align-items-center justify-content-between pt-4">
+                  <div>
+                    <p className="p-0 m-0">Calculated Interest </p>
+                    <h4>₦{calculatedInterest}</h4>
+                  </div>
+                  <div className="rollover-text-left">
+                    <p className="p-0 m-0">Withholding Tax</p>
+                    <h4 className="">₦{calc_withholding_tax}</h4>
+                  </div>
                 </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">Interst Rate </p>
-                  <h4>20.00 %</h4>
+                <div className="d-flex align-items-center justify-content-between pt-4">
+                  <div>
+                    <p className="p-0 m-0">Payment at Maturity</p>
+                    <h4>₦{maturityPayment.toFixed(2)}</h4>
+                  </div>
+                  <div className="rollover-text-left"></div>
                 </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">
-                    Interest Payment <br /> frequency{" "}
-                  </p>
-                  <h4 className="">Daily</h4>
+                <div className="py-5 check-box-bank">
+                  <input type="checkbox" id="scales" name="scales" required />
+                  <label htmlFor="scales">
+                    I agree to the Terms and Condition
+                  </label>
                 </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">Calculated Interest </p>
-                  <h4>₦200,000</h4>
-                </div>
-                <div className="rollover-text-left">
-                  <p className="p-0 m-0">Withholding Tax</p>
-                  <h4 className="">₦2,000</h4>
-                </div>
-              </div>
-              <div className="d-flex align-items-center justify-content-between pt-4">
-                <div>
-                  <p className="p-0 m-0">Payment at Maturity</p>
-                  <h4>₦2,700,000</h4>
-                </div>
-                <div className="rollover-text-left"></div>
-              </div>
-              <div className="py-5 check-box-bank">
-                <input type="checkbox" id="scales" name="scales" />
-                <label htmlFor="scales">
-                  I agree to the Terms and Condition
-                </label>
               </div>
             </div>
           </div>
-        </div>
-      </RolloverSummaryWrapper>
+        </RolloverSummaryWrapper>
+      )}
     </div>
   );
 };
@@ -831,8 +941,11 @@ export const RolloverWithdrawMethod = ({
                       name="withdraw"
                       onChange={(e) => setWithdrawTo(e.target.value)}
                       value={withdrawTo}
+                      required
                     >
-                      <option value="">Select withdrawal destination</option>
+                      <option value="" hidden>
+                        Select withdrawal destination
+                      </option>
                       <option value="TO_BANK">To Bank</option>
                       <option value="TO_WALLET">My Wallet</option>
                     </select>
@@ -913,41 +1026,48 @@ export const RolloverWithdrawMethod = ({
 };
 
 export const WithdrawalSummary = ({
-  amount = 0,
-  reason = "",
+  amount,
+  reason,
   compPenalCharge,
+  checkTerms,
 }) => {
-  const [penalty, setPenalty] = useState(null);
+  const [isTerms, setIsTerms] = useState(false);
   const { singlePlan, penal_charge } = useSelector((state) => state.plan);
 
-  const plan = singlePlan?.data?.body ? singlePlan?.data.body : {};
-  const penalCharge = penal_charge?.data?.body ? penal_charge?.data?.body : [];
+  const plan = useMemo(
+    () => (singlePlan?.data?.body ? singlePlan?.data.body : {}),
+    [singlePlan]
+  );
+  const penalCharges = useMemo(
+    () => (penal_charge?.data?.body ? penal_charge?.data?.body : []),
+    [penal_charge]
+  );
+
+  console.log(plan);
+  console.log(penalCharges);
 
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
-  console.log(penalCharge);
-  console.log(plan);
-  const planProductCharges = penalCharge?.filter(
+  const planProductCharges = penalCharges?.filter(
     (data) => data.product.id === plan.product.id
   );
 
   const computePenalCharge = useCallback(
     (intRecOption) => {
       let penalRate = 0;
-      let penalCharge;
-      const currentNumberOfDays = moment(recentDate).diff(
+      let penalCharge = 0;
+      const maxNumberDays = moment(plan?.actualMaturityDate).diff(
         plan?.planSummary?.startDate,
         "days"
       );
 
+      const currentNumberOfDays =
+        moment(recentDate).diff(plan?.planSummary?.startDate, "days") || 1;
+
       planProductCharges.forEach((item) => {
-        const maxDays = Math.round(
-          (item.maxDaysElapsed * plan?.tenor?.tenorDays) / 100
-        );
-        const minDays = Math.round(
-          (item.minDaysElapsed * plan?.tenor?.tenorDays) / 100
-        );
+        const maxDays = (item.maxDaysElapsed * maxNumberDays) / 100;
+        const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
         if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
           penalRate = item.penalRate;
         }
@@ -961,10 +1081,10 @@ export const WithdrawalSummary = ({
             plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
           ) {
             const totalEarnedInt =
-              (plan?.plansummary?.principal *
+              (plan?.planSummary?.principal *
                 plan?.interestRate *
-                currentNumberOfDays) /
-              365;
+                (currentNumberOfDays / 365)) /
+              100;
             penalCharge = totalEarnedInt * penalRate;
           }
           break;
@@ -972,7 +1092,7 @@ export const WithdrawalSummary = ({
         case "UPFRONT":
           if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
             const excessIntPaid =
-              amount * plan?.interestRate * (plan?.tenor?.tenorDays / 365) -
+              amount * plan?.interestRate * (maxNumberDays / 365) -
               amount * plan?.interestRate * (currentNumberOfDays / 365);
             penalCharge =
               (currentNumberOfDays / 365) * penalRate * amount + excessIntPaid;
@@ -997,9 +1117,10 @@ export const WithdrawalSummary = ({
   );
 
   useEffect(() => {
-    setPenalty(computePenalCharge(plan?.interestReceiptOption));
-  }, [computePenalCharge, plan]);
-
+    const penal = computePenalCharge(plan?.interestReceiptOption);
+    compPenalCharge(penal);
+    checkTerms(isTerms);
+  }, [computePenalCharge, plan, compPenalCharge, isTerms, checkTerms]);
 
   return (
     <div>
@@ -1056,7 +1177,11 @@ export const WithdrawalSummary = ({
                   </p>
                   <h4 className="d-flex gap-1 justify-content-end">
                     {getCurrIcon(plan?.currency?.name)}
-                    {(plan?.planSummary?.principal - amount).toFixed(2)}
+                    {(
+                      plan?.planSummary?.principal -
+                      amount -
+                      computePenalCharge(plan?.interestReceiptOption)
+                    ).toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -1067,7 +1192,15 @@ export const WithdrawalSummary = ({
                 </div>
               </div>
               <div className="py-5 check-box-bank">
-                <input type="checkbox" id="scales" name="scales" />
+                <input
+                  type="checkbox"
+                  id="scales"
+                  name="term"
+                  value={isTerms}
+                  checked={isTerms}
+                  onChange={() => setIsTerms(!isTerms)}
+                  required
+                />
                 <label htmlFor="scales">
                   I agree to the Terms and Condition
                 </label>
@@ -1091,11 +1224,15 @@ export const getCurrIcon = (currency) => {
       );
     case "USD":
       return (
-        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</span>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+          &#36;
+        </span>
       );
     case "CAD":
       return (
-        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>&#36;</span>
+        <span style={{ fontSize: 14, color: "#535353", fontWeight: 600 }}>
+          &#36;
+        </span>
       );
     case "NGN":
       return (
@@ -1183,7 +1320,7 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4>₦200,000</h4> */}
                   <h4 className="flex justify-content-end">
                     {getCurrIcon(current_currency)}{" "}
-                    {planData.planSummary.calculatedInterest}
+                    {planData.planSummary.calculatedInterest.toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -1192,7 +1329,8 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Withholding Tax</p>
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
-                    {getCurrIcon(current_currency)} {calc_withholding_tax}
+                    {getCurrIcon(current_currency)}{" "}
+                    {calc_withholding_tax.toFixed(2)}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1200,7 +1338,7 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4>₦2,700,000</h4> */}
                   <h4 className="flex justify-content-end">
                     {getCurrIcon(current_currency)}{" "}
-                    {planData.planSummary.paymentMaturity}
+                    {planData.planSummary.paymentMaturity.toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -2255,10 +2393,12 @@ const ReferalTableWarapper = styled.div`
 
 export const ReferralBonus = () => {
   const dispatch = useDispatch();
+  const { users } = useSelector((state) => state.user_profile);
   const { loading, refActivities, refRedeemMsg, referralThreshold } =
     useSelector((state) => state.wallet);
   console.log(refActivities);
   console.log(refRedeemMsg);
+  console.log(users);
 
   const handleRedeemClick = () => {
     dispatch(redeemReferralBonus());
@@ -2319,7 +2459,9 @@ export const ReferralBonus = () => {
               <div className="d-flex justify-content-between aligin-items-center">
                 <div>
                   <p className="m-0 p-0">Earned Referral Bonus</p>
-                  <h4 className="py-4">₦ 0.00</h4>
+                  <h4 className="py-4">
+                    ₦ {users?.referralBonus?.earnedReferralBonus?.toFixed(2)}
+                  </h4>
                 </div>
                 <div>
                   <button
@@ -2332,13 +2474,16 @@ export const ReferralBonus = () => {
               </div>
               <div className="d-flex align-items-content justify-content-center">
                 <p className="m-0 p-0">
-                  0 out of ₦{referralThreshold?.amount} Earned
+                  {users?.referralBonus?.earnedReferralBonus} out of ₦
+                  {referralThreshold?.amount} Earned
                 </p>
               </div>
             </div>
             <div className="total-bonus">
               <p className="p-0 m-0">Total Redeemed Bonus :</p>
-              <h4 className="total-amount">₦ 0.00</h4>
+              <h4 className="total-amount">
+                ₦ {users?.referralBonus?.totalRedeemedBonus?.toFixed(2)}
+              </h4>
             </div>
           </div>
 
@@ -2526,7 +2671,7 @@ export const TransferDeposit = () => {
         width: 100,
       },
     ],
-    rows: deposits?.reverse()?.map((data) => ({
+    rows: deposits?.map((data) => ({
       sn: `${data.transactionId}`,
       date: `${data.transactionDate}`,
       description: `${data.description}`,
@@ -2615,6 +2760,27 @@ export const WithdrawalCard = () => {
 const Wrapper = styled.div``;
 
 export const SpecialEarnings = () => {
+  const dispatch = useDispatch();
+  const { specialEarnings, totalEarning, totalRedeemedEarning } = useSelector(
+    (state) => state.wallet
+  );
+  const earningsActivities = specialEarnings?.entities
+    ? specialEarnings?.entities
+    : [];
+  console.log(specialEarnings);
+  console.log(totalEarning);
+  console.log(totalRedeemedEarning);
+
+  const handleClick = () => {
+    dispatch(redeemSpecialEarning());
+  };
+
+  useEffect(() => {
+    dispatch(getSpecialEarningActivities());
+    dispatch(getTotalEarning());
+    dispatch(getTotalRedeemedEarning());
+  }, [dispatch]);
+
   const data = {
     columns: [
       {
@@ -2638,32 +2804,12 @@ export const SpecialEarnings = () => {
         width: 100,
       },
     ],
-    rows: [
-      // {
-      //   id: "N0_1947034",
-      //   date: "Apr 28 2022",
-      //   description: "Referral Bonus for Jane Doe first activation",
-      //   amount: "₦1,500,000",
-      // },
-      // {
-      //   id: "N0_1947034",
-      //   date: "Apr 28 2022",
-      //   description: "Part withdrawal",
-      //   amount: "₦1,500,000",
-      // },
-      // {
-      //   id: "N0_1947034",
-      //   date: "Apr 28 2022",
-      //   description: "Part withdrawal",
-      //   amount: "₦1,500,000",
-      // },
-      // {
-      //   id: "N0_1947034",
-      //   date: "Apr 28 2022",
-      //   description: "Part withdrawal",
-      //   amount: "₦1,500,000",
-      // },
-    ],
+    rows: earningsActivities?.map((data) => ({
+      id: `${data.transactionId}`,
+      date: `${data.dateOfTransaction}`,
+      description: `${data.description}`,
+      amount: `₦${data.amount}`,
+    })),
   };
 
   return (
@@ -2673,19 +2819,27 @@ export const SpecialEarnings = () => {
           <span className="fw-bold">Wallet</span>
         </NavTitle>
       </ProfileNavBar>
+      <Toaster />
       <SpecialEarningsWarapper>
         <h3>Rosabon Special Earnings</h3>
         <div className="bonus-card d-flex justify-content-start aligin-items-center">
           <div className="total-bonus">
             <p className="p-0 m-0">Total Redeemed Earnings :</p>
-            <h4 className="total-amount">₦ 0.00</h4>
+            <h4 className="total-amount">
+              ₦{" "}
+              {totalRedeemedEarning ? totalRedeemedEarning.toFixed(2) : "0.00"}
+            </h4>
           </div>
           <div className="redeem-card">
             <p className="p-0 m-0">Total Earnings :</p>
             <div className="d-flex total-amount justify-content-between aligin-items-center">
-              <h4 className="">₦ 0.00</h4>
+              <h4 className="">
+                ₦ {totalEarning ? totalEarning.toFixed(2) : "0.00"}
+              </h4>
               <div>
-                <button>Redeem</button>
+                <button className="btn btn-primary" onClick={handleClick}>
+                  Redeem
+                </button>
               </div>
             </div>
           </div>
@@ -3178,7 +3332,7 @@ export const paymentAtMaturity = (
   let result = 0;
   const interestMonthly = calculatedInterest / tenorMonths;
   const interestQuaterly = calculatedInterest / (tenorMonths / 4);
-  const interestBiAnnual = calculatedInterest / (tenorMonths / 24);
+  const interestBiAnnual = calculatedInterest / (tenorMonths / 6);
   switch (intRecOption) {
     case "MATURITY":
       result =
@@ -3192,36 +3346,48 @@ export const paymentAtMaturity = (
       break;
 
     case "MONTHLY":
-      result =
-        Math.round(
-          (principal +
-            interestMonthly -
-            (withholdingTax / 100) * interestMonthly) *
-            100 +
-            Number.EPSILON
-        ) / 100;
+      if (tenorMonths === 0) {
+        result = null;
+      } else {
+        result =
+          Math.round(
+            (principal +
+              interestMonthly -
+              (withholdingTax / 100) * interestMonthly) *
+              100 +
+              Number.EPSILON
+          ) / 100;
+      }
       break;
 
     case "QUARTERLY":
-      result =
-        Math.round(
-          (principal +
-            interestQuaterly -
-            (withholdingTax / 100) * interestQuaterly) *
-            100 +
-            Number.EPSILON
-        ) / 100;
+      if (tenorMonths < 4) {
+        result = null;
+      } else {
+        result =
+          Math.round(
+            (principal +
+              interestQuaterly -
+              (withholdingTax / 100) * interestQuaterly) *
+              100 +
+              Number.EPSILON
+          ) / 100;
+      }
       break;
 
     case "BI_ANNUAL":
-      result =
-        Math.round(
-          (principal +
-            interestBiAnnual -
-            (withholdingTax / 100) * interestBiAnnual) *
-            100 +
-            Number.EPSILON
-        ) / 100;
+      if (tenorMonths < 6) {
+        result = null;
+      } else {
+        result =
+          Math.round(
+            (principal +
+              interestBiAnnual -
+              (withholdingTax / 100) * interestBiAnnual) *
+              100 +
+              Number.EPSILON
+          ) / 100;
+      }
       break;
 
     default:

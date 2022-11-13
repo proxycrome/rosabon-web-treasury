@@ -120,7 +120,7 @@ function PageRoutes({ login, isAuth }) {
 				}
 			/>
 			<Route
-				path="/rollover"
+				path="/rollover/:id"
 				element={
 					<ProtectedRoute isAuth={isAuth}>
 						<PlanHome>

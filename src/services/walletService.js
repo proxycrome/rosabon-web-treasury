@@ -9,7 +9,7 @@ export const getWalletBalanceService = () => {
 
 export const getWalletTransactionsService = () => {
   const http = new HttpService();
-  const url = `auth/transactions/history?limit=100000000`;
+  const url = `auth/transactions/history?limit=1000000000`;
   return http.getData(url);
 };
 
@@ -27,7 +27,7 @@ export const getEachWalletTransactionService = (transId) => {
 
 export const getMyReferralsService = () => {
   const http = new HttpService();
-  const url = `auth/referrals`;
+  const url = `auth/referrals?limit=1000000000`;
   return http.getData(url);
 }
 
@@ -45,7 +45,7 @@ export const pokeUserService = (id) => {
 
 export const getMyReferralActivitiesService = () => {
   const http = new HttpService();
-  const url = `auth/referrals/activities`;
+  const url = `auth/referrals/activities?limit=1000000000`;
   return http.getData(url);
 }
 
@@ -57,12 +57,36 @@ export const redeemReferralBonusService = () => {
 
 export const getMyDepositActivitiesService = () => {
   const http = new HttpService();
-  const url = `auth/my-deposits/activities`;
+  const url = `auth/my-deposits/activities?limit=1000000000`;
   return http.getData(url);
 }
 
 export const getReferralRedeemThresholdService = () => {
   const http = new HttpService();
   const url = `auth/wallets/get-referral-redeem-threshold`;
+  return http.getData(url);
+}
+
+export const redeemSpecialEarningService = () => {
+  const http = new HttpService();
+  const url = `auth/special-earnings/redeem-bonus`;
+  return http.postDataWithToken(null, url);
+}
+
+export const getSpecialEarningActivitiesService = () => {
+  const http = new HttpService();
+  const url = `auth/special-earnings/activities?limit=1000000000`;
+  return http.getData(url);
+}
+
+export const getTotalEarningService = () => {
+  const http = new HttpService();
+  const url = `auth/special-earnings/total-earning`;
+  return http.getData(url);
+}
+
+export const getTotalRedeemedEarningService = () => {
+  const http = new HttpService();
+  const url = `auth/special-earnings/total-redeemed-earning`;
   return http.getData(url);
 }

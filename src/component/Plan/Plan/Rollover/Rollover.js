@@ -1,72 +1,178 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect, useCallback } from "react";
+import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
-import moment from 'moment';
-import FullRollover from './FullRollover';
-import PartRollover from './PartRollover';
-import {  
-  getSinglePlan, 
-  getWithdrawReason ,
-  getSingleProduct
+import moment from "moment";
+import FullRollover from "./FullRollover";
+import PartRollover from "./PartRollover";
+import {
+  getInvestmentRates,
+  getSinglePlan,
+  getSingleProduct,
+  getWithholdingTax,
 } from "../../../../store/actions";
+import { getCurrIcon } from "../../Accesssories";
+import { useMemo } from "react";
 
 const Rollover = () => {
-  const [part, setPart] = useState('');
-  const [full, setFull] = useState('');
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [rolloverType, setRolloverType] = useState("");
+  const [tenor, setTenor] = useState("");
+  const [checkAmount, setCheckAmount] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-  const [otherReasons, setOtherReasons] = useState("")
+  const [interestRate, setInterestRate] = useState(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const { singlePlan } = useSelector((state) => state.plan);
-  const { withdrawReasons } = useSelector((state) => state.user_profile);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
-  const planStatus = singlePlan?.data.statusCode
+  const { singlePlan, investment_rates, withholding_tax } = useSelector(
+    (state) => state.plan
+  );
+  const plan = useMemo(
+    () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
+    [singlePlan]
+  );
+  const planStatus = singlePlan?.data.statusCode;
+  const inv_rates = useMemo(
+    () => (investment_rates?.data.body ? investment_rates?.data.body : []),
+    [investment_rates]
+  );
+  const withhold_tax = withholding_tax?.data.body
+    ? withholding_tax?.data.body
+    : [];
+
+  console.log(plan);
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
-    dispatch(getWithdrawReason());
-  },[])
+    dispatch(getInvestmentRates());
+    dispatch(getWithholdingTax());
+  }, [dispatch, id]);
 
   useEffect(() => {
-    dispatch(getSingleProduct(plan?.product?.id))
-  },[plan])
+    if (singlePlan) {
+      dispatch(getSingleProduct(plan?.product?.id));
+    }
+  }, [plan]);
 
-  const { singleProduct } = useSelector(state => state.product)
-  const productTenors = singleProduct ? singleProduct?.data?.body.tenors : [];
+  const { singleProduct } = useSelector((state) => state.product);
+  const productTenors = useMemo(
+    () => (singleProduct ? singleProduct?.data?.body.tenors : []),
+    [singleProduct]
+  );
+
+  console.log(productTenors);
+
+  const fetchIntRate = useCallback(
+    (intRecOption) => {
+      let interestRate;
+
+      const selectedTenor = productTenors.find(
+        (item) => item.id === parseInt(tenor)
+      );
+
+      let rate = inv_rates?.find((item) => {
+        return (
+          item.product.id === parseInt(plan?.product?.id) &&
+          item.currency.name === plan?.currency?.name &&
+          amount >= item.minimumAmount &&
+          amount <= item.maximumAmount &&
+          selectedTenor?.tenorDays >= item.minimumTenor &&
+          selectedTenor?.tenorDays <= item.maximumTenor
+        );
+      });
+
+      if (rate !== undefined) {
+        switch (intRecOption) {
+          case "MONTHLY":
+            interestRate = rate?.monthlyInterestRate;
+            break;
+
+          case "UPFRONT":
+            interestRate = rate?.upfrontInterestRate;
+            break;
+
+          case "QUARTERLY":
+            interestRate = rate?.quarterlyInterestRate;
+            break;
+
+          case "BI_ANNUAL":
+            interestRate = rate?.biAnnualInterestRate;
+            break;
+
+          case "MATURITY":
+            interestRate = rate?.maturityRate;
+            break;
+
+          default:
+            interestRate = 0;
+            break;
+        }
+        if (interestRate === null) {
+          interestRate = 0;
+          // interestRate = formData.directDebit ? 0 : 0;
+          return interestRate;
+        } else {
+          return interestRate;
+        }
+      } else {
+        interestRate = 0;
+        return interestRate;
+      }
+    },
+    [amount, tenor, plan, productTenors, inv_rates]
+  );
+
+  useEffect(() => {
+    setInterestRate(fetchIntRate(plan?.interestReceiptOption));
+  }, [plan, fetchIntRate]);
 
   const handleClick = (e) => {
-    if (e.target.value === 'part') {
-      setPart('part');
-      setFull('');
+    const { name, value } = e.target;
+    if (name === "rolloverType") {
+      setRolloverType(value);
     }
-    if (e.target.value === 'full') {
-      setFull('full');
-      setPart('');
-      setAmount(plan?.planSummary?.principal)
+    if (value === "full") {
+      setAmount(plan?.planSummary?.principal);
     }
   };
 
-  if (full && isClicked) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (amount < plan?.product?.minTransactionLimit) {
+      setCheckAmount(true);
+      return;
+    } else {
+      setCheckAmount(false);
+      setIsClicked(true);
+    }
+  };
+
+  if (rolloverType === "full" && isClicked) {
     return (
       <FullRollover
+        amount={parseFloat(amount)?.toFixed(2)}
+        tenor={parseInt(tenor)}
+        interestRate={parseInt(interestRate)}
+        withholdTax={withhold_tax}
         goBack={() => {
-          setFull('');
+          setRolloverType("");
           setIsClicked(false);
         }}
       />
     );
   }
 
-  if (part && isClicked) {
+  if (rolloverType === "part" && isClicked) {
     return (
       <PartRollover
+        amount={parseFloat(amount)?.toFixed(2)}
+        tenor={parseInt(tenor)}
+        interestRate={parseInt(interestRate)}
+        withholdTax={withhold_tax}
         goBack={() => {
-          setPart('');
+          setRolloverType("");
           setIsClicked(false);
         }}
       />
@@ -74,179 +180,226 @@ const Rollover = () => {
   }
 
   const back = () => {
-    navigate('/plan-list');
+    navigate("/plan-list");
   };
 
   return (
     <>
-      <ProfileNavBar>
-          <NavTitle>
-            <span className="fw-bold">Plan</span>
-          </NavTitle>
-        </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Rollover</h4>
-          <div className="plan-content">
-            <div className="plan">
-              <div className="plan-top h-50 p-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>{plan.planName}</h4>
-                    <p className="p-0 m-0">{plan?.product.productName}</p>
-                  </div>
-                  <h4 className="Matured">{plan.planStatus.toLowerCase()}</h4>
-                </div>
-                <div className="d-flex align-items-center justify-content-between pt-4">
-                  <div>
-                    <h4>Start date</h4>
-                    <p className="p-0 m-0">
-                      {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
-                    </p>
-                  </div>
-                  <div>
-                    <h4>End date</h4>
-                    <p className="p-0 m-0">
-                      {moment(plan.planSummary.endDate).format("DD/MM/YYYY")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex position-relative horizontal-line">
-                <div className="position-absolute horizontal-circle-left"></div>
-                <hr className="dotted" />
-                <div className="position-absolute end-0 horizontal-circle-right"></div>
-              </div>
+      {planStatus === "OK" && (
+        <>
+          <ProfileNavBar>
+            <NavTitle>
+              <span className="fw-bold">Plan</span>
+            </NavTitle>
+          </ProfileNavBar>
+          <form autoComplete="off" autoCorrect="off" onSubmit={handleSubmit}>
+            <Wrapper>
+              <LeftView>
+                <h4 className="pb-3">Rollover</h4>
+                <div className="plan-content">
+                  <div className="plan">
+                    <div className="plan-top h-50 p-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>{plan?.planName}</h4>
+                          <p className="p-0 m-0">
+                            {plan?.product?.productName}
+                          </p>
+                        </div>
+                        <h4 className={`capitalize ${plan?.planStatus}`}>
+                          {plan?.planStatus?.toLowerCase()}
+                        </h4>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between pt-4">
+                        <div>
+                          <h4>Start date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan?.planSummary?.startDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </p>
+                        </div>
+                        <div>
+                          <h4>End date</h4>
+                          <p className="p-0 m-0">
+                            {moment(plan?.planSummary?.endDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex position-relative horizontal-line">
+                      <div className="position-absolute horizontal-circle-left"></div>
+                      <hr className="dotted" />
+                      <div className="position-absolute end-0 horizontal-circle-right"></div>
+                    </div>
 
-              <div className="plan-top h-50 py-1 px-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Balance</h4>
-                    <p className="p-0 m-0">
-                      ₦{plan.planSummary.principal?.toLocaleString()}
-                    </p>
+                    <div className="plan-top h-50 py-1 px-4">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h4>Balance</h4>
+                          <p className="p-0 m-0 d-flex gap-1">
+                            {getCurrIcon(plan?.currency?.name)}
+                            {plan?.planSummary?.principal?.toLocaleString()}
+                          </p>
+                        </div>
+                        {/* <i className"fa-solid fa-ellipsis"></i> */}
+                      </div>
+                    </div>
                   </div>
-                  {/* <i className"fa-solid fa-ellipsis"></i> */}
+                </div>
+
+                <div className="plan-payment">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between my-5">
+                      <div className="d-flex align-items-center">
+                        <p className="p-0 m-0">Partial Rollover</p>
+                      </div>
+                      <input
+                        type="radio"
+                        id="part"
+                        name="rolloverType"
+                        value="part"
+                        onClick={handleClick}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                      <div className="d-flex align-items-center">
+                        <p className="p-0 m-0">Full Rollover</p>
+                      </div>
+                      <input
+                        type="radio"
+                        id="full"
+                        name="rolloverType"
+                        value="full"
+                        onClick={handleClick}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="row my-4">
+                    <div className="col ">
+                      <label>Input amount</label>
+                      <div className="input-group">
+                        <div className=" input-group-prepend curr-icon">
+                          {getCurrIcon(plan?.currency?.name)}
+                        </div>
+                        <input
+                          className="form-control curr-input"
+                          placeholder={
+                            rolloverType === "part"
+                              ? ""
+                              : plan?.planSummary?.principal?.toFixed(2)
+                          }
+                          type="number"
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                          disabled={rolloverType === "full"}
+                        />
+                      </div>
+                      <label className="d-flex gap-1 mt-2">
+                        Amount for withdrawal is{" "}
+                        <span className="d-flex">
+                          {getCurrIcon(plan?.currency?.name)}
+                          {(
+                            plan?.planSummary?.principal -
+                            (amount ? parseFloat(amount) : 0)
+                          ).toFixed(2)}
+                        </span>
+                      </label>
+                      {checkAmount && (
+                        <label className="text-danger mt-2">
+                          Amount for rollover is below the minimum allowed
+                          amount of {getCurrIcon(plan?.currency?.name)}
+                          <span style={{ fontWeight: "700" }}>
+                            {plan?.product?.minTransactionLimit}
+                          </span>{" "}
+                          available for the product the plan is created under
+                        </label>
+                      )}
+                    </div>
+                  </div>
+                  <div className="row my-4">
+                    <div className="col ">
+                      <label>Select a new Tenor</label>
+                      <div className="input-group mt-1">
+                        <select
+                          className="form-select form-select-md"
+                          aria-label=".form-select-md"
+                          name="tenor"
+                          value={tenor}
+                          onChange={(e) => setTenor(e.target.value)}
+                          required
+                        >
+                          <option value="" hidden disabled>
+                            Select a new Tenor
+                          </option>
+                          {productTenors?.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.tenorName}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row my-4">
+                    <div className="col ">
+                      <label>Calculate Interest Rate (%)</label>
+                      <div className="input-group">
+                        <input
+                          className="form-control"
+                          type="text"
+                          value={interestRate}
+                          disabled
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </LeftView>
+              <RightView>
+                <div className="bank-details">
+                  {/* <div className="bank-detail-content"> */}
+                  {/* <UserBankDetails /> */}
+                  {/* </div> */}
+                </div>
+              </RightView>
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button
+                      type="button"
+                      style={{ color: "#111E6C", width: "300px" }}
+                      onClick={back}
+                    >
+                      Back
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      type="submit"
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          <div className="plan-payment">
-            <div>
-              <div className="d-flex align-items-center justify-content-between my-5">
-                <div className="d-flex align-items-center">
-                  <p className="p-0 m-0">Partial Rollover</p>
-                </div>
-                <input
-                  type="radio"
-                  id="part"
-                  name="rolloverType"
-                  value="part"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="d-flex align-items-center justify-content-between mb-4">
-                <div className="d-flex align-items-center">
-                  <p className="p-0 m-0">Full Rollover</p>
-                </div>
-                <input
-                  type="radio"
-                  id="full"
-                  name="rolloverType"
-                  value="full"
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
-            <div className="row my-4">
-              <div className="col ">
-                <label>Input amount</label>
-                <div className="input-group">
-                  <input
-                    className="form-control"
-                    placeholder="₦ 2,500,000"
-                    type="text"
-                    value={amount}
-                    onChange={(e)=>setAmount(parseInt(e.target.value))}
-                    disabled={full==="full"}
-                  />
-                </div>
-                <label>Amount for withdrawal is ₦0.00</label>
-              </div>
-            </div>
-            <div className="row my-4">
-              <div className="col ">
-                <label>Select a new Tenor</label>
-                <div className="input-group">
-                  <select
-                    className="form-select form-select-md"
-                    aria-label=".form-select-md"
-                    name="Tenor" 
-                  >
-                    {/* <option>6 months</option>
-                    <option>9 months</option>
-                    <option>12 months</option> */}
-                    {
-                      productTenors.map(item => (
-                        <option key={item.id} value={item.id} >
-                          {item?.tenorName}
-                        </option>
-                      ))
-                    }
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="row my-4">
-              <div className="col ">
-                <label>Calculate Interest Rate (%)</label>
-                <div className="input-group">
-                  <input
-                    className="form-control"
-                    type="text"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </LeftView>
-        <RightView>
-        <div className="bank-details">
-          {/* <div className="bank-detail-content"> */}
-            {/* <UserBankDetails /> */}
-          {/* </div> */}
-        </div>
-      </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={back}
-              >
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
-                }}
-                onClick={() => setIsClicked(true)}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+            </WrapperFooter>
+          </form>
+        </>
+      )}
     </>
   );
 };
@@ -274,20 +427,36 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active, .Pending, .Matured {
+  .ACTIVE,
+  .PENDING,
+  .MATURED {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
     letter-spacing: -0.01em;
   }
-  .Active {
+  .ACTIVE {
     color: #219653;
   }
-  .Pending {
-    color: #F2994A;
+  .PENDING {
+    color: #f2994a;
   }
-  .Matured {
-    color: #2D9CDB;
+  .MATURED {
+    color: #2d9cdb;
+  }
+
+  .capitalize {
+    text-transform: capitalize;
+  }
+
+  .curr-icon {
+    position: absolute;
+    margin-top: 6px;
+    margin-left: 12px;
+    z-index: 10;
+  }
+  .curr-input {
+    padding-left: 24px;
   }
 `;
 
@@ -299,7 +468,6 @@ const RightView = styled.div`
   .bank-details {
     height: 70vh;
     padding: 40px;
-    margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
     justify-content: center;

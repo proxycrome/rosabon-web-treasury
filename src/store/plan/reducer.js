@@ -50,6 +50,9 @@ import {
   DELETE_PLAN,
   DELETE_PLAN_SUCCESS,
   DELETE_PLAN_ERROR,
+  GET_CLOSED_PLANS,
+  GET_CLOSED_PLANS_SUCCESS,
+  GET_CLOSED_PLANS_ERROR,
 } from "./actionTypes";
 
 const initialState = {
@@ -88,6 +91,8 @@ const initialState = {
   transferError: null,
   deletePlanMsg: null,
   deletePlanError: null,
+  closed_plans: null,
+  closed_plans_error: null,
 };
 
 const plan = (state = initialState, action) => {
@@ -109,6 +114,7 @@ const plan = (state = initialState, action) => {
     case PAY_WITH_CARD:
     case COMPLETE_TRANSFER:
     case DELETE_PLAN:
+    case GET_CLOSED_PLANS:
       state = {
         ...state,
         loading: true,
@@ -416,6 +422,24 @@ const plan = (state = initialState, action) => {
         loading: false,
         deletePlanMsg: null,
         deletePlanError: action.payload,
+      };
+      break;
+
+    case GET_CLOSED_PLANS_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        closed_plans: action.payload,
+        closed_plans_error: null,
+      };
+      break;
+
+    case GET_CLOSED_PLANS_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        closed_plans: null,
+        closed_plans_error: action.payload,
       };
       break;
 

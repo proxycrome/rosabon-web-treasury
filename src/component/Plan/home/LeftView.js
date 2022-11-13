@@ -281,13 +281,15 @@ export const LeftView = ({ view }) => {
                   </div>
                 ))}
             </div>
-            <p
-              className="py-2"
-              onClick={() => setIsView(!isView)}
-              style={{ cursor: "pointer" }}
-            >
-              View all Notifications
-            </p>
+            <a href="#note">
+              <p
+                className="py-2"
+                onClick={() => setIsView(!isView)}
+                style={{ cursor: "pointer" }}
+              >
+                View all Notifications
+              </p>
+            </a>
           </>
         ) : null}
 
