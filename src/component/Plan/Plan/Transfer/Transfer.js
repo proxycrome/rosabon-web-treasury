@@ -225,7 +225,6 @@ const Transfer = () => {
                         handleClose={() => setModalState("close")}
                         handleShowModalTwo={setModalState}
                         transferForm={{ receive, amount }}
-                        plan={plan}
                         transferNotice="transfer"
                       />
                     </ModalComponent>

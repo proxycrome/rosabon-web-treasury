@@ -106,14 +106,17 @@ const Rollover = () => {
             break;
 
           default:
-            interestRate = 0;
             break;
         }
         if (interestRate === null) {
-          interestRate = 0;
+          interestRate = plan?.directDebit ? 0 + rate?.directDebitRate : 0;
           // interestRate = formData.directDebit ? 0 : 0;
           return interestRate;
         } else {
+          interestRate =
+            plan?.directDebit === true || plan?.directDebit === "true"
+              ? interestRate + rate?.directDebitRate
+              : interestRate;
           return interestRate;
         }
       } else {

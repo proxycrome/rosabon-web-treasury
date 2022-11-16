@@ -623,7 +623,20 @@ const InterestCalculatorWrapper = styled.div`
   }
 `;
 
-export const RolloverSummary = ({ amount, tenor, interestRate, withholdTax }) => {
+export const RolloverSummary = ({
+  amount,
+  tenor,
+  interestRate,
+  withholdTax,
+  checkTerms,
+  isTerms,
+  setEndDate,
+  setFormData,
+  formData,
+  setSavingsFreq,
+}) => {
+  // const [isTerms, setIsTerms] = useState(false);
+
   const { singlePlan, investment_rates } = useSelector((state) => state.plan);
   const plan = useMemo(
     () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
@@ -637,80 +650,75 @@ export const RolloverSummary = ({ amount, tenor, interestRate, withholdTax }) =>
   );
 
   const date = new Date();
-  const startDate = moment(date).format("DD/MM/YYYY")
+  const startDate = moment(date).format("DD/MM/YYYY");
 
-  
-  let selectedTenor = productTenors?.find(
-    (item) => item.id === tenor
-  );
-
-  // const contribValue = (savingFrequency) => {
-  //   const selectedTenor = productTenors?.find(
-  //     (item) => item.id === parseInt(tenor)
-  //   );
-
-  //   const customTenorDays = moment(formData.actualMaturityDate).diff(
-  //     recentDate,
-  //     "days"
-  //   );
-
-  //   if (singleProduct?.properties?.hasTargetAmount) {
-  //     if (plan?.savingFrequency !== "") {
-  //         let computedValue;
-  //         switch (savingFrequency) {
-  //           case "DAILY":
-  //             computedValue =
-  //               amount / selectedTenor?.tenorDays;
-  //             break;
-
-  //           case "WEEKLY":
-  //             if (selectedTenor?.tenorDays < 7) {
-  //               computedValue = undefined;
-  //               setValidSavingsFreq(false);
-  //             } else {
-                
-  //                 computedValue =
-  //                   amount /
-  //                   Math.floor(selectedTenor?.tenorDays / 7);
-    
-  //             }
-  //             break;
-
-  //           case "MONTHLY":
-  //             if (selectedTenor?.tenorDays < 30) {
-  //               computedValue = undefined;
-  //               setValidSavingsFreq(false);
-  //             } else {
-                
-              
-  //                 computedValue =
-  //                   formData.targetAmount /
-  //                   Math.floor(selectedTenor?.tenorDays / 30);
-            
-  //             }
-  //             break;
-
-  //           default:
-  //             break;
-  //         }
-          
-  //       } 
-  //     }
-  //   }
-  // };
-
-  
+  let selectedTenor = productTenors?.find((item) => item.id === tenor);
 
   let addedDate = moment(date).add(selectedTenor?.tenorDays, "days")?._d;
   let endDate = moment(addedDate).format("DD/MM/YYYY");
+
+  useEffect(() => {
+    setEndDate(endDate);
+  }, []);
+
+  const customTenorDays = moment(addedDate).diff(date, "days");
+
+  const contribValue = useCallback(
+    (savingFrequency) => {
+      // const selectedTenor = productTenors?.find(
+      //   (item) => item.id === parseInt(formData.tenor)
+      // );
+
+      if (plan?.product?.properties?.hasTargetAmount) {
+        if (plan?.savingFrequency !== "") {
+          let computedValue;
+          switch (savingFrequency) {
+            case "DAILY":
+              computedValue = amount / customTenorDays;
+              break;
+
+            case "WEEKLY":
+              if (customTenorDays < 7) {
+                computedValue = undefined;
+                setSavingsFreq(true);
+              } else {
+                computedValue = amount / Math.floor(customTenorDays / 7);
+                setSavingsFreq(false);
+              }
+              break;
+
+            case "MONTHLY":
+              if (customTenorDays < 30) {
+                computedValue = undefined;
+                setSavingsFreq(true);
+              } else {
+                computedValue = amount / Math.floor(customTenorDays / 30);
+                setSavingsFreq(false);
+              }
+              break;
+
+            default:
+              computedValue = 0;
+              break;
+          }
+          return computedValue;
+        }
+      }
+    },
+    [tenor, setSavingsFreq]
+  );
 
   const calculateSI = (principal, rate, time) => {
     const SI = (principal * rate * (time / 365)) / 100;
     return Math.round(SI * 100 + Number.EPSILON) / 100;
   };
 
-  const calculatedInterest = calculateSI(amount, interestRate, selectedTenor?.tenorDays);
-  
+  const calculatedInterest = calculateSI(
+    amount,
+    interestRate,
+    selectedTenor?.tenorDays
+  );
+
   const calc_withholding_tax =
     Math.round(
       calculateSI(amount, interestRate, selectedTenor?.tenorDays) *
@@ -723,10 +731,22 @@ export const RolloverSummary = ({ amount, tenor, interestRate, withholdTax }) =>
     plan?.interestReceiptOption,
     amount,
     withholdTax[0]?.rate,
-    (selectedTenor?.tenorDays / 30),
+    selectedTenor?.tenorDays / 30,
     calculateSI(amount, interestRate, selectedTenor?.tenorDays)
   );
-    
+
+  console.log(tenor);
+  console.log(customTenorDays);
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      contributionValue: contribValue(plan?.savingFrequency),
+      calculatedInterest,
+      paymentMaturity: maturityPayment,
+      withholdingTax: calc_withholding_tax,
+    });
+  }, [contribValue, customTenorDays]);
 
   return (
     <div>
@@ -750,11 +770,17 @@ export const RolloverSummary = ({ amount, tenor, interestRate, withholdTax }) =>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
                     <p className="p-0 m-0">Principal </p>
-                    <h4>₦{amount}</h4>
+                    <h4 className="d-flex gap-1">
+                      {getCurrIcon(plan?.currency?.name)}
+                      {amount}
+                    </h4>
                   </div>
                   <div className="rollover-text-left">
                     <p className="p-0 m-0">Amount for Withdrawal </p>
-                    <h4 className=""> ₦{(plan?.planSummary?.principal - amount)?.toFixed(2)}</h4>
+                    <h4 className="d-flex gap-1 justify-content-end">
+                      {getCurrIcon(plan?.currency?.name)}
+                      {(plan?.planSummary?.principal - amount)?.toFixed(2)}
+                    </h4>
                   </div>
                 </div>
                 <div className="d-flex align-items-end justify-content-between pt-4">
@@ -772,22 +798,39 @@ export const RolloverSummary = ({ amount, tenor, interestRate, withholdTax }) =>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
                     <p className="p-0 m-0">Calculated Interest </p>
-                    <h4>₦{calculatedInterest}</h4>
+                    <h4 className="d-flex gap-1">
+                      {getCurrIcon(plan?.currency?.name)}
+                      {calculatedInterest}
+                    </h4>
                   </div>
                   <div className="rollover-text-left">
                     <p className="p-0 m-0">Withholding Tax</p>
-                    <h4 className="">₦{calc_withholding_tax}</h4>
+                    <h4 className="d-flex gap-1 justify-content-end">
+                      {getCurrIcon(plan?.currency?.name)}
+                      {calc_withholding_tax}
+                    </h4>
                   </div>
                 </div>
                 <div className="d-flex align-items-center justify-content-between pt-4">
                   <div>
                     <p className="p-0 m-0">Payment at Maturity</p>
-                    <h4>₦{maturityPayment.toFixed(2)}</h4>
+                    <h4 className="d-flex gap-1">
+                      {getCurrIcon(plan?.currency?.name)}
+                      {maturityPayment.toFixed(2)}
+                    </h4>
                   </div>
                   <div className="rollover-text-left"></div>
                 </div>
                 <div className="py-5 check-box-bank">
-                  <input type="checkbox" id="scales" name="scales" required />
+                  <input
+                    type="checkbox"
+                    id="scales"
+                    name="term"
+                    value={isTerms}
+                    checked={isTerms}
+                    onChange={() => checkTerms(!isTerms)}
+                    required
+                  />
                   <label htmlFor="scales">
                     I agree to the Terms and Condition
                   </label>
@@ -875,6 +918,7 @@ export const RolloverWithdrawMethod = ({
   setWithdrawTo,
   base64File,
   setBase64File,
+  savingFreq,
 }) => {
   const [withdraw, setWithdraw] = useState("");
   const { login } = useSelector((state) => state.auth);
@@ -886,42 +930,8 @@ export const RolloverWithdrawMethod = ({
   const corporateUserWithdrawalMandateRef = useRef();
   console.log("bank dets", bankDetails);
 
-  const handleFileChange = (e, name) => {
-    const { files } = e.target;
-
-    console.log(files[0]);
-
-    const encodedFileBase64 = (file) => {
-      let reader = new FileReader();
-      if (file) {
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          setBase64File({
-            ...base64File,
-            [name]: reader.result.split("base64,")[1],
-          });
-        };
-        reader.onerror = (error) => {
-          console.log("error", error);
-        };
-      }
-    };
-
-    if (
-      files[0]?.size <= 2000000 &&
-      (files[0]?.type === "image/jpeg" || files[0]?.type === "application/pdf")
-    ) {
-      encodedFileBase64(files[0]);
-    }
-    e.target.value = null;
-  };
-
-  const handleFileSelect = (e, reference) => {
-    e.preventDefault();
-    reference.current.click();
-  };
-
   console.log("hhh", withdrawTo);
+  console.log("hhh", savingFreq);
 
   return (
     <div>
@@ -942,6 +952,7 @@ export const RolloverWithdrawMethod = ({
                       onChange={(e) => setWithdrawTo(e.target.value)}
                       value={withdrawTo}
                       required
+                      disabled={savingFreq}
                     >
                       <option value="" hidden>
                         Select withdrawal destination
@@ -977,38 +988,24 @@ export const RolloverWithdrawMethod = ({
               ) : withdrawTo === "TO_BANK" && user_role === "COMPANY" ? (
                 <div>
                   <div className="d-flex justify-content-between">
-                    <div>
-                      <p>Upload withdrawal mandate instruction</p>
-                      <p>png</p>
-                    </div>
-                    <div>
-                      <div className=" style-attachment">
-                        <input
-                          type="file"
-                          className="file"
-                          ref={corporateUserWithdrawalMandateRef}
-                          onChange={(e) =>
-                            handleFileChange(
-                              e,
-                              "corporateUserWithdrawalMandate"
-                            )
-                          }
-                        />
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                          onClick={(e) =>
-                            handleFileSelect(
-                              e,
-                              corporateUserWithdrawalMandateRef
-                            )
-                          }
-                        >
-                          Choose file
-                        </button>
-                      </div>
+                    <div className="">
+                      <FileUpload
+                        fileName="withdrawal mandate instruction letter"
+                        setFile={(file) =>
+                          setBase64File({
+                            ...base64File,
+                            corporateUserWithdrawalMandate: file.encodedUpload,
+                          })
+                        }
+                        id="mandate"
+                      />
                     </div>
                   </div>
+                  {!base64File?.corporateUserWithdrawalMandate && (
+                    <small className="text-danger">
+                      Upload a withdrawal mandate Letter
+                    </small>
+                  )}
                   <p>
                     Letter must be on a company's letter head and also carry
                     bank account details
@@ -1016,6 +1013,12 @@ export const RolloverWithdrawMethod = ({
                 </div>
               ) : (
                 <></>
+              )}
+              {savingFreq && (
+                <small className="text-danger">
+                  The tenor days is less than the savings frequency for this
+                  plan. Please Select another tenor.
+                </small>
               )}
             </div>
           </div>
@@ -2627,7 +2630,7 @@ export const TransferDeposit = () => {
       );
       setDeposits(deposit);
     }
-    if (values === "plan" && category === "FUND_REVERSAL_TO_WALLET") {
+    if (values === "plan" && category === "PLAN_TO_WALLET_FUNDING") {
       setBank(false);
       setCredit(false);
       setPlan(true);
@@ -2709,7 +2712,7 @@ export const TransferDeposit = () => {
           </h3>
           <h3
             className={plan ? "" : "grey-text"}
-            onClick={() => handleClick("plan", "FUND_REVERSAL_TO_WALLET")}
+            onClick={() => handleClick("plan", "PLAN_TO_WALLET_FUNDING")}
           >
             Plan Transfer Deposit
           </h3>
@@ -3346,7 +3349,7 @@ export const paymentAtMaturity = (
       break;
 
     case "MONTHLY":
-      if (tenorMonths === 0) {
+      if (tenorMonths < 1) {
         result = null;
       } else {
         result =

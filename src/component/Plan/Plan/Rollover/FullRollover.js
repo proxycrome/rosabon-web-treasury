@@ -1,15 +1,30 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
 import { getCurrIcon, RolloverSummary } from "../../Accesssories";
 import moment from "moment";
+import { getBankDetails } from "../../../../store/actions";
+import { Toaster } from "react-hot-toast";
 
 const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
   const [modalState, setModalState] = useState("Close");
+  const [isTerms, setIsTerms] = useState(false);
+  const [endDate, setEndDate] = useState("");
+  const [formData, setFormData] = useState({
+    contributionValue: 0,
+    calculatedInterest: 0,
+    paymentMaturity: 0,
+    withholdingTax: 0,
+  });
+  const [dataObj, setDataObj] = useState({});
+  const [savingFreq, setSavingFreq] = useState(false);
+  
+  
 
+  const dispatch = useDispatch();
   const { singlePlan } = useSelector((state) => state.plan);
   const { withdrawReasons } = useSelector((state) => state.user_profile);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
@@ -17,6 +32,20 @@ const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
   const capitalise = (str) => {
     return str?.charAt(0)?.toUpperCase() + str?.slice(1)?.toLowerCase();
   };
+
+  useEffect(() => {
+    setDataObj({
+      amount: parseFloat(amount).toFixed(2),
+      formData,
+      interestRate,
+      tenor,
+    })
+  }, [formData, amount, interestRate, tenor])
+  
+
+  useEffect(() => {
+    dispatch(getBankDetails());
+  }, [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,6 +59,7 @@ const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
           <span className="fw-bold">Plan</span>
         </NavTitle>
       </ProfileNavBar>
+      <Toaster/>
       <form autoComplete="off" autoCorrect="off" onSubmit={handleSubmit}>
         <Wrapper>
           <LeftView>
@@ -94,6 +124,13 @@ const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
                   tenor={tenor}
                   interestRate={interestRate}
                   withholdTax={withholdTax}
+                  checkTerms={setIsTerms}
+                  isTerms={isTerms}
+                  setEndDate={setEndDate}
+                  setFormData={setFormData}
+                  formData={formData}
+                  setSavingsFreq={setSavingFreq}
+                  savingFreq={savingFreq}
                 />
               </div>
             </div>
@@ -130,6 +167,9 @@ const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
                   <Notice
                     handleClose={() => setModalState("close")}
                     handleShowModalTwo={() => setModalState("modal-two")}
+                    actionType="rollover"
+                    endDate={endDate}
+                    dataObj={dataObj}
                   />
                 </ModalComponent>
 
@@ -202,7 +242,6 @@ const RightView = styled.div`
   .bank-details {
     height: auto;
     padding: 40px 0;
-    margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
     justify-content: center;

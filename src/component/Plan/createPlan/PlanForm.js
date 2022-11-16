@@ -78,12 +78,12 @@ const PlanForm = () => {
     planDate: recentDate,
     savingFrequency: null,
     weeklyContributionDay: "",
-    monthlyContributionDay: "",
+    monthlyContributionDay: 0,
     interestReceiptOption: "",
     planStatus: "ACTIVE",
     contributionValue: 0.0,
     directDebit: false,
-    interestRate: 0.0,
+    interestRate: 0,
     acceptPeriodicContribution: true,
     actualMaturityDate: "",
     autoRollOver: false,
@@ -200,6 +200,14 @@ const PlanForm = () => {
             ? formData.targetAmount
             : formData.amount
         ),
+        monthlyContributionDay:
+          formData.savingFrequency === "MONTHLY"
+            ? formData.monthlyContributionDay
+            : null,
+        weeklyContributionDay:
+          formData.savingFrequency === "WEEKLY"
+            ? formData.weeklyContributionDay
+            : null,
         tenor: checkAtMaturity ? null : formData.tenor,
         planSummary: summary,
         directDebit:
@@ -981,7 +989,7 @@ const PlanForm = () => {
                   Customize Tenor
                 </option>
               </Input>
-              {(formData.tenor === 0 ) && (
+              {formData.tenor === 0 && (
                 <Input
                   className={`form-control mb-3`}
                   style={{ width: "100%" }}
@@ -1060,11 +1068,11 @@ const PlanForm = () => {
                     defaultValue={formData.monthlyContributionDay}
                     required={formData.savingFrequency === "MONTHLY"}
                   >
-                    <option value="" hidden disabled>
+                    <option value={0} hidden disabled>
                       Set Monthly Contibution Day
                     </option>
                     {[...Array(28).keys()].map((item) => (
-                      <option key={item + 1} value={String(item + 1)}>
+                      <option key={item + 1} value={item + 1}>
                         {item + 1}{" "}
                       </option>
                     ))}
@@ -1080,7 +1088,7 @@ const PlanForm = () => {
               )}
             </div>
             <div className="col-md-6 mb-5">
-              <label>Interest Reciept Option</label>
+              <label>Interest Receipt Option</label>
               <div className="input-group">
                 <Input
                   className={`form-select form-select-md ${
@@ -1123,14 +1131,19 @@ const PlanForm = () => {
               )}
             </div>
           </div>
-          <div className="row">
+          <div className="row mb-4">
             <div className="col-md-6 ">
               <div className="d-flex justify-content-between align-items-center">
                 <label>Contribution value</label>
               </div>
-              <div className="input-group mb-4">
+              <div className="input-group mb-2">
+                <div className=" input-group-prepend curr-icon">
+                  {getCurrIcon(formData.currency)}
+                </div>
                 <Input
-                  className={`form-control ${validate && "validate"}`}
+                  className={`form-control ${
+                    validate && "validate"
+                  } curr-input`}
                   name="contributionValue"
                   placeholder=""
                   type="number"
@@ -1141,28 +1154,44 @@ const PlanForm = () => {
                 />
               </div>
               {product?.properties?.hasSavingFrequency && (
-                <div
-                  className=" d-flex align-content-center"
-                  style={{ gap: 8 }}
-                >
-                  <label className="helper-text">
-                    Kindly confirm periodic payment
-                  </label>
-                  <input
-                    type="checkbox"
-                    style={{
-                      width: 14,
-                      height: 14,
-                      marginTop: 4,
-                      cursor: "pointer",
-                    }}
-                    name="confirmPeriodicPay"
-                    value={confirmPeriodicPay}
-                    checked={confirmPeriodicPay}
-                    required={product?.properties?.hasSavingFrequency}
-                    onChange={() => setConfirmperiodicPay(!confirmPeriodicPay)}
-                  />
-                </div>
+                <>
+                  <div
+                    className=" d-flex flex-column align-items-start"
+                    // style={{ gap: 8 }}
+                  >
+                    <div className="d-flex align-items-start">
+                      <label className="helper-text">
+                        I agree to pay this amount periodically
+                        {/* {!confirmPeriodicPay && (
+                          <label className="helper-text text-danger d-block mt-1">
+                            Kindly confirm periodic payment
+                          </label>
+                        )} */}
+                      </label>
+                      <input
+                        type="checkbox"
+                        style={{
+                          width: 14,
+                          height: 14,
+                          marginTop: "5px",
+                          marginLeft: "10px",
+                          cursor: "pointer",
+                        }}
+                        name="confirmPeriodicPay"
+                        value={confirmPeriodicPay}
+                        checked={confirmPeriodicPay}
+                        required={product?.properties?.hasSavingFrequency}
+                        onChange={(e) => {
+                          setConfirmperiodicPay(!confirmPeriodicPay);
+                          e.target.setCustomValidity("")
+                        }}
+                        onInvalid={(e) => {
+                          e.target.setCustomValidity('Kindly confirm periodic payment.');
+                        }}
+                      />
+                    </div>
+                  </div>
+                </>
               )}
               {/* {
                 (formData.contributionValue < calculateMinContribVal(formData.contributionValue) 
@@ -1195,8 +1224,14 @@ const PlanForm = () => {
             </div>
           </div>
           <div className="row">
-            <div className="col-md-6 ">
-              <label>Calculate interest rate</label>
+            <div
+              className={
+                product?.properties?.allowsMonthlyDraw
+                  ? "col-md-6"
+                  : "col-md-12"
+              }
+            >
+              <label>Interest Rate (%)</label>
               <div className="input-group mb-4">
                 <Input
                   className={`form-control ${validate && "validate"}`}
@@ -1204,30 +1239,32 @@ const PlanForm = () => {
                   placeholder=""
                   type="number"
                   value={formData.interestRate}
-                  min={1}
-                  required
+                  required={!formData.interestRate}
                   onChange={handleChange}
+                  disabled
                 />
               </div>
             </div>
-            <div className="col-md-6">
-              <label>Number of tickets</label>
-              <div className="input-group mb-4">
-                <Input
-                  className="form-control"
-                  name="numberOfTickets"
-                  placeholder=""
-                  type="number"
-                  disabled={!product?.properties?.allowsMonthlyDraw}
-                  value={updateNumOfTickets(
-                    product?.properties?.hasTargetAmount
-                      ? formData.targetAmount
-                      : formData.amount
-                  )}
-                  onChange={handleChange}
-                />
+            {product?.properties?.allowsMonthlyDraw && (
+              <div className="col-md-6">
+                <label>Number of tickets</label>
+                <div className="input-group mb-4">
+                  <Input
+                    className="form-control"
+                    name="numberOfTickets"
+                    placeholder=""
+                    type="number"
+                    disabled={product?.properties?.allowsMonthlyDraw}
+                    value={updateNumOfTickets(
+                      product?.properties?.hasTargetAmount
+                        ? formData.targetAmount
+                        : formData.amount
+                    )}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div className="row">
             <div className="col-md-6 ">

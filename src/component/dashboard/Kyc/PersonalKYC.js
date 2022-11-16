@@ -31,6 +31,10 @@ const PersonalKYC = () => {
 
   console.log(user_details);
 
+  const date = new Date();
+  const recentDate = moment(date).format("YYYY-MM-DD");
+  const maximumDate = moment(recentDate).subtract(365 * 18, "days")?._d;
+
   // const success = useSelector((state) => state.auth.success);
   const [show, setShow] = useState(false);
 
@@ -130,16 +134,12 @@ const PersonalKYC = () => {
 
   const handleVerifyBVN = (e) => {
     e.preventDefault();
-    const { firstName, lastName, bvn, phone } = formData;
+    const { bvn, phone } = formData;
 
     const objData = {
-      firstName: firstName
-        ? firstName?.toUpperCase()
-        : user_details?.individualUser?.firstName?.toUpperCase(),
-      lastName: lastName
-        ? lastName?.toUpperCase()
-        : user_details?.individualUser?.lastName?.toUpperCase(),
-      id: bvn ? bvn : user_details.individualUser.bvn,
+      firstName: user_details?.individualUser?.firstName?.toUpperCase(),
+      lastName: user_details?.individualUser?.lastName?.toUpperCase(),
+      id: bvn ? bvn : user_details?.individualUser?.bvn,
       isSubjectConsent: true,
       phoneNumber: phone ? phone : user_details?.phone,
     };
@@ -166,12 +166,13 @@ const PersonalKYC = () => {
     dispatch(getStates(formData.countryId));
   }, [formData.countryId]);
 
-  console.log(bvnError);
+  // console.log(bvnError);
   console.log(bvnMessage);
+  // console.log(moment(maximumDate).format("YYYY-MM-DD"));
 
   return (
     <div>
-      {user_details || !loading ? (
+      {user_details && !loading ? (
         <div className="">
           <div>
             <Toaster />
@@ -205,7 +206,9 @@ const PersonalKYC = () => {
                                   "Enter first name"
                                 }
                                 name="firstName"
-                                defaultValue={formData.firstName || user_details?.individualUser?.firstName}
+                                defaultValue={
+                                  user_details?.individualUser?.firstName
+                                }
                                 onChange={handleChange}
                                 disabled
                               />
@@ -223,7 +226,10 @@ const PersonalKYC = () => {
                                 }
                                 name="middleName"
                                 onChange={handleChange}
-                                defaultValue={formData.middleName || user_details?.individualUser?.middleName}
+                                defaultValue={
+                                  formData.middleName ||
+                                  user_details?.individualUser?.middleName
+                                }
                               />
                             </div>
                           </div>
@@ -238,7 +244,9 @@ const PersonalKYC = () => {
                                   "Enter last name"
                                 }
                                 name="lastName"
-                                defaultValue={formData.lastName || user_details?.individualUser?.lastName}
+                                defaultValue={
+                                  user_details?.individualUser?.lastName
+                                }
                                 onChange={handleChange}
                                 disabled
                               />
@@ -281,6 +289,7 @@ const PersonalKYC = () => {
                                     "DD-MM-YYYY"
                                   ).format("YYYY-MM-DD")
                                 }
+                                max={moment(maximumDate).format("YYYY-MM-DD")}
                               />
                             </div>
                           </div>
@@ -343,7 +352,8 @@ const PersonalKYC = () => {
                           </div>
                           {bvnError && bvnError.message && (
                             <small className="text-danger">
-                              {bvnError?.message}
+                              BVN validation failed, please provide correct
+                              details
                             </small>
                           )}
                           <div>
@@ -364,10 +374,8 @@ const PersonalKYC = () => {
                                   handleClose={handleBVNModalClose}
                                   firstName={bvnMessage?.data?.firstName}
                                   lastName={bvnMessage?.data?.lastName}
-                                  bvn={
-                                    formData.bvn ||
-                                    user_details?.individualUser?.bvn
-                                  }
+                                  bvn={bvnMessage?.data?.idNumber}
+                                  phone={bvnMessage?.data?.mobile}
                                   nameMatch={bvnMessage?.isNameMatched}
                                 />
                               </ModalComponent>
@@ -731,6 +739,6 @@ const WrapperBody = styled.div`
     line-height: 21px;
     text-align: right;
     background: #f2f2f2;
-    color: #111e6c;
+    color: #ffffff;
   }
 `;

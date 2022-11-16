@@ -87,10 +87,10 @@ export const getAuthUsersError = (error) => {
   };
 };
 
-export const updateUserKyc = (formData, pathCred) => {
+export const updateUserKyc = (formData, pathCred, dispatch) => {
   return {
     type: UPDATE_USER_KYC,
-    payload: { formData, pathCred },
+    payload: { formData, pathCred, dispatch },
   };
 };
 

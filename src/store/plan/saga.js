@@ -215,9 +215,12 @@ function* deletePlan({ payload: { id } }) {
     console.log(response.data);
     yield put(deletePlanSuccess(response.data));
     if (response) {
-      toast.success("Plan would be removed after temporary bank details expires.", {
-        position: "top-right",
-      });
+      toast.success(
+        "Plan would be removed after temporary bank details expires.",
+        {
+          position: "top-right",
+        }
+      );
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -234,7 +237,14 @@ function* deletePlan({ payload: { id } }) {
 }
 
 function* planAction({
-  payload: { formData, onSuccess, handleShowModalTwo, dispatch, setDebitPopup },
+  payload: {
+    formData,
+    onSuccess,
+    handleShowModalTwo,
+    dispatch,
+    setDebitPopup,
+    rolloverType,
+  },
 }) {
   const { planAction, paymentType } = formData;
   try {
@@ -260,6 +270,14 @@ function* planAction({
           handleShowModalTwo,
         };
         dispatch(completeTransfer(data));
+      } else if (planAction === "ROLLOVER") {
+        if (rolloverType === "part") {
+          onSuccess(true);
+          toast.success(response.data.message, { position: "top-right" });
+        } else if (rolloverType === "full") {
+          handleShowModalTwo();
+          toast.success(response.data.message, { position: "top-right" });
+        }
       }
     }
   } catch (error) {

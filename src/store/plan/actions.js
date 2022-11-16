@@ -244,7 +244,8 @@ export const planAction = (
   onSuccess,
   handleShowModalTwo,
   dispatch,
-  setDebitPopup
+  setDebitPopup,
+  rolloverType
 ) => {
   return {
     type: PLAN_ACTION,
@@ -254,6 +255,7 @@ export const planAction = (
       handleShowModalTwo,
       dispatch,
       setDebitPopup,
+      rolloverType,
     },
   };
 };

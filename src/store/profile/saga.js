@@ -21,6 +21,7 @@ import {
 
 import {
   getAuthUserError,
+  getAuthUsers,
   getAuthUsersError,
   getAuthUsersSuccess,
   getAuthUserSuccess,
@@ -70,7 +71,7 @@ import {
   verifyBvnService,
 } from "../../services/profileService";
 
-function* getAuthUsers() {
+function* getAuthentUsers() {
   try {
     const response = yield call(getAuthUsersService);
     console.log(response.data);
@@ -92,28 +93,33 @@ function* getAuthUser({ payload: { email } }) {
   }
 }
 
-function* updateUserKyc({ payload: { formData, pathCred } }) {
+function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
   try {
     const response = yield call(updateUserKycService, formData);
     console.log(response.data);
     yield put(updateUserKycSuccess(response.data));
-    if (response && pathCred.route === "/plan-product") {
+    if (response && pathCred?.route === "/plan-product") {
       setTimeout(() => {
         toast.success("KYC Updated Successfully");
       }, 5000);
-      pathCred.navigate(pathCred.route);
+      pathCred?.navigate(pathCred?.route);
     }
 
-    if (response && pathCred.route === "/profile") {
+    if (response && pathCred?.route === "/profile") {
       setTimeout(() => {
         toast.success("KYC Updated Successfully");
       }, 5000);
-      pathCred.navigate(pathCred.route);
+      pathCred?.navigate(pathCred?.route);
     }
+    if (response && !pathCred){
+      dispatch(getAuthUsers());
+    }   
   } catch (error) {
-    console.log(error?.response?.data);
+    console.log(error);
     yield put(updateUserKycError(error?.response?.data));
-    toast.error(error?.response?.data?.message);
+    if (error?.response?.data?.message){
+      toast.error(error?.response?.data?.message);
+    }
   }
 }
 
@@ -250,7 +256,7 @@ function* getUserDocs() {
 }
 
 export function* watchGetAuthUsers() {
-  yield takeEvery(GET_AUTH_USERS, getAuthUsers);
+  yield takeEvery(GET_AUTH_USERS, getAuthentUsers);
 }
 
 export function* watchGetAuthUser() {

@@ -7,7 +7,6 @@ import {
   getAuthUsers,
   getBankDetails,
   getWalletBalance,
-  getWalletBalanceSuccess,
   getWithdrawReason,
   postTransferToPlan,
   requestWithdrawal,

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 // import { Notice, SuccessConfirm } from '../../../Accessories/BVNConfirm';
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
@@ -7,10 +7,17 @@ import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import { getCurrIcon, RolloverSummary } from "../../Accesssories";
 import RolloverWithdraw from "./RolloverWithdraw";
 import moment from "moment";
+import { getBankDetails } from "../../../../store/actions";
 
 const PartRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
   const [isClicked, setIsClicked] = useState(false);
+  const [isTerms, setIsTerms] = useState(false);
+  const [endDate, setEndDate] = useState("");
+  const [formData, setFormData] = useState({});
+  const [savingFreq, setSavingFreq] = useState(false);
 
+
+  const dispatch = useDispatch();
   const { singlePlan } = useSelector((state) => state.plan);
   const { withdrawReasons } = useSelector((state) => state.user_profile);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
@@ -23,6 +30,10 @@ const PartRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
     e.preventDefault();
     setIsClicked(true);
   };
+
+  useEffect(() => {
+    dispatch(getBankDetails());
+  }, [dispatch])
 
   if (isClicked) {
     return (
@@ -107,6 +118,12 @@ const PartRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
                   tenor={tenor}
                   interestRate={interestRate}
                   withholdTax={withholdTax}
+                  checkTerms={setIsTerms}
+                  isTerms={isTerms}
+                  setEndDate={setEndDate}
+                  setFormData={setFormData}
+                  formData={formData}
+                  setSavingsFreq={setSavingFreq}
                 />
               </div>
             </div>
