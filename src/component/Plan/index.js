@@ -11,6 +11,7 @@ const PlanHome = ({ product, list, topup, payment, details, children }) => {
   const navigate = useNavigate()
   const auth = useSelector((state) => state.auth)
   const { login, isLoggedIn } = auth
+  const { sidebar } = useSelector((state) => state.user_profile);
 
   useEffect(() => {
     const tokenString = JSON.parse(localStorage.getItem("token"));
@@ -39,9 +40,11 @@ export default PlanHome
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
+  position: relative;
 
-  @media (min-width: 1200px) {
-    width: 100%;
+  @media (min-width: 1201px) {
+    width: 100vw;
+    height: 100%;
     .side-bar {
       width: 20%;
     }
@@ -49,7 +52,10 @@ const Wrapper = styled.div`
       width: 80%;
     }
   }
-  @media (max-width: 1200px) {
+  @media (min-width: 0px) and (max-width: 1200px) {
+    width: 100%;
+    height: 100%;
+    positon: relative;
     .main-body {
       width: 100%;
     }

@@ -18,6 +18,8 @@ const CreatePlan = () => {
   const productStatus = catWithProducts?.statusCode
   const products = catWithProducts?.data.body ? catWithProducts?.data.body : []
 
+  console.log(products);
+
 
 
   const dispatch = useDispatch();
@@ -50,7 +52,7 @@ const CreatePlan = () => {
               </p>
             </div>
             <div className="plan-list">
-              {item.products.map((product) => (
+              {item.products.filter(data => data.status === "ACTIVE").map((product) => (
                 <div className="choose-plan" key={product.id}>
                   <div className="d-flex align-items-center " style={{gap:16}}>
                     <img
@@ -72,7 +74,7 @@ const CreatePlan = () => {
                           Lorem Ipsum is simply dummy text of the{" "}
                         </p> */}
                         {
-                          product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
+                          product.productDescription.split(".").slice(0,3)?.map((item,id) =>(
                             <p key={id} className="p-0 m-0 pb-2" >{item}. </p>
                           ))
                         }
@@ -118,7 +120,7 @@ const Wrapper = styled.div`
     }
     .choose-plan {
       width: 358px !important;
-      height: 213px;
+      height: auto;
       padding: 10px 5px;
       > div {
         display: block !important;
@@ -136,7 +138,7 @@ const Wrapper = styled.div`
     }
     .choose-plan {
       width: 448px !important;
-      height: 213px;
+      height: auto;
       padding: 10px 5px;
       > div {
         display: block !important;
@@ -154,13 +156,13 @@ const Wrapper = styled.div`
     padding: 60px 1rem;
     .choose-plan {
       width: 90% !important;
-      height: 213px;
+      height: autopx;
       padding: 10px 5px;
     }
   }
   .choose-plan {
     width: 448px;
-    height: 213px;
+    height: auto;
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;

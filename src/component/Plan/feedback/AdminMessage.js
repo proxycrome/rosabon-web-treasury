@@ -1,16 +1,13 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import styled from "styled-components";
 import { Input } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import moment from "moment/moment";
-import { Toaster } from 'react-hot-toast';
-import { 
-  getReplies, 
-  getSingleTicket,
-  postReply 
-} from "../../../store/actions";
+import { Toaster } from "react-hot-toast";
+import { getReplies, getSingleTicket, postReply } from "../../../store/actions";
+import Spinner from "../../common/loading";
 
 const AdminMessage = () => {
   const { id } = useParams();
@@ -18,24 +15,26 @@ const AdminMessage = () => {
 
   const [reply, setReply] = useState("");
 
-  const { single_ticket, replies, loading } = useSelector((state) => state.feedback)
+  const { single_ticket, replies, loading } = useSelector(
+    (state) => state.feedback
+  );
   const ticket = single_ticket ? single_ticket : {};
   const messages = replies ? replies : [];
 
   useEffect(() => {
     dispatch(getReplies(parseInt(id)));
     dispatch(getSingleTicket(parseInt(id)));
-  }, [])
+  }, []);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = {
       content: reply,
       images: [],
       ticketId: parseInt(id),
-      title: moment()
-    }
-    await dispatch(postReply(form))
+      title: moment(),
+    };
+    await dispatch(postReply(form));
     await dispatch(getReplies(parseInt(id)));
     await setReply("");
   };
@@ -43,54 +42,63 @@ const AdminMessage = () => {
   return (
     <div>
       <WrapperBody>
-        <Toaster/>
+        <Toaster />
         <ProfileNavBar>
           <NavTitle>
             <span className="fw-bold">Feedback</span>
           </NavTitle>
         </ProfileNavBar>
-        <Wrapper>
-          <h4 className="title">Title </h4>
-          <p className="p-0 m-0">{ticket?.title} </p>
-          {
-            messages.map(item => item.replyType === "USER_REPLY" ? 
-            <div key={item.id} >
-              <h4 className="pt-4">Message</h4>
-              <p className="p-0 m-0">{item.content} {" "}</p>
-            </div> : 
-            <div className="message pt-4">
-              <h4>Admin</h4>
-              <p className="p-0 m-0">{item.content}{" "}</p>
-            </div>
-            )
-          }
-        </Wrapper>
-        <WrapperFooter className="">
-          <form 
-            onSubmit={handleSubmit} 
-            className="d-flex align-items-center justify-content-between msg"
-          >
-            <div className="input-group">
-              <Input 
-                type="text" 
-                className="form-control" 
-                name="reply"
-                placeholder="Type your message"
-                value={reply}
-                onChange={(e) => setReply(e.target.value)}
-              />
-            </div>
-            <div className="ml-2">
-              <button 
-                className="grey_btn" 
-                type="submit" 
-                disabled={reply===""}
+        {loading ? (
+          <div className="vh-100 w-100">
+            <Spinner />
+          </div>
+        ) : (
+          <>
+            <Wrapper>
+              <h4 className="title">Title </h4>
+              <p className="p-0 m-0">{ticket?.title} </p>
+              {messages.map((item) =>
+                item.replyType === "USER_REPLY" ? (
+                  <div key={item.id}>
+                    <h4 className="pt-4">Message</h4>
+                    <p className="p-0 m-0">{item.content} </p>
+                  </div>
+                ) : (
+                  <div className="message pt-4">
+                    <h4>Admin</h4>
+                    <p className="p-0 m-0">{item.content} </p>
+                  </div>
+                )
+              )}
+            </Wrapper>
+            <WrapperFooter className="">
+              <form
+                onSubmit={handleSubmit}
+                className="d-flex align-items-center justify-content-between msg"
               >
-                {loading ? "Sending..." : "Submit"}
-              </button>
-            </div>
-          </form>
-        </WrapperFooter>
+                <div className="input-group">
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="reply"
+                    placeholder="Type your message"
+                    value={reply}
+                    onChange={(e) => setReply(e.target.value)}
+                  />
+                </div>
+                <div className="ml-2">
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                    disabled={reply === ""}
+                  >
+                    {loading ? "Sending..." : "Submit"}
+                  </button>
+                </div>
+              </form>
+            </WrapperFooter>
+          </>
+        )}
       </WrapperBody>
     </div>
   );
@@ -170,7 +178,6 @@ const Wrapper = styled.div`
     padding-left: 50px;
     padding-bottom: 100px;
   }
-
 `;
 
 const WrapperFooter = styled.div`
@@ -190,7 +197,7 @@ const WrapperFooter = styled.div`
   input {
     width: 100%;
     height: 53px;
-    background-color: #F8F8F8;
+    background-color: #f8f8f8;
     border-radius: 20px;
     padding-left: 37px;
     border: none;

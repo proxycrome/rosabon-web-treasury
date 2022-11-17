@@ -33,7 +33,7 @@ const WrapperBody = styled.div`
   display: flex;
   flex-direction: row;
 
-  @media (min-width: 1200px) {
+  @media (min-width: 1201px) {
     width: 100%;
     .side-bar {
       width: 20%;

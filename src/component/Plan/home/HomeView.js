@@ -23,30 +23,6 @@ function HomeView() {
     setSendView(data);
   }
 
-  // useEffect(() => {
-  //   if(login){
-  //     navigate(0);
-  //   }
-  // }, []);
-
-  
-
-  // const user =
-  //   users && users.role == "COMPANY"
-  //     ? users.company.name
-  //     : users.role == "INDIVIDUAL_USER"
-  //     ? users.individualUser.firstName
-  //     : "";
-
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("token"));
-  //   if (tokenString) {
-  //     dispatch(getAuthUsers(tokenString.token));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
       navigate("/kyc");
@@ -63,9 +39,9 @@ function HomeView() {
           <span>
             Welcome back{" "}
             <span className="fw-bold">
-              {users && users?.role == "COMPANY"
+              {users && users?.role === "COMPANY"
                 ? users?.company.name
-                : users?.role == "INDIVIDUAL_USER"
+                : users?.role === "INDIVIDUAL_USER"
                 ? users?.individualUser.firstName
                 : ""
               }

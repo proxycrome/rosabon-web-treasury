@@ -123,11 +123,14 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
   }
 }
 
-function* verifyBvn({ payload: { formData, id } }) {
+function* verifyBvn({ payload: { formData, id, setComplete } }) {
   try {
     const response = yield call(verifyBvnService, formData);
     console.log(response.data);
     yield put(verifyBvnSuccess(response.data));
+    if(response.data && setComplete){
+      setComplete(true);
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(verifyBvnError(error?.response?.data, id));

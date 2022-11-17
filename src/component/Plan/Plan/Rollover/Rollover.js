@@ -19,7 +19,8 @@ const Rollover = () => {
   const [amount, setAmount] = useState("");
   const [rolloverType, setRolloverType] = useState("");
   const [tenor, setTenor] = useState("");
-  const [checkAmount, setCheckAmount] = useState(false);
+  const [checkMinAmount, setCheckMinAmount] = useState(false);
+  const [checkMaxAmount, setCheckMaxAmount] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [interestRate, setInterestRate] = useState(0);
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const Rollover = () => {
     : [];
 
   console.log(plan);
+  console.log(inv_rates);
 
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
@@ -115,7 +117,7 @@ const Rollover = () => {
         } else {
           interestRate =
             plan?.directDebit === true || plan?.directDebit === "true"
-              ? interestRate + rate?.directDebitRate
+              ? interestRate + rate?.percentDirectDebit
               : interestRate;
           return interestRate;
         }
@@ -144,10 +146,16 @@ const Rollover = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (amount < plan?.product?.minTransactionLimit) {
-      setCheckAmount(true);
+      setCheckMinAmount(true);
+      setCheckMaxAmount(false);
+      return;
+    } else if (amount > plan?.planSummary?.principal) {
+      setCheckMinAmount(false);
+      setCheckMaxAmount(true)
       return;
     } else {
-      setCheckAmount(false);
+      setCheckMinAmount(false);
+      setCheckMaxAmount(false)
       setIsClicked(true);
     }
   };
@@ -301,6 +309,7 @@ const Rollover = () => {
                           type="number"
                           value={amount}
                           onChange={(e) => setAmount(e.target.value)}
+                          required
                           disabled={rolloverType === "full"}
                         />
                       </div>
@@ -314,14 +323,24 @@ const Rollover = () => {
                           ).toFixed(2)}
                         </span>
                       </label>
-                      {checkAmount && (
+                      {checkMinAmount && (
                         <label className="text-danger mt-2">
                           Amount for rollover is below the minimum allowed
                           amount of {getCurrIcon(plan?.currency?.name)}
                           <span style={{ fontWeight: "700" }}>
                             {plan?.product?.minTransactionLimit}
                           </span>{" "}
-                          available for the product the plan is created under
+                          available for the product the plan is created under.
+                        </label>
+                      )}
+                      {checkMaxAmount && (
+                        <label className="text-danger mt-2">
+                          Amount for rollover is above the maximum allowed
+                          amount of {getCurrIcon(plan?.currency?.name)}
+                          <span style={{ fontWeight: "700" }}>
+                            {plan?.planSummary?.principal}
+                          </span>{" "}
+                          available for this plan.
                         </label>
                       )}
                     </div>
@@ -352,7 +371,7 @@ const Rollover = () => {
                   </div>
                   <div className="row my-4">
                     <div className="col ">
-                      <label>Calculate Interest Rate (%)</label>
+                      <label>Interest Rate (%)</label>
                       <div className="input-group">
                         <input
                           className="form-control"

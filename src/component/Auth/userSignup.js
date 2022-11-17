@@ -17,6 +17,8 @@ import { Toaster } from "react-hot-toast";
 import { SignupLeftView } from "./loginLeftView";
 import { ValidateUserForm, validateUserInfo } from "./validateForm";
 import Footer from "../dashboard/ProfileFooter";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 function UserSignup() {
   const navigate = useNavigate();
@@ -30,21 +32,26 @@ function UserSignup() {
   const [isUserTerms, setIsUserTerms] = useState(false);
 
   const location = useLocation();
-  console.log(location);
 
-  const query = new URLSearchParams(location?.search)
+  const query = new URLSearchParams(location?.search);
 
-  const referralCode = query.get('referralCode');
-  const sourcer = query.get('source');
+  const referralCode = query.get("referralCode");
+  const sourcer = query.get("source");
 
   const referral = {
     referralCode,
-    sourcer
-  }
+    sourcer,
+  };
 
   localStorage.setItem("referral", JSON.stringify(referral));
 
-  const { handleValueChange, values, handleSubmit, errors } = ValidateUserForm(
+  const {
+    handleValueChange,
+    handlePhoneValueChange,
+    values,
+    handleSubmit,
+    errors,
+  } = ValidateUserForm(
     validateUserInfo,
     isUserNewsLetters,
     isUserTerms,
@@ -58,8 +65,6 @@ function UserSignup() {
   const togglePassword2 = () => {
     setPasswordShown2(!passwordShown2);
   };
-
-  
 
   // useEffect(() => {
   //   if (isSignedup) {
@@ -149,29 +154,19 @@ function UserSignup() {
                       </div>
                       <div className="mb-4">
                         <label>Mobile Number</label>
-                        <div className="d-flex">
-                          <select
-                            className="form-select-md select-field"
-                            style={{
-                              border: "1.5px solid #E0E0E0",
-                              outline: "none",
-                            }}
-                          >
-                            <option>NGN</option>
-                          </select>
-                          <div className="input-group">
-                            <div className="input-group-prepend phone-code">
-                              +234
-                            </div>
-                            <Input
-                              type="text"
-                              className="form-control phone-input"
-                              onChange={handleValueChange}
-                              name="phone"
-                              maxLength="10"
-                              value={values.phone}
-                            />
-                          </div>
+                        <div className="input-group">
+                          <PhoneInput
+                            country={"ng"}
+                            inputClass="form-control phone-input"
+                            buttonClass="select-field"
+                            name="phone"
+                            value={values.phone}
+                            countryCodeEditable={false}
+                            onChange={(value) => handlePhoneValueChange(value)}
+                            disableDropdown
+                            maxLength="10"
+                            masks={{ ng: "... ... ...." }}
+                          />
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
@@ -231,11 +226,11 @@ function UserSignup() {
                         <div className="">
                           <label>How did you hear about us?</label>
                           <select
-                            className="form-select form-select-lg select-field"
+                            className="form-select form-select-lg select-user-field"
                             aria-label=".form-select-lg"
                             onChange={handleValueChange}
                             name="source"
-                            value={values.source}
+                            defaultValue={values.source}
                           >
                             <option value=""></option>
                             <option value="ROSABON_SALES">
@@ -256,7 +251,7 @@ function UserSignup() {
                               placeholder="Source Name"
                               onChange={handleValueChange}
                               name="sourceOthers"
-                              value={values.sourceOthers}
+                              defaultValue={values.sourceOthers}
                             />
                           ) : values.source === "ANOTHER_USER" ? (
                             <Input
@@ -265,7 +260,7 @@ function UserSignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           ) : values.source === "ROSABON_SALES" ? (
@@ -275,7 +270,7 @@ function UserSignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           ) : (
@@ -441,6 +436,10 @@ const RightWrapper = styled.section`
   .select-field {
     height: 54px;
     font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: none;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;
@@ -448,7 +447,23 @@ const RightWrapper = styled.section`
     letter-spacing: -0.01em;
     color: #242424;
     padding: 15px;
+    background: #ffffff;
   }
+
+  .select-user-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border: 1.5px solid #e0e0e0 !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -504,9 +519,18 @@ const LoginInput = styled.div`
   }
 
   .phone-input {
-    padding-left: 60px !important;
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
   }
-
 `;
 const LoginButton = styled.div`
   display: flex;

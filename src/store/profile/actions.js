@@ -35,6 +35,7 @@ import {
   SEND_OTP,
   SEND_OTP_ERROR,
   SEND_OTP_SUCCESS,
+  TOGGLE_SIDEBAR,
   UPDATE_USER_KYC,
   UPDATE_USER_KYC_ERROR,
   UPDATE_USER_KYC_SUCCESS,
@@ -108,10 +109,10 @@ export const updateUserKycError = (error) => {
   };
 };
 
-export const verifyBvn = (formData, id) => {
+export const verifyBvn = (formData, id, setComplete) => {
   return {
     type: VERIFY_BVN,
-    payload: { formData, id },
+    payload: { formData, id, setComplete },
   };
 };
 
@@ -352,3 +353,9 @@ export const getUserDocsError = (error) => {
     payload: error,
   };
 };
+
+export const toggleSidebar = () => {
+  return {
+    type: TOGGLE_SIDEBAR,
+  }
+}

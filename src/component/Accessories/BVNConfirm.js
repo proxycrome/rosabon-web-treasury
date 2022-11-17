@@ -36,6 +36,7 @@ export function BVNConfirm({
   nameMatch,
   director,
   phone,
+  dateOfBirth,
 }) {
   const [complete, setComplete] = useState(false);
   const dispatch = useDispatch();
@@ -85,10 +86,10 @@ export function BVNConfirm({
           id: bvn,
           isSubjectConsent: true,
           phoneNumber: phone,
+          dateOfBirth: dateOfBirth,
         };
         console.log(objData);
-        dispatch(verifyBvn(objData));
-        setComplete(true);
+        dispatch(verifyBvn(objData, null,  setComplete));
       }
     }
   }, [kycData]);

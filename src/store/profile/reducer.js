@@ -41,6 +41,7 @@ import {
   SEND_OTP,
   SEND_OTP_ERROR,
   SEND_OTP_SUCCESS,
+  TOGGLE_SIDEBAR,
   UPDATE_USER_KYC,
   UPDATE_USER_KYC_ERROR,
   UPDATE_USER_KYC_SUCCESS,
@@ -86,6 +87,7 @@ const initialState = {
   withdrawReasonsError: null,
   documents: null,
   documentsError: null,
+  sidebar: false,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -537,6 +539,13 @@ const userProfileReducer = (state = initialState, action) => {
         ...state,
         bvnMessage: null,
         bvnError: null,
+      }
+      break;
+
+    case TOGGLE_SIDEBAR:
+      state = {
+        ...state,
+        sidebar: !state.sidebar,
       }
       break;
 

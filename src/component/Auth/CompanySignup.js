@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   Form,
   FormGroup,
@@ -7,46 +7,55 @@ import {
   FormFeedback,
   InputGroup,
   InputGroupText,
-} from 'reactstrap'
-import { useSelector, useDispatch, connect } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import toast, { Toaster } from 'react-hot-toast'
-import { SignupLeftView } from './loginLeftView'
-import Footer from '../dashboard/ProfileFooter'
-import { ValidateCompanyForm, validateInfo } from './validateForm'
+} from "reactstrap";
+import { useSelector, useDispatch, connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { SignupLeftView } from "./loginLeftView";
+import Footer from "../dashboard/ProfileFooter";
+import { ValidateCompanyForm, validateInfo } from "./validateForm";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 function CompanySignup() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const auth = useSelector((state) => state.auth)
-  const { isSignedup, isLoading } = auth
-  const user_profile = useSelector((state) => state.user_profile)
-  const { users } = user_profile
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+  const { isSignedup, isLoading } = auth;
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
 
-  const [passwordShown1, setPasswordShown1] = useState(false)
-  const [passwordShown2, setPasswordShown2] = useState(false)
-  const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false)
-  const [isCompanyTerms, setIsCompanyTerms] = useState(false)
+  const [passwordShown1, setPasswordShown1] = useState(false);
+  const [passwordShown2, setPasswordShown2] = useState(false);
+  const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false);
+  const [isCompanyTerms, setIsCompanyTerms] = useState(false);
 
-  const referral = JSON.parse(localStorage.getItem('referral'));
+  const referral = JSON.parse(localStorage.getItem("referral"));
 
-  const {referralCode, sourcer} = referral;
+  const { referralCode, sourcer } = referral;
 
   const {
     handleValueChange,
+    handlePhoneValueChange,
     values,
     handleSubmit,
     errors,
-  } = ValidateCompanyForm(validateInfo, isCompanyNewsLetters, isCompanyTerms, referralCode, sourcer)
+  } = ValidateCompanyForm(
+    validateInfo,
+    isCompanyNewsLetters,
+    isCompanyTerms,
+    referralCode,
+    sourcer
+  );
 
   const togglePassword1 = () => {
-    setPasswordShown1(!passwordShown1)
-  }
+    setPasswordShown1(!passwordShown1);
+  };
   const togglePassword2 = () => {
-    setPasswordShown2(!passwordShown2)
-  }
+    setPasswordShown2(!passwordShown2);
+  };
 
   // useEffect(() => {
   //   if (isSignedup) {
@@ -60,8 +69,8 @@ function CompanySignup() {
       <Wrapper>
         <div
           style={{
-            height: '100vh',
-            overflow: 'hidden',
+            height: "100vh",
+            overflow: "hidden",
           }}
           className="content"
         >
@@ -69,7 +78,7 @@ function CompanySignup() {
             <SignupLeftView />
           </div>
           <div
-            style={{ overflowY: 'auto', gridTemplateColumns: 'auto' }}
+            style={{ overflowY: "auto", gridTemplateColumns: "auto" }}
             className="login-right-view"
           >
             <div className="">
@@ -77,7 +86,7 @@ function CompanySignup() {
                 <h4>Sign up</h4>
                 <Toaster
                   toastOptions={{
-                    className: 'bg-danger text-white',
+                    className: "bg-danger text-white",
                   }}
                   position="bottom-center"
                 />
@@ -143,30 +152,20 @@ function CompanySignup() {
                         {errors.email && <h3>{errors.email}</h3>}
                       </div>
                       <div className="mb-4">
-                        <label>Contact Person Number</label>
-                        <div className="d-flex">
-                          <select
-                            className="form-select-md select-field"
-                            style={{
-                              border: "1.5px solid #E0E0E0",
-                              outline: "none",
-                            }}
-                          >
-                            <option>NGN</option>
-                          </select>
-                          <div className="input-group">
-                            <div className="input-group-prepend phone-code">
-                              +234
-                            </div>
-                            <Input
-                              type="text"
-                              className="form-control phone-input"
-                              onChange={handleValueChange}
-                              name="phone"
-                              maxLength="10"
-                              value={values.phone}
-                            />
-                          </div>
+                        <label>Mobile Number</label>
+                        <div className="input-group">
+                          <PhoneInput
+                            country={"ng"}
+                            inputClass="form-control phone-input"
+                            buttonClass="select-field"
+                            name="phone"
+                            value={values.phone}
+                            countryCodeEditable={false}
+                            onChange={(value) => handlePhoneValueChange(value)}
+                            disableDropdown
+                            maxLength="10"
+                            masks={{ ng: "... ... ...." }}
+                          />
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
@@ -175,7 +174,7 @@ function CompanySignup() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown1 ? 'text' : 'password'}
+                              type={passwordShown1 ? "text" : "password"}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="password"
@@ -184,11 +183,11 @@ function CompanySignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword1}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                                 className={
                                   passwordShown1
-                                    ? 'far fa-eye'
-                                    : 'far fa-eye-slash'
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
                                 }
                               ></i>
                             </InputGroupText>
@@ -201,7 +200,7 @@ function CompanySignup() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown2 ? 'text' : 'password'}
+                              type={passwordShown2 ? "text" : "password"}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="c_password"
@@ -210,11 +209,11 @@ function CompanySignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword2}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                                 className={
                                   passwordShown2
-                                    ? 'far fa-eye'
-                                    : 'far fa-eye-slash'
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
                                 }
                               ></i>
                             </InputGroupText>
@@ -226,11 +225,11 @@ function CompanySignup() {
                         <div className="">
                           <label>How did you hear about us?</label>
                           <select
-                            className="form-select form-select-lg select-field"
+                            className="form-select form-select-lg select-user-field"
                             aria-label=".form-select-md"
                             onChange={handleValueChange}
                             name="source"
-                            value={values.source}
+                            defaultValue={values.source}
                           >
                             <option value=""></option>
                             <option value="ROSABON_SALES">
@@ -244,33 +243,33 @@ function CompanySignup() {
                       </div>
                       <div className="referal-link pb-5">
                         <div className="input-group">
-                          {values.source === 'OTHER' ? (
+                          {values.source === "OTHER" ? (
                             <Input
                               type="text"
                               className="form-control"
                               placeholder="Source Name"
                               onChange={handleValueChange}
                               name="sourceOthers"
-                              value={values.sourceOthers}
+                              defaultValue={values.sourceOthers}
                             />
-                          ) : values.source === 'ANOTHER_USER' ? (
+                          ) : values.source === "ANOTHER_USER" ? (
                             <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
-                          ) : values.source === 'ROSABON_SALES' ? (
+                          ) : values.source === "ROSABON_SALES" ? (
                             <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           ) : (
@@ -280,12 +279,13 @@ function CompanySignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           )}
                         </div>
                         {errors.refferedBy && <h3>{errors.refferedBy}</h3>}
+                        {values.source === "OTHER" && errors.refferedBy && <h3>{errors.refferedBy}</h3>}
                       </div>
                       <div className="">
                         <div className="form-check">
@@ -335,24 +335,24 @@ function CompanySignup() {
                             className="form-check-label"
                             htmlFor="checkTerms"
                           >
-                            I agree to the{' '}
+                            I agree to the{" "}
                             <span
                               style={{
-                                color: 'rgba(17, 30, 108, 1)',
-                                fontWeight: '500',
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
                               }}
                             >
                               Terms
-                            </span>{' '}
-                            and{' '}
+                            </span>{" "}
+                            and{" "}
                             <span
                               style={{
-                                color: 'rgba(17, 30, 108, 1)',
-                                fontWeight: '500',
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
                               }}
                             >
                               Privacy
-                            </span>{' '}
+                            </span>{" "}
                             Policy
                           </label>
                         </div>
@@ -368,10 +368,10 @@ function CompanySignup() {
                           className="btn btn-primary px-5 mb-2"
                           disabled={isLoading}
                         >
-                          {isLoading ? 'Signing up...' : 'Sign up'}
+                          {isLoading ? "Signing up..." : "Sign up"}
                         </button>
                         <p className="text-center">
-                          Already have an account?{' '}
+                          Already have an account?{" "}
                           <span className="">
                             <Link to="/login">Sign in </Link>
                           </span>
@@ -386,10 +386,10 @@ function CompanySignup() {
         </div>
       </Wrapper>
     </div>
-  )
+  );
 }
 
-export default CompanySignup
+export default CompanySignup;
 
 const Wrapper = styled.div`
   .content {
@@ -398,7 +398,7 @@ const Wrapper = styled.div`
       grid-template-columns: 1fr 1fr;
     }
   }
-`
+`;
 
 const RightWrapper = styled.section`
   background: #ffffff;
@@ -423,9 +423,9 @@ const RightWrapper = styled.section`
   }
   .login_input {
   }
-  input[type='text'],
-  input[type='email'],
-  input[type='password'] {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
     height: 54px;
     padding: 15px;
     border: 1.5px solid #e0e0e0;
@@ -439,7 +439,11 @@ const RightWrapper = styled.section`
   }
   .select-field {
     height: 54px;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: none;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;
@@ -447,7 +451,23 @@ const RightWrapper = styled.section`
     letter-spacing: -0.01em;
     color: #242424;
     padding: 15px;
+    background: #ffffff;
   }
+
+  .select-user-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border: 1.5px solid #e0e0e0 !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -459,7 +479,7 @@ const RightWrapper = styled.section`
     padding-left: 10px;
   }
   h3 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
@@ -470,7 +490,7 @@ const RightWrapper = styled.section`
     color: #e20d0d;
     padding-top: 12px;
   }
-`
+`;
 
 const LoginInput = styled.div`
   label,
@@ -503,9 +523,19 @@ const LoginInput = styled.div`
   }
 
   .phone-input {
-    padding-left: 60px !important;
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
   }
-`
+`;
 const LoginButton = styled.div`
   display: flex;
   align-items: center;
@@ -523,4 +553,4 @@ const LoginButton = styled.div`
   span {
     color: rgba(28, 68, 141, 1);
   }
-`
+`;

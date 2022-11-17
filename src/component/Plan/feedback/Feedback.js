@@ -257,7 +257,7 @@ const Feedback = () => {
 export default Feedback;
 
 const WrapperBody = styled.div`
-  /* height: 100vh; */
+  width: 100%;
 `;
 
 const NavTitle = styled.div`

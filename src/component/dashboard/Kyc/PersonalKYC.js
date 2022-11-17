@@ -134,7 +134,7 @@ const PersonalKYC = () => {
 
   const handleVerifyBVN = (e) => {
     e.preventDefault();
-    const { bvn, phone } = formData;
+    const { bvn, phone, dateOfBirth } = formData;
 
     const objData = {
       firstName: user_details?.individualUser?.firstName?.toUpperCase(),
@@ -142,6 +142,12 @@ const PersonalKYC = () => {
       id: bvn ? bvn : user_details?.individualUser?.bvn,
       isSubjectConsent: true,
       phoneNumber: phone ? phone : user_details?.phone,
+      dateOfBirth: dateOfBirth
+        ? dateOfBirth
+        : moment(
+            user_details?.individualUser?.dateOfBirth,
+            "DD-MM-YYYY"
+          ).format("YYYY-MM-DD"),
     };
 
     console.log(objData);
@@ -377,6 +383,7 @@ const PersonalKYC = () => {
                                   bvn={bvnMessage?.data?.idNumber}
                                   phone={bvnMessage?.data?.mobile}
                                   nameMatch={bvnMessage?.isNameMatched}
+                                  dateOfBirth={bvnMessage?.dateOfBirth}
                                 />
                               </ModalComponent>
                             </div>

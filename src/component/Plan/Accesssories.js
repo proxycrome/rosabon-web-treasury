@@ -729,14 +729,12 @@ export const RolloverSummary = ({
 
   const maturityPayment = paymentAtMaturity(
     plan?.interestReceiptOption,
-    amount,
+    parseFloat(amount),
     withholdTax[0]?.rate,
     selectedTenor?.tenorDays / 30,
     calculateSI(amount, interestRate, selectedTenor?.tenorDays)
   );
 
-  console.log(tenor);
-  console.log(customTenorDays);
 
   useEffect(() => {
     setFormData({
@@ -772,14 +770,14 @@ export const RolloverSummary = ({
                     <p className="p-0 m-0">Principal </p>
                     <h4 className="d-flex gap-1">
                       {getCurrIcon(plan?.currency?.name)}
-                      {amount}
+                      {parseFloat(amount)}
                     </h4>
                   </div>
                   <div className="rollover-text-left">
                     <p className="p-0 m-0">Amount for Withdrawal </p>
                     <h4 className="d-flex gap-1 justify-content-end">
                       {getCurrIcon(plan?.currency?.name)}
-                      {(plan?.planSummary?.principal - amount)?.toFixed(2)}
+                      {(plan?.planSummary?.principal - parseFloat(amount))?.toFixed(2)}
                     </h4>
                   </div>
                 </div>
@@ -1262,13 +1260,13 @@ export const PlanSummary = ({ planPay }) => {
   const current_currency = currencies_list.find(
     (item) => item.id === planData?.currency
   )?.name;
-  const calc_withholding_tax =
-    Math.round(
-      planData.planSummary.calculatedInterest *
-        (planData.planSummary.withholdingTax / 100) *
-        100 +
-        Number.EPSILON
-    ) / 100;
+  // const calc_withholding_tax =
+  //   Math.round(
+  //     planData.planSummary.calculatedInterest *
+  //       (planData.planSummary.withholdingTax / 100) *
+  //       100 +
+  //       Number.EPSILON
+  //   ) / 100;
 
   console.log("form check", form);
 
@@ -1333,7 +1331,7 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
                     {getCurrIcon(current_currency)}{" "}
-                    {calc_withholding_tax.toFixed(2)}
+                    {planData?.planSummary?.withholdingTax?.toFixed(2)}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1341,7 +1339,7 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4>₦2,700,000</h4> */}
                   <h4 className="flex justify-content-end">
                     {getCurrIcon(current_currency)}{" "}
-                    {planData.planSummary.paymentMaturity.toFixed(2)}
+                    {planData?.planSummary?.paymentMaturity?.toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -2972,8 +2970,8 @@ export const FeedbackTickets = () => {
     navigate(`/admin-message/${id}`);
   };
   return (
-    <div>
-      <ProfileNavBar>
+    <div className="d-flex flex-column">
+      <ProfileNavBar feedback={true}>
         <NavTitle>
           <span className="fw-bold">Feedback</span>
         </NavTitle>
@@ -2984,7 +2982,7 @@ export const FeedbackTickets = () => {
             <Spinner />
           </div>
         ) : (
-          <>
+          <div className="mt-5">
             <h3>My Tickets</h3>
 
             <div>
@@ -3052,7 +3050,7 @@ export const FeedbackTickets = () => {
                 </tbody>
               </table>
             </div>
-          </>
+          </div>
         )}
       </FeedbackticketWarapper>
     </div>
@@ -3063,7 +3061,7 @@ export const FeedbackTickets = () => {
 // height: 39px;
 
 const FeedbackticketWarapper = styled.div`
-  padding: 30px;
+  padding: 60px 30px !important;
   .borderless td,
   .borderless th {
     border: none !important;
@@ -3126,8 +3124,8 @@ export const FeedbackOpenTickets = () => {
     navigate(`/admin-message/${id}`);
   };
   return (
-    <div>
-      <ProfileNavBar>
+    <div className="d-flex flex-column">
+      <ProfileNavBar feedback={true}>
         <NavTitle>
           <span className="fw-bold">Feedback</span>
         </NavTitle>
@@ -3138,7 +3136,7 @@ export const FeedbackOpenTickets = () => {
             <Spinner />
           </div>
         ) : (
-          <>
+          <div className="mt-5">
             <h3>My Open Tickets</h3>
 
             <div>
@@ -3206,7 +3204,7 @@ export const FeedbackOpenTickets = () => {
                 </tbody>
               </table>
             </div>
-          </>
+          </div>
         )}
       </FeedbackticketWarapper>
     </div>
@@ -3228,8 +3226,8 @@ export const FeedbackCloseTickets = () => {
     navigate(`/admin-message/${id}`);
   };
   return (
-    <div>
-      <ProfileNavBar>
+    <div className="d-flex flex-column">
+      <ProfileNavBar feedback={true}>
         <NavTitle>
           <span className="fw-bold">Feedback</span>
         </NavTitle>
@@ -3240,7 +3238,7 @@ export const FeedbackCloseTickets = () => {
             <Spinner />
           </div>
         ) : (
-          <>
+          <div className="mt-5">
             <h3>My Closed Tickets</h3>
 
             <div>
@@ -3303,7 +3301,7 @@ export const FeedbackCloseTickets = () => {
                 </tbody>
               </Table>
             </div>
-          </>
+          </div>
         )}
       </FeedbackticketWarapper>
     </div>
@@ -3340,7 +3338,11 @@ export const paymentAtMaturity = (
     case "MATURITY":
       result =
         Math.round(
-          (principal + calculatedInterest - withholdingTax / 100) * 100
+          (principal +
+            calculatedInterest -
+            (calculatedInterest * (withholdingTax / 100))) *
+            100 +
+            Number.EPSILON
         ) / 100;
       break;
 
@@ -3356,7 +3358,7 @@ export const paymentAtMaturity = (
           Math.round(
             (principal +
               interestMonthly -
-              (withholdingTax / 100) * interestMonthly) *
+              ((withholdingTax / 100) * interestMonthly)) *
               100 +
               Number.EPSILON
           ) / 100;
@@ -3371,7 +3373,7 @@ export const paymentAtMaturity = (
           Math.round(
             (principal +
               interestQuaterly -
-              (withholdingTax / 100) * interestQuaterly) *
+              ((withholdingTax / 100) * interestQuaterly)) *
               100 +
               Number.EPSILON
           ) / 100;
@@ -3386,7 +3388,7 @@ export const paymentAtMaturity = (
           Math.round(
             (principal +
               interestBiAnnual -
-              (withholdingTax / 100) * interestBiAnnual) *
+              ((withholdingTax / 100) * interestBiAnnual)) *
               100 +
               Number.EPSILON
           ) / 100;
