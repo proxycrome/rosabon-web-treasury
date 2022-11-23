@@ -4,6 +4,9 @@ import {
   CLEAR_OTP,
   CLEAR_USERS,
   CLOSE_MODAL,
+  GET_ALL_GENDER,
+  GET_ALL_GENDER_ERROR,
+  GET_ALL_GENDER_SUCCESS,
   GET_AUTH_USER,
   GET_AUTH_USERS,
   GET_AUTH_USERS_ERROR,
@@ -88,6 +91,8 @@ const initialState = {
   documents: null,
   documentsError: null,
   sidebar: false,
+  gender: null,
+  genderError: null,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -534,19 +539,46 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
+    case GET_ALL_GENDER:
+      state = {
+        ...state,
+        loading: true,
+        gender: null,
+        genderError: null,
+      };
+      break;
+
+    case GET_ALL_GENDER_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        gender: action.payload,
+        genderError: null,
+      };
+      break;
+
+    case GET_ALL_GENDER_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        gender: null,
+        genderError: action.payload,
+      };
+      break;
+
     case CLEAR_BVN:
       state = {
         ...state,
         bvnMessage: null,
         bvnError: null,
-      }
+      };
       break;
 
     case TOGGLE_SIDEBAR:
       state = {
         ...state,
         sidebar: !state.sidebar,
-      }
+      };
       break;
 
     default:

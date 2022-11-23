@@ -89,7 +89,7 @@ export function BVNConfirm({
           dateOfBirth: dateOfBirth,
         };
         console.log(objData);
-        dispatch(verifyBvn(objData, null,  setComplete));
+        dispatch(verifyBvn(objData, null, setComplete));
       }
     }
   }, [kycData]);
@@ -388,7 +388,9 @@ export function OTPVerify({
   const [token, setToken] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const dispatch = useDispatch();
-  const { otp, validateOtpError } = useSelector((state) => state.user_profile);
+  const { otp, validateOtpError, validateEmailOtp } = useSelector(
+    (state) => state.user_profile
+  );
   const { phoneMsg, validatePhone } = useSelector(
     (state) => state.updateProfile
   );
@@ -397,17 +399,15 @@ export function OTPVerify({
 
   const handleEmailOtpSubmit = async (e) => {
     e.preventDefault();
-    // if ((otpData && token === otpData) || (otp?.data && token === otp?.data)) {
-    updateOtp(token);
     dispatch(validateOtp(token));
-    // toggleCont();
-    // handleClose();
-    // }
-
-    if ((otpData && token !== otpData) || (otp?.data && token !== otp?.data)) {
-      setErrorMsg("Please enter a valid OTP");
-    }
   };
+
+  useEffect(() => {
+    if (validateEmailOtp) {
+      updateOtp(token);
+      handleClose();
+    }
+  }, [validateEmailOtp]);
 
   const handlePhoneOtpSubmit = async (e) => {
     e.preventDefault();
@@ -484,23 +484,27 @@ export function OTPVerify({
                   <p className="text-center">
                     Didn't get an OTP?{" "}
                     {emailOtp ? (
-                      <strong
-                        onClick={handleResendEmailOtp}
-                        style={{ cursor: "pointer" }}
-                      >
-                        Resend
-                      </strong>
+                      <Link to="#">
+                        <strong
+                          onClick={handleResendEmailOtp}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Resend
+                        </strong>
+                      </Link>
                     ) : (
-                      <strong
-                        onClick={handleResendPhoneOtp}
-                        style={{ cursor: "pointer" }}
-                      >
-                        Resend
-                      </strong>
+                      <Link to="#">
+                        <strong
+                          onClick={handleResendPhoneOtp}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Resend
+                        </strong>
+                      </Link>
                     )}
                   </p>
                   <OTPButton>
-                    <div className="d-flex justify-content-between align-items-center ">
+                    <div className="d-flex justify-content-between align-items-center gap-1">
                       <button
                         style={{
                           outline: "none",
@@ -660,13 +664,11 @@ const WrappCongrate = styled.div`
 
   .inputField {
     border: 1px solid #e0e0e0;
-    height: 56px;
+    height: 50px;
     border-radius: 3px;
     font-size: 20px;
     color: #000;
-    flex: 1 0 56px;
-    // outline: none;
-    // border: none;
+    flex: 1 0 45px;
   }
 
   .enclose {
@@ -812,7 +814,9 @@ export function Notice({
       },
     };
     console.log(data);
-    dispatch(planAction(data, null, handleShowModalTwo, dispatch, null, "full"))
+    dispatch(
+      planAction(data, null, handleShowModalTwo, dispatch, null, "full")
+    );
   };
 
   const submit = async () => {

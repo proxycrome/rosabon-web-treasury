@@ -14,6 +14,7 @@ import {
   getCountries,
   getStates,
   getAuthUsers,
+  getAllGender,
 } from "../../../store/actions";
 import moment from "moment";
 
@@ -26,8 +27,12 @@ const PersonalKYC = () => {
   const { login, isLoggedIn } = auth;
 
   const user_profile = useSelector((state) => state.user_profile);
-  const { loading, showBvnModal, bvnError, bvnMessage, countries, states } =
+  const { loading, showBvnModal, bvnError, bvnMessage, countries, states, gender } =
     user_profile;
+
+  const activeGender = gender?.filter(item => item.status === "ACTIVE");
+
+  console.log(gender);
 
   console.log(user_details);
 
@@ -112,7 +117,7 @@ const PersonalKYC = () => {
         dateOfBirth: dateOfBirth
           ? String(moment(dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY"))
           : user_details?.individualUser?.dateOfBirth,
-        gender: gender ? gender : user_details?.individualUser?.gender,
+        genderId: gender ? Number(gender) : user_details?.individualUser?.gender?.id,
         firstName: firstName
           ? firstName
           : user_details?.individualUser?.firstName,
@@ -162,6 +167,7 @@ const PersonalKYC = () => {
     const tokenString = JSON.parse(localStorage.getItem("token"));
     if (tokenString) {
       dispatch(getAuthUsers());
+      dispatch(getAllGender());
     } else {
       navigate("/login");
     }
@@ -267,15 +273,16 @@ const PersonalKYC = () => {
                                 className="form-select form-select-lg mb-3 select-field"
                                 aria-label=".form-select-lg"
                                 onChange={handleChange}
-                                value={
+                                defaultValue={
                                   formData.gender ||
-                                  user_details?.individualUser?.gender
+                                  user_details?.individualUser?.gender?.id
                                 }
                                 name="gender"
                               >
-                                <option value="">Select Gender...</option>
-                                <option value="MALE">Male</option>
-                                <option value="FEMALE">Female</option>
+                                <option value="" hidden>Select Gender...</option>
+                                {activeGender?.map(item => (
+                                  <option key={item.id} value={item.id}>{item.gender}</option>
+                                ))}
                               </select>
                             </div>
                           </div>
@@ -543,7 +550,7 @@ const PersonalKYC = () => {
                       (formData.country ||
                         user_details?.individualUser?.address?.country) &&
                       (formData.gender ||
-                        user_details?.individualUser?.gender) &&
+                        user_details?.individualUser?.gender?.gender) &&
                       (formData.bvn || user_details?.individualUser?.bvn) &&
                       bvnMessage?.success ? (
                         <button
@@ -577,7 +584,7 @@ const PersonalKYC = () => {
                       (formData.country ||
                         user_details?.individualUser?.address?.country) &&
                       (formData.gender ||
-                        user_details?.individualUser?.gender) &&
+                        user_details?.individualUser?.gender?.gender) &&
                       (formData.bvn || user_details?.individualUser?.bvn) &&
                       bvnMessage?.success ? (
                         <button

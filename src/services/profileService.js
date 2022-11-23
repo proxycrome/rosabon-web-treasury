@@ -96,3 +96,9 @@ export const getUserDocsService = () => {
   const url = `auth/individual-user/my-document/get-by-user`;
   return http.getData(url);
 };
+
+export const getAllGenderService = () => {
+  const http = new HttpService();
+  const url = `auth/admin/gender`;
+  return http.getData(url);
+};

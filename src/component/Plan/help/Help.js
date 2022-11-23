@@ -54,9 +54,7 @@ const Help = () => {
             </div>
             <hr className="my-5" />
             <div className="accordion" id="accordionExample">
-              {[...new Set(faqMessages.map((d) => d.faqCategory))]
-                ?.filter((d) => d.status === "ACTIVE")
-                ?.map((data) => (
+              {activeFaqs?.map((data) => (
                   <div className="accordion-item" key={data.id}>
                     <h2
                       className="accordion-header"
@@ -74,12 +72,12 @@ const Help = () => {
                       </div>
                     </h2>
                     <Collapse isOpen={col1 === data.id}>
-                      {activeFaqs
-                        .filter((item) => item?.faqCategory?.id === data?.id)
+                      {data.faqs
+                        ?.filter((item) => item.status === "ACTIVE")
                         ?.map((faq) => (
                           <div
                             id="collapseOne"
-                            className="accordion-collapse collapse show mb-4"
+                            className="accordion-collapse collapse show"
                             aria-labelledby="headingOne"
                             data-bs-parent="#accordionExample"
                             key={faq.id}

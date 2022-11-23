@@ -633,7 +633,6 @@ export const RolloverSummary = ({
   setEndDate,
   setFormData,
   formData,
-  setSavingsFreq,
 }) => {
   // const [isTerms, setIsTerms] = useState(false);
 
@@ -663,50 +662,50 @@ export const RolloverSummary = ({
 
   const customTenorDays = moment(addedDate).diff(date, "days");
 
-  const contribValue = useCallback(
-    (savingFrequency) => {
-      // const selectedTenor = productTenors?.find(
-      //   (item) => item.id === parseInt(formData.tenor)
-      // );
+  // const contribValue = useCallback(
+  //   (savingFrequency) => {
+  //     // const selectedTenor = productTenors?.find(
+  //     //   (item) => item.id === parseInt(formData.tenor)
+  //     // );
 
-      if (plan?.product?.properties?.hasTargetAmount) {
-        if (plan?.savingFrequency !== "") {
-          let computedValue;
-          switch (savingFrequency) {
-            case "DAILY":
-              computedValue = amount / customTenorDays;
-              break;
+  //     if (plan?.product?.properties?.hasTargetAmount) {
+  //       if (plan?.savingFrequency !== "") {
+  //         let computedValue;
+  //         switch (savingFrequency) {
+  //           case "DAILY":
+  //             computedValue = amount / customTenorDays;
+  //             break;
 
-            case "WEEKLY":
-              if (customTenorDays < 7) {
-                computedValue = undefined;
-                setSavingsFreq(true);
-              } else {
-                computedValue = amount / Math.floor(customTenorDays / 7);
-                setSavingsFreq(false);
-              }
-              break;
+  //           case "WEEKLY":
+  //             if (customTenorDays < 7) {
+  //               computedValue = undefined;
+  //               setSavingsFreq(true);
+  //             } else {
+  //               computedValue = amount / Math.floor(customTenorDays / 7);
+  //               setSavingsFreq(false);
+  //             }
+  //             break;
 
-            case "MONTHLY":
-              if (customTenorDays < 30) {
-                computedValue = undefined;
-                setSavingsFreq(true);
-              } else {
-                computedValue = amount / Math.floor(customTenorDays / 30);
-                setSavingsFreq(false);
-              }
-              break;
+  //           case "MONTHLY":
+  //             if (customTenorDays < 30) {
+  //               computedValue = undefined;
+  //               setSavingsFreq(true);
+  //             } else {
+  //               computedValue = amount / Math.floor(customTenorDays / 30);
+  //               setSavingsFreq(false);
+  //             }
+  //             break;
 
-            default:
-              computedValue = 0;
-              break;
-          }
-          return computedValue;
-        }
-      }
-    },
-    [tenor, setSavingsFreq]
-  );
+  //           default:
+  //             computedValue = 0;
+  //             break;
+  //         }
+  //         return computedValue;
+  //       }
+  //     }
+  //   },
+  //   [tenor, setSavingsFreq]
+  // );
 
   const calculateSI = (principal, rate, time) => {
     const SI = (principal * rate * (time / 365)) / 100;
@@ -735,16 +734,15 @@ export const RolloverSummary = ({
     calculateSI(amount, interestRate, selectedTenor?.tenorDays)
   );
 
-
   useEffect(() => {
     setFormData({
       ...formData,
-      contributionValue: contribValue(plan?.savingFrequency),
+      // contributionValue: contribValue(plan?.savingFrequency),
       calculatedInterest,
       paymentMaturity: maturityPayment,
       withholdingTax: calc_withholding_tax,
     });
-  }, [contribValue, customTenorDays]);
+  }, [customTenorDays]);
 
   return (
     <div>
@@ -777,7 +775,9 @@ export const RolloverSummary = ({
                     <p className="p-0 m-0">Amount for Withdrawal </p>
                     <h4 className="d-flex gap-1 justify-content-end">
                       {getCurrIcon(plan?.currency?.name)}
-                      {(plan?.planSummary?.principal - parseFloat(amount))?.toFixed(2)}
+                      {(
+                        plan?.planSummary?.principal - parseFloat(amount)
+                      )?.toFixed(2)}
                     </h4>
                   </div>
                 </div>
@@ -916,10 +916,16 @@ export const RolloverWithdrawMethod = ({
   setWithdrawTo,
   base64File,
   setBase64File,
-  savingFreq,
+  // savingFreq,
+  balance,
 }) => {
   const [withdraw, setWithdraw] = useState("");
   const { login } = useSelector((state) => state.auth);
+  const { singlePlan, investment_rates } = useSelector((state) => state.plan);
+  const plan = useMemo(
+    () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
+    [singlePlan]
+  );
 
   const user_role = login ? login?.role?.name : "";
   const { bankDetails, bankDetailsError } = useSelector(
@@ -929,19 +935,28 @@ export const RolloverWithdrawMethod = ({
   console.log("bank dets", bankDetails);
 
   console.log("hhh", withdrawTo);
-  console.log("hhh", savingFreq);
+  // console.log("hhh", savingFreq);
 
   return (
     <div>
       <RolloverSummaryWrapper>
         <h4 className="pt-5">
-          Kindly select beneficiary account to receive the withdrawal
+          Kindly select beneficiary account to receive the portion of your funds
+          not rolled over ({getCurrIcon(plan?.currency?.name)} {balance})
         </h4>
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
+              <div className="row my-3">
+                <div className="col d-flex justify-content-between">
+                  <div>Amount for withdrawal:</div>
+                  <div>
+                    {getCurrIcon(plan?.currency?.name)} {balance}
+                  </div>
+                </div>
+              </div>
               <div className="row my-4">
-                <div className="col ">
+                <div className="col">
                   <div className="input-group">
                     <select
                       className="form-select form-select-md"
@@ -950,7 +965,7 @@ export const RolloverWithdrawMethod = ({
                       onChange={(e) => setWithdrawTo(e.target.value)}
                       value={withdrawTo}
                       required
-                      disabled={savingFreq}
+                      // disabled={savingFreq}
                     >
                       <option value="" hidden>
                         Select withdrawal destination
@@ -1012,12 +1027,12 @@ export const RolloverWithdrawMethod = ({
               ) : (
                 <></>
               )}
-              {savingFreq && (
+              {/* {savingFreq && (
                 <small className="text-danger">
                   The tenor days is less than the savings frequency for this
                   plan. Please Select another tenor.
                 </small>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -1558,6 +1573,7 @@ export const AvailableBalance = ({
   withdrawData,
   errors,
   walletBalance,
+  id,
 }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [withdrawMandateImage, setWithdrawMandateImage] = useState({});
@@ -1621,7 +1637,7 @@ export const AvailableBalance = ({
   console.log(withdrawReasons);
   console.log(bankDetails);
   return (
-    <AvailableBalanceWapper>
+    <AvailableBalanceWapper id={id}>
       {role === "COMPANY" && (
         <UncontrolledTooltip placement="bottom" target="mandate">
           Letter must be on a company's letter head and also carry bank account
@@ -1774,10 +1790,14 @@ export const AvailableBalance = ({
   );
 };
 
-export const TransferCard = ({ walletBalance, transferData }) => {
+export const TransferCard = ({ walletBalance, transferData, id }) => {
   const dispatch = useDispatch();
   const { eligiblePlans } = useSelector((state) => state.plan);
-  console.log(eligiblePlans);
+  const activeEligiblePlans = eligiblePlans?.filter(
+    (plan) =>
+      plan.interestReceiptOption === "MATURITY" && plan.planStatus === "ACTIVE"
+  );
+  console.log(activeEligiblePlans);
 
   const data = {
     amount: "",
@@ -1795,7 +1815,7 @@ export const TransferCard = ({ walletBalance, transferData }) => {
   };
 
   const planName = (id) => {
-    const obj = eligiblePlans?.find((item) => item.id === +id);
+    const obj = activeEligiblePlans?.find((item) => item.id === +id);
     return obj?.planName;
   };
 
@@ -1815,7 +1835,7 @@ export const TransferCard = ({ walletBalance, transferData }) => {
   }, [dispatch]);
 
   return (
-    <AvailableBalanceWapper>
+    <AvailableBalanceWapper id={id}>
       <h3>Transfer</h3>
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
@@ -1849,7 +1869,7 @@ export const TransferCard = ({ walletBalance, transferData }) => {
             onChange={handleChange}
           >
             <option value=""></option>
-            {eligiblePlans?.map((item) => (
+            {activeEligiblePlans?.map((item) => (
               <option key={item.id} value={item.id.toString()}>
                 {item.planName}
               </option>
@@ -2209,6 +2229,10 @@ export const ReferalTable = () => {
     dispatch(pokeUser(id));
   };
 
+  const copyReferralLink = () => {
+    toast.success("Referral Link Copied");
+  };
+
   useEffect(() => {
     dispatch(getMyReferrals());
     dispatch(getAuthUsers());
@@ -2285,7 +2309,12 @@ export const ReferalTable = () => {
                   readOnly
                 />
                 <div className="input-group-text">
-                  <i className="fa-solid fa-key"></i>
+                  <CopyToClipboard
+                    text={users?.referralLink}
+                    onCopy={copyReferralLink}
+                  >
+                    <img src={Copy} alt="copy" className="copy" />
+                  </CopyToClipboard>
                 </div>
               </div>
             </div>
@@ -2322,7 +2351,8 @@ const ReferalTableWarapper = styled.div`
     justify-content: center;
 
     h3 {
-      font-size: 17px;
+      padding-top: 6px;
+      font-size: 20px;
       font-weight: 600;
     }
   }
@@ -2389,6 +2419,9 @@ const ReferalTableWarapper = styled.div`
     line-height: 20px;
     letter-spacing: -0.01em;
     color: #000000;
+  }
+  .copy {
+    cursor: pointer;
   }
 `;
 
@@ -2461,7 +2494,10 @@ export const ReferralBonus = () => {
                 <div>
                   <p className="m-0 p-0">Earned Referral Bonus</p>
                   <h4 className="py-4">
-                    ₦ {users?.referralBonus?.earnedReferralBonus?.toFixed(2)}
+                    ₦{" "}
+                    {users?.referralBonus?.earnedReferralBonus
+                      ? users?.referralBonus?.earnedReferralBonus?.toFixed(2)
+                      : "0.00"}
                   </h4>
                 </div>
                 <div>
@@ -2475,15 +2511,24 @@ export const ReferralBonus = () => {
               </div>
               <div className="d-flex align-items-content justify-content-center">
                 <p className="m-0 p-0">
-                  {users?.referralBonus?.earnedReferralBonus} out of ₦
-                  {referralThreshold?.amount} Earned
+                  {users?.referralBonus?.earnedReferralBonus
+                    ? users?.referralBonus?.earnedReferralBonus
+                    : "0"}{" "}
+                  out of ₦
+                  {referralThreshold?.amount
+                    ? referralThreshold?.amount
+                    : "0.00"}{" "}
+                  Earned
                 </p>
               </div>
             </div>
             <div className="total-bonus">
               <p className="p-0 m-0">Total Redeemed Bonus :</p>
               <h4 className="total-amount">
-                ₦ {users?.referralBonus?.totalRedeemedBonus?.toFixed(2)}
+                ₦{" "}
+                {users?.referralBonus?.totalRedeemedBonus
+                  ? users?.referralBonus?.totalRedeemedBonus?.toFixed(2)
+                  : "0.00"}
               </h4>
             </div>
           </div>
@@ -2971,17 +3016,17 @@ export const FeedbackTickets = () => {
   };
   return (
     <div className="d-flex flex-column">
-      <ProfileNavBar feedback={true}>
+      <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Feedback</span>
         </NavTitle>
       </ProfileNavBar>
-      <FeedbackticketWarapper>
-        {loading ? (
-          <div className="vh-100 w-100">
-            <Spinner />
-          </div>
-        ) : (
+      {loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : (
+        <FeedbackticketWarapper>
           <div className="mt-5">
             <h3>My Tickets</h3>
 
@@ -3025,8 +3070,8 @@ export const FeedbackTickets = () => {
                             {item.status}
                           </button>
                         </td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
+                        <td>{item.createdAt.split(" ")[0]}</td>
+                        <td>{item.modifiedAt.split(" ")[0]}</td>
                         <td>
                           <button
                             style={{
@@ -3051,8 +3096,8 @@ export const FeedbackTickets = () => {
               </table>
             </div>
           </div>
-        )}
-      </FeedbackticketWarapper>
+        </FeedbackticketWarapper>
+      )}
     </div>
   );
 };
@@ -3125,17 +3170,17 @@ export const FeedbackOpenTickets = () => {
   };
   return (
     <div className="d-flex flex-column">
-      <ProfileNavBar feedback={true}>
+      <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Feedback</span>
         </NavTitle>
       </ProfileNavBar>
-      <FeedbackticketWarapper>
-        {loading ? (
-          <div className="vh-100 w-100">
-            <Spinner />
-          </div>
-        ) : (
+      {loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : (
+        <FeedbackticketWarapper>
           <div className="mt-5">
             <h3>My Open Tickets</h3>
 
@@ -3179,8 +3224,8 @@ export const FeedbackOpenTickets = () => {
                             {item.status}
                           </button>
                         </td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
+                        <td>{item.createdAt.split(" ")[0]}</td>
+                        <td>{item.modifiedAt.split(" ")[0]}</td>
                         <td>
                           <button
                             style={{
@@ -3205,8 +3250,8 @@ export const FeedbackOpenTickets = () => {
               </table>
             </div>
           </div>
-        )}
-      </FeedbackticketWarapper>
+        </FeedbackticketWarapper>
+      )}
     </div>
   );
 };
@@ -3227,17 +3272,17 @@ export const FeedbackCloseTickets = () => {
   };
   return (
     <div className="d-flex flex-column">
-      <ProfileNavBar feedback={true}>
+      <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Feedback</span>
         </NavTitle>
       </ProfileNavBar>
-      <FeedbackticketWarapper>
-        {loading ? (
-          <div className="vh-100 w-100">
-            <Spinner />
-          </div>
-        ) : (
+      {loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : (
+        <FeedbackticketWarapper>
           <div className="mt-5">
             <h3>My Closed Tickets</h3>
 
@@ -3276,8 +3321,8 @@ export const FeedbackCloseTickets = () => {
                             {item.status}
                           </button>
                         </td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
+                        <td>{item.createdAt.split(" ")[0]}</td>
+                        <td>{item.modifiedAt.split(" ")[0]}</td>
                         <td>
                           <button
                             style={{
@@ -3302,8 +3347,8 @@ export const FeedbackCloseTickets = () => {
               </Table>
             </div>
           </div>
-        )}
-      </FeedbackticketWarapper>
+        </FeedbackticketWarapper>
+      )}
     </div>
   );
 };
@@ -3340,7 +3385,7 @@ export const paymentAtMaturity = (
         Math.round(
           (principal +
             calculatedInterest -
-            (calculatedInterest * (withholdingTax / 100))) *
+            calculatedInterest * (withholdingTax / 100)) *
             100 +
             Number.EPSILON
         ) / 100;
@@ -3358,7 +3403,7 @@ export const paymentAtMaturity = (
           Math.round(
             (principal +
               interestMonthly -
-              ((withholdingTax / 100) * interestMonthly)) *
+              (withholdingTax / 100) * interestMonthly) *
               100 +
               Number.EPSILON
           ) / 100;
@@ -3373,7 +3418,7 @@ export const paymentAtMaturity = (
           Math.round(
             (principal +
               interestQuaterly -
-              ((withholdingTax / 100) * interestQuaterly)) *
+              (withholdingTax / 100) * interestQuaterly) *
               100 +
               Number.EPSILON
           ) / 100;
@@ -3388,7 +3433,7 @@ export const paymentAtMaturity = (
           Math.round(
             (principal +
               interestBiAnnual -
-              ((withholdingTax / 100) * interestBiAnnual)) *
+              (withholdingTax / 100) * interestBiAnnual) *
               100 +
               Number.EPSILON
           ) / 100;

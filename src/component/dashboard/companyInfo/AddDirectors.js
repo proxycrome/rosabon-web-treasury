@@ -18,6 +18,8 @@ import {
   CLEAR_MESSAGES,
   CLEAR_BVN,
 } from "../../../store/profile/actionTypes";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
   const dispatch = useDispatch();
@@ -72,6 +74,13 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
     setformData({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handlePhoneValueChange = (value) => {
+    setformData({
+      ...formData,
+      phone: value,
     });
   };
 
@@ -140,8 +149,10 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
     }
 
     if (!values.bvn) {
-      errors.bvn = "BVN is required";
+      errors.bvn = "Verified BVN is required";
     }
+
+    
 
     return errors;
   }
@@ -167,8 +178,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
   useEffect(() => {
     if (
       Object.keys(errors).length === 0 &&
-      isSubmitted  &&
-      bvnMessage?.isNameMatched
+      isSubmitted 
     ) {
       const {
         firstName,
@@ -225,7 +235,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
         photoEncodedString: "",
       });
 
-      dispatch({type: CLEAR_BVN})
+      dispatch({ type: CLEAR_BVN });
       removeForm(false);
     }
   }, [errors]);
@@ -277,8 +287,8 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
       ...formData,
       firstName: bvnMessage?.data?.firstName,
       lastName: bvnMessage?.data?.lastName,
-    })
-  }
+    });
+  };
 
   const reset = () => {
     setformData({
@@ -463,7 +473,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                       <span className="text-danger">{errors.middleName}</span>
                     )}
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mb-4">
                     <label>Last Name</label>
                     <div className="input-group">
                       <input
@@ -501,7 +511,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-8 mb-4">
+                  <div className="col-md-7 mb-4">
                     <label>Email Address</label>
                     <div className="input-group">
                       <input
@@ -518,18 +528,26 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                       <span className="text-danger">{errors.email}</span>
                     )}
                   </div>
-                  <div className="col-md-4 mb-4">
+                  <div className="col-md-5 mb-4">
                     <label>Phone Number</label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Phone Number"
-                        id="phone"
+                    <div className="input-group" id="phone">
+                      <PhoneInput
+                        country={"ng"}
+                        inputClass={`form-control phone-input ${
+                          showEdit ? "disable" : ""
+                        }`}
+                        buttonClass={`phone-select-field ${
+                          showEdit ? "disable" : ""
+                        }`}
                         name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
+                        value={formData?.phone}
+                        // countryCodeEditable={false}
                         disabled={showEdit}
+                        onChange={(value) => handlePhoneValueChange(value)}
+                        disableCountryCode={true}
+                        placeholder="Phone Number"
+                        disableDropdown
+                        masks={{ ng: ".... ... ...." }}
                       />
                       <UncontrolledTooltip placement="bottom" target="phone">
                         Please provide the Phone Number tied to the BVN
@@ -825,7 +843,11 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                 )}
                 <div className="row">
                   <div className="col-md-12 d-flex justify-content-center mt-5">
-                    <button type="button" className="btn_bg_blue" onClick={handleFormSubmit}>
+                    <button
+                      type="button"
+                      className="btn_bg_blue"
+                      onClick={handleFormSubmit}
+                    >
                       Add to List of Directors
                     </button>
                   </div>
@@ -951,11 +973,52 @@ const WrapperBody = styled.div`
   .grey_vify_btn {
     margin-top: 35px;
     background: #f2f2f2;
-    color: #111e6c;
+    color: #ccc;
+    cursor: not-allowed;
     border-radius: 8px;
     font-style: normal;
     font-weight: 600;
     font-size: 17px;
     line-height: 21px;
+    &:disabled{
+      color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .phone-select-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: none;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
+  .phone-input {
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
+  }
+
+  .disable {
+    background: rgba(28, 68, 141, 0.09) !important;
+    cursor: not-allowed;
   }
 `;

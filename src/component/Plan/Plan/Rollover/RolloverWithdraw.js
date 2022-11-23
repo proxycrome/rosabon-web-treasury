@@ -22,7 +22,7 @@ const RolloverWithdraw = ({
   const [base64File, setBase64File] = useState({
     corporateUserWithdrawalMandate: "",
   });
-  const [savingFreq, setSavingFreq] = useState(false);
+  // const [savingFreq, setSavingFreq] = useState(false);
   const [formData, setFormData] = useState({
     contributionValue: 0,
     calculatedInterest: 0,
@@ -58,15 +58,14 @@ const RolloverWithdraw = ({
   };
 
   console.log(checkUpload());
-  console.log(savingFreq);
   console.log(isTerms);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isTerms && !savingFreq && checkUpload()) {
+    if (isTerms && checkUpload()) {
       const { corporateUserWithdrawalMandate } = base64File;
       const {
-        contributionValue,
+        // contributionValue,
         calculatedInterest,
         paymentMaturity,
         withholdingTax,
@@ -106,7 +105,7 @@ const RolloverWithdraw = ({
                   bankName: bankDetails?.bank?.name,
                 }
               : null,
-          contributionValue: contributionValue,
+          contributionValue: plan?.contributionValue,
           currency: parseInt(plan?.currency?.id),
           dateCreated: recentDate,
           directDebit: plan?.directDebit,
@@ -171,7 +170,6 @@ const RolloverWithdraw = ({
               setEndDate={setEndDate}
               setFormData={setFormData}
               formData={formData}
-              setSavingsFreq={setSavingFreq}
             />
           </LeftView>
           <RightView>
@@ -182,7 +180,10 @@ const RolloverWithdraw = ({
                   setWithdrawTo={setWithdrawTo}
                   base64File={base64File}
                   setBase64File={setBase64File}
-                  savingFreq={savingFreq}
+                  // savingFreq={savingFreq}
+                  balance={parseFloat(
+                    plan?.planSummary?.principal - parseFloat(amount)
+                  )}
                 />
               </div>
             </div>

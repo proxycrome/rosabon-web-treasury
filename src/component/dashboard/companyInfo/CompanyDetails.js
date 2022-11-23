@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 // import { updateCompanyDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
 // import { getAuthUsers } from "../../../redux/actions/personalInfo/userProfile.actions";
 import { getAuthUsers, updateCompanyDetails } from "../../../store/actions";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -50,6 +52,13 @@ const CompanyDetails = () => {
     setformData({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handlePhoneValueChange = (value) => {
+    setformData({
+      ...formData,
+      phone: value,
     });
   };
 
@@ -374,7 +383,7 @@ const CompanyDetails = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-8 mb-4">
+                  <div className="col-md-6 mb-4">
                     <label>Email Address</label>
                     <div className="input-group">
                       <input
@@ -391,17 +400,28 @@ const CompanyDetails = () => {
                       <span className="text-danger">{errors?.email}</span>
                     )}
                   </div>
-                  <div className="col-md-4 mb-4">
+                  <div className="col-md-6 mb-4">
                     <label>Phone Number</label>
                     <div className="input-group">
-                      <input
-                        className="form-control"
-                        placeholder={users?.phone || "Phone Number"}
-                        type="number"
+                      <PhoneInput
+                        country={"ng"}
+                        inputClass={`form-control phone-input ${
+                          showEditCont ? "disable" : ""
+                        }`}
+                        buttonClass={`phone-select-field ${
+                          showEditCont ? "disable" : ""
+                        }`}
                         name="phone"
-                        defaultValue={formData.phone || users?.phone}
-                        onChange={handleChange}
+                        value={formData.phone}
+                        // countryCodeEditable={false}
                         disabled={showEditCont}
+                        onChange={(value) => handlePhoneValueChange(value)}
+                        disableCountryCode={true}
+                        placeholder={
+                          users?.phone || "Phone Number"
+                        }
+                        disableDropdown
+                        masks={{ ng: ".... ... ...." }}
                       />
                     </div>
                     {errors && errors?.phone && (
@@ -520,12 +540,48 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
   }
+  .phone-select-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: none;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
+  .phone-input {
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
+  }
+
+  .disable {
+    background: rgba(28, 68, 141, 0.09) !important;
+    cursor: not-allowed;
+  }
 `;
 
 const WrapperFooter = styled.div`
   background: #ffffff;
   box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
   padding: 40px 80px;
+  width: 100% !important;
   @media (max-width: 600px) {
     padding: 40px 20px;
   }

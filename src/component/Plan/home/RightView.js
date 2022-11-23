@@ -59,8 +59,8 @@ export const RightView = () => {
 
   return (
     <RightWrapper className="border-end border-light">
-      <div className="naira-card position-relative">
-        <div className="naira-card-content">
+      <div className="naira-card">
+        <div className="naira-card-content position-relative">
           <img
             className="position-absolute eclips-image image-fluid"
             src={halfEllipse}
@@ -72,15 +72,15 @@ export const RightView = () => {
             alt="YelloBackgroud"
           /> */}
           <div className="d-flex align-center justify-content-between ">
-            <p className="p-0 m-0">Total Networth</p>
+            <p className="p-0 m-0 rise">Total Networth</p>
             <div className="sqr-box">
               <p className="p-0 m-0">₦</p>
             </div>
           </div>
-          <h3 className="pt-1 pb-3">₦ {totalnetWorth.toLocaleString()}</h3>
+          <h3 className="pt-1 pb-3 rise">₦ {totalnetWorth.toLocaleString()}</h3>
           <div className="down-button pt-4">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex  align-items-center justify-content-between active-box">
+            <div className="d-flex justify-content-between action-det">
+              <div className="d-flex align-items-center justify-content-between active-box">
                 <div className="sqr-box">
                   <p className="p-0 m-0">
                     {activePlanList.length.toString().padStart(2, "0")}
@@ -95,9 +95,9 @@ export const RightView = () => {
               </Link>
             </div>
           </div>
+          <div className="grey-background"></div>
+          <div className="yellow-background"></div>
         </div>
-        <div className="grey-background"></div>
-        <div className="yellow-background"></div>
       </div>
       <div className="home-body">
         <div className="">
@@ -172,7 +172,7 @@ export const RightView = () => {
                               to={`/create-plan/${product.id}`}
                               onClick={() => handleProduct(product.id)}
                               className="d-flex justify-content-center"
-                              style={{textDecoration: "none"}}
+                              style={{ textDecoration: "none" }}
                             >
                               <button>Create Plan</button>
                             </Link>
@@ -197,9 +197,14 @@ const RightWrapper = styled.div`
     height: 93px;
   }
 
+  .rise {
+    position: sticky;
+    z-index: 10;
+  }
+
   .grey-background {
     position: absolute;
-    bottom: 14px;
+    bottom: -14px;
     right: 1.5%;
     width: 97.3%;
     height: 186px;
@@ -212,7 +217,7 @@ const RightWrapper = styled.div`
   .yellow-background {
     position: absolute;
     right: 6.5%;
-    bottom: 0;
+    bottom: -28px;
     width: 88.7%;
     height: 170px;
     background: #f3a712;
@@ -238,7 +243,7 @@ const RightWrapper = styled.div`
 
   .naira-card-content {
     width: 100% !important;
-    height: 192px;
+    height: auto;
     position: absolute;
     top: 0;
     background: #ffffff;
@@ -260,7 +265,7 @@ const RightWrapper = styled.div`
   }
   .naira-card {
     width: 513px;
-    height: 221px;
+    height: auto;
   }
   .eclips-image {
     top: 0;
@@ -358,5 +363,15 @@ const RightWrapper = styled.div`
   }
   .cat-name {
     text-transform: lowercase;
+  }
+
+  @media (max-width: 400px) {
+    .action-det {
+      flex-direction: column;
+      gap: 10px;
+      button {
+        width: 100%;
+      }
+    }
   }
 `;

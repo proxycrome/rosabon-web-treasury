@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { NavLink, useNavigate } from "react-router-dom";
+import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";  ;
 
 const Footer = ({ position, active, single, double }) => {
   const footerStylin = position === "bank" ? "bank" : "profile";
@@ -10,6 +11,13 @@ const Footer = ({ position, active, single, double }) => {
       <div className={footerStylin}>
         <div className="footer-body">
           <>
+          <div className="rosabonLogo mb-3">
+            <img
+              style={{ width: "70px", height: "30px" }}
+              src={RFSLogoFullColour}
+              alt="RFSLogo"
+            />
+          </div>
             <div className="justify-content-around d-flex align-items-center footer-content">
               <NavLink to="/register-user">
                 <button className="">Register as an Invididual</button>
@@ -31,14 +39,18 @@ const WrapperFooter = styled.div`
   @media (min-width: 900px) {
     display: none;
   }
-  @media (max-width: 400px) {
+  .footer-body{
+    margin: 2rem;
+  }
+  @media (max-width: 450px) {
     .footer-content {
-      display: block !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-top: 20px;
     }
-    .footer-body {
-      padding-left: 25%;
-    }
+    
+
     button {
       margin: 10px 0;
     }
@@ -56,6 +68,7 @@ const WrapperFooter = styled.div`
     box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
   }
   button {
+    width: 200px;
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -65,7 +78,7 @@ const WrapperFooter = styled.div`
     border: 1px solid #ffffff;
     border-radius: 10px;
     margin-right: 20px;
-    background: #f2f2f2;
+    background: #f2f2f2
     color: #828282;
   }
 

@@ -74,7 +74,7 @@ const PlanForm = () => {
     currency: "",
     exchangeRate: "",
     amount: 0.0,
-    targetAmount: null,
+    targetAmount: 0.0,
     tenor: "",
     planDate: recentDate,
     savingFrequency: "",
@@ -82,9 +82,9 @@ const PlanForm = () => {
     monthlyContributionDay: 0,
     interestReceiptOption: "",
     planStatus: "ACTIVE",
-    contributionValue: null,
+    contributionValue: 0.0,
     directDebit: false,
-    interestRate: null,
+    interestRate: 0.0,
     acceptPeriodicContribution: true,
     actualMaturityDate: "",
     autoRollOver: false,
@@ -225,6 +225,8 @@ const PlanForm = () => {
             ? true
             : false,
         interestRate: fetchIntRate(formData.interestReceiptOption),
+        savingFrequency:
+          formData.savingFrequency !== "" ? formData.savingFrequency : null,
       });
     } else {
       setFormData({
@@ -298,7 +300,7 @@ const PlanForm = () => {
           }
           setFormData({
             ...formData,
-            contributionValue: (computedValue * 100 + Number.EPSILON) / 100,
+            contributionValue: (computedValue * 100) / 100,
           });
         } else {
           if (product?.properties?.hasTargetAmount) {
@@ -366,7 +368,7 @@ const PlanForm = () => {
   console.log("valid", validSavingsFreq);
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
-    let interestRate = null;
+    let interestRate;
     let principal = product?.properties?.hasTargetAmount
       ? formData.targetAmount
       : formData.amount;
@@ -454,7 +456,7 @@ const PlanForm = () => {
         return interestRate;
       }
     } else {
-      interestRate = null;
+      interestRate = undefined;
       return interestRate;
     }
   };
@@ -502,18 +504,10 @@ const PlanForm = () => {
     );
 
     const calc_withholding_tax =
-    Math.round(
-      (calculateSI(
-        product?.properties?.hasTargetAmount
-          ? formData.targetAmount
-          : formData.amount,
-        formData.interestRate,
-        checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
-      ) *
-        (withhold_tax[0]?.rate / 100)) *
-        100 +
-        Number.EPSILON
-    ) / 100;
+      Math.round(
+        summary.calculatedInterest * (withhold_tax[0]?.rate / 100) * 100 +
+          Number.EPSILON
+      ) / 100;
 
     // }
     setSummary({
@@ -566,6 +560,7 @@ const PlanForm = () => {
     formData.targetAmount,
     formData.amount,
     formData.actualMaturityDate,
+    summary.calculatedInterest,
   ]);
 
   // side effect Update interest rate and exchange rate
@@ -600,9 +595,9 @@ const PlanForm = () => {
   const updateNumOfTickets = (value) => {
     let ticketNo;
     if (product?.properties?.allowsMonthlyDraw) {
-      if (value === null){
-        return null
-      }else{
+      if (value === null) {
+        return null;
+      } else {
         ticketNo = value / product?.minTransactionLimit;
         return Math.floor(ticketNo);
       }
@@ -890,7 +885,7 @@ const PlanForm = () => {
                         onChange={handleChange}
                         name="currency"
                         required
-                        defaultValue={formData.currency}
+                        value={formData.currency}
                       >
                         <option value="" disabled hidden>
                           Select investment currency
@@ -916,7 +911,7 @@ const PlanForm = () => {
                         }`}
                         name="exchangeRate"
                         placeholder=""
-                        disabled={formData.currency}
+                        disabled
                         type="number"
                         value={formData.exchangeRate}
                         onChange={handleChange}
@@ -1011,11 +1006,13 @@ const PlanForm = () => {
                       <option value="" disabled hidden>
                         Select tenor
                       </option>
-                      {product?.tenors?.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.tenorName}{" "}
-                        </option>
-                      ))}
+                      {product?.tenors
+                        ?.filter((data) => data.tenorStatus === "ACTIVE")
+                        ?.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.tenorName}{" "}
+                          </option>
+                        ))}
                       <option value={0} hidden={!product?.allowCustomization}>
                         Customize Tenor
                       </option>
@@ -1190,12 +1187,10 @@ const PlanForm = () => {
                       </div>
                       {product?.properties?.hasSavingFrequency && (
                         <>
-                          <div
-                            className=" d-flex flex-column align-items-start"
-                          >
+                          <div className=" d-flex flex-column align-items-start">
                             <div className="d-flex align-items-start">
                               <label className="helper-text">
-                                I agree to pay this amount periodically  
+                                I agree to pay this amount periodically
                               </label>
                               <input
                                 type="checkbox"

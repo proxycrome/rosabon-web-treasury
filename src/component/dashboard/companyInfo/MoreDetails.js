@@ -26,6 +26,8 @@ import {
   CLOSE_MODAL,
   CLEAR_MESSAGES,
 } from "../../../store/profile/actionTypes";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const MoreDetails = () => {
   const dispatch = useDispatch();
@@ -118,6 +120,13 @@ const MoreDetails = () => {
     });
   };
 
+  const handlePhoneValueChange = (value) => {
+    setformData({
+      ...formData,
+      phone: value,
+    });
+  };
+
   const updateNames = (firstName, lastName) => {
     setformData({
       ...formData,
@@ -126,7 +135,7 @@ const MoreDetails = () => {
     });
     console.log("tesssssssssst");
     console.log(firstName, lastName);
-  }
+  };
 
   const [editFormData, setEditFormData] = useState({
     [`firstName${col2}`]: "",
@@ -145,6 +154,13 @@ const MoreDetails = () => {
     setEditFormData({
       ...editFormData,
       [name]: value,
+    });
+  };
+
+  const handleEditPhoneValueChange = (value) => {
+    setEditFormData({
+      ...editFormData,
+      [`phone${col2}`]: value,
     });
   };
 
@@ -251,7 +267,7 @@ const MoreDetails = () => {
         },
       };
       console.log(data);
-      dispatch(updateDirectorDetails(data));
+      dispatch(updateDirectorDetails(data, reset, dispatch));
     }
 
     if (directorField?.length > 0) {
@@ -263,7 +279,7 @@ const MoreDetails = () => {
         return { ...others };
       });
       console.log(dirArr);
-      dispatch(updateDirectorDetails(dirArr));
+      dispatch(updateDirectorDetails(dirArr, reset, dispatch));
     } else {
       setErrors(validateform(formData));
       setIsSubmitted(true);
@@ -272,15 +288,11 @@ const MoreDetails = () => {
 
   useEffect(() => {
     let formArr = [];
-    if (
-      Object.keys(errors).length === 0 &&
-      isSubmitted 
-      
-    ) {
-      if(!bvnMessage?.isNameMatched){
-        toast.error("Verify Your BVN")
-        return;
-      }
+    if (Object.keys(errors).length === 0 && isSubmitted) {
+      // if (!bvnMessage?.isNameMatched) {
+      //   toast.error("Verify Your BVN");
+      //   return;
+      // }
       const {
         firstName,
         middleName,
@@ -323,8 +335,7 @@ const MoreDetails = () => {
         return { ...others };
       });
 
-     dispatch(updateDirectorDetails(otherArr, reset));
-      
+      dispatch(updateDirectorDetails(otherArr, reset, dispatch));
     }
   }, [errors]);
 
@@ -429,8 +440,6 @@ const MoreDetails = () => {
     setDirectorField(rem);
   };
 
-  
-
   console.log(formData);
 
   useEffect(() => {
@@ -508,71 +517,73 @@ const MoreDetails = () => {
                             )}
                           </span>
                         </h4>
+                      </div>
+                    </div>
+                    {item.id === col2 ? (
+                      <div className="details-content">
+                        {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
                         <div className="d-flex flex-column align-items-end">
                           <button
                             type="button"
-                            className="red-button"
+                            className="red-button mb-5"
                             onClick={() => setShowModal(true)}
                           >
                             Delete Director
                           </button>
                         </div>
-                      </div>
-                      <ModalComponent
-                        show={showModal}
-                        size={"md"}
-                        handleClose={() => setShowModal(false)}
-                      >
-                        <div>
-                          <Wrapper>
-                            <div className="d-flex justify-content-center align-items-center">
-                              <WrappCongrate>
-                                <div className="container">
-                                  <div className="row">
-                                    <div className="col text-center">
-                                      <div>
-                                        <img
-                                          className="congrate_confet"
-                                          src={Canceled}
-                                          alt="Canceled"
-                                        />
-                                      </div>
-                                      <p className="pt-5">
-                                        This action will delete the selected{" "}
-                                        <br />
-                                        director's details
-                                      </p>
-                                      <div className="pt-5 ">
-                                        <button
-                                          type="button"
-                                          className="btn grey_btn"
-                                          onClick={() => setShowModal(false)}
-                                        >
-                                          Cancel
-                                        </button>
-                                        <button
-                                          type="button"
-                                          className="btn blue_btn"
-                                          onClick={() =>
-                                            handleDeleteDirector(item.id)
-                                          }
-                                        >
-                                          Okay
-                                        </button>
+                        <Collapse isOpen={col2 === item.id}>
+                          <ModalComponent
+                            show={showModal}
+                            size={"md"}
+                            handleClose={() => setShowModal(false)}
+                          >
+                            <div>
+                              <Wrapper>
+                                <div className="d-flex justify-content-center align-items-center">
+                                  <WrappCongrate>
+                                    <div className="container">
+                                      <div className="row">
+                                        <div className="col text-center">
+                                          <div>
+                                            <img
+                                              className="congrate_confet"
+                                              src={Canceled}
+                                              alt="Canceled"
+                                            />
+                                          </div>
+                                          <p className="pt-5">
+                                            This action will delete the selected{" "}
+                                            <br />
+                                            director's details
+                                          </p>
+                                          <div className="pt-5 ">
+                                            <button
+                                              type="button"
+                                              className="btn grey_btn"
+                                              onClick={() =>
+                                                setShowModal(false)
+                                              }
+                                            >
+                                              Cancel
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="btn blue_btn"
+                                              onClick={() =>
+                                                handleDeleteDirector(col2)
+                                              }
+                                            >
+                                              Okay
+                                            </button>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  </WrappCongrate>
                                 </div>
-                              </WrappCongrate>
+                              </Wrapper>
                             </div>
-                          </Wrapper>
-                        </div>
-                      </ModalComponent>
-                    </div>
-                    {item.id === col2 ? (
-                      <div className="details-content">
-                        {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
-                        <Collapse isOpen={col2 === item.id}>
+                          </ModalComponent>
                           <div className="image-holder">
                             <div className="row">
                               <div className="d-flex align-items-center justify-content-between">
@@ -678,7 +689,10 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.firstName || "First Name"}
                                   name={`firstName${col2}`}
-                                  defaultValue={editFormData[`firstName${col2}`] || item?.firstName}
+                                  defaultValue={
+                                    editFormData[`firstName${col2}`] ||
+                                    item?.firstName
+                                  }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -694,13 +708,16 @@ const MoreDetails = () => {
                                     item?.middleName || "Middle Name"
                                   }
                                   name={`middleName${col2}`}
-                                  defaultValue={editFormData[`middleName${col2}`] || item?.middleName}
+                                  defaultValue={
+                                    editFormData[`middleName${col2}`] ||
+                                    item?.middleName
+                                  }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
                               </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4 mb-4">
                               <label>Last Name</label>
                               <div className="input-group">
                                 <input
@@ -708,7 +725,10 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.lastName || "Last Name"}
                                   name={`lastName${col2}`}
-                                  defaultValue={editFormData[`lastName${col2}`] || item?.lastName }
+                                  defaultValue={
+                                    editFormData[`lastName${col2}`] ||
+                                    item?.lastName
+                                  }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -724,7 +744,10 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.address || "Address"}
                                   name={`address${col2}`}
-                                  defaultValue={editFormData[`address${col2}`] || item?.address}
+                                  defaultValue={
+                                    editFormData[`address${col2}`] ||
+                                    item?.address
+                                  }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -732,7 +755,7 @@ const MoreDetails = () => {
                             </div>
                           </div>
                           <div className="row">
-                            <div className="col-md-8 mb-4">
+                            <div className="col-md-7 mb-4">
                               <label>Email Address</label>
                               <div className="input-group">
                                 <input
@@ -740,24 +763,38 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.email || "Email Address"}
                                   name={`email${col2}`}
-                                  defaultValue={editFormData[`email${col2}`] || item?.email}
+                                  defaultValue={
+                                    editFormData[`email${col2}`] || item?.email
+                                  }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
                               </div>
                             </div>
-                            <div className="col-md-4 mb-4">
+                            <div className="col-md-5 mb-4">
                               <label>Phone Number</label>
-                              <div className="input-group">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder={item?.phone || "Phone Number"}
-                                  id="phone"
-                                  name={`phone${col2}`}
-                                  defaultValue={editFormData[`phone${col2}`] || item?.phone}
-                                  onChange={handleEditChange}
+                              <div className="input-group" id="phone">
+                                <PhoneInput
+                                  country={"ng"}
+                                  inputClass={`form-control phone-input ${
+                                    showEdit ? "disable" : ""
+                                  }`}
+                                  buttonClass={`phone-select-field ${
+                                    showEdit ? "disable" : ""
+                                  }`}
+                                  name="phone"
+                                  value={
+                                    editFormData[`phone${col2}`] || item?.phone
+                                  }
+                                  // countryCodeEditable={false}
                                   disabled={showEdit}
+                                  onChange={(value) =>
+                                    handleEditPhoneValueChange(value)
+                                  }
+                                  disableCountryCode={true}
+                                  placeholder={item?.phone || "Phone Number"}
+                                  disableDropdown
+                                  masks={{ ng: ".... ... ...." }}
                                 />
                                 <UncontrolledTooltip
                                   placement="bottom"
@@ -783,7 +820,9 @@ const MoreDetails = () => {
                                         "Bank verification number (BVN)"
                                       }
                                       name={`bvn${col2}`}
-                                      defaultValue={editFormData[`bvn${col2}`] || item?.bvn}
+                                      defaultValue={
+                                        editFormData[`bvn${col2}`] || item?.bvn
+                                      }
                                       onChange={handleEditChange}
                                       disabled={showEdit}
                                     />
@@ -895,7 +934,10 @@ const MoreDetails = () => {
                                   className="form-control"
                                   placeholder={item?.idNumber || "ID Number"}
                                   name={`idNumber${col2}`}
-                                  defaultValue={editFormData[`idNumber${col2}`] || item?.idNumber}
+                                  defaultValue={
+                                    editFormData[`idNumber${col2}`] ||
+                                    item?.idNumber
+                                  }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 />
@@ -1202,7 +1244,7 @@ const MoreDetails = () => {
                               />
                             </div>
                           </div>
-                          <div className="col-md-4">
+                          <div className="col-md-4 mb-4">
                             <label>Last Name</label>
                             <div className="input-group">
                               <input
@@ -1234,7 +1276,7 @@ const MoreDetails = () => {
                           </div>
                         </div>
                         <div className="row">
-                          <div className="col-md-8 ">
+                          <div className="col-md-7 ">
                             <label>Email Address</label>
                             <div className="input-group mb-4">
                               <input
@@ -1248,18 +1290,24 @@ const MoreDetails = () => {
                               />
                             </div>
                           </div>
-                          <div className="col-md-4 ">
+                          <div className="col-md-5 ">
                             <label>Phone Number</label>
-                            <div className="input-group mb-4">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Phone Number"
-                                id="phone"
+                            <div className="input-group mb-4" id="phone">
+                              <PhoneInput
+                                country={"ng"}
+                                inputClass={`form-control phone-input disable`}
+                                buttonClass={`phone-select-field disable `}
                                 name="phone"
                                 value={data?.phone}
-                                onChange={handleChange}
-                                disabled={showEdit}
+                                // countryCodeEditable={false}
+                                disabled
+                                onChange={(value) =>
+                                  handlePhoneValueChange(value)
+                                }
+                                disableCountryCode={true}
+                                placeholder="Phone Number"
+                                disableDropdown
+                                masks={{ ng: ".... ... ...." }}
                               />
                               <UncontrolledTooltip
                                 placement="bottom"
@@ -1287,14 +1335,7 @@ const MoreDetails = () => {
                                   />
                                 </div>
                               </div>
-                              {data.firstName &&
-                              data.lastName &&
-                              data.address &&
-                              data.phone &&
-                              data.email &&
-                              data.bvn &&
-                              !showEdit &&
-                              !bvnMessage?.isNameMatched ? (
+                              {false ? (
                                 <div className="col-4">
                                   <button
                                     type="button"
@@ -1686,7 +1727,7 @@ const MoreDetails = () => {
                           </span>
                         )}
                       </div>
-                      <div className="col-md-4">
+                      <div className="col-md-4 mb-4">
                         <label>Last Name</label>
                         <div className="input-group">
                           <input
@@ -1724,7 +1765,7 @@ const MoreDetails = () => {
                       </div>
                     </div>
                     <div className="row">
-                      <div className="col-md-8 mb-4">
+                      <div className="col-md-7 mb-4">
                         <label>Email Address</label>
                         <div className="input-group">
                           <input
@@ -1741,18 +1782,26 @@ const MoreDetails = () => {
                           <span className="text-danger">{errors.email}</span>
                         )}
                       </div>
-                      <div className="col-md-4 mb-4">
+                      <div className="col-md-5 mb-4">
                         <label>Phone Number</label>
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Phone Number"
-                            id="phone"
+                        <div className="input-group" id="phone">
+                          <PhoneInput
+                            country={"ng"}
+                            inputClass={`form-control phone-input ${
+                              showEdit ? "disable" : ""
+                            }`}
+                            buttonClass={`phone-select-field ${
+                              showEdit ? "disable" : ""
+                            }`}
                             name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
+                            value={formData?.phone}
+                            // countryCodeEditable={false}
                             disabled={showEdit}
+                            onChange={(value) => handlePhoneValueChange(value)}
+                            disableCountryCode={true}
+                            placeholder="Phone Number"
+                            disableDropdown
+                            masks={{ ng: ".... ... ...." }}
                           />
                           <UncontrolledTooltip
                             placement="bottom"
@@ -1839,7 +1888,9 @@ const MoreDetails = () => {
                                   firstName={bvnMessage?.data?.firstName}
                                   lastName={bvnMessage?.data?.lastName}
                                   bvn={formData.bvn}
-                                  confirmName={(firstName, lastName) => updateNames(firstName, lastName)}
+                                  confirmName={(firstName, lastName) =>
+                                    updateNames(firstName, lastName)
+                                  }
                                   director="director"
                                   nameMatch={bvnMessage?.isNameMatched}
                                 />
@@ -2177,7 +2228,7 @@ const MoreDetails = () => {
                                 />
                               </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4 mb-4">
                               <label>Last Name</label>
                               <div className="input-group">
                                 <input
@@ -2209,7 +2260,7 @@ const MoreDetails = () => {
                             </div>
                           </div>
                           <div className="row">
-                            <div className="col-md-8 ">
+                            <div className="col-md-7">
                               <label>Email Address</label>
                               <div className="input-group mb-4">
                                 <input
@@ -2223,18 +2274,24 @@ const MoreDetails = () => {
                                 />
                               </div>
                             </div>
-                            <div className="col-md-4 ">
+                            <div className="col-md-5">
                               <label>Phone Number</label>
-                              <div className="input-group mb-4">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Phone Number"
-                                  id="phone"
+                              <div className="input-group mb-4" id="phone">
+                                <PhoneInput
+                                  country={"ng"}
+                                  inputClass={`form-control phone-input disable`}
+                                  buttonClass={`phone-select-field disable`}
                                   name="phone"
                                   value={data?.phone}
-                                  onChange={handleChange}
-                                  disabled={showEdit}
+                                  // countryCodeEditable={false}
+                                  disabled
+                                  onChange={(value) =>
+                                    handlePhoneValueChange(value)
+                                  }
+                                  disableCountryCode={true}
+                                  placeholder="Phone Number"
+                                  disableDropdown
+                                  masks={{ ng: ".... ... ...." }}
                                 />
                                 <UncontrolledTooltip
                                   placement="bottom"
@@ -2552,9 +2609,22 @@ const MoreDetails = () => {
           <div className="footer-body">
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
-                <button type="submit" className="blue-btn">
+                {!showEdit || directorField?.length > 0 ? (
+                  <button 
+                  type="submit" 
+                  className="blue-btn"
+                >
                   Save
                 </button>
+                ) : (
+                  <button 
+                  type="submit"
+                  className="grey-button"
+                  disabled
+                >
+                  Save
+                </button>
+                )}
               </div>
             </div>
           </div>
@@ -2569,7 +2639,7 @@ export default MoreDetails;
 const WrapperBody = styled.div`
   padding: 0 4rem 7rem 1rem;
   .details-content {
-    padding-top: 70px;
+    padding-top: 20px;
   }
   @media (max-width: 560px) {
     padding: 0 1rem 7rem 1rem;
@@ -2593,9 +2663,7 @@ const WrapperBody = styled.div`
     color: #222222;
     padding-bottom: 45px;
   }
-  .details-content {
-    padding-top: 45px;
-  }
+  
   .grey-button {
     background: #f2f2f2;
     color: #111e6c;
@@ -2680,12 +2748,53 @@ const WrapperBody = styled.div`
   .grey_vify_btn {
     margin-top: 35px;
     background: #f2f2f2;
-    color: #111e6c;
+    color: #ccc;
+    cursor: not-allowed;
     border-radius: 8px;
     font-style: normal;
     font-weight: 600;
     font-size: 17px;
     line-height: 21px;
+    &:disabled {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .phone-select-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: 1px solid #eee !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
+  .phone-input {
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
+  }
+
+  .disable {
+    background: rgba(28, 68, 141, 0.09) !important;
+    cursor: not-allowed;
   }
 `;
 
@@ -2714,6 +2823,9 @@ const WrapperFooter = styled.div`
     outline: none;
     border: none;
     padding: 10px 15px;
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
   .blue-btn {
     color: #f2f2f2;

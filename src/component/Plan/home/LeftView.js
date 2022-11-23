@@ -44,6 +44,9 @@ export const LeftView = ({ view }) => {
     : [];
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
+  const activeProductList = productList?.filter(
+    (item) => item.status === "ACTIVE"
+  );
 
   console.log(users);
 
@@ -97,12 +100,14 @@ export const LeftView = ({ view }) => {
 
   const tenors = useMemo(() => {
     if (productStatus === "OK") {
-      let tenorList = productList.find(
+      let tenorList = activeProductList.find(
         (item) => item.id === data.product
       )?.tenors;
       return tenorList;
     }
   }, [data.product]);
+
+  console.log(tenors);
 
   const handleChange = (e) => {
     if (e.target.name === "amount") {
@@ -143,7 +148,7 @@ export const LeftView = ({ view }) => {
   };
 
   return (
-    <LeftWrapper className="ms-4">
+    <LeftWrapper className="mx-4">
       <div className="calculatoe">
         <div className="interest shadow p-4 my-2">
           <div
@@ -174,7 +179,7 @@ export const LeftView = ({ view }) => {
                       Select Product
                     </option>
                     {productStatus === "OK" &&
-                      productList.map((item) => (
+                      activeProductList.map((item) => (
                         <option key={item.id} value={item.id}>
                           {item.productName}
                         </option>
@@ -212,11 +217,13 @@ export const LeftView = ({ view }) => {
                       Select Tenor
                     </option>
                     {productStatus === "OK" &&
-                      tenors?.map((item) => (
-                        <option key={item.id} value={item.tenorDays}>
-                          {item.tenorName}
-                        </option>
-                      ))}
+                      tenors
+                        ?.filter((data) => data.tenorStatus === "ACTIVE")
+                        ?.map((item) => (
+                          <option key={item.id} value={item.tenorDays}>
+                            {item.tenorName}
+                          </option>
+                        ))}
                   </Input>
                 </div>
               </div>
@@ -281,7 +288,7 @@ export const LeftView = ({ view }) => {
                   </div>
                 ))}
             </div>
-            <a href="#note">
+            <a href="#note" style={{ textDecoration: "none" }}>
               <p
                 className="py-2"
                 onClick={() => setIsView(!isView)}
@@ -359,7 +366,7 @@ const LeftWrapper = styled.div`
   }
   .calculatoe {
     background: rgba(28, 68, 141, 0.02);
-    padding: 20px 40px;
+    padding: 20px 20px;
     .interest {
       background: #ffffff;
       box-shadow: 0px 4px 10px rgba(196, 204, 221, 0.18);

@@ -1,4 +1,7 @@
 import {
+  GET_ALL_GENDER,
+  GET_ALL_GENDER_ERROR,
+  GET_ALL_GENDER_SUCCESS,
   GET_AUTH_USER,
   GET_AUTH_USERS,
   GET_AUTH_USERS_ERROR,
@@ -357,5 +360,25 @@ export const getUserDocsError = (error) => {
 export const toggleSidebar = () => {
   return {
     type: TOGGLE_SIDEBAR,
+  }
+}
+
+export const getAllGender = () => {
+  return {
+    type: GET_ALL_GENDER
+  }
+}
+
+export const getAllGenderSuccess = (data) => {
+  return {
+    type: GET_ALL_GENDER_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getAllGenderError = (error) => {
+  return {
+    type: GET_ALL_GENDER_ERROR,
+    payload: error,
   }
 }

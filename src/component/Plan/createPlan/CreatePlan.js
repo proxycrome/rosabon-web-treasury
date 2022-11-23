@@ -4,66 +4,76 @@ import styled from "styled-components";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { Collapse } from "reactstrap";
 import { Link } from "react-router-dom";
-import { 
-  getCatWithProducts, 
+import {
+  getCatWithProducts,
   getSingleProduct,
-  getInvestmentRates
+  getInvestmentRates,
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
 
 const CreatePlan = () => {
   const [open, setOpen] = useState(false);
 
-  const { catWithProducts, loading } = useSelector((state) => state.product)
-  const productStatus = catWithProducts?.statusCode
-  const products = catWithProducts?.data.body ? catWithProducts?.data.body : []
+  const { catWithProducts, loading } = useSelector((state) => state.product);
+  const productStatus = catWithProducts?.statusCode;
+  const products = catWithProducts?.data.body ? catWithProducts?.data.body : [];
 
   console.log(products);
-
-
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCatWithProducts());
     dispatch(getInvestmentRates());
-  }, [])
+  }, []);
 
   const handleProduct = (id) => {
-    dispatch(getSingleProduct(id))
-  }
+    dispatch(getSingleProduct(id));
+  };
 
   // console.log(open)
   return (
-    <Wrapper>
+    <>
       {loading ? (
-          <div className="vh-100 w-100">
-            <Spinner />
-          </div>
-        ) : 
-        productStatus === "OK" ?
-         products.map((item) => item?.products.length > 0 && (
-          <div className=" pb-5" key={item.productCategoryId} >
-            <div>
-              <div className="d-flex align-items-center justify-content-between savins-drop">
-                <h5>{item.productCategoryName} </h5>
-              </div>
-              <p className="para-header">
-                Choose from a {item.productCategoryName} plan
-              </p>
-            </div>
-            <div className="plan-list">
-              {item.products.filter(data => data.status === "ACTIVE").map((product) => (
-                <div className="choose-plan" key={product.id}>
-                  <div className="d-flex align-items-center " style={{gap:16}}>
-                    <img
-                      className="image-holder"
-                      src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
-                      alt="Product"
-                    />
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : (
+        <Wrapper>
+          {productStatus === "OK" ? (
+            products.map(
+              (item) =>
+                item?.products.length > 0 && (
+                  <div className=" pb-5" key={item.productCategoryId}>
                     <div>
-                      <h5>{product.productName} </h5>
-                      <div>
-                        {/* <p className="p-0 m-0 pb-2">
+                      <div className="d-flex align-items-center justify-content-between savins-drop">
+                        <h5>{item.productCategoryName} </h5>
+                      </div>
+                      <p className="para-header">
+                        Choose from a {item.productCategoryName} plan
+                      </p>
+                    </div>
+                    <div className="plan-list">
+                      {item.products
+                        .filter((data) => data.status === "ACTIVE")
+                        .map((product) => (
+                          <div className="choose-plan" key={product.id}>
+                            <div
+                              className="d-flex align-items-center "
+                              style={{ gap: 16 }}
+                            >
+                              <img
+                                className="image-holder"
+                                src={
+                                  product?.imageUrl?.length > 10
+                                    ? product.imageUrl
+                                    : ChoosePlanHolder
+                                }
+                                alt="Product"
+                              />
+                              <div>
+                                <h5>{product.productName} </h5>
+                                <div>
+                                  {/* <p className="p-0 m-0 pb-2">
                           Lorem Ipsum is simply dummy text of the{" "}
                         </p>
                         <p className="p-0 m-0 pb-2">
@@ -73,25 +83,35 @@ const CreatePlan = () => {
                         <p className="p-0 m-0 pb-2">
                           Lorem Ipsum is simply dummy text of the{" "}
                         </p> */}
-                        {
-                          product.productDescription.split(".").slice(0,3)?.map((item,id) =>(
-                            <p key={id} className="p-0 m-0 pb-2" >{item}. </p>
-                          ))
-                        }
-                      </div>
+                                  {product.productDescription
+                                    .split(".")
+                                    .slice(0, 3)
+                                    ?.map((item, id) => (
+                                      <p key={id} className="p-0 m-0 pb-2">
+                                        {item}.{" "}
+                                      </p>
+                                    ))}
+                                </div>
+                              </div>
+                            </div>
+                            <Link
+                              to={`/create-plan/${product.id}`}
+                              onClick={() => handleProduct(product.id)}
+                            >
+                              <button>Create Plan</button>
+                            </Link>
+                          </div>
+                        ))}
                     </div>
                   </div>
-                  <Link to={`/create-plan/${product.id}`} onClick={()=>handleProduct(product.id)} >
-                    <button>Create Plan</button>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-         ))
-        : (<></>)
-      }
-    </Wrapper>
+                )
+            )
+          ) : (
+            <></>
+          )}
+        </Wrapper>
+      )}
+    </>
   );
 };
 
@@ -103,7 +123,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding-top: 60px;
-  width: 90%;
+  width: 100%;
   padding-left: 30px;
   margin: 0 auto;
   .image-holder {

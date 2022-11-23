@@ -210,8 +210,8 @@ const UserWallet = () => {
         ) : (
           <Wrapper>
             <LeftView>
-              <div className="naira-card position-relative">
-                <div className="naira-card-content">
+              <div className="row naira-card">
+                <div className="naira-card-content position-relative">
                   <img
                     className="position-absolute eclips-image image-fluid"
                     src={halfEllipse}
@@ -221,19 +221,19 @@ const UserWallet = () => {
                   className="position-absolute set-yellow-background image-fluid"
                   src={YelloBackgroud}
                   alt="YelloBackgroud"
-                /> */}
-                  <div className="d-flex align-center justify-content-between ">
+                  /> */}
+                  <div className="d-flex align-center justify-content-between caption">
                     <p className="p-0 m-0">Nuban Account Number</p>
                     <div className="sqr-box">
                       <p className="p-0 m-0">₦</p>
                     </div>
                   </div>
-                  <div>Providus Bank</div>
+                  <div className="caption">Providus Bank</div>
                   <h3 className="pt-1 pb-3 accountDet">
                     {tokenObj?.virtualAccountNo} ({tokenObj?.virtualAccountName}
                     )
                   </h3>
-                  <div className="down-button pt-4 mt-4">
+                  <div className="down-button">
                     <p className="p-0 m-0">Balance</p>
                     <h5>
                       ₦{" "}
@@ -242,13 +242,15 @@ const UserWallet = () => {
                         : 0}
                     </h5>
                   </div>
+                  <div className="grey-background"></div>
+                  <div className="yellow-background"></div>
                 </div>
-                <div className="grey-background"></div>
-                <div className="yellow-background"></div>
+                
               </div>
               {/* </div> */}
-              <div className="py-5">
-                <div className="d-flex justify-content-between align-items-center">
+              <div className="row py-5">
+                <div className="d-flex justify-content-between align-items-center wallet-options">
+                  <a href="#withdraw" style={{textDecoration: "none"}}>
                   <div className="text-center">
                     <div
                       onClick={() => {
@@ -265,7 +267,8 @@ const UserWallet = () => {
                     </div>
                     <p className="pt-3">Withdraw</p>
                   </div>
-
+                  </a>
+                  <a href="#transfer" style={{textDecoration: "none"}}>    
                   <div>
                     <div
                       onClick={() => {
@@ -283,6 +286,7 @@ const UserWallet = () => {
                     </div>
                     <p className="pt-3">Transfer</p>
                   </div>
+                  </a>
                   <div>
                     <NavLink to="/wallet-history">
                       <div className="d-flex box-image justify-content-center align-items-center">
@@ -331,6 +335,7 @@ const UserWallet = () => {
                             withdrawData={(data) => handleFormData(data)}
                             errors={errors}
                             walletBalance={walletBalance}
+                            id="withdraw"
                           />
                         </div>
                       </div>
@@ -344,6 +349,7 @@ const UserWallet = () => {
                             transferData={(data) =>
                               handleTransferFormData(data)
                             }
+                            id="transfer"
                           />
                         </div>
                       </div>
@@ -499,7 +505,7 @@ const LeftView = styled.div`
 
   .grey-background {
     position: absolute;
-    bottom: 14px;
+    bottom: -14px;
     right: 1.5%;
     width: 97.3%;
     height: 186px;
@@ -511,8 +517,8 @@ const LeftView = styled.div`
 
   .naira-card-content {
     width: 100% !important;
-    height: 192px;
-    position: absolute;
+    height: auto;
+    // position: absolute;
     top: 0;
     background: #ffffff;
     box-shadow: 0px 6px 18px rgba(196, 204, 221, 0.25);
@@ -523,7 +529,7 @@ const LeftView = styled.div`
   .yellow-background {
     position: absolute;
     right: 6.5%;
-    bottom: 0;
+    bottom: -28px;
     width: 88.7%;
     height: 170px;
     background: #f3a712;
@@ -537,7 +543,7 @@ const LeftView = styled.div`
     right: -5% !important;
     z-index: -5;
   }
-  @media (max-width: 570px) {
+  @media (max-width: 600px) {
     padding: 20px !important;
     .image-holder {
       display: none;
@@ -545,6 +551,7 @@ const LeftView = styled.div`
     .choose-plan {
       width: 90% !important;
     }
+    
   }
   .choose-plan {
     width: 448px;
@@ -616,19 +623,24 @@ const LeftView = styled.div`
     }
   }
 
+  .caption {
+    position: sticky;
+    z-index: 20;
+  }
+
   .naira-card {
     width: 513px;
-    height: 221px;
+    height: auto;
   }
 
   .eclips-image {
     top: 0;
     right: 0;
-    z-index: 1;
+    z-index: 0;
   }
 
   .accountDet {
-    position: absolute;
+    position: sticky;
     z-index: 20;
   }
 
@@ -662,6 +674,9 @@ const LeftView = styled.div`
     .naira-card {
       width: 100% !important;
       margin: 0 auto;
+    }
+    .wallet-options{
+      flex-direction: column;
     }
   }
 `;

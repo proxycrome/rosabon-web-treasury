@@ -65,6 +65,13 @@ function CompanySignup() {
 
   return (
     <div>
+      <div>
+        <Toaster
+          toastOptions={{
+            className: "bg-danger text-white",
+          }}
+        />
+      </div>
       <Footer />
       <Wrapper>
         <div
@@ -83,13 +90,7 @@ function CompanySignup() {
           >
             <div className="">
               <RightWrapper>
-                <h4>Sign up</h4>
-                <Toaster
-                  toastOptions={{
-                    className: "bg-danger text-white",
-                  }}
-                  position="bottom-center"
-                />
+                <h4 className="container">Sign up</h4>
                 <div className="container">
                   <form autoComplete="off" onSubmit={handleSubmit}>
                     <LoginInput>
@@ -122,7 +123,7 @@ function CompanySignup() {
                             <h3>{errors.contactFirstName}</h3>
                           )}
                         </div>
-                        <div className="col-md-6 ps-2 mb-4">
+                        <div className="col-md-6 mb-4">
                           <label>Contact Person Last name</label>
                           <div className="input-group">
                             <Input
@@ -285,7 +286,9 @@ function CompanySignup() {
                           )}
                         </div>
                         {errors.refferedBy && <h3>{errors.refferedBy}</h3>}
-                        {values.source === "OTHER" && errors.refferedBy && <h3>{errors.refferedBy}</h3>}
+                        {values.source === "OTHER" && errors.refferedBy && (
+                          <h3>{errors.refferedBy}</h3>
+                        )}
                       </div>
                       <div className="">
                         <div className="form-check">
@@ -443,7 +446,7 @@ const RightWrapper = styled.section`
     border-left: 1.5px solid #e0e0e0 !important;
     border-top: 1.5px solid #e0e0e0 !important;
     border-bottom: 1.5px solid #e0e0e0 !important;
-    border-right: none;
+    border-right: 1px solid #eee;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;

@@ -59,8 +59,8 @@ export function ProfileNavBar({ children, view, feedback }) {
   }, [dispatch, navigate]);
 
   return (
-    <WrappeNavBar className={feedback ? "stand" : ""}>
-      <div className={feedback ? "stand shadow-sm pe-4" : "shadow-sm pe-4"}>
+    <WrappeNavBar>
+      <div className="shadow-sm pe-4">
         <div className="profile_nav py-2">
           <div className="page-title mx-3">{children}</div>
           <div className="hamburger mx-5" onClick={handleClick} style={{ cursor: "pointer" }}>
@@ -129,20 +129,12 @@ export function ProfileNavBar({ children, view, feedback }) {
 
 const WrappeNavBar = styled.div`
   width: 100%;
-  position: sticky;
+  // position: sticky;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(98, 134, 154, 0.12);
   text-align: right;
   top: 0;
   z-index: 1000;
-
-  .stand{
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-    background: #ffffff;
-    margin-bottom: 50px;
-  }
 
   .page-title h2 {
     font-size: 20px !important;

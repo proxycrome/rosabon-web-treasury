@@ -25,38 +25,35 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
     dispatch(toggleSidebar());
   };
 
-
   return (
     <WrappSideBarList>
-      <div className={sidebar === true ? "show" : `${styleContent}`} >
+      <div className={sidebar === true ? "show" : `${styleContent}`}>
         <div>
           <div className="text-center">
             <div>
               <div className="px-5 py-3 d-flex justify-content-center">
-                <div className="style-log" onClick={handleClick} style={{ cursor: "pointer" }}>
+                <div
+                  className="style-log"
+                >
                   <img
                     style={{ width: "70px", height: "30px", margin: "0 50px" }}
                     src={RFSLogoFullColour}
                     alt="RFSLogo"
                   />
                 </div>
-
-                {/* <div>
-                  <i className="hamburger fa-solid fa-bars"></i>
-                </div> */}
               </div>
             </div>
 
             <div className="content-list">
               <ul className="pt-5">
-                <NavLink className="nav_link" to="/">
+                <NavLink className="nav_link" to="/" onClick={() => handleClick()}>
                   <li>
                     <i className="fas fa-home"></i>
                     <span>Home</span>
                   </li>
                 </NavLink>
 
-                <NavLink className="nav_link" to="/plan-product">
+                <NavLink className="nav_link" to="/plan-product" onClick={() => handleClick()}>
                   <li>
                     <i className="far fa-file-alt"></i>
                     <span>Create</span>
@@ -66,7 +63,10 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                 <NavLink
                   className="nav_link"
                   to="/plan-list"
-                  onClick={() => setOpenPlan(!openPlan)}
+                  onClick={() => {
+                    setOpenPlan(!openPlan);
+                    handleClick();
+                  }}
                 >
                   <li>
                     <i className="fas fa-file-alt"></i>
@@ -75,20 +75,20 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                 </NavLink>
                 <Collapse isOpen={openPlan}>
                   <ul>
-                    <NavLink className="nav_link" to="/archives">
+                    <NavLink className="nav_link" to="/archives" onClick={() => handleClick()}>
                       <li>
                         <span>Archives</span>
                       </li>
                     </NavLink>
                   </ul>
                 </Collapse>
-                <NavLink className="nav_link" to="/user-wallet">
+                <NavLink className="nav_link" to="/user-wallet" onClick={() => handleClick()}>
                   <li>
                     <i className="fas fa-sticky-note"></i>
                     <span>Wallet</span>
                   </li>
                 </NavLink>
-                <NavLink style={{ textDecoration: "none" }} to="/statement">
+                <NavLink style={{ textDecoration: "none" }} to="/statement" onClick={() => handleClick()}>
                   <li>
                     <i className="fa fa-envelope"></i>
                     <span>Statement</span>
@@ -97,7 +97,10 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                 <NavLink
                   className="nav_link"
                   to="/feedback"
-                  onClick={() => setOpenFeedback(!openFeedback)}
+                  onClick={() => {
+                    setOpenFeedback(!openFeedback);
+                    handleClick();
+                  }}
                 >
                   <li>
                     <i className="fas fa-thumbs-up"></i>
@@ -108,9 +111,12 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                   <ul>
                     <NavLink
                       style={{ textDecoration: "none" }}
-                      className={isTicket ? "nav_" : ""}
+                      className={isTicket ? "nav_link" : ""}
                       to="/feedback-tickets"
-                      onClick={() => setTicket(true)}
+                      onClick={() => {
+                        setTicket(true);
+                        handleClick();
+                      }}
                     >
                       <li>
                         <span>My Tickets</span>
@@ -120,7 +126,10 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                       style={{ textDecoration: "none" }}
                       className={isOpenTicket ? "nav_link" : ""}
                       to="/open-tickets"
-                      onClick={() => setIsOpenTicket(true)}
+                      onClick={() => {
+                        setIsOpenTicket(true);
+                        handleClick();
+                      }}
                     >
                       <li>
                         <span>My Open Tickets</span>
@@ -130,7 +139,10 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                       style={{ textDecoration: "none" }}
                       className={isCloseTicket ? "nav_link" : ""}
                       to="/close-tickets"
-                      onClick={() => setIsCloseTicket(true)}
+                      onClick={() => {
+                        setIsCloseTicket(true);
+                        handleClick();
+                      }}
                     >
                       <li>
                         <span>My Closed Tickets</span>
@@ -138,7 +150,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                     </NavLink>
                   </ul>
                 </Collapse>
-                <NavLink style={{ textDecoration: "none" }} to="/help">
+                <NavLink style={{ textDecoration: "none" }} to="/help" onClick={() => handleClick()}>
                   <li>
                     <i className="fas fa-exclamation-circle"></i>
                     <span>Help</span>
@@ -161,23 +173,23 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
 const WrappSideBarList = styled.div`
   // width: 20%;
   position: fixed;
-  top: o;
+  top: 0;
+  z-index: 1000;  
   // background: #ffffff;
-  z-index: 1000;
   height: 100vh;
   overflow-y: auto;
+  // border: 1px solid #eeeeee;
+
 
   @media (min-width: 0px) and (max-width: 1200px) {
-    
+    border: 1px solid #eeeeee;
     .profile {
       display: none;
       overflow-y: hidden;
     }
     .show {
-      position: sticky;
-    width: 100%;
-    height: calc(100% + 400px);
-      
+      position: sticky !important;
+      width: 100vw !important;
       top: 0;
       left: 0;
       z-index: 1000;
@@ -198,7 +210,6 @@ const WrappSideBarList = styled.div`
     .active {
       li {
         background: linear-gradient(92.71deg, #111e6c -64.5%, #4b5dc6 151.56%);
-        border-radius: 5px;
         border-radius: 5px;
         color: #ffffff !important;
       }
@@ -243,7 +254,6 @@ const WrappSideBarList = styled.div`
   .active {
     li {
       background: linear-gradient(92.71deg, #111e6c -64.5%, #4b5dc6 151.56%);
-      border-radius: 5px;
       border-radius: 5px;
       color: #ffffff !important;
     }

@@ -28,13 +28,14 @@ const Feedback = () => {
     title: false,
     content: false
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [IsWithDraw, setIsWithDraw] = useState(false);
-  const [isTransfer, setIsTransfer] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const [tabs, setTabs] = useState("");
-  const user_details = useSelector((state) => state.user_profile.users);
+  // const [isSubmitted, setIsSubmitted] = useState(false);
+  // const [IsWithDraw, setIsWithDraw] = useState(false);
+  // const [isTransfer, setIsTransfer] = useState(false);
+  // const [isClicked, setIsClicked] = useState(false);
+  // const [tabs, setTabs] = useState("");
+  // const user_details = useSelector((state) => state.user_profile.users);
   const { loading, categories } = useSelector((state) => state.feedback);
+  console.log(categories);
 
   useEffect(() => {
     
@@ -43,17 +44,17 @@ const Feedback = () => {
 
   const [show, setShow] = useState(false);
 
-  const handleClick = (value) => {
-    console.log(value);
-    if (value === "transter") {
-      setIsWithDraw(true);
-      setIsTransfer(false);
-    }
-    if (value === "withdraw") {
-      setIsWithDraw(false);
-      setIsTransfer(true);
-    }
-  };
+  // const handleClick = (value) => {
+  //   console.log(value);
+  //   if (value === "transter") {
+  //     setIsWithDraw(true);
+  //     setIsTransfer(false);
+  //   }
+  //   if (value === "withdraw") {
+  //     setIsWithDraw(false);
+  //     setIsTransfer(true);
+  //   }
+  // };
 
   const handleChange = (e) => {
     if(e.target.name === "categoryId") {
@@ -94,9 +95,13 @@ const Feedback = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await validateForm(feedbackForm);
-    setIsSubmitted(true);
-    if(feedbackForm.title!=="" && feedbackForm.content!=="") {
-     await dispatch(postFeedback(feedbackForm, setShow));
+    const formData = {
+      ...feedbackForm,
+      platform: "TREASURY"
+    }
+    // setIsSubmitted(true);
+    if(feedbackForm.title !== "" && feedbackForm.content !== "") {
+     await dispatch(postFeedback(formData, setShow));
      setFeedbackForm(initialForm);
      setErrors({
       title: false,

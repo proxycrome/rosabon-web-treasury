@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { Toaster } from 'react-hot-toast'
-import { LoginLeftView } from './loginLeftView'
-import styled from 'styled-components'
-import { Link, useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-
-import { loginUser } from '../../store/actions'
+import React, { useState, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import { LoginLeftView } from "./loginLeftView";
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
+import { loginUser } from "../../store/actions";
 import {
   Form,
   FormGroup,
@@ -14,55 +14,55 @@ import {
   FormFeedback,
   InputGroup,
   InputGroupText,
-} from 'reactstrap'
+} from "reactstrap";
 
 const Login = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const auth = useSelector((state) => state.auth)
-  const { login, isLoggedIn, isLoading } = auth
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+  const { login, isLoggedIn, isLoading } = auth;
 
-  const user_profile = useSelector((state) => state.user_profile)
-  const { users } = user_profile
+  const user_profile = useSelector((state) => state.user_profile);
+  const { users } = user_profile;
   const data = {
-    email: '',
-    password: '',
-  }
-  const [passwordShown, setPasswordShown] = useState(false)
-  const [emailError, setError] = useState(false)
-  const [formData, setformData] = useState(data)
+    email: "",
+    password: "",
+  };
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [emailError, setError] = useState(false);
+  const [formData, setformData] = useState(data);
 
   const togglePassword1 = () => {
-    setPasswordShown(!passwordShown)
-  }
+    setPasswordShown(!passwordShown);
+  };
 
   function isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email)
+    return /\S+@\S+\.\S+/.test(email);
   }
 
   const handleChange = (e) => {
-    setError(false)
-    const { name, value } = e.target
+    setError(false);
+    const { name, value } = e.target;
     setformData({
       ...formData,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const handleUserSubmit = (e) => {
-    e.preventDefault()
-    setError(false)
-    const { email, password } = formData
+    e.preventDefault();
+    setError(false);
+    const { email, password } = formData;
     if (!isValidEmail(email)) {
-      return setError(true)
+      return setError(true);
     }
     let data = {
       email,
       password,
-      platformType: 'WEB',
-    }
-    dispatch(loginUser(data, navigate))
-  }
+      platformType: "WEB",
+    };
+    dispatch(loginUser(data, navigate));
+  };
   // useEffect(() => {
   //   if (users && users.kyc && users.role === "COMPANY") {
   //     navigate("/company-profile");
@@ -89,101 +89,123 @@ const Login = () => {
         <LoginLeftView />
       </div>
       <div className="">
+        <Toaster />
         <RightWrapper>
-          <Toaster/>
-          <h4>Login</h4>
-          <div className="container">
-            <Form autoComplete="off" onSubmit={handleUserSubmit}>
-              <FormGroup className="w-100">
-                <Label htmlFor="email" className="card-title fw-bold fs-5 mb-2">
-                  Email Address
-                </Label>
-                <Input
-                  type="email"
-                  name="email"
-                  className="w-100"
-                  bsSize="lg"
-                  onChange={handleChange}
-                  invalid={emailError}
-                />
-                <FormFeedback>Valid Email is Required</FormFeedback>
-              </FormGroup>
-              <FormGroup className="w-100">
-                <Label htmlFor="email" className="card-title fw-bold fs-5 mb-2">
-                  Password
-                </Label>
-                <InputGroup>
+          <div className="rosabonLogo">
+            <img
+              style={{ width: "70px", height: "30px" }}
+              src={RFSLogoFullColour}
+              alt="RFSLogo"
+            />
+          </div>
+          <div>
+            <h4>Login</h4>
+            <div className="container">
+              <Form autoComplete="off" onSubmit={handleUserSubmit}>
+                <FormGroup className="w-100">
+                  <Label
+                    htmlFor="email"
+                    className="card-title fw-bold fs-5 mb-2"
+                  >
+                    Email Address
+                  </Label>
                   <Input
-                    type={passwordShown ? 'text' : 'password'}
+                    type="email"
+                    name="email"
+                    className="w-100"
                     bsSize="lg"
                     onChange={handleChange}
-                    name="password"
-                    value={formData.password}
+                    invalid={emailError}
                   />
-                  <InputGroupText>
-                    <i
-                      onClick={togglePassword1}
-                      style={{ cursor: 'pointer' }}
-                      className={
-                        passwordShown ? 'far fa-eye' : 'far fa-eye-slash'
-                      }
-                    ></i>
-                  </InputGroupText>
-                </InputGroup>
-                <FormFeedback>Password</FormFeedback>
-              </FormGroup>
-              <div className="d-flex justify-content-between align-items-center">
-                <FormGroup check>
-                  <Input type="checkbox" />
-                  <Label check>Stay signed in</Label>
+                  <FormFeedback>Valid Email is Required</FormFeedback>
                 </FormGroup>
-                <span className="card-title">
-                  <Link to="/forgot-password">Forgot Password?</Link>
-                </span>
-              </div>
-              <div className="text-center mt-5">
-                <button
-                  type="submit"
-                  className="btn btn-primary px-5 mb-2"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'LOADING...' : 'Login'}
-                </button>
-                <p>
-                  Don’t have an account?{' '}
-                  <span className="">
-                    <Link to="/register-user">Sign up</Link>
+                <FormGroup className="w-100">
+                  <Label
+                    htmlFor="email"
+                    className="card-title fw-bold fs-5 mb-2"
+                  >
+                    Password
+                  </Label>
+                  <InputGroup>
+                    <Input
+                      type={passwordShown ? "text" : "password"}
+                      bsSize="lg"
+                      onChange={handleChange}
+                      name="password"
+                      value={formData.password}
+                    />
+                    <InputGroupText>
+                      <i
+                        onClick={togglePassword1}
+                        style={{ cursor: "pointer" }}
+                        className={
+                          passwordShown ? "far fa-eye" : "far fa-eye-slash"
+                        }
+                      ></i>
+                    </InputGroupText>
+                  </InputGroup>
+                  <FormFeedback>Password</FormFeedback>
+                </FormGroup>
+                <div className="d-flex justify-content-between align-items-center">
+                  <FormGroup check>
+                    <Input type="checkbox" />
+                    <Label check>Stay signed in</Label>
+                  </FormGroup>
+                  <span className="card-title">
+                    <Link to="/forgot-password">Forgot Password?</Link>
                   </span>
-                </p>
-              </div>
-            </Form>
+                </div>
+                <div className="text-center mt-5">
+                  <button
+                    type="submit"
+                    className="btn btn-primary px-5 mb-2"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "LOADING..." : "Login"}
+                  </button>
+                  <p>
+                    Don’t have an account?{" "}
+                    <span className="">
+                      <Link to="/register-user">Sign up</Link>
+                    </span>
+                  </p>
+                </div>
+              </Form>
+            </div>
           </div>
-          <div className="container"></div>
+          {/* <div className="container"></div> */}
         </RightWrapper>
       </div>
     </WrapperContainer>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
 
 const WrapperContainer = styled.div`
   height: 100vh;
   display: grid;
   @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
+    .rosabonLogo {
+      display: none;
+    }
   }
-`
+`;
 
 const RightWrapper = styled.section`
   background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  row-gap: 3rem;
   padding: 6rem 4rem 4rem 4rem;
-  @media (max-width: 900px) {
+  @media (max-width: 899px) {
     padding: 4rem 3rem;
+    .rosabonLogo{
+      align-self: flstart;
+    }
   }
-  @media (max-width: 500px) {
-    padding: 4rem 1rem;
-  }
+
   input[type="text"],
   input[type="email"],
   input[type="password"] {
@@ -230,4 +252,4 @@ const RightWrapper = styled.section`
     
     color: #828282;
   }
-`
+`;

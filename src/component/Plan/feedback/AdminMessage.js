@@ -33,6 +33,7 @@ const AdminMessage = () => {
       images: [],
       ticketId: parseInt(id),
       title: moment(),
+      platform: "TREASURY"
     };
     await dispatch(postReply(form));
     await dispatch(getReplies(parseInt(id)));

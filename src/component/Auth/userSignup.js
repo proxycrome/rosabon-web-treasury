@@ -100,42 +100,40 @@ function UserSignup() {
           >
             <div className="">
               <RightWrapper>
-                <h4>Sign up</h4>
+                <h4 className="container">Sign up</h4>
                 <div className="container">
                   <form autoComplete="off" onSubmit={handleSubmit}>
                     <LoginInput>
                       <div className="row">
-                        <div className="col-md-12 d-flex align-items-start">
-                          <div className="col-md-6  mb-4">
-                            <label>First Name</label>
-                            <div className="input-group">
-                              <Input
-                                type="text"
-                                className="form-control"
-                                onChange={handleValueChange}
-                                name="firstName"
-                                value={values.firstName}
-                              />
-                            </div>
-                            <div>
-                              {errors.firstName && <h3>{errors.firstName}</h3>}
-                            </div>
+                        <div className="col-md-6  mb-4">
+                          <label>First Name</label>
+                          <div className="input-group">
+                            <Input
+                              type="text"
+                              className="form-control"
+                              onChange={handleValueChange}
+                              name="firstName"
+                              value={values.firstName}
+                            />
                           </div>
-                          <div className="col-md-6 ps-2 mb-4">
-                            <label>Last Name</label>
-                            <div className="input-group">
-                              <Input
-                                type="text"
-                                className="form-control"
-                                // placeholder="Last Name"
-                                onChange={handleValueChange}
-                                name="lastName"
-                                value={values.lastName}
-                              />
-                            </div>
-                            <div>
-                              {errors.lastName && <h3>{errors.lastName}</h3>}
-                            </div>
+                          <div>
+                            {errors.firstName && <h3>{errors.firstName}</h3>}
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-4">
+                          <label>Last Name</label>
+                          <div className="input-group">
+                            <Input
+                              type="text"
+                              className="form-control"
+                              // placeholder="Last Name"
+                              onChange={handleValueChange}
+                              name="lastName"
+                              value={values.lastName}
+                            />
+                          </div>
+                          <div>
+                            {errors.lastName && <h3>{errors.lastName}</h3>}
                           </div>
                         </div>
                       </div>
@@ -439,7 +437,7 @@ const RightWrapper = styled.section`
     border-left: 1.5px solid #e0e0e0 !important;
     border-top: 1.5px solid #e0e0e0 !important;
     border-bottom: 1.5px solid #e0e0e0 !important;
-    border-right: none;
+    border-right: 1px solid #eee;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;

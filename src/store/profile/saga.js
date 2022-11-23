@@ -2,6 +2,7 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects";
 import toast from "react-hot-toast";
 
 import {
+  GET_ALL_GENDER,
   GET_AUTH_USER,
   GET_AUTH_USERS,
   GET_BANKS,
@@ -20,6 +21,8 @@ import {
 } from "./actionTypes";
 
 import {
+  getAllGenderError,
+  getAllGenderSuccess,
   getAuthUserError,
   getAuthUsers,
   getAuthUsersError,
@@ -54,6 +57,7 @@ import {
 } from "./actions";
 
 import {
+  getAllGenderService,
   getAuthUserService,
   getAuthUsersService,
   getBankDetailsService,
@@ -111,13 +115,13 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
       }, 5000);
       pathCred?.navigate(pathCred?.route);
     }
-    if (response && !pathCred){
+    if (response && !pathCred) {
       dispatch(getAuthUsers());
-    }   
+    }
   } catch (error) {
     console.log(error);
     yield put(updateUserKycError(error?.response?.data));
-    if (error?.response?.data?.message){
+    if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message);
     }
   }
@@ -128,7 +132,7 @@ function* verifyBvn({ payload: { formData, id, setComplete } }) {
     const response = yield call(verifyBvnService, formData);
     console.log(response.data);
     yield put(verifyBvnSuccess(response.data));
-    if(response.data && setComplete){
+    if (response.data && setComplete) {
       setComplete(true);
     }
   } catch (error) {
@@ -175,6 +179,9 @@ function* sendOtp() {
     const response = yield call(sendOtpService);
     console.log(response.data);
     yield put(sendOtpSuccess(response.data));
+    if (response?.data?.message) {
+      toast.success(response?.data?.message, { position: "top-right" });
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(sendOtpError(error?.response?.data));
@@ -186,6 +193,9 @@ function* validateOtp({ payload: { otp } }) {
     const response = yield call(validateOtpService, otp);
     console.log(response.data);
     yield put(validateOtpSuccess(response.data));
+    if (response?.data?.message){
+      toast.success(response?.data?.message, { position: "top-right" });
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(validateOtpError(error?.response?.data));
@@ -197,6 +207,9 @@ function* sendCompanyOtp() {
     const response = yield call(sendCompanyOtpService);
     console.log(response.data);
     yield put(sendCompanyOtpSuccess(response.data));
+    if (response?.data?.message){
+      toast.success(response?.data?.message, { position: "top-right" });
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(sendCompanyOtpError(error?.response?.data));
@@ -255,6 +268,17 @@ function* getUserDocs() {
   } catch (error) {
     console.log(error?.response?.data);
     yield put(getUserDocsError(error?.response?.data));
+  }
+}
+
+function* getAllGender() {
+  try {
+    const response = yield call(getAllGenderService);
+    console.log(response.data);
+    yield put(getAllGenderSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getAllGenderError(error?.response?.data));
   }
 }
 
@@ -318,6 +342,10 @@ export function* watchGetUserDocs() {
   yield takeEvery(GET_USER_DOCS, getUserDocs);
 }
 
+export function* watchGetAllGender() {
+  yield takeEvery(GET_ALL_GENDER, getAllGender);
+}
+
 function* ProfileSaga() {
   yield all([
     fork(watchGetAuthUsers),
@@ -335,6 +363,7 @@ function* ProfileSaga() {
     fork(watchGetBankDetails),
     fork(watchGetWithdrawReason),
     fork(watchGetUserDocs),
+    fork(watchGetAllGender),
   ]);
 }
 
