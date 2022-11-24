@@ -105,6 +105,6 @@ export const getAllGenderService = () => {
 
 export const getAllSourcesService = () => {
   const http = new HttpService();
-  const url = `auth/admin/sources`;
+  const url = `auth/admin/sources?status=ACTIVE`;
   return http.getDataWithoutToken(url);
 };

@@ -19,13 +19,13 @@ import { ValidateUserForm, validateUserInfo } from "./validateForm";
 import Footer from "../dashboard/ProfileFooter";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { getAllSources } from "../../store/actions";
 
 function UserSignup() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const { isSignedup, login, isLoggedIn, isLoading } = auth;
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const { isLoading } = auth;
+  const { sources } = useSelector((state) => state.user_profile);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [isUserNewsLetters, setisUserNewsLetters] = useState(false);
@@ -66,11 +66,9 @@ function UserSignup() {
     setPasswordShown2(!passwordShown2);
   };
 
-  // useEffect(() => {
-  //   if (isSignedup) {
-  //     navigate('/congrates', { state: 'success_signup' })
-  //   }
-  // }, [isSignedup])
+  useEffect(() => {
+    dispatch(getAllSources());
+  }, [dispatch]);
 
   return (
     <div>
@@ -158,7 +156,7 @@ function UserSignup() {
                             inputClass="form-control phone-input"
                             buttonClass="select-field"
                             inputProps={{
-                              name: 'phone',
+                              name: "phone",
                               required: true,
                             }}
                             placeholder="+234 801 234 5678"
@@ -235,7 +233,7 @@ function UserSignup() {
                             name="source"
                             defaultValue={values.source}
                           >
-                            <option value=""></option>
+                            <option value="" hidden></option>
                             <option value="ROSABON_SALES">
                               Rosabon sales executive
                             </option>
@@ -248,14 +246,25 @@ function UserSignup() {
                       <div className="referal-link pb-5">
                         <div className="input-group">
                           {values.source === "OTHER" ? (
-                            <Input
-                              type="text"
-                              className="form-control"
-                              placeholder="Source Name"
+                            <select
+                              className="form-select form-select-lg select-user-field"
+                              aria-label=".form-select-lg"
                               onChange={handleValueChange}
-                              name="sourceOthers"
-                              defaultValue={values.sourceOthers}
-                            />
+                              name="sourceOthersId"
+                              defaultValue={values.sourceOthersId}
+                            >
+                              <option value="" hidden>
+                                Select Source Name
+                              </option>
+                              {sources?.map((data) => (
+                                <option key={data.id} value={data.id}>
+                                  {data.name}
+                                </option>
+                              ))}
+                              <option value="NOT_IN_LIST">
+                                Not in the List
+                              </option>
+                            </select>
                           ) : values.source === "ANOTHER_USER" ? (
                             <Input
                               type="text"
@@ -290,6 +299,21 @@ function UserSignup() {
                         </div>
                         {errors.refferedBy && <h3>{errors.refferedBy}</h3>}
                       </div>
+                      {values.source === "OTHER" && values.sourceOthersId === "NOT_IN_LIST" && (
+                        <div className="mb-4">
+                          <div className="input-group">
+                            <Input
+                              type="text"
+                              placeholder="Enter Other Sources"
+                              className="form-control"
+                              onChange={handleValueChange}
+                              name="sourceNotInTheList"
+                              value={values.sourceNotInTheList}
+                            />
+                          </div>
+                          {errors.sourceNotInTheList && <h3>{errors.sourceNotInTheList}</h3>}
+                        </div>
+                      )}
                       <div className="">
                         <div className="form-check">
                           <Input
