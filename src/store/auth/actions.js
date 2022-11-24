@@ -6,6 +6,7 @@ import {
   LOGIN_USER_ERROR,
   LOGIN_USER_SUCCESS,
   LOGOUT_USER,
+  LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
   REFRESH_USER,
   REGISTER_USER,
@@ -68,7 +69,14 @@ export const logout = (navigate) => {
 export const logoutSuccess = () => {
   return {
     type: LOGOUT_USER_SUCCESS,
-    payload: null,
+    // payload: data,
+  };
+};
+
+export const logoutError = (error) => {
+  return {
+    type: LOGOUT_USER_ERROR,
+    payload: error,
   };
 };
 

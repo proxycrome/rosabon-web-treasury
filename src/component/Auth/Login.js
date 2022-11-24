@@ -60,6 +60,7 @@ const Login = () => {
       email,
       password,
       platformType: "WEB",
+      platform: "TREASURY",
     };
     dispatch(loginUser(data, navigate));
   };

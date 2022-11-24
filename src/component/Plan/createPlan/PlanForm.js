@@ -40,18 +40,22 @@ const PlanForm = () => {
   const product = products?.data?.body
     ? products?.data?.body.find((item) => item.id === parseInt(id))
     : {};
-  const ex_rates = exRates?.data.body ? exRates?.data.body : [];
+  const ex_rates = exRates?.data.body
+    ? exRates?.data?.body?.filter((item) => item.status === "ACTIVE")
+    : [];
   const withhold_tax = withholding_tax?.data.body
-    ? withholding_tax?.data.body
+    ? withholding_tax?.data?.body
     : [];
   const inv_rates = investment_rates?.data.body
-    ? investment_rates?.data.body
+    ? investment_rates?.data?.body?.filter((item) => item.status === "ACTIVE")
     : [];
-  const currencies_list = currencies?.data.body ? currencies?.data.body : [];
+  const currencies_list = currencies?.data.body
+    ? currencies?.data?.body?.filter((item) => item.status === "ACTIVE")
+    : [];
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
-  console.log(inv_rates);
+  console.log(ex_rates);
   console.log(product);
   console.log(product.tenors);
 
@@ -890,11 +894,13 @@ const PlanForm = () => {
                         <option value="" disabled hidden>
                           Select investment currency
                         </option>
-                        {product?.currency?.map((item, id) => (
-                          <option key={id} value={item.name}>
-                            {item.name}{" "}
-                          </option>
-                        ))}
+                        {product?.currency
+                          ?.filter((item) => item.status === "ACTIVE")
+                          ?.map((item, id) => (
+                            <option key={id} value={item.name}>
+                              {item.name}{" "}
+                            </option>
+                          ))}
                       </Input>
                     </div>
                   </div>

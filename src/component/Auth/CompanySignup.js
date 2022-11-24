@@ -159,12 +159,17 @@ function CompanySignup() {
                             country={"ng"}
                             inputClass="form-control phone-input"
                             buttonClass="select-field"
-                            name="phone"
+                            inputProps={{
+                              name: "phone",
+                              required: true,
+                            }}
+                            placeholder="+234 801 234 5678"
+                            jumpCursorToEnd={true}
+                            disableCountryCode={false}
                             value={values.phone}
                             countryCodeEditable={false}
                             onChange={(value) => handlePhoneValueChange(value)}
                             disableDropdown
-                            maxLength="10"
                             masks={{ ng: "... ... ...." }}
                           />
                         </div>

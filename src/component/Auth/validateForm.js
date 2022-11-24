@@ -18,7 +18,7 @@ export const ValidateCompanyForm = (
   const [values, setValues] = useState({
     email: "",
     password: "",
-    phone: "",
+    phone: "2348012345678",
     source: "" || sourcer,
     sourceOthers: "" || sourcer === "OTHER" ? referralCode : "",
     contactFirstName: "",
@@ -134,6 +134,10 @@ export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
     errors.phone = "Mobile number is required ";
   }
 
+  if(values.phone === "2348012345678") {
+    errors.phone = "Enter a valid phone number"
+  }
+
   if(values.phone.length > 13){
     errors.phone = "Invalid Phone Number";
   }
@@ -156,7 +160,7 @@ export const ValidateUserForm = (
   const [values, setValues] = useState({
     email: "",
     password: "",
-    phone: "",
+    phone: "2348012345678",
     source: "" || sourcer,
     sourceOthers: "" || sourcer === "OTHER" ? referralCode : "",
     firstName: "",
@@ -223,7 +227,6 @@ export const ValidateUserForm = (
         usage: "TREASURY",
         refferedBy: refferedBy ? refferedBy : referralCode,
       };
-      
       dispatch(registerUser(data, navigate));
     }
   }, [errors]);
@@ -272,6 +275,10 @@ export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
   }
   if (!values.phone) {
     errors.phone = "Mobile number is required ";
+  }
+
+  if(values.phone === "2348012345678") {
+    errors.phone = "Enter a valid phone number"
   }
 
   if(values.phone.length > 13){

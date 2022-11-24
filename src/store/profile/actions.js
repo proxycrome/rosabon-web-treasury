@@ -2,6 +2,9 @@ import {
   GET_ALL_GENDER,
   GET_ALL_GENDER_ERROR,
   GET_ALL_GENDER_SUCCESS,
+  GET_ALL_SOURCES,
+  GET_ALL_SOURCES_ERROR,
+  GET_ALL_SOURCES_SUCCESS,
   GET_AUTH_USER,
   GET_AUTH_USERS,
   GET_AUTH_USERS_ERROR,
@@ -205,7 +208,7 @@ export const sendOtp = () => {
 export const sendOtpSuccess = (data) => {
   return {
     type: SEND_OTP_SUCCESS,
-    paylaod: data,
+    payload: data,
   };
 };
 
@@ -379,6 +382,26 @@ export const getAllGenderSuccess = (data) => {
 export const getAllGenderError = (error) => {
   return {
     type: GET_ALL_GENDER_ERROR,
+    payload: error,
+  }
+}
+
+export const getAllSources = () => {
+  return {
+    type: GET_ALL_SOURCES,
+  }
+}
+
+export const getAllSourcesSuccess = (data) => {
+  return {
+    type: GET_ALL_SOURCES_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getAllSourcesError = (error) => {
+  return {
+    type: GET_ALL_SOURCES_ERROR,
     payload: error,
   }
 }

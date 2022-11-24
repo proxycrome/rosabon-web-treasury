@@ -7,6 +7,9 @@ import {
   GET_ALL_GENDER,
   GET_ALL_GENDER_ERROR,
   GET_ALL_GENDER_SUCCESS,
+  GET_ALL_SOURCES,
+  GET_ALL_SOURCES_ERROR,
+  GET_ALL_SOURCES_SUCCESS,
   GET_AUTH_USER,
   GET_AUTH_USERS,
   GET_AUTH_USERS_ERROR,
@@ -93,6 +96,8 @@ const initialState = {
   sidebar: false,
   gender: null,
   genderError: null,
+  sources: null,
+  sourcesError: null,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -563,6 +568,33 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         gender: null,
         genderError: action.payload,
+      };
+      break;
+
+    case GET_ALL_SOURCES:
+      state = {
+        ...state,
+        loading: true,
+        sources: null,
+        sourcesError: null,
+      };
+      break;
+
+    case GET_ALL_SOURCES_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        sources: action.payload,
+        sourcesError: null,
+      };
+      break;
+
+    case GET_ALL_SOURCES_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        sources: null,
+        sourcesError: action.payload,
       };
       break;
 

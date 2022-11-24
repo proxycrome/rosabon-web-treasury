@@ -151,11 +151,11 @@ const Rollover = () => {
       return;
     } else if (amount > plan?.planSummary?.principal) {
       setCheckMinAmount(false);
-      setCheckMaxAmount(true)
+      setCheckMaxAmount(true);
       return;
     } else {
       setCheckMinAmount(false);
-      setCheckMaxAmount(false)
+      setCheckMaxAmount(false);
       setIsClicked(true);
     }
   };
@@ -360,11 +360,13 @@ const Rollover = () => {
                           <option value="" hidden disabled>
                             Select a new Tenor
                           </option>
-                          {productTenors?.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.tenorName}
-                            </option>
-                          ))}
+                          {productTenors
+                            ?.filter((data) => data.tenorStatus === "ACTIVE")
+                            ?.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.tenorName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>

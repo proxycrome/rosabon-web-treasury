@@ -16,6 +16,7 @@ import {
   forgotPasswordSuccess,
   loginUserError,
   loginUserSuccess,
+  logoutError,
   logoutSuccess,
   registerUserError,
   registerUserSuccess,
@@ -26,6 +27,7 @@ import {
 import {
   forgotPasswordService,
   loginService,
+  logoutService,
   registerService,
   resetPasswordService,
 } from "../../services/authServices";
@@ -64,12 +66,23 @@ function* loginUser({ payload: { formData, navigate } }) {
 }
 
 function* logoutUser({ payload: { navigate } }) {
-  try {
-    localStorage.clear();
-    yield put(logoutSuccess());
-    navigate("/login");
+  try {  
+    const response = yield call(logoutService)
+    yield put(logoutSuccess(response.data));
+    if (response){
+      localStorage.clear();
+      navigate("/login");
+      toast.success(response.data.message, {position: "top-right"})
+    } 
   } catch (error) {
     console.log(error);
+    console.log(error?.response);
+    yield put(logoutError(error?.response?.data?.message));
+    if (error?.response?.data?.message) {
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+      });
+    }
   }
 }
 
