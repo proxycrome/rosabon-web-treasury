@@ -25,6 +25,8 @@ const Withdrawal = () => {
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const planStatus = singlePlan?.data?.statusCode;
 
+  console.log(withdrawReasons);
+
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
@@ -224,11 +226,13 @@ const Withdrawal = () => {
                           <option value="" hidden>
                             Select Reason for Withdrawal
                           </option>
-                          {withdrawReasons?.data?.body?.map((item) => (
-                            <option key={item.id} value={item.reason}>
-                              {item.reason}
-                            </option>
-                          ))}
+                          {withdrawReasons?.data?.body
+                            ?.filter((data) => data.status === "ACTIVE")
+                            ?.map((item) => (
+                              <option key={item.id} value={item.reason}>
+                                {item.reason}
+                              </option>
+                            ))}
                           <option>Others</option>
                         </select>
                       </div>

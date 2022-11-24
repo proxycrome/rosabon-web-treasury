@@ -1747,11 +1747,13 @@ export const AvailableBalance = ({
               onChange={handleChange}
             >
               <option value="">Please select reason for withdrawal</option>
-              {withdrawReasons?.map((data) => (
-                <option key={data.id} value={`${data.id}`}>
-                  {data.reason}
-                </option>
-              ))}
+              {withdrawReasons
+                ?.filter((item) => item.status === "ACTIVE")
+                ?.map((data) => (
+                  <option key={data.id} value={`${data.id}`}>
+                    {data.reason}
+                  </option>
+                ))}
               <option value="others">Others</option>
             </select>
           </div>
