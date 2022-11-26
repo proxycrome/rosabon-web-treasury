@@ -94,22 +94,18 @@ const PersonalKYC = () => {
       isAssited: user_details && user_details.assited,
       isNewsLetters: user_details && user_details.newsLetters,
       isKyc: true,
-      phone: phone ? phone : user_details && user_details?.phone,
+      phone: phone ? phone.trim() : user_details?.phone,
       role: "INDIVIDUAL_USER",
-      status: user_details && user_details?.status,
       usage: "TREASURY",
-      source: user_details?.source,
-      sourceOthers: user_details?.sourceOthers,
-      email: email ? email : user_details && user_details?.email,
       individualUser: {
-        bvn: bvn ? bvn : user_details.individualUser.bvn,
+        bvn: bvn ? bvn.trim() : user_details.individualUser.bvn,
         contactAddress: {
-          city: city ? city : user_details?.individualUser?.address?.city,
+          city: city ? city.trim() : user_details?.individualUser?.address?.city,
           country: country
             ? country
             : user_details?.individualUser?.address?.country,
           houseNoAddress: houseNoAddress
-            ? houseNoAddress
+            ? houseNoAddress.trim()
             : user_details?.individualUser?.address.houseNoAddress,
           state: state ? state : user_details?.individualUser?.address?.state,
         },
@@ -118,12 +114,8 @@ const PersonalKYC = () => {
           ? String(moment(dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY"))
           : user_details?.individualUser?.dateOfBirth,
         genderId: gender ? Number(gender) : user_details?.individualUser?.gender?.id,
-        firstName: firstName
-          ? firstName
-          : user_details?.individualUser?.firstName,
-        lastName: lastName ? lastName : user_details?.individualUser?.lastName,
         middleName: middleName
-          ? middleName
+          ? middleName.trim()
           : user_details?.individualUser?.middleName,
       },
     };
@@ -134,7 +126,7 @@ const PersonalKYC = () => {
     };
     console.log(data);
     // console.log(tokenString);
-    dispatch(updateUserKyc(data, pathCred));
+    dispatch(updateUserKyc(data, pathCred, dispatch));
   };
 
   const handleVerifyBVN = (e) => {
@@ -218,7 +210,7 @@ const PersonalKYC = () => {
                                   "Enter first name"
                                 }
                                 name="firstName"
-                                defaultValue={
+                                value={
                                   user_details?.individualUser?.firstName
                                 }
                                 onChange={handleChange}
@@ -256,7 +248,7 @@ const PersonalKYC = () => {
                                   "Enter last name"
                                 }
                                 name="lastName"
-                                defaultValue={
+                                value={
                                   user_details?.individualUser?.lastName
                                 }
                                 onChange={handleChange}

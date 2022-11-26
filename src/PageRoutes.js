@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, HashRouter } from "react-router-dom";
 // import ProfileUpdate from "./component/dashboard/ProfileUpdate";
-import ProtectedRoute, { NotProtectedRoute } from "./ProtectecRoute";
+import ProtectedRoute, { KYCRoute, NotProtectedRoute } from "./ProtectecRoute";
 import ForgotPassword from "./component/Auth/ForgotPassword";
 import Congratulatios from "./component/Auth/Congratulatios";
 import ResetPassword from "./component/Auth/ResetPassword";
@@ -43,8 +43,8 @@ import {
 } from "./component/Plan/Accesssories";
 import DebitCardCallback from "./component/Accessories/DebitCardCallback";
 
-function PageRoutes({ login, isAuth }) {
-	console.log(isAuth);
+function PageRoutes({ login, isAuth, user }) {
+	// console.log(isAuth);
 	return (
 		// <HashRouter>
 		<Routes>
@@ -52,7 +52,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/payment/callback"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<DebitCardCallback />
 					</ProtectedRoute>
 				}
@@ -62,7 +62,7 @@ function PageRoutes({ login, isAuth }) {
 				exact
 				path="/"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<HomeView />
 						</PlanHome>
@@ -72,7 +72,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/plan-product"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<PlanProduct />
 						</PlanHome>
@@ -82,7 +82,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/plan-list"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<ListPlans />
 						</PlanHome>
@@ -92,7 +92,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/plan-topup/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<TopupPlan />
 						</PlanHome>
@@ -102,7 +102,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/plan-payment"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<PlanPayment />
 						</PlanHome>
@@ -112,7 +112,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/create-plan/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<PlanForm />
 						</PlanHome>
@@ -122,7 +122,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/rollover/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<PlanRollover />
 						</PlanHome>
@@ -132,7 +132,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/transfer/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<Transfer />
 						</PlanHome>
@@ -142,7 +142,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/pay-with-card/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<PayWithCard />
 						</PlanHome>
@@ -152,7 +152,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/withdrawal/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<Withdrawal />
 						</PlanHome>
@@ -162,7 +162,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/history/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<Transactions />
 						</PlanHome>
@@ -172,7 +172,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/archives"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<Archives />
 						</PlanHome>
@@ -182,7 +182,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/user-wallet"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<UserWallet />
 						</PlanHome>
@@ -192,7 +192,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/wallet-history"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<HistoryTable />
 						</PlanHome>
@@ -202,7 +202,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/referral-table"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<ReferalTable />
 						</PlanHome>
@@ -212,7 +212,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/referral-table/bonus"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<ReferralBonus />
 						</PlanHome>
@@ -222,7 +222,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/deposit-table"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<TransferDeposit />
 						</PlanHome>
@@ -232,7 +232,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/special-earnings"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<SpecialEarnings />
 						</PlanHome>
@@ -242,7 +242,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/feedback"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<Feedback />
 						</PlanHome>
@@ -252,7 +252,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/feedback-tickets"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<FeedbackTickets />
 						</PlanHome>
@@ -262,7 +262,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/open-tickets"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<FeedbackOpenTickets />
 						</PlanHome>
@@ -272,7 +272,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/close-tickets"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<FeedbackCloseTickets />
 						</PlanHome>
@@ -282,7 +282,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/admin-message/:id"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<AdminMessage />
 						</PlanHome>
@@ -292,7 +292,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/help"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<Help />
 						</PlanHome>
@@ -302,7 +302,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/statement"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome>
 							<Statement />
 						</PlanHome>
@@ -312,9 +312,9 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/kyc"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<KYCRoute isAuth={isAuth} user={user} login={login}>
 						<KYC />
-					</ProtectedRoute>
+					</KYCRoute>
 				}>
 				<Route path="" element={<GeneralKYC />} />
 			</Route>
@@ -322,7 +322,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/profile"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<Profile />
 					</ProtectedRoute>
 				}
@@ -330,7 +330,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/plan-details-form"
 				element={
-					<ProtectedRoute isAuth={isAuth}>
+					<ProtectedRoute isAuth={isAuth} user={user}>
 						<PlanHome details="details" />
 					</ProtectedRoute>
 				}
@@ -338,7 +338,7 @@ function PageRoutes({ login, isAuth }) {
 			<Route
 				path="/login"
 				element={
-					<NotProtectedRoute isAuth={isAuth}>
+					<NotProtectedRoute isAuth={isAuth} login={login}>
 						<Login />
 					</NotProtectedRoute>
 				}

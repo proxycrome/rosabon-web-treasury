@@ -31,16 +31,18 @@ import {
   registerService,
   resetPasswordService,
 } from "../../services/authServices";
+import { getAuthUsers } from "../actions";
 
 //If user is login then dispatch redux action's are directly from here.
-function* loginUser({ payload: { formData, navigate } }) {
+function* loginUser({ payload: { formData, navigate, dispatch } }) {
   try {
     const response = yield call(loginService, formData);
 
     yield put(loginUserSuccess(response.data));
     if (response.data) {
       toast.success("Login was successful");
-      if (response.data.kyc) {
+      dispatch(getAuthUsers());
+      if (response.data.kyc === true) {
         navigate("/");
       } else {
         navigate("/kyc");

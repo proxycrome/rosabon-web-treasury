@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import styled from "styled-components";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { RightView } from "./RightView";
@@ -23,14 +23,11 @@ function HomeView() {
     setSendView(data);
   }
 
-  useEffect(() => {
-    if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/kyc");
-    }
-    if (users && !users.kyc && users.role === "COMPANY") {
-      navigate("/kyc");
-    }
-  }, [users]);
+  // useEffect(() => {
+  //   if (login && !login.kyc) {
+  //     navigate("/kyc");
+  //   }
+  // }, [login]);
 
   return (
     <div>

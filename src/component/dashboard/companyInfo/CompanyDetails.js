@@ -546,7 +546,7 @@ const WrapperBody = styled.div`
     border-left: 1.5px solid #e0e0e0 !important;
     border-top: 1.5px solid #e0e0e0 !important;
     border-bottom: 1.5px solid #e0e0e0 !important;
-    border-right: none;
+    border-right: 1px solid #eee;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;

@@ -44,7 +44,7 @@ const CreatePlan = () => {
               (item) =>
                 item?.products.length > 0 && (
                   <div className=" pb-5" key={item.productCategoryId}>
-                    <div>
+                    <div className="">
                       <div className="d-flex align-items-center justify-content-between savins-drop">
                         <h5>{item.productCategoryName} </h5>
                       </div>
@@ -120,19 +120,19 @@ export default CreatePlan;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   justify-content: center;
   padding-top: 60px;
   width: 100%;
-  padding-left: 30px;
+  padding-left: 60px;
   margin: 0 auto;
   .image-holder {
     width: 95px;
     height: 93px;
   }
   @media (max-width: 1200px) {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 60px;
+    padding-top: 60px;
   }
   @media (max-width: 970px) and (min-width: 800px) {
     .image-holder {

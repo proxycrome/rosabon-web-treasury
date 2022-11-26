@@ -18,7 +18,7 @@ export const ValidateCompanyForm = (
   const [values, setValues] = useState({
     email: "",
     password: "",
-    phone: "2348012345678",
+    phone: "",
     source: "" || sourcer,
     sourceOthersId: "",
     sourceNotInTheList: "",
@@ -84,13 +84,13 @@ export const ValidateCompanyForm = (
         sourceNotInTheList,
       } = values;
       let company = {
-        contactFirstName,
-        contactLastName,
-        name,
+        contactFirstName: contactFirstName.trim(),
+        contactLastName: contactLastName.trim(),
+        name: name.trim(),
       };
       let data = {
         company,
-        email,
+        email: email.trim(),
         isAssited: false,
         isNewsLetters: isCompanyNewsLetters,
         password,
@@ -106,9 +106,9 @@ export const ValidateCompanyForm = (
             ? null
             : Number(sourceOthersId),
         sourceNotInTheList:
-          sourceOthersId === "NOT_IN_LIST" ? sourceNotInTheList : null,
+          sourceOthersId === "NOT_IN_LIST" ? sourceNotInTheList.trim() : null,
         usage: "TREASURY",
-        refferedBy: refferedBy ? refferedBy : referralCode,
+        refferedBy: refferedBy ? refferedBy.trim() : referralCode,
       };
       dispatch(registerUser(data, navigate));
     }
@@ -166,12 +166,12 @@ export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
     errors.phone = "Mobile number is required ";
   }
 
-  if (values.phone === "2348012345678") {
+  if (values.phone === "234" || values.phone.startsWith("2340")) {
     errors.phone = "Enter a valid phone number";
   }
 
-  if (values.phone.length > 13) {
-    errors.phone = "Invalid Phone Number";
+  if (values.phone.length < 13) {
+    errors.phone = "Enter a valid phone number";
   }
 
   if (!isCompanyTerms) {
@@ -192,7 +192,7 @@ export const ValidateUserForm = (
   const [values, setValues] = useState({
     email: "",
     password: "",
-    phone: "2348012345678",
+    phone: "",
     source: "" || sourcer,
     sourceOthersId: "",
     sourceNotInTheList: "",
@@ -256,12 +256,12 @@ export const ValidateUserForm = (
         sourceNotInTheList,
       } = values;
       let individualUser = {
-        firstName,
-        lastName,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
       };
       let data = {
         individualUser,
-        email,
+        email: email.trim(),
         isAssited: false,
         isNewsLetters: isUserNewsLetters,
         password,
@@ -277,9 +277,9 @@ export const ValidateUserForm = (
             ? null
             : Number(sourceOthersId),
         sourceNotInTheList:
-          sourceOthersId === "NOT_IN_LIST" ? sourceNotInTheList : null,
+          sourceOthersId === "NOT_IN_LIST" ? sourceNotInTheList.trim() : null,
         usage: "TREASURY",
-        refferedBy: refferedBy ? refferedBy : referralCode,
+        refferedBy: refferedBy ? refferedBy.trim() : referralCode,
       };
       dispatch(registerUser(data, navigate));
     }
@@ -335,12 +335,12 @@ export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
     errors.phone = "Mobile number is required ";
   }
 
-  if (values.phone === "2348012345678") {
+  if (values.phone === "234" || values.phone.startsWith("2340")) {
     errors.phone = "Enter a valid phone number";
   }
 
-  if (values.phone.length > 13) {
-    errors.phone = "Invalid Phone Number";
+  if (values.phone.length < 13) {
+    errors.phone = "Enter a valid phone number";
   }
 
   if (!isUserTerms) {
@@ -349,7 +349,7 @@ export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
   return errors;
 }
 
-export const ValidatePasswordForm = (validatePassword, email, token) => {
+export const ValidatePasswordForm = (validatePassword, email) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [values, setValues] = useState({

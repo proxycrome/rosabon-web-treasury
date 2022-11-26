@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  FormFeedback,
-  InputGroup,
-  InputGroupText,
-} from "reactstrap";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Input, InputGroup, InputGroupText, Tooltip } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { Link, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { SignupLeftView } from "./loginLeftView";
 import Footer from "../dashboard/ProfileFooter";
 import { ValidateCompanyForm, validateInfo } from "./validateForm";
@@ -23,17 +14,20 @@ import { getAllSources } from "../../store/actions";
 function CompanySignup() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const {isLoading } = auth;
+  const { isLoading } = auth;
   const { sources } = useSelector((state) => state.user_profile);
-
+  const [open, setOpen] = useState(false);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false);
   const [isCompanyTerms, setIsCompanyTerms] = useState(false);
 
-  const referral = JSON.parse(localStorage.getItem("referral"));
+  const location = useLocation();
 
-  const { referralCode, sourcer } = referral;
+  const query = new URLSearchParams(location?.search);
+
+  const referralCode = query.get("referralCode");
+  const sourcer = query.get("source");
 
   const {
     handleValueChange,
@@ -48,6 +42,10 @@ function CompanySignup() {
     referralCode,
     sourcer
   );
+
+  const toggle = () => {
+    setOpen(!open);
+  };
 
   const togglePassword1 = () => {
     setPasswordShown1(!passwordShown1);
@@ -69,7 +67,7 @@ function CompanySignup() {
           }}
         />
       </div>
-      <Footer />
+      <Footer source={sourcer} referralCode={referralCode} />
       <Wrapper>
         <div
           style={{
@@ -79,7 +77,7 @@ function CompanySignup() {
           className="content"
         >
           <div className="login-left-view">
-            <SignupLeftView />
+            <SignupLeftView source={sourcer} referralCode={referralCode} />
           </div>
           <div
             style={{ overflowY: "auto", gridTemplateColumns: "auto" }}
@@ -159,6 +157,7 @@ function CompanySignup() {
                             inputProps={{
                               name: "phone",
                               required: true,
+                              id: "phone",
                             }}
                             placeholder="+234 801 234 5678"
                             jumpCursorToEnd={true}
@@ -172,6 +171,16 @@ function CompanySignup() {
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
+                      <Tooltip
+                        placement="bottom-end"
+                        target="phone"
+                        isOpen={open}
+                        toggle={toggle}
+                        autohide={false}
+                      >
+                        Enter your Mobile Number without the first "0" (e.g 801
+                        234 5678)
+                      </Tooltip>
                       <div className="mb-4 input_password">
                         <label>Password</label>
                         <div className="input-group">
@@ -227,20 +236,37 @@ function CompanySignup() {
                       <div className="mb-4">
                         <div className="">
                           <label>How did you hear about us?</label>
-                          <select
-                            className="form-select form-select-lg select-user-field"
-                            aria-label=".form-select-md"
-                            onChange={handleValueChange}
-                            name="source"
-                            defaultValue={values.source}
-                          >
-                            <option value="" hidden></option>
-                            <option value="ROSABON_SALES">
-                              Rosabon sales executive
-                            </option>
-                            <option value="ANOTHER_USER">Another user</option>
-                            <option value="OTHER">Others</option>
-                          </select>
+                          {sourcer ? (
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                className="form-control"
+                                onChange={handleValueChange}
+                                name="source"
+                                defaultValue={
+                                  values.source === "ANOTHER_USER"
+                                    ? "Another user"
+                                    : "Rosabon sales executive"
+                                }
+                                disabled={sourcer}
+                              />
+                            </div>
+                          ) : (
+                            <select
+                              className="form-select form-select-lg select-user-field"
+                              aria-label=".form-select-lg"
+                              onChange={handleValueChange}
+                              name="source"
+                              defaultValue={values.source}
+                            >
+                              <option value="" hidden></option>
+                              <option value="ROSABON_SALES">
+                                Rosabon sales executive
+                              </option>
+                              <option value="ANOTHER_USER">Another user</option>
+                              <option value="OTHER">Others</option>
+                            </select>
+                          )}
                         </div>
                         {errors.source && <h3>{errors.source}</h3>}
                       </div>
@@ -248,24 +274,24 @@ function CompanySignup() {
                         <div className="input-group">
                           {values.source === "OTHER" ? (
                             <select
-                            className="form-select form-select-lg select-user-field"
-                            aria-label=".form-select-lg"
-                            onChange={handleValueChange}
-                            name="sourceOthersId"
-                            defaultValue={values.sourceOthersId}
-                          >
-                            <option value="" hidden>
-                              Select Source Name
-                            </option>
-                            {sources?.map((data) => (
-                              <option key={data.id} value={data.id}>
-                                {data.name}
+                              className="form-select form-select-lg select-user-field"
+                              aria-label=".form-select-lg"
+                              onChange={handleValueChange}
+                              name="sourceOthersId"
+                              defaultValue={values.sourceOthersId}
+                            >
+                              <option value="" hidden>
+                                Select Source Name
                               </option>
-                            ))}
-                            <option value="NOT_IN_LIST">
-                              Not in the List
-                            </option>
-                          </select>
+                              {sources?.map((data) => (
+                                <option key={data.id} value={data.id}>
+                                  {data.name}
+                                </option>
+                              ))}
+                              <option value="NOT_IN_LIST">
+                                Not in the List
+                              </option>
+                            </select>
                           ) : values.source === "ANOTHER_USER" ? (
                             <Input
                               type="text"
@@ -300,21 +326,24 @@ function CompanySignup() {
                         </div>
                         {errors.refferedBy && <h3>{errors.refferedBy}</h3>}
                       </div>
-                      {values.source === "OTHER" && values.sourceOthersId === "NOT_IN_LIST" && (
-                        <div className="mb-4">
-                          <div className="input-group">
-                            <Input
-                              type="text"
-                              placeholder="Enter Other Sources"
-                              className="form-control"
-                              onChange={handleValueChange}
-                              name="sourceNotInTheList"
-                              value={values.sourceNotInTheList}
-                            />
+                      {values.source === "OTHER" &&
+                        values.sourceOthersId === "NOT_IN_LIST" && (
+                          <div className="mb-4">
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                placeholder="Enter Other Sources"
+                                className="form-control"
+                                onChange={handleValueChange}
+                                name="sourceNotInTheList"
+                                value={values.sourceNotInTheList}
+                              />
+                            </div>
+                            {errors.sourceNotInTheList && (
+                              <h3>{errors.sourceNotInTheList}</h3>
+                            )}
                           </div>
-                          {errors.sourceNotInTheList && <h3>{errors.sourceNotInTheList}</h3>}
-                        </div>
-                      )}
+                        )}
                       <div className="">
                         <div className="form-check">
                           <Input

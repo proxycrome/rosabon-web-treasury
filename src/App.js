@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import PageRoutes from './PageRoutes'
 import { useSelector, useDispatch } from 'react-redux'
-import { refreshUser } from './store/actions'
+import { getAuthUsers, refreshUser } from './store/actions'
 import Spinner from './component/common/loading'
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { login, isAuth } = useSelector((state) => state.auth);
+  const { users } = useSelector(state => state.user_profile);
 
   useEffect(() => {
     dispatch(refreshUser());
-  }, [dispatch]);
+    dispatch(getAuthUsers());
+  }, []);
 
   // useEffect(() => {
   //   let current_url = window.location.href;
@@ -26,7 +28,7 @@ function App() {
   return (
     <div className="App">
       {isAuth !== null ? (
-        <PageRoutes login={login} isAuth={isAuth} />
+        <PageRoutes login={login} isAuth={isAuth} user={users}/>
       ) : (
         <div className="vh-100 w-100">
           <Spinner />

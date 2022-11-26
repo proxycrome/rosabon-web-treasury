@@ -62,7 +62,7 @@ const Login = () => {
       platformType: "WEB",
       platform: "TREASURY",
     };
-    dispatch(loginUser(data, navigate));
+    dispatch(loginUser(data, navigate, dispatch));
   };
   // useEffect(() => {
   //   if (users && users.kyc && users.role === "COMPANY") {

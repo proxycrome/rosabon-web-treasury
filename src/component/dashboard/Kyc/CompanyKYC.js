@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAuthUsers, updateUserKyc } from "../../../store/actions";
 import moment from "moment";
 import Spinner from "../../common/loading";
+import { Toaster } from "react-hot-toast";
 
 const CompanyKYC = () => {
   const dispatch = useDispatch();
@@ -12,12 +13,12 @@ const CompanyKYC = () => {
 
   const { users, loading } = useSelector((state) => state.user_profile);
 
-  console.log(users);
+  // console.log(users);
 
   const data = {
     rcNumber: "",
     natureOfBusiness: "",
-    companyType: "",
+    businessType: "",
     dateOfInco: "",
     companyAddress: "",
     name: "",
@@ -43,7 +44,7 @@ const CompanyKYC = () => {
     const {
       rcNumber,
       natureOfBusiness,
-      companyType,
+      businessType,
       dateOfInco,
       companyAddress,
       name,
@@ -54,36 +55,30 @@ const CompanyKYC = () => {
     } = formData;
 
     let data = {
-      email: email ? email : users?.email,
-      isAssited: users && users?.assited,
-      isNewsLetters: users && users?.newsLetters,
-      phone: phone ? phone : users?.phone,
-      source: users?.source,
-      sourceOthers: users?.sourceOthers,
+      isAssited: users?.assited,
+      isNewsLetters: users?.newsLetters,
+      phone: phone ? phone.trim() : users?.phone,
       role: "COMPANY",
       usage: "TREASURY",
       isKyc: true,
-      status: users?.status,
       company: {
-        rcNumber: rcNumber ? rcNumber : users?.company?.rcNumber,
+        rcNumber: rcNumber ? rcNumber.trim() : users?.company?.rcNumber,
         natureOfBusiness: natureOfBusiness
-          ? natureOfBusiness
+          ? natureOfBusiness.trim()
           : users?.company?.natureOfBusiness,
-        companyType: companyType ? companyType : users?.company?.companyType,
+        businessType: businessType ? businessType : users?.company?.companyType,
         dateOfInco: dateOfInco
           ? String(moment(dateOfInco, "YYYY-MM-DD").format("DD-MM-YYYY"))
           : users?.company?.dateOfInco,
         companyAddress: companyAddress
-          ? companyAddress
+          ? companyAddress.trim()
           : users?.company?.companyAddress,
         contactFirstName: contactFirstName
-          ? contactFirstName
+          ? contactFirstName.trim()
           : users?.company?.contactFirstName,
         contactLastName: contactLastName
-          ? contactLastName
+          ? contactLastName.trim()
           : users.company.contactLastName,
-        contactMiddleName: users?.company?.contactMiddleName,
-        name: name ? name : users?.company?.name,
       },
     };
 
@@ -91,8 +86,7 @@ const CompanyKYC = () => {
       navigate,
       route,
     };
-    console.log(data);
-    dispatch(updateUserKyc(data, pathCred));
+    dispatch(updateUserKyc(data, pathCred, dispatch));
   };
 
   useEffect(() => {
@@ -108,7 +102,10 @@ const CompanyKYC = () => {
     <div>
       <div className="">
         <div>
-          {loading ? (
+          <Toaster />
+        </div>
+        <div>
+          {users === null && loading ? (
             <div className="vh-100 w-100">
               <Spinner />
             </div>
@@ -138,7 +135,7 @@ const CompanyKYC = () => {
                             <div className="input-group mb-4">
                               <input
                                 className="form-control"
-                                placeholder={users?.company?.name}
+                                placeholder={users?.company?.name || "Company Name"}
                                 type="text"
                                 name="name"
                                 onChange={handleChange}
@@ -200,7 +197,10 @@ const CompanyKYC = () => {
                                 }
                                 onChange={handleChange}
                                 name="companyAddress"
-                                defaultValue={formData.companyAddress || users?.company?.companyAddress}
+                                defaultValue={
+                                  formData.companyAddress ||
+                                  users?.company?.companyAddress
+                                }
                               />
                             </div>
                           </div>
@@ -218,7 +218,10 @@ const CompanyKYC = () => {
                                 type="text"
                                 onChange={handleChange}
                                 name="natureOfBusiness"
-                                defaultValue={formData.natureOfBusiness || users?.company?.natureOfBusiness}
+                                defaultValue={
+                                  formData.natureOfBusiness ||
+                                  users?.company?.natureOfBusiness
+                                }
                               />
                             </div>
                           </div>
@@ -228,13 +231,15 @@ const CompanyKYC = () => {
                               className="form-select form-select-lg mb-3 select-field"
                               aria-label=".form-select-lg"
                               onChange={handleChange}
-                              value={
-                                formData.companyType ||
+                              defaultValue={
+                                formData.businessType ||
                                 users?.company?.companyType
                               }
-                              name="companyType"
+                              name="businessType"
                             >
-                              <option value="">Company Type...</option>
+                              <option value="" hidden>
+                                Company Type...
+                              </option>
                               <option value="SOLE_PROPRIETORSHIP">
                                 Sole proprietorship
                               </option>
@@ -262,7 +267,10 @@ const CompanyKYC = () => {
                                 type="text"
                                 name="contactFirstName"
                                 onChange={handleChange}
-                                defaultValue={formData.contactFirstName || users?.company?.contactFirstName}
+                                defaultValue={
+                                  formData.contactFirstName ||
+                                  users?.company?.contactFirstName
+                                }
                               />
                             </div>
                           </div>
@@ -277,12 +285,15 @@ const CompanyKYC = () => {
                                 type="text"
                                 name="contactLastName"
                                 onChange={handleChange}
-                                defaultValue={formData.contactLastName || users?.company?.contactLastName}
+                                defaultValue={
+                                  formData.contactLastName ||
+                                  users?.company?.contactLastName
+                                }
                               />
                             </div>
                           </div>
                         </div>
-                        <div className="row">
+                        <div className="row d-md-flex align-items-end">
                           <div className="col-md-8 ">
                             <label>Contact Person Email Address</label>
                             <div className="input-group mb-4">
@@ -292,7 +303,8 @@ const CompanyKYC = () => {
                                 type="text"
                                 name="email"
                                 onChange={handleChange}
-                                defaultValue={formData.email || users?.email}
+                                value={users?.email}
+                                disabled
                               />
                             </div>
                           </div>
@@ -321,7 +333,7 @@ const CompanyKYC = () => {
                         {(formData.rcNumber || users?.company?.rcNumber) &&
                         (formData.natureOfBusiness ||
                           users?.company?.natureOfBusiness) &&
-                        (formData.companyType || users?.company?.companyType) &&
+                        (formData.businessType || users?.company?.companyType) &&
                         (formData.dateOfInco || users?.company?.dateOfInco) &&
                         (formData.companyAddress ||
                           users?.company?.companyAddress) &&
@@ -348,7 +360,7 @@ const CompanyKYC = () => {
                         {(formData.rcNumber || users?.company?.rcNumber) &&
                         (formData.natureOfBusiness ||
                           users?.company?.natureOfBusiness) &&
-                        (formData.companyType || users?.company?.companyType) &&
+                        (formData.businessType || users?.company?.companyType) &&
                         (formData.dateOfInco || users?.company?.dateOfInco) &&
                         (formData.companyAddress ||
                           users?.company?.companyAddress) &&
@@ -425,6 +437,7 @@ const WrapperBody = styled.div`
   }
   .select-field {
     font-family: "Montserrat";
+    height: 54px;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;

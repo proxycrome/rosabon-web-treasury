@@ -104,13 +104,24 @@ const userProfileReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_AUTH_USER:
     case GET_AUTH_USERS:
+    case UPDATE_USER_KYC:
+    case VERIFY_BVN:
+    case GET_COUNTRY:
+    case GET_STATE:
+    case GET_LGA:
+    case SEND_OTP:
+    case VALIDATE_OTP:
+    case SEND_COMPANY_OTP:
+    case GET_BANKS:
+    case GET_COMPANY_DOCS:
+    case GET_BANK_DETAILS:
+    case GET_WITHDRAW_REASON:
+    case GET_USER_DOCS:
+    case GET_ALL_GENDER:
+    case GET_ALL_SOURCES:
       state = {
         ...state,
         loading: true,
-        user: null,
-        userError: null,
-        users: null,
-        usersError: null,
       };
       break;
 
@@ -164,15 +175,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
-    case UPDATE_USER_KYC:
-      state = {
-        ...state,
-        loading: true,
-        kycData: null,
-        kycDataError: null,
-      };
-      break;
-
     case UPDATE_USER_KYC_SUCCESS:
       state = {
         ...state,
@@ -188,16 +190,6 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         kycData: null,
         kycDataError: action.payload,
-      };
-      break;
-
-    case VERIFY_BVN:
-      state = {
-        ...state,
-        loading: true,
-        bvnMessage: null,
-        bvnError: null,
-        showBvnModal: false,
       };
       break;
 
@@ -222,15 +214,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
-    case GET_COUNTRY:
-      state = {
-        ...state,
-        loading: true,
-        countries: null,
-        countriesError: null,
-      };
-      break;
-
     case GET_COUNTRY_SUCCESS:
       state = {
         ...state,
@@ -246,15 +229,6 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         countries: null,
         countriesError: action.payload,
-      };
-      break;
-
-    case GET_STATE:
-      state = {
-        ...state,
-        loading: true,
-        states: null,
-        statesError: null,
       };
       break;
 
@@ -276,15 +250,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
-    case GET_LGA:
-      state = {
-        ...state,
-        loading: true,
-        lgas: null,
-        lgasError: null,
-      };
-      break;
-
     case GET_LGA_SUCCESS:
       state = {
         ...state,
@@ -300,15 +265,6 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         lgas: null,
         lgasError: action.payload,
-      };
-      break;
-
-    case SEND_OTP:
-      state = {
-        ...state,
-        loading: true,
-        otp: null,
-        otpError: null,
       };
       break;
 
@@ -329,15 +285,6 @@ const userProfileReducer = (state = initialState, action) => {
         otp: null,
         otpError: action.payload,
         showEmailOtpModal: false,
-      };
-      break;
-
-    case VALIDATE_OTP:
-      state = {
-        ...state,
-        loading: true,
-        validateEmailOtp: null,
-        validateOtpError: null,
       };
       break;
 
@@ -383,15 +330,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
-    case SEND_COMPANY_OTP:
-      state = {
-        ...state,
-        loading: true,
-        otp: null,
-        otpError: null,
-      };
-      break;
-
     case SEND_COMPANY_OTP_SUCCESS:
       state = {
         ...state,
@@ -409,15 +347,6 @@ const userProfileReducer = (state = initialState, action) => {
         otp: null,
         otpError: action.payload,
         showEmailOtpModal: false,
-      };
-      break;
-
-    case GET_BANKS:
-      state = {
-        ...state,
-        loading: true,
-        banks: null,
-        banksError: null,
       };
       break;
 
@@ -439,14 +368,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
-    case GET_COMPANY_DOCS:
-      state = {
-        loading: true,
-        companyDocs: null,
-        companyDocsError: null,
-      };
-      break;
-
     case GET_COMPANY_DOCS_SUCCESS:
       state = {
         loading: false,
@@ -460,15 +381,6 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         companyDocs: null,
         companyDocsError: action.payload,
-      };
-      break;
-
-    case GET_BANK_DETAILS:
-      state = {
-        ...state,
-        loading: true,
-        bankDetails: null,
-        bankDetailsError: null,
       };
       break;
 
@@ -490,15 +402,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
-    case GET_WITHDRAW_REASON:
-      state = {
-        ...state,
-        loading: true,
-        withdrawReasons: null,
-        withdrawReasonsError: null,
-      };
-      break;
-
     case GET_WITHDRAW_REASON_SUCCESS:
       state = {
         ...state,
@@ -514,15 +417,6 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         withdrawReasons: null,
         withdrawReasonsError: action.payload,
-      };
-      break;
-
-    case GET_USER_DOCS:
-      state = {
-        ...state,
-        loading: true,
-        documents: null,
-        documentsError: null,
       };
       break;
 
@@ -544,15 +438,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
       break;
 
-    case GET_ALL_GENDER:
-      state = {
-        ...state,
-        loading: true,
-        gender: null,
-        genderError: null,
-      };
-      break;
-
     case GET_ALL_GENDER_SUCCESS:
       state = {
         ...state,
@@ -568,15 +453,6 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         gender: null,
         genderError: action.payload,
-      };
-      break;
-
-    case GET_ALL_SOURCES:
-      state = {
-        ...state,
-        loading: true,
-        sources: null,
-        sourcesError: null,
       };
       break;
 

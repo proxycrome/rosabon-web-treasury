@@ -109,21 +109,23 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
     if (response && pathCred?.route === "/plan-product") {
       setTimeout(() => {
         toast.success("KYC Updated Successfully");
-      }, 5000);
+      }, 2000);
+      dispatch(getAuthUsers());
       pathCred?.navigate(pathCred?.route);
     }
 
     if (response && pathCred?.route === "/profile") {
       setTimeout(() => {
         toast.success("KYC Updated Successfully");
-      }, 5000);
+      }, 2000);
+      dispatch(getAuthUsers());
       pathCred?.navigate(pathCred?.route);
     }
     if (response && !pathCred) {
       dispatch(getAuthUsers());
     }
   } catch (error) {
-    console.log(error);
+    console.log(error?.response?.data);
     yield put(updateUserKycError(error?.response?.data));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message);
@@ -289,7 +291,6 @@ function* getAllGender() {
 function* getAllSources() {
   try {
     const response = yield call(getAllSourcesService);
-    console.log(response.data);
     yield put(getAllSourcesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);

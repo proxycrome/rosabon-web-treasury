@@ -38,10 +38,10 @@ export const registerUserError = (error) => {
   };
 };
 
-export const loginUser = (formData, navigate) => {
+export const loginUser = (formData, navigate, dispatch) => {
   return {
     type: LOGIN_USER,
-    payload: { formData, navigate },
+    payload: { formData, navigate, dispatch },
   };
 };
 

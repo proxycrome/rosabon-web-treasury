@@ -25,7 +25,7 @@ export const RightView = () => {
   const cat_products = catWithProducts?.data?.body;
   const cat_products_status = catWithProducts?.statusCode;
   const planList = plans?.data?.body ? plans?.data?.body : [];
-  console.log(planList);
+
   const activePlanList = planList.filter(
     (data) => data.planStatus === "ACTIVE"
   );

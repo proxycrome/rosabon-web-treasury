@@ -11,7 +11,8 @@ const PlanHome = ({ product, list, topup, payment, details, children }) => {
   const navigate = useNavigate()
   const auth = useSelector((state) => state.auth)
   const { login, isLoggedIn } = auth
-  const { sidebar } = useSelector((state) => state.user_profile);
+  const { users } = useSelector((state) => state.user_profile);
+  console.log(users);
 
   useEffect(() => {
     const tokenString = JSON.parse(localStorage.getItem("token"));
@@ -21,7 +22,10 @@ const PlanHome = ({ product, list, topup, payment, details, children }) => {
     if (!isLoggedIn) {
       navigate("/login");
     }
-  }, []);
+    if (users && !users.kyc) {
+      navigate("/kyc");
+    }
+  }, [users]);
 
   return (
     <Wrapper>

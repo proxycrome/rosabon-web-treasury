@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import PersonalProfile from "./PersonalProfile";
 import CompanyProfile from "./CompanyProfile";
 import { ProfileSideBarList } from "../component/dashboard/ProfileSideBar";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const { login } = useSelector((state) => state.auth);
+  const { users } = useSelector((state) => state.user_profile);
+
+  useEffect(() => {
+    if (users && !users.kyc) {
+      navigate("/kyc");
+    }
+  }, [users])
 
   return (
     <WrapperBody>

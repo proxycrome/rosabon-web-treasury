@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { NavLink, useNavigate } from "react-router-dom";
-import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";  ;
+import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 
-const Footer = ({ position, active, single, double }) => {
+const Footer = ({ position, active, single, double, source, referralCode }) => {
   const footerStylin = position === "bank" ? "bank" : "profile";
 
   return (
@@ -11,18 +11,30 @@ const Footer = ({ position, active, single, double }) => {
       <div className={footerStylin}>
         <div className="footer-body">
           <>
-          <div className="rosabonLogo mb-3">
-            <img
-              style={{ width: "70px", height: "30px" }}
-              src={RFSLogoFullColour}
-              alt="RFSLogo"
-            />
-          </div>
+            <div className="rosabonLogo mb-3">
+              <img
+                style={{ width: "70px", height: "30px" }}
+                src={RFSLogoFullColour}
+                alt="RFSLogo"
+              />
+            </div>
             <div className="justify-content-around d-flex align-items-center footer-content">
-              <NavLink to="/register-user">
+              <NavLink
+                to={`/register-user${
+                  source && referralCode
+                    ? `?referralCode=${referralCode}&source=${source}`
+                    : ""
+                }`}
+              >
                 <button className="">Register as an Invididual</button>
               </NavLink>
-              <NavLink to="/register-company">
+              <NavLink
+                to={`/register-company${
+                  source && referralCode
+                    ? `?referralCode=${referralCode}&source=${source}`
+                    : ""
+                }`}
+              >
                 <button className="">Register as a Coporate</button>
               </NavLink>
             </div>

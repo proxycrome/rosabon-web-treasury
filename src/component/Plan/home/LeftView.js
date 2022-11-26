@@ -48,7 +48,6 @@ export const LeftView = ({ view }) => {
     (item) => item.status === "ACTIVE"
   );
 
-  console.log(users);
 
   // fetch interest rate
   const interest_rate = useMemo(() => {
@@ -107,8 +106,6 @@ export const LeftView = ({ view }) => {
     }
   }, [data.product]);
 
-  console.log(tenors);
-
   const handleChange = (e) => {
     if (e.target.name === "amount") {
       setData({
@@ -147,6 +144,8 @@ export const LeftView = ({ view }) => {
     toast.success("Referral Code Copied");
   };
 
+  console.log(users);
+
   return (
     <LeftWrapper className="mx-4">
       <div className="calculatoe">
@@ -175,7 +174,7 @@ export const LeftView = ({ view }) => {
                     value={data.product}
                     onChange={handleChange}
                   >
-                    <option hidden selected disabled value={0}>
+                    <option hidden value={0}>
                       Select Product
                     </option>
                     {productStatus === "OK" &&
@@ -213,7 +212,7 @@ export const LeftView = ({ view }) => {
                     value={data.tenor}
                     onChange={handleChange}
                   >
-                    <option hidden value={0} disabled>
+                    <option hidden value={0}>
                       Select Tenor
                     </option>
                     {productStatus === "OK" &&
@@ -313,7 +312,7 @@ export const LeftView = ({ view }) => {
               type="text"
               className="form-control"
               aria-label="Text input with checkbox"
-              value={users?.referralLink}
+              defaultValue={users?.referralLink}
             />
             <div className="input-group-text">
               <CopyToClipboard
@@ -332,7 +331,7 @@ export const LeftView = ({ view }) => {
               type="text"
               className="form-control"
               aria-label="Text input with checkbox"
-              value={users?.myReferralCode}
+              defaultValue={users?.myReferralCode}
             />
             <div className="input-group-text">
               <CopyToClipboard

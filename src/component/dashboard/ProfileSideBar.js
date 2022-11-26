@@ -19,7 +19,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
   const dispatch = useDispatch();
 
   const { sidebar } = useSelector((state) => state.user_profile);
-  console.log(sidebar);
+  
 
   const handleClick = () => {
     dispatch(toggleSidebar());
