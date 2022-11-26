@@ -33,8 +33,8 @@ export function ProfileNavBar({ children, view, feedback }) {
   const unreadNotifications = notifications?.filter(
     (item) => item.readStatus === "UNREAD"
   );
-  // const auth = useSelector((state) => state.auth);
-  // const { login, isLoggedIn } = auth;
+ 
+  console.log(notifications);
 
   const toggle = () => {
     setMenu(!menu);

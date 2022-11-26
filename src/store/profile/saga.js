@@ -142,7 +142,7 @@ function* verifyBvn({ payload: { formData, id, setComplete } }) {
       setComplete(true);
     }
   } catch (error) {
-    console.log(error?.response?.data);
+    console.log(error?.response);
     yield put(verifyBvnError(error?.response?.data, id));
   }
 }

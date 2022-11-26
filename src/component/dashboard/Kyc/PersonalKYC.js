@@ -27,12 +27,17 @@ const PersonalKYC = () => {
   const { login, isLoggedIn } = auth;
 
   const user_profile = useSelector((state) => state.user_profile);
-  const { loading, showBvnModal, bvnError, bvnMessage, countries, states, gender } =
-    user_profile;
+  const {
+    loading,
+    showBvnModal,
+    bvnError,
+    bvnMessage,
+    countries,
+    states,
+    gender,
+  } = user_profile;
 
-  const activeGender = gender?.filter(item => item.status === "ACTIVE");
-
-  console.log(gender);
+  const activeGender = gender?.filter((item) => item.status === "ACTIVE");
 
   console.log(user_details);
 
@@ -47,16 +52,16 @@ const PersonalKYC = () => {
     dateOfBirth: "",
     gender: "",
     bvn: "",
-    firstName: "",
+    // firstName: "",
     middleName: "",
-    lastName: "",
+    // lastName: "",
     name: "",
     houseNoAddress: "",
     state: "",
     city: "",
     country: "",
     phone: "",
-    email: "",
+    // email: "",
     countryId: 1,
   };
 
@@ -78,16 +83,16 @@ const PersonalKYC = () => {
       dateOfBirth,
       gender,
       bvn,
-      firstName,
+      // firstName,
       middleName,
-      lastName,
+      // lastName,
       countryId,
       houseNoAddress,
       state,
       city,
       country,
       phone,
-      email,
+      // email,
     } = formData;
 
     let data = {
@@ -100,7 +105,9 @@ const PersonalKYC = () => {
       individualUser: {
         bvn: bvn ? bvn.trim() : user_details.individualUser.bvn,
         contactAddress: {
-          city: city ? city.trim() : user_details?.individualUser?.address?.city,
+          city: city
+            ? city.trim()
+            : user_details?.individualUser?.address?.city,
           country: country
             ? country
             : user_details?.individualUser?.address?.country,
@@ -113,7 +120,9 @@ const PersonalKYC = () => {
         dateOfBirth: dateOfBirth
           ? String(moment(dateOfBirth, "YYYY-MM-DD").format("DD-MM-YYYY"))
           : user_details?.individualUser?.dateOfBirth,
-        genderId: gender ? Number(gender) : user_details?.individualUser?.gender?.id,
+        genderId: gender
+          ? Number(gender)
+          : user_details?.individualUser?.gender?.id,
         middleName: middleName
           ? middleName.trim()
           : user_details?.individualUser?.middleName,
@@ -136,9 +145,9 @@ const PersonalKYC = () => {
     const objData = {
       firstName: user_details?.individualUser?.firstName?.toUpperCase(),
       lastName: user_details?.individualUser?.lastName?.toUpperCase(),
-      id: bvn ? bvn : user_details?.individualUser?.bvn,
+      id: bvn ? bvn.trim() : user_details?.individualUser?.bvn,
       isSubjectConsent: true,
-      phoneNumber: phone ? phone : user_details?.phone,
+      phoneNumber: phone ? phone.trim() : user_details?.phone,
       dateOfBirth: dateOfBirth
         ? dateOfBirth
         : moment(
@@ -171,7 +180,6 @@ const PersonalKYC = () => {
   }, [formData.countryId]);
 
   // console.log(bvnError);
-  console.log(bvnMessage);
   // console.log(moment(maximumDate).format("YYYY-MM-DD"));
 
   return (
@@ -210,9 +218,7 @@ const PersonalKYC = () => {
                                   "Enter first name"
                                 }
                                 name="firstName"
-                                value={
-                                  user_details?.individualUser?.firstName
-                                }
+                                value={user_details?.individualUser?.firstName}
                                 onChange={handleChange}
                                 disabled
                               />
@@ -248,9 +254,7 @@ const PersonalKYC = () => {
                                   "Enter last name"
                                 }
                                 name="lastName"
-                                value={
-                                  user_details?.individualUser?.lastName
-                                }
+                                value={user_details?.individualUser?.lastName}
                                 onChange={handleChange}
                                 disabled
                               />
@@ -271,9 +275,13 @@ const PersonalKYC = () => {
                                 }
                                 name="gender"
                               >
-                                <option value="" hidden>Select Gender...</option>
-                                {activeGender?.map(item => (
-                                  <option key={item.id} value={item.id}>{item.gender}</option>
+                                <option value="" hidden>
+                                  Select Gender...
+                                </option>
+                                {activeGender?.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {item.gender}
+                                  </option>
                                 ))}
                               </select>
                             </div>
@@ -382,7 +390,7 @@ const PersonalKYC = () => {
                                   bvn={bvnMessage?.data?.idNumber}
                                   phone={bvnMessage?.data?.mobile}
                                   nameMatch={bvnMessage?.isNameMatched}
-                                  dateOfBirth={bvnMessage?.dateOfBirth}
+                                  dateOfBirth={bvnMessage?.data?.dateOfBirth}
                                 />
                               </ModalComponent>
                             </div>
