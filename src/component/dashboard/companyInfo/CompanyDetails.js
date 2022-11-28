@@ -20,8 +20,7 @@ const CompanyDetails = () => {
   const [showEditNOK, setShowEditNOK] = useState(true);
 
   const { users } = useSelector((state) => state.user_profile);
-
-  console.log(users);
+  const { loading, companyInfoMsg } = useSelector((state) => state.updateProfile);
 
   const toggleDetail = () => {
     setShowEditDetail(!showEditDetail);
@@ -40,7 +39,7 @@ const CompanyDetails = () => {
     companyType: "",
     contactFirstName: "",
     contactLastName: "",
-    email: "",
+    // email: "",
     phone: "",
     companyAddress: "",
     natureOfBusiness: "",
@@ -64,10 +63,6 @@ const CompanyDetails = () => {
 
   const validateUserInfo = (values) => {
     let errors = {};
-
-    if ((!values.email && !users?.email) || !users?.email) {
-      errors.email = "Email address is required";
-    }
 
     if (
       (!values.contactFirstName && !users?.company?.contactFirstName) ||
@@ -119,8 +114,15 @@ const CompanyDetails = () => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { contactFirstName, contactLastName, email, phone, companyType, natureOfBusiness, companyAddress } =
-        formData;
+      const {
+        contactFirstName,
+        contactLastName,
+        email,
+        phone,
+        companyType,
+        natureOfBusiness,
+        companyAddress,
+      } = formData;
       const data = {
         contactFirstName: contactFirstName
           ? contactFirstName
@@ -128,22 +130,23 @@ const CompanyDetails = () => {
         contactLastName: contactLastName
           ? contactLastName
           : users?.company?.contactLastName,
-        email: email ? email : users?.email,
+        // email: email ? email : users?.email,
         phone: phone ? phone : users?.phone,
         companyType: companyType ? companyType : users?.company?.companyType,
-        natureOfBusiness: natureOfBusiness ? natureOfBusiness : users?.company?.natureOfBusiness,
-        companyAddress: companyAddress ? companyAddress : users?.company?.companyAddress,
+        natureOfBusiness: natureOfBusiness
+          ? natureOfBusiness
+          : users?.company?.natureOfBusiness,
+        companyAddress: companyAddress
+          ? companyAddress
+          : users?.company?.companyAddress,
       };
-      console.log(data);
       dispatch(updateCompanyDetails(data));
     }
   }, [errors, isSubmitted]);
 
   useEffect(() => {
-    if (!users) {
-      dispatch(getAuthUsers());
-    }
-  }, [users]);
+    dispatch(getAuthUsers());
+  }, [companyInfoMsg]);
 
   return (
     <div>
@@ -225,13 +228,15 @@ const CompanyDetails = () => {
                       <input
                         className="form-control"
                         placeholder={
-                          users?.company?.companyAddress ||
-                          "Company Address"
+                          users?.company?.companyAddress || "Company Address"
                         }
                         type="text"
                         name="companyAddress"
                         onChange={handleChange}
-                        defaultValue={formData.companyAddress || users?.company?.companyAddress}
+                        defaultValue={
+                          formData.companyAddress ||
+                          users?.company?.companyAddress
+                        }
                         disabled={showEditDetail}
                       />
                     </div>
@@ -270,7 +275,10 @@ const CompanyDetails = () => {
                         type="text"
                         name="natureOfBusiness"
                         onChange={handleChange}
-                        defaultValue={formData.natureOfBusiness || users?.company?.natureOfBusiness}
+                        defaultValue={
+                          formData.natureOfBusiness ||
+                          users?.company?.natureOfBusiness
+                        }
                         disabled={showEditDetail}
                       />
                     </div>
@@ -348,7 +356,10 @@ const CompanyDetails = () => {
                         }
                         type="text"
                         name="contactFirstName"
-                        defaultValue={formData.contactFirstName || users?.company?.contactFirstName}
+                        defaultValue={
+                          formData.contactFirstName ||
+                          users?.company?.contactFirstName
+                        }
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -370,7 +381,10 @@ const CompanyDetails = () => {
                           "Contact Person Last Name"
                         }
                         name="contactLastName"
-                        defaultValue={formData.contactLastName || users?.company?.contactLastName}
+                        defaultValue={
+                          formData.contactLastName ||
+                          users?.company?.contactLastName
+                        }
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -391,14 +405,13 @@ const CompanyDetails = () => {
                         placeholder={users?.email || "Email Address"}
                         type="email"
                         name="email"
-                        defaultValue={formData.email || users?.email}
-                        onChange={handleChange}
-                        disabled={showEditCont}
+                        value={users?.email}
+                        disabled
                       />
                     </div>
-                    {errors && errors?.email && (
+                    {/* {errors && errors?.email && (
                       <span className="text-danger">{errors?.email}</span>
-                    )}
+                    )} */}
                   </div>
                   <div className="col-md-6 mb-4">
                     <label>Phone Number</label>
@@ -417,9 +430,7 @@ const CompanyDetails = () => {
                         disabled={showEditCont}
                         onChange={(value) => handlePhoneValueChange(value)}
                         disableCountryCode={true}
-                        placeholder={
-                          users?.phone || "Phone Number"
-                        }
+                        placeholder={users?.phone || "Phone Number"}
                         disableDropdown
                         masks={{ ng: ".... ... ...." }}
                       />
@@ -438,7 +449,7 @@ const CompanyDetails = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button type="submit" className="blue-btn">
-                  Save
+                  {loading ? "Loading..." : "Save"}
                 </button>
               </div>
             </div>

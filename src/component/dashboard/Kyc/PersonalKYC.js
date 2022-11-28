@@ -39,8 +39,6 @@ const PersonalKYC = () => {
 
   const activeGender = gender?.filter((item) => item.status === "ACTIVE");
 
-  console.log(user_details);
-
   const date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
   const maximumDate = moment(recentDate).subtract(365 * 18, "days")?._d;
@@ -133,8 +131,6 @@ const PersonalKYC = () => {
       navigate,
       route,
     };
-    console.log(data);
-    // console.log(tokenString);
     dispatch(updateUserKyc(data, pathCred, dispatch));
   };
 
@@ -155,8 +151,6 @@ const PersonalKYC = () => {
             "DD-MM-YYYY"
           ).format("YYYY-MM-DD"),
     };
-
-    console.log(objData);
     dispatch(verifyBvn(objData));
   };
 

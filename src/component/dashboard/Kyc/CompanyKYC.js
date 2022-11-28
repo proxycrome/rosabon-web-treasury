@@ -21,10 +21,10 @@ const CompanyKYC = () => {
     businessType: "",
     dateOfInco: "",
     companyAddress: "",
-    name: "",
+    // name: "",
     contactFirstName: "",
     contactLastName: "",
-    email: "",
+    // email: "",
     phone: "",
   };
 
@@ -47,10 +47,10 @@ const CompanyKYC = () => {
       businessType,
       dateOfInco,
       companyAddress,
-      name,
+      // name,
       contactFirstName,
       contactLastName,
-      email,
+      // email,
       phone,
     } = formData;
 

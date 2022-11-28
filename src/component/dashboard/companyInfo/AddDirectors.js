@@ -21,7 +21,13 @@ import {
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
+const AddDirectors = ({
+  updateDirector,
+  countNumbers,
+  number,
+  removeForm,
+  idTypes,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showOne, setShowOne] = useState(true);
@@ -64,7 +70,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
     email: "",
     phone: "",
     bvn: "",
-    idType: "",
+    idTypeId: "",
     idNumber: "",
   };
   const [formData, setformData] = useState(data);
@@ -140,8 +146,8 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
       errors.phone = "Phone number is required";
     }
 
-    if (!values.idType) {
-      errors.idType = "ID Type is required";
+    if (!values.idTypeId) {
+      errors.idTypeId = "ID Type is required";
     }
 
     if (!values.idNumber) {
@@ -151,8 +157,6 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
     if (!values.bvn) {
       errors.bvn = "Verified BVN is required";
     }
-
-    
 
     return errors;
   }
@@ -176,10 +180,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
   };
 
   useEffect(() => {
-    if (
-      Object.keys(errors).length === 0 &&
-      isSubmitted 
-    ) {
+    if (Object.keys(errors).length === 0 && isSubmitted) {
       const {
         firstName,
         middleName,
@@ -188,7 +189,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
         email,
         address,
         bvn,
-        idType,
+        idTypeId,
         idNumber,
       } = formData;
 
@@ -203,7 +204,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
         email,
         address,
         bvn,
-        idType,
+        idTypeId: Number(idTypeId),
         idNumber,
         idDocumentImage: {
           encodedUpload: frontEncodedString,
@@ -225,7 +226,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
         email: "",
         phone: "",
         bvn: "",
-        idType: "",
+        idTypeId: "",
         idNumber: "",
       });
 
@@ -300,7 +301,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
       email: "",
       phone: "",
       bvn: "",
-      idType: "",
+      idTypeId: "",
       idNumber: "",
     });
 
@@ -313,7 +314,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
 
   return (
     <div className="mt-5">
-      <form autoComplete="off">
+      {/* <form autoComplete="off"> */}
         <WrapperBody>
           <hr />
           <div className="container-fluid">
@@ -648,26 +649,21 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
                       <select
                         className="form-select form-select-md"
                         aria-label=".form-select-md"
-                        name="idType"
-                        value={formData.idType}
+                        name="idTypeId"
+                        value={formData.idTypeId}
                         onChange={handleChange}
                         disabled={showEdit}
                       >
                         <option value="">Select ID Type...</option>
-                        <option value="NATIONAL_IDENTITY_CARD">
-                          National ID card
-                        </option>
-                        <option value="DRIVER_LICENSE">
-                          Driver's License{" "}
-                        </option>
-                        <option value="INTERNATIONAL_PASSPORT">
-                          International Passport
-                        </option>
-                        <option value="VOTER_CARD">Voter's Card </option>
+                        {idTypes?.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
-                    {errors.idType && (
-                      <span className="text-danger">{errors.idType}</span>
+                    {errors.idTypeId && (
+                      <span className="text-danger">{errors.idTypeId}</span>
                     )}
                   </div>
                   <div className="col-md-6 mb-4">
@@ -856,7 +852,7 @@ const AddDirectors = ({ updateDirector, countNumbers, number, removeForm }) => {
             </div>
           </div>
         </WrapperBody>
-      </form>
+      {/* </form> */}
       <hr />
     </div>
   );
@@ -980,7 +976,7 @@ const WrapperBody = styled.div`
     font-weight: 600;
     font-size: 17px;
     line-height: 21px;
-    &:disabled{
+    &:disabled {
       color: #ccc;
       cursor: not-allowed;
     }

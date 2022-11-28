@@ -7,6 +7,9 @@ import {
   GET_ALL_GENDER,
   GET_ALL_GENDER_ERROR,
   GET_ALL_GENDER_SUCCESS,
+  GET_ALL_ID_TYPES,
+  GET_ALL_ID_TYPES_ERROR,
+  GET_ALL_ID_TYPES_SUCCESS,
   GET_ALL_SOURCES,
   GET_ALL_SOURCES_ERROR,
   GET_ALL_SOURCES_SUCCESS,
@@ -98,6 +101,8 @@ const initialState = {
   genderError: null,
   sources: null,
   sourcesError: null,
+  idTypes: null,
+  idTypesError: null,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -119,6 +124,7 @@ const userProfileReducer = (state = initialState, action) => {
     case GET_USER_DOCS:
     case GET_ALL_GENDER:
     case GET_ALL_SOURCES:
+    case GET_ALL_ID_TYPES:
       state = {
         ...state,
         loading: true,
@@ -471,6 +477,24 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         sources: null,
         sourcesError: action.payload,
+      };
+      break;
+
+    case GET_ALL_ID_TYPES_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        idTypes: action.payload,
+        idTypesError: null,
+      };
+      break;
+
+    case GET_ALL_ID_TYPES_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        idTypes: null,
+        idTypesError: action.payload,
       };
       break;
 

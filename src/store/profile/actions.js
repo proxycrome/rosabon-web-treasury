@@ -2,6 +2,9 @@ import {
   GET_ALL_GENDER,
   GET_ALL_GENDER_ERROR,
   GET_ALL_GENDER_SUCCESS,
+  GET_ALL_ID_TYPES,
+  GET_ALL_ID_TYPES_ERROR,
+  GET_ALL_ID_TYPES_SUCCESS,
   GET_ALL_SOURCES,
   GET_ALL_SOURCES_ERROR,
   GET_ALL_SOURCES_SUCCESS,
@@ -402,6 +405,26 @@ export const getAllSourcesSuccess = (data) => {
 export const getAllSourcesError = (error) => {
   return {
     type: GET_ALL_SOURCES_ERROR,
+    payload: error,
+  }
+}
+
+export const getAllIdTypes = () => {
+  return {
+    type: GET_ALL_ID_TYPES,
+  }
+}
+
+export const getAllIdTypesSuccess = (data) => {
+  return {
+    type: GET_ALL_ID_TYPES_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getAllIdTypesError = (error) => {
+  return {
+    type: GET_ALL_ID_TYPES_ERROR,
     payload: error,
   }
 }

@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 
 import {
   GET_ALL_GENDER,
+  GET_ALL_ID_TYPES,
   GET_ALL_SOURCES,
   GET_AUTH_USER,
   GET_AUTH_USERS,
@@ -57,6 +58,8 @@ import {
   validateOtpSuccess,
   verifyBvnError,
   verifyBvnSuccess,
+  getAllIdTypesSuccess,
+  getAllIdTypesError,
 } from "./actions";
 
 import {
@@ -76,7 +79,8 @@ import {
   updateUserKycService,
   validateOtpService,
   verifyBvnService,
-  getAllSourcesService
+  getAllSourcesService,
+  getAllIdTypesService
 } from "../../services/profileService";
 
 function* getAuthentUsers() {
@@ -298,6 +302,16 @@ function* getAllSources() {
   }
 }
 
+function* getAllIdTypes() {
+  try {
+    const response = yield call(getAllIdTypesService);
+    yield put(getAllIdTypesSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getAllIdTypesError(error?.response?.data));
+  }
+}
+
 export function* watchGetAuthUsers() {
   yield takeEvery(GET_AUTH_USERS, getAuthentUsers);
 }
@@ -366,6 +380,10 @@ export function* watchGetAllSources() {
   yield takeEvery(GET_ALL_SOURCES, getAllSources);
 }
 
+export function* watchGetAllIdTypes() {
+  yield takeEvery(GET_ALL_ID_TYPES, getAllIdTypes);
+}
+
 function* ProfileSaga() {
   yield all([
     fork(watchGetAuthUsers),
@@ -385,6 +403,7 @@ function* ProfileSaga() {
     fork(watchGetUserDocs),
     fork(watchGetAllGender),
     fork(watchGetAllSources),
+    fork(watchGetAllIdTypes),
   ]);
 }
 

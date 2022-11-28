@@ -99,7 +99,7 @@ export const getUserDocsService = () => {
 
 export const getAllGenderService = () => {
   const http = new HttpService();
-  const url = `auth/admin/gender`;
+  const url = `auth/admin/gender?status=ACTIVE`;
   return http.getData(url);
 };
 
@@ -107,4 +107,10 @@ export const getAllSourcesService = () => {
   const http = new HttpService();
   const url = `auth/admin/sources?status=ACTIVE`;
   return http.getDataWithoutToken(url);
+};
+
+export const getAllIdTypesService = () => {
+  const http = new HttpService();
+  const url = `auth/admin/identification-type?status=ACTIVE`;
+  return http.getData(url);
 };

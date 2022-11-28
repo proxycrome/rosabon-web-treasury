@@ -16,6 +16,7 @@ import {
   updateDirectorDetails,
   getDirectorDetails,
   deleteDirector,
+  getAllIdTypes,
 } from "../../../store/actions";
 import ModalComponent from "../../ModalComponent";
 import { BVNConfirm, OTPVerify } from "../../Accessories/BVNConfirm";
@@ -62,6 +63,7 @@ const MoreDetails = () => {
     otpError,
     validateEmailOtp,
     id,
+    idTypes,
   } = useSelector((state) => state.user_profile);
 
   const { directors, loading, deleteDirectorMsg, directorMsg } = useSelector(
@@ -107,7 +109,7 @@ const MoreDetails = () => {
     email: "",
     phone: "",
     bvn: "",
-    idType: "",
+    idTypeId: "",
     idNumber: "",
   };
   const [formData, setformData] = useState(data);
@@ -145,7 +147,7 @@ const MoreDetails = () => {
     [`email${col2}`]: "",
     [`phone${col2}`]: "",
     [`bvn${col2}`]: "",
-    [`idType${col2}`]: "",
+    [`idTypeId${col2}`]: "",
     [`idNumber${col2}`]: "",
   });
 
@@ -228,8 +230,8 @@ const MoreDetails = () => {
       errors.phone = "Phone number is required";
     }
 
-    if (!values.idType) {
-      errors.idType = "ID Type is required";
+    if (!values.idTypeId) {
+      errors.idTypeId = "ID Type is required";
     }
 
     if (!values.idNumber) {
@@ -257,7 +259,8 @@ const MoreDetails = () => {
         email: editFormData[`email${col2}`] || director?.email,
         address: editFormData[`address${col2}`] || director?.address,
         bvn: editFormData[`bvn${col2}`] || director?.bvn,
-        idType: editFormData[`idType${col2}`] || director?.idType,
+        idTypeId:
+          Number(editFormData[`idTypeId${col2}`]) || Number(director?.idType?.id),
         idNumber: editFormData[`idNumber${col2}`] || director?.idNumber,
         idDocumentImage: {
           encodedUpload: base64File[`frontEncodedString${col2}`],
@@ -301,7 +304,7 @@ const MoreDetails = () => {
         email,
         address,
         bvn,
-        idType,
+        idTypeId,
         idNumber,
       } = formData;
 
@@ -316,7 +319,7 @@ const MoreDetails = () => {
         email,
         address,
         bvn,
-        idType,
+        idTypeId: Number(idTypeId),
         idNumber,
         idDocumentImage: {
           encodedUpload: frontEncodedString,
@@ -424,7 +427,7 @@ const MoreDetails = () => {
       email: "",
       phone: "",
       bvn: "",
-      idType: "",
+      idTypeId: "",
       idNumber: "",
     });
 
@@ -441,6 +444,10 @@ const MoreDetails = () => {
   };
 
   console.log(formData);
+
+  useEffect(() => {
+    dispatch(getAllIdTypes());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getDirectorDetails());
@@ -902,27 +909,20 @@ const MoreDetails = () => {
                                 <select
                                   className="form-select form-select-md"
                                   aria-label=".form-select-md"
-                                  name={`idType${col2}`}
+                                  name={`idTypeId${col2}`}
                                   value={
-                                    editFormData[`idType${col2}`] ||
-                                    item?.idType
+                                    editFormData[`idTypeId${col2}`] ||
+                                    item?.idType?.id
                                   }
                                   onChange={handleEditChange}
                                   disabled={showEdit}
                                 >
                                   <option value="">Select ID Type...</option>
-                                  <option value="NATIONAL_IDENTITY_CARD">
-                                    National ID card
-                                  </option>
-                                  <option value="DRIVER_LICENSE">
-                                    Driver's License{" "}
-                                  </option>
-                                  <option value="INTERNATIONAL_PASSPORT">
-                                    International Passport
-                                  </option>
-                                  <option value="VOTER_CARD">
-                                    Voter's Card{" "}
-                                  </option>
+                                  {idTypes?.map((item) => (
+                                    <option key={item.id} value={item.id}>
+                                      {item.name}
+                                    </option>
+                                  ))}
                                 </select>
                               </div>
                             </div>
@@ -1391,22 +1391,17 @@ const MoreDetails = () => {
                             <select
                               className="form-select form-select-md mb-3"
                               aria-label=".form-select-md"
-                              name="idType"
-                              value={data?.idType}
+                              name="idTypeId"
+                              value={data?.idTypeId}
                               onChange={handleChange}
                               disabled={showEdit}
                             >
                               <option value="">Select ID Type...</option>
-                              <option value="NATIONAL_IDENTITY_CARD">
-                                National ID card
-                              </option>
-                              <option value="DRIVER_LICENSE">
-                                Driver's License{" "}
-                              </option>
-                              <option value="INTERNATIONAL_PASSPORT">
-                                International Passport
-                              </option>
-                              <option value="VOTER_CARD">Voter's Card </option>
+                              {idTypes?.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.name}
+                                </option>
+                              ))}
                             </select>
                           </div>
                           <div className="col-md-6 ">
@@ -1545,6 +1540,7 @@ const MoreDetails = () => {
                       directors?.length
                     }
                     removeForm={setAddDirectors}
+                    idTypes={idTypes}
                   />
                 </Collapse>
                 <div className="row">
@@ -1907,26 +1903,21 @@ const MoreDetails = () => {
                           <select
                             className="form-select form-select-md"
                             aria-label=".form-select-md"
-                            name="idType"
-                            value={formData.idType}
+                            name="idTypeId"
+                            value={formData.idTypeId}
                             onChange={handleChange}
                             disabled={showEdit}
                           >
                             <option value="">Select ID Type...</option>
-                            <option value="NATIONAL_IDENTITY_CARD">
-                              National ID card
-                            </option>
-                            <option value="DRIVER_LICENSE">
-                              Driver's License{" "}
-                            </option>
-                            <option value="INTERNATIONAL_PASSPORT">
-                              International Passport
-                            </option>
-                            <option value="VOTER_CARD">Voter's Card </option>
+                            {idTypes?.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.name}
+                              </option>
+                            ))}
                           </select>
                         </div>
-                        {errors.idType && (
-                          <span className="text-danger">{errors.idType}</span>
+                        {errors.idTypeId && (
+                          <span className="text-danger">{errors.idTypeId}</span>
                         )}
                       </div>
                       <div className="col-md-6 mb-4">
@@ -2383,24 +2374,17 @@ const MoreDetails = () => {
                               <select
                                 className="form-select form-select-md mb-3"
                                 aria-label=".form-select-md"
-                                name="idType"
-                                value={data?.idType}
+                                name="idTypeId"
+                                value={data?.idTypeId}
                                 onChange={handleChange}
                                 disabled={showEdit}
                               >
                                 <option value="">Select ID Type...</option>
-                                <option value="NATIONAL_IDENTITY_CARD">
-                                  National ID card
-                                </option>
-                                <option value="DRIVER_LICENSE">
-                                  Driver's License{" "}
-                                </option>
-                                <option value="INTERNATIONAL_PASSPORT">
-                                  International Passport
-                                </option>
-                                <option value="VOTER_CARD">
-                                  Voter's Card{" "}
-                                </option>
+                                {idTypes?.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {item.name}
+                                  </option>
+                                ))}
                               </select>
                             </div>
                             <div className="col-md-6 ">
@@ -2585,6 +2569,7 @@ const MoreDetails = () => {
                       countNumbers={countNumbers}
                       number={directorField[directorField.length - 1]?.no || 1}
                       removeForm={setAddDirectors}
+                      idTypes={idTypes}
                     />
                   </Collapse>
                   <div className="row">
@@ -2610,20 +2595,13 @@ const MoreDetails = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 {!showEdit || directorField?.length > 0 ? (
-                  <button 
-                  type="submit" 
-                  className="blue-btn"
-                >
-                  Save
-                </button>
+                  <button type="submit" className="blue-btn">
+                    Save
+                  </button>
                 ) : (
-                  <button 
-                  type="submit"
-                  className="grey-button"
-                  disabled
-                >
-                  Save
-                </button>
+                  <button type="submit" className="grey-button" disabled>
+                    Save
+                  </button>
                 )}
               </div>
             </div>
@@ -2663,7 +2641,7 @@ const WrapperBody = styled.div`
     color: #222222;
     padding-bottom: 45px;
   }
-  
+
   .grey-button {
     background: #f2f2f2;
     color: #111e6c;

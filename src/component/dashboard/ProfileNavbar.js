@@ -33,8 +33,6 @@ export function ProfileNavBar({ children, view, feedback }) {
   const unreadNotifications = notifications?.filter(
     (item) => item.readStatus === "UNREAD"
   );
- 
-  console.log(notifications);
 
   const toggle = () => {
     setMenu(!menu);
@@ -111,7 +109,6 @@ export function ProfileNavBar({ children, view, feedback }) {
                       </div>
                     </NavLink>
                   </DropdownItem>
-                  <DropdownItem className="d-block">Settings</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem className="text-danger" onClick={handleLogout}>
                     <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{" "}
