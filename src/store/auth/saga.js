@@ -31,7 +31,7 @@ import {
   registerService,
   resetPasswordService,
 } from "../../services/authServices";
-import { getAuthUsers } from "../actions";
+import { getAuthUsers, clearBvn, clearMessages } from "../actions";
 
 //If user is login then dispatch redux action's are directly from here.
 function* loginUser({ payload: { formData, navigate, dispatch } }) {
@@ -67,7 +67,7 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
   }
 }
 
-function* logoutUser({ payload: { navigate } }) {
+function* logoutUser({ payload: { navigate, dispatch } }) {
   try {  
     const response = yield call(logoutService)
     yield put(logoutSuccess(response.data));
@@ -75,6 +75,8 @@ function* logoutUser({ payload: { navigate } }) {
       localStorage.clear();
       navigate("/login");
       toast.success(response.data.message, {position: "top-right"})
+      dispatch(clearBvn());
+      dispatch(clearMessages());
     } 
   } catch (error) {
     console.log(error);

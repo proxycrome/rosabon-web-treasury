@@ -59,10 +59,10 @@ export const loginUserError = (error) => {
   };
 };
 
-export const logout = (navigate) => {
+export const logout = (navigate, dispatch) => {
   return {
     type: LOGOUT_USER,
-    payload: { navigate },
+    payload: { navigate, dispatch },
   };
 };
 

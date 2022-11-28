@@ -43,7 +43,7 @@ export function ProfileNavBar({ children, view, feedback }) {
   };
 
   const handleLogout = (e) => {
-    dispatch(logout(navigate));
+    dispatch(logout(navigate, dispatch));
   };
 
   useEffect(() => {

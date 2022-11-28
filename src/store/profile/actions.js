@@ -1,4 +1,6 @@
 import {
+  CLEAR_BVN,
+  CLEAR_MESSAGES,
   GET_ALL_GENDER,
   GET_ALL_GENDER_ERROR,
   GET_ALL_GENDER_SUCCESS,
@@ -366,65 +368,77 @@ export const getUserDocsError = (error) => {
 export const toggleSidebar = () => {
   return {
     type: TOGGLE_SIDEBAR,
-  }
-}
+  };
+};
 
 export const getAllGender = () => {
   return {
-    type: GET_ALL_GENDER
-  }
-}
+    type: GET_ALL_GENDER,
+  };
+};
 
 export const getAllGenderSuccess = (data) => {
   return {
     type: GET_ALL_GENDER_SUCCESS,
     payload: data,
-  }
-}
+  };
+};
 
 export const getAllGenderError = (error) => {
   return {
     type: GET_ALL_GENDER_ERROR,
     payload: error,
-  }
-}
+  };
+};
 
 export const getAllSources = () => {
   return {
     type: GET_ALL_SOURCES,
-  }
-}
+  };
+};
 
 export const getAllSourcesSuccess = (data) => {
   return {
     type: GET_ALL_SOURCES_SUCCESS,
     payload: data,
-  }
-}
+  };
+};
 
 export const getAllSourcesError = (error) => {
   return {
     type: GET_ALL_SOURCES_ERROR,
     payload: error,
-  }
-}
+  };
+};
 
 export const getAllIdTypes = () => {
   return {
     type: GET_ALL_ID_TYPES,
-  }
-}
+  };
+};
 
 export const getAllIdTypesSuccess = (data) => {
   return {
     type: GET_ALL_ID_TYPES_SUCCESS,
     payload: data,
-  }
-}
+  };
+};
 
 export const getAllIdTypesError = (error) => {
   return {
     type: GET_ALL_ID_TYPES_ERROR,
     payload: error,
+  };
+};
+ 
+export const clearBvn = () => {
+  return {
+    type: CLEAR_BVN,
+  };
+};
+
+export const clearMessages = () => {
+  return {
+    type: CLEAR_MESSAGES,
   }
 }

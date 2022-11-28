@@ -323,6 +323,8 @@ const userProfileReducer = (state = initialState, action) => {
     case CLEAR_MESSAGES:
       state = {
         ...state,
+        kycData: null,
+        kycDataError: null,
         validateEmailOtp: null,
         validateOtpError: null,
       };
