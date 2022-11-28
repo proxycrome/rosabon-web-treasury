@@ -14,6 +14,15 @@ import {
   GET_REFERRAL_REDEEM_THRESHOLD,
   GET_REFERRAL_REDEEM_THRESHOLD_ERROR,
   GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS,
+  GET_SPECIAL_EARNING_ACTIVITIES,
+  GET_SPECIAL_EARNING_ACTIVITIES_ERROR,
+  GET_SPECIAL_EARNING_ACTIVITIES_SUCCESS,
+  GET_TOTAL_EARNING,
+  GET_TOTAL_EARNING_ERROR,
+  GET_TOTAL_EARNING_SUCCESS,
+  GET_TOTAL_REDEEMED_EARNING,
+  GET_TOTAL_REDEEMED_EARNING_ERROR,
+  GET_TOTAL_REDEEMED_EARNING_SUCCESS,
   GET_WALLET_BALANCE,
   GET_WALLET_BALANCE_ERROR,
   GET_WALLET_BALANCE_SUCCESS,
@@ -26,6 +35,9 @@ import {
   POST_TRANSFER_TO_PLAN,
   POST_TRANSFER_TO_PLAN_ERROR,
   POST_TRANSFER_TO_PLAN_SUCCESS,
+  REDEEEM_SPECIAL_EARNING,
+  REDEEEM_SPECIAL_EARNING_ERROR,
+  REDEEEM_SPECIAL_EARNING_SUCCESS,
   REDEEM_REFERRAL_BONUS,
   REDEEM_REFERRAL_BONUS_ERROR,
   REDEEM_REFERRAL_BONUS_SUCCESS,
@@ -221,39 +233,119 @@ export const redeemReferralBonusError = (error) => {
 export const getMyDepositActivities = () => {
   return {
     type: GET_MY_DEPOSIT_ACTIVITIES,
-  }
-}
+  };
+};
 
 export const getMyDepositActivitiesSuccess = (data) => {
   return {
     type: GET_MY_DEPOSIT_ACTIVITIES_SUCCESS,
     payload: data,
-  }
-}
+  };
+};
 
 export const getMyDepositActivitiesError = (error) => {
   return {
     type: GET_MY_DEPOSIT_ACTIVITIES_ERROR,
     payload: error,
-  }
-}
+  };
+};
 
 export const getReferralRedeemThreshold = () => {
   return {
     type: GET_REFERRAL_REDEEM_THRESHOLD,
-  }
-}
+  };
+};
 
 export const getReferralRedeemThresholdSuccess = (data) => {
   return {
     type: GET_REFERRAL_REDEEM_THRESHOLD_SUCCESS,
     payload: data,
-  }
-}
+  };
+};
 
 export const getReferralRedeemThresholdError = (error) => {
   return {
     type: GET_REFERRAL_REDEEM_THRESHOLD_ERROR,
+    payload: error,
+  };
+};
+
+export const redeemSpecialEarning = () => {
+  return {
+    type: REDEEEM_SPECIAL_EARNING,
+  };
+};
+
+export const redeemSpecialEarningSuccess = (data) => {
+  return {
+    type: REDEEEM_SPECIAL_EARNING_SUCCESS,
+    payload: data,
+  };
+};
+
+export const redeemSpecialEarningError = (error) => {
+  return {
+    type: REDEEEM_SPECIAL_EARNING_ERROR,
+    payload: error,
+  };
+};
+
+export const getSpecialEarningActivities = () => {
+  return {
+    type: GET_SPECIAL_EARNING_ACTIVITIES,
+  };
+};
+
+export const getSpecialEarningActivitiesSuccess = (data) => {
+  return {
+    type: GET_SPECIAL_EARNING_ACTIVITIES_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getSpecialEarningActivitiesError = (error) => {
+  return {
+    type: GET_SPECIAL_EARNING_ACTIVITIES_ERROR,
+    payload: error,
+  };
+};
+
+export const getTotalEarning = () => {
+  return {
+    type: GET_TOTAL_EARNING,
+  }
+}
+
+export const getTotalEarningSuccess = (data) => {
+  return {
+    type: GET_TOTAL_EARNING_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getTotalEarningError = (error) => {
+  return {
+    type: GET_TOTAL_EARNING_ERROR,
+    payload: error,
+  }
+}
+
+export const getTotalRedeemedEarning = () => {
+  return {
+    type: GET_TOTAL_REDEEMED_EARNING
+  }
+}
+
+export const getTotalRedeemedEarningSuccess = (data) => {
+  return {
+    type: GET_TOTAL_REDEEMED_EARNING_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getTotalRedeemedEarningError = (error) => {
+  return {
+    type: GET_TOTAL_REDEEMED_EARNING_ERROR,
     payload: error,
   }
 }

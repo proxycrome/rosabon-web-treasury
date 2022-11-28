@@ -21,6 +21,7 @@ import {
   changeUserPasswordSuccess,
   deleteDirectorError,
   deleteDirectorSuccess,
+  getDirectorDetails,
   getDirectorDetailsError,
   getDirectorDetailsSuccess,
   updateBankDetailsError,
@@ -122,7 +123,7 @@ function* updateContactDetails({ payload: { formData } }) {
   }
 }
 
-function* updateDirectorDetails({ payload: { formData, reset } }) {
+function* updateDirectorDetails({ payload: { formData, reset, dispatch } }) {
   try {
     const response = yield call(updateDirectorDetailsService, formData);
     console.log(response.data);
@@ -130,6 +131,7 @@ function* updateDirectorDetails({ payload: { formData, reset } }) {
     if (response) {
       toast.success("Director Details Updated Successfully");
       reset();
+      dispatch(getDirectorDetails());
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -145,6 +147,9 @@ function* verifyPhone({ payload: { recipient } }) {
     const response = yield call(verifyPhoneService, recipient);
     console.log(response.data);
     yield put(verifyPhoneSuccess(response.data));
+    if (response?.data?.message){
+      toast.success(response?.data?.message, { position: "top-right" });
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(verifyPhoneError(error?.response?.data));
@@ -156,6 +161,9 @@ function* validatePhoneOtp({ payload: { otp } }) {
     const response = yield call(validatePhoneOtpService, otp);
     console.log(response.data);
     yield put(validatePhoneOtpSuccess(response.data));
+    if (response?.data?.message){
+      toast.success(response?.data?.message, { position: "top-right" });
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(validatePhoneOtpError(error?.response?.data));
@@ -221,7 +229,7 @@ function* updatePersonalDocument({ payload: { formData, reset } }) {
   }
 }
 
-function* getDirectorDetails() {
+function* getDirectorDetail() {
   try {
     const response = yield call(getDirectorDetailsService);
     console.log(response.data);
@@ -321,7 +329,7 @@ export function* watchUpdatePersonalDocument() {
 }
 
 export function* watchGetDirectorDetails() {
-  yield takeEvery(GET_DIRECTOR_DETAILS, getDirectorDetails);
+  yield takeEvery(GET_DIRECTOR_DETAILS, getDirectorDetail);
 }
 
 export function* watchDeleteDirector() {

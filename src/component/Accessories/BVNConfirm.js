@@ -6,7 +6,7 @@ import Caneled from "../../asset/cnaceled.png";
 import OtpInput from "react18-input-otp";
 import JsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import html2canvas from 'html2canvas';
+import html2canvas from "html2canvas";
 import {
   updateUserKyc,
   sendOtp,
@@ -15,6 +15,7 @@ import {
   verifyPhone,
   validatePhoneOtp,
   planAction,
+  verifyBvn,
 } from "../../store/actions";
 
 import { Link, useNavigate, NavLink } from "react-router-dom";
@@ -22,6 +23,7 @@ import { usePaystackPayment } from "react-paystack";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { CLEAR_MESSAGES } from "../../store/updateProfile/actionTypes";
 import { getCurrIcon } from "../Plan/Accesssories";
+import moment from "moment";
 
 export function BVNConfirm({
   bank,
@@ -33,6 +35,8 @@ export function BVNConfirm({
   confirmName,
   nameMatch,
   director,
+  phone,
+  dateOfBirth,
 }) {
   const [complete, setComplete] = useState(false);
   const dispatch = useDispatch();
@@ -46,10 +50,10 @@ export function BVNConfirm({
   const { success } = useSelector((state) => state.auth);
   const { kycData } = useSelector((state) => state.user_profile);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!nameMatch  && director){
+    if (!nameMatch && director) {
       confirmName(firstName, lastName);
       handleClose();
       return;
@@ -60,18 +64,33 @@ export function BVNConfirm({
       usage: "TREASURY",
       individualUser: {
         bvn,
-        firstName,
-        lastName,
+        firstName:
+          firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
+        lastName:
+          lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),
+        isKyc: false,
+        status: "ACTIVE",
       },
     };
 
     console.log(data);
-    dispatch(updateUserKyc(data, null));
+    dispatch(updateUserKyc(data, null, dispatch));
   };
 
   useEffect(() => {
     if (kycData) {
-      setComplete(true);
+      if (!nameMatch) {
+        const objData = {
+          firstName: firstName?.toUpperCase(),
+          lastName: lastName?.toUpperCase(),
+          id: bvn,
+          isSubjectConsent: true,
+          phoneNumber: phone,
+          dateOfBirth: dateOfBirth,
+        };
+        console.log(objData);
+        dispatch(verifyBvn(objData, null, setComplete));
+      }
     }
   }, [kycData]);
 
@@ -107,18 +126,18 @@ export function BVNConfirm({
                         <h4>BVN Verification</h4>
                         {director ? (
                           <p className="pt-5">
-                          Your name on the system should be updated with{" "}
-                          {firstName} {lastName} to reflect exactly as it
-                          appears on your BVN
-                        </p>
+                            Your name on the system should be updated with{" "}
+                            {firstName} {lastName} to reflect exactly as it
+                            appears on your BVN
+                          </p>
                         ) : (
                           <p className="pt-5">
-                          Your name on our system will be updated with{" "}
-                          {firstName} {lastName} to reflect exactly as it
-                          appears on your BVN
-                        </p>
+                            Your name on our system will be updated with{" "}
+                            {firstName} {lastName} to reflect exactly as it
+                            appears on your BVN
+                          </p>
                         )}
-                        
+
                         <div className=" text-center pt-3">
                           <button
                             onClick={handleSubmit}
@@ -369,7 +388,9 @@ export function OTPVerify({
   const [token, setToken] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const dispatch = useDispatch();
-  const { otp, validateOtpError } = useSelector((state) => state.user_profile);
+  const { otp, validateOtpError, validateEmailOtp } = useSelector(
+    (state) => state.user_profile
+  );
   const { phoneMsg, validatePhone } = useSelector(
     (state) => state.updateProfile
   );
@@ -378,17 +399,15 @@ export function OTPVerify({
 
   const handleEmailOtpSubmit = async (e) => {
     e.preventDefault();
-    // if ((otpData && token === otpData) || (otp?.data && token === otp?.data)) {
-    updateOtp(token);
     dispatch(validateOtp(token));
-    // toggleCont();
-    // handleClose();
-    // }
-
-    if ((otpData && token !== otpData) || (otp?.data && token !== otp?.data)) {
-      setErrorMsg("Please enter a valid OTP");
-    }
   };
+
+  useEffect(() => {
+    if (validateEmailOtp) {
+      updateOtp(token);
+      handleClose();
+    }
+  }, [validateEmailOtp]);
 
   const handlePhoneOtpSubmit = async (e) => {
     e.preventDefault();
@@ -465,23 +484,27 @@ export function OTPVerify({
                   <p className="text-center">
                     Didn't get an OTP?{" "}
                     {emailOtp ? (
-                      <strong
-                        onClick={handleResendEmailOtp}
-                        style={{ cursor: "pointer" }}
-                      >
-                        Resend
-                      </strong>
+                      <Link to="#">
+                        <strong
+                          onClick={handleResendEmailOtp}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Resend
+                        </strong>
+                      </Link>
                     ) : (
-                      <strong
-                        onClick={handleResendPhoneOtp}
-                        style={{ cursor: "pointer" }}
-                      >
-                        Resend
-                      </strong>
+                      <Link to="#">
+                        <strong
+                          onClick={handleResendPhoneOtp}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Resend
+                        </strong>
+                      </Link>
                     )}
                   </p>
                   <OTPButton>
-                    <div className="d-flex justify-content-between align-items-center ">
+                    <div className="d-flex justify-content-between align-items-center gap-1">
                       <button
                         style={{
                           outline: "none",
@@ -641,13 +664,11 @@ const WrappCongrate = styled.div`
 
   .inputField {
     border: 1px solid #e0e0e0;
-    height: 56px;
+    height: 50px;
     border-radius: 3px;
     font-size: 20px;
     color: #000;
-    flex: 1 0 56px;
-    // outline: none;
-    // border: none;
+    flex: 1 0 45px;
   }
 
   .enclose {
@@ -709,14 +730,94 @@ export function Notice({
   handleShowModalTwo = null,
   transferNotice = null,
   transferForm = null,
-  plan = null,
   payType = "",
+  actionType,
+  endDate,
+  dataObj = null,
 }) {
   const dispatch = useDispatch();
+  const date = new Date();
+  const recentDate = moment(date).format("YYYY-MM-DD");
+  const { login } = useSelector((state) => state.auth);
+  const user_role = login ? login?.role?.name : "";
+  const { singlePlan } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
   const receive_amount = transferForm !== null && transferForm?.amount;
   const receiving_plan =
     transferForm !== null && JSON.parse(transferForm?.receive);
+
+  const handleFullRoll = (e) => {
+    e.preventDefault();
+    const {
+      amount,
+      formData: {
+        contributionValue,
+        calculatedInterest,
+        paymentMaturity,
+        withholdingTax,
+      },
+      interestRate,
+      tenor,
+    } = dataObj;
+    const data = {
+      amount: parseFloat(amount),
+      balanceAfterRollover: parseFloat(
+        plan?.planSummary?.principal - parseFloat(amount)
+      ),
+      completed: true,
+      plan: parseInt(plan?.id),
+      planAction: "ROLLOVER",
+      rollToPlan: {
+        acceptPeriodicContribution: true,
+        actualMaturityDate: moment(endDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+        allowsLiquidation: plan?.allowsLiquidation,
+        amount: plan?.product?.properties?.hasTargetAmount
+          ? null
+          : parseFloat(amount),
+        autoRenew: plan?.autoRenew,
+        autoRollOver: plan?.autoRenew,
+        contributionValue: contributionValue,
+        currency: parseInt(plan?.currency?.id),
+        dateCreated: recentDate,
+        directDebit: plan?.directDebit,
+        exchangeRate: plan?.exchangeRate,
+        interestRate: interestRate,
+        interestReceiptOption: plan?.interestReceiptOption,
+        monthlyContributionDay: plan?.monthlyContributionDay,
+        numberOfTickets: Math.floor(
+          amount / plan?.product?.minTransactionLimit
+        ),
+        paymentMethod: plan?.paymentMethod,
+        planDate: recentDate,
+        planName: plan?.planName,
+        planStatus: "ACTIVE",
+        planSummary: {
+          calculatedInterest: parseFloat(calculatedInterest),
+          endDate: moment(endDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+          interestRate: interestRate,
+          interestReceiptOption: plan?.interestReceiptOption,
+          paymentMaturity: parseFloat(paymentMaturity),
+          planName: plan?.planName,
+          principal: parseFloat(amount),
+          startDate: recentDate,
+          withholdingTax: parseFloat(withholdingTax),
+        },
+        product: plan?.product?.id,
+        productCategory: plan?.productCategory?.id,
+        savingFrequency: plan?.savingFrequency,
+        targetAmount: plan?.product?.properties?.hasTargetAmount
+          ? parseFloat(amount)
+          : null,
+        tenor: tenor,
+        weeklyContributionDay: plan?.weeklyContributionDay,
+      },
+    };
+    console.log(data);
+    dispatch(
+      planAction(data, null, handleShowModalTwo, dispatch, null, "full")
+    );
+  };
 
   const submit = async () => {
     const formData = {
@@ -745,8 +846,9 @@ export function Notice({
                   <h5>Note</h5>
                   {transferNotice === "transfer" ? (
                     <p className="">
-                      You are about to transfer {getCurrIcon(plan?.currency?.name)}
-                      {parseFloat(receive_amount).toFixed(2)} from your{" "} 
+                      You are about to transfer{" "}
+                      {getCurrIcon(plan?.currency?.name)}
+                      {parseFloat(receive_amount).toFixed(2)} from your{" "}
                       {plan?.planName} plan into {receiving_plan?.planName} plan
                     </p>
                   ) : payType === "pay-card" ? (
@@ -765,9 +867,23 @@ export function Notice({
                     >
                       Cancel
                     </button>
-                    <button onClick={submit} type="button" className="blue_btn">
-                      Proceed
-                    </button>
+                    {actionType === "rollover" ? (
+                      <button
+                        onClick={handleFullRoll}
+                        type="button"
+                        className="blue_btn"
+                      >
+                        Proceed
+                      </button>
+                    ) : (
+                      <button
+                        onClick={submit}
+                        type="button"
+                        className="blue_btn"
+                      >
+                        Proceed
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -781,40 +897,39 @@ export function Notice({
 
 export function TransactionPreview({ handleClose, transaction }) {
   const generatePDF = () => {
-    
-    const input = document.getElementById('print');
+    const input = document.getElementById("print");
     const pxToMm = (px) => {
-      return Math.floor(px/document.getElementById('print')?.offsetHeight);
+      return Math.floor(px / document.getElementById("print")?.offsetHeight);
     };
-    
+
     const mmToPx = (mm) => {
-      return document.getElementById('print')?.offsetHeight*mm;
+      return document.getElementById("print")?.offsetHeight * mm;
     };
 
     const a4WidthMm = 210;
-      const a4HeightMm = 297; 
-      const a4HeightPx = mmToPx(a4HeightMm); 
-      const inputHeightMm = pxToMm(input?.offsetHeight);
-      const numPages = inputHeightMm <= a4HeightMm ? 1 : Math.floor(inputHeightMm/a4HeightMm) + 1;
+    const a4HeightMm = 297;
+    const a4HeightPx = mmToPx(a4HeightMm);
+    const inputHeightMm = pxToMm(input?.offsetHeight);
+    const numPages =
+      inputHeightMm <= a4HeightMm
+        ? 1
+        : Math.floor(inputHeightMm / a4HeightMm) + 1;
 
-    
-    html2canvas(input)
-        .then((canvas) => {
-          const imgData = canvas.toDataURL('image/png');
-          
-          // Document of a4WidthMm wide and inputHeightMm high
-          // if (inputHeightMm > a4HeightMm) {
-          //   // elongated a4 (system print dialog will handle page breaks)
-          //   var pdf = new JsPDF('p', 'mm', [inputHeightMm+16, a4WidthMm]);
-          // } else {
-            // standard a4
-            var pdf = new JsPDF();
-          // }
-          
-          pdf.addImage(imgData, 'PNG', 65, 20 );
-          pdf.save(`transaction.pdf`);
-        });
-    ;
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+
+      // Document of a4WidthMm wide and inputHeightMm high
+      // if (inputHeightMm > a4HeightMm) {
+      //   // elongated a4 (system print dialog will handle page breaks)
+      //   var pdf = new JsPDF('p', 'mm', [inputHeightMm+16, a4WidthMm]);
+      // } else {
+      // standard a4
+      var pdf = new JsPDF();
+      // }
+
+      pdf.addImage(imgData, "PNG", 65, 20);
+      pdf.save(`transaction.pdf`);
+    });
   };
 
   return (
@@ -824,7 +939,11 @@ export function TransactionPreview({ handleClose, transaction }) {
           <WrapDetails>
             <div className="container">
               <div className="row">
-                <div className="col" id="print" style={{border: "1px solid black"}}>
+                <div
+                  className="col"
+                  id="print"
+                  style={{ border: "1px solid black" }}
+                >
                   <div className="d-flex flex-column justify-content-center align-items-center pb-5">
                     <h4>
                       {transaction?.transactionType === "CREDIT" ? "+" : "-"}{" "}
@@ -908,7 +1027,7 @@ export function ProceedPayCard({
   onSuccess,
   onClose,
   text,
-  setIsClicked
+  setIsClicked,
 }) {
   const { reg_transaction, loading } = useSelector((state) => state.paystack);
   const { users } = useSelector((state) => state.user_profile);
@@ -922,7 +1041,7 @@ export function ProceedPayCard({
 
   useEffect(() => {
     setIsClicked(false);
-  }, [])
+  }, []);
 
   const initializePayment = usePaystackPayment(config);
 
@@ -942,7 +1061,7 @@ export function ProceedPayCard({
                           color: "#FFFFFF",
                           width: "300px",
                           height: "41px",
-                          borderRadius: "10px"
+                          borderRadius: "10px",
                         }}
                         onClick={() => {
                           initializePayment(onSuccess, onClose);

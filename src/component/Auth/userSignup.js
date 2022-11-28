@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  FormFeedback,
-  InputGroup,
-  InputGroupText,
-} from "reactstrap";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Input, InputGroup, InputGroupText, Tooltip } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
@@ -17,40 +8,45 @@ import { Toaster } from "react-hot-toast";
 import { SignupLeftView } from "./loginLeftView";
 import { ValidateUserForm, validateUserInfo } from "./validateForm";
 import Footer from "../dashboard/ProfileFooter";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { getAllSources } from "../../store/actions";
 
 function UserSignup() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const { isSignedup, login, isLoggedIn, isLoading } = auth;
-  const user_profile = useSelector((state) => state.user_profile);
-  const { users } = user_profile;
+  const { isLoading } = auth;
+  const { sources } = useSelector((state) => state.user_profile);
+  const [open, setOpen] = useState(false);
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [isUserNewsLetters, setisUserNewsLetters] = useState(false);
   const [isUserTerms, setIsUserTerms] = useState(false);
 
   const location = useLocation();
-  console.log(location);
 
-  const query = new URLSearchParams(location?.search)
+  const query = new URLSearchParams(location?.search);
 
-  const referralCode = query.get('referralCode');
-  const sourcer = query.get('source');
+  const referralCode = query.get("referralCode");
+  const sourcer = query.get("source");
 
-  const referral = {
-    referralCode,
-    sourcer
-  }
-
-  localStorage.setItem("referral", JSON.stringify(referral));
-
-  const { handleValueChange, values, handleSubmit, errors } = ValidateUserForm(
+  const {
+    handleValueChange,
+    handlePhoneValueChange,
+    values,
+    handleSubmit,
+    errors,
+  } = ValidateUserForm(
     validateUserInfo,
     isUserNewsLetters,
     isUserTerms,
     referralCode,
     sourcer
   );
+
+  const toggle = () => {
+    setOpen(!open);
+  };
 
   const togglePassword1 = () => {
     setPasswordShown1(!passwordShown1);
@@ -59,13 +55,9 @@ function UserSignup() {
     setPasswordShown2(!passwordShown2);
   };
 
-  
-
-  // useEffect(() => {
-  //   if (isSignedup) {
-  //     navigate('/congrates', { state: 'success_signup' })
-  //   }
-  // }, [isSignedup])
+  useEffect(() => {
+    dispatch(getAllSources());
+  }, [dispatch]);
 
   return (
     <div>
@@ -76,7 +68,7 @@ function UserSignup() {
           }}
         />
       </div>
-      <Footer />
+      <Footer source={sourcer} referralCode={referralCode} />
       <Wrapper>
         <div
           style={{
@@ -86,7 +78,7 @@ function UserSignup() {
           className="content"
         >
           <div className="login-left-view">
-            <SignupLeftView />
+            <SignupLeftView source={sourcer} referralCode={referralCode} />
           </div>
 
           <div
@@ -95,42 +87,39 @@ function UserSignup() {
           >
             <div className="">
               <RightWrapper>
-                <h4>Sign up</h4>
+                <h4 className="container">Sign up</h4>
                 <div className="container">
                   <form autoComplete="off" onSubmit={handleSubmit}>
                     <LoginInput>
                       <div className="row">
-                        <div className="col-md-12 d-flex align-items-start">
-                          <div className="col-md-6  mb-4">
-                            <label>First Name</label>
-                            <div className="input-group">
-                              <Input
-                                type="text"
-                                className="form-control"
-                                onChange={handleValueChange}
-                                name="firstName"
-                                value={values.firstName}
-                              />
-                            </div>
-                            <div>
-                              {errors.firstName && <h3>{errors.firstName}</h3>}
-                            </div>
+                        <div className="col-md-6  mb-4">
+                          <label>First Name</label>
+                          <div className="input-group">
+                            <Input
+                              type="text"
+                              className="form-control"
+                              onChange={handleValueChange}
+                              name="firstName"
+                              value={values.firstName}
+                            />
                           </div>
-                          <div className="col-md-6 ps-2 mb-4">
-                            <label>Last Name</label>
-                            <div className="input-group">
-                              <Input
-                                type="text"
-                                className="form-control"
-                                // placeholder="Last Name"
-                                onChange={handleValueChange}
-                                name="lastName"
-                                value={values.lastName}
-                              />
-                            </div>
-                            <div>
-                              {errors.lastName && <h3>{errors.lastName}</h3>}
-                            </div>
+                          <div>
+                            {errors.firstName && <h3>{errors.firstName}</h3>}
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-4">
+                          <label>Last Name</label>
+                          <div className="input-group">
+                            <Input
+                              type="text"
+                              className="form-control"
+                              onChange={handleValueChange}
+                              name="lastName"
+                              value={values.lastName}
+                            />
+                          </div>
+                          <div>
+                            {errors.lastName && <h3>{errors.lastName}</h3>}
                           </div>
                         </div>
                       </div>
@@ -149,32 +138,38 @@ function UserSignup() {
                       </div>
                       <div className="mb-4">
                         <label>Mobile Number</label>
-                        <div className="d-flex">
-                          <select
-                            className="form-select-md select-field"
-                            style={{
-                              border: "1.5px solid #E0E0E0",
-                              outline: "none",
+                        <div className="input-group">
+                          <PhoneInput
+                            country={"ng"}
+                            inputClass="form-control phone-input"
+                            buttonClass="select-field"
+                            inputProps={{
+                              name: "phone",
+                              required: true,
+                              id: "phone",
                             }}
-                          >
-                            <option>NGN</option>
-                          </select>
-                          <div className="input-group">
-                            <div className="input-group-prepend phone-code">
-                              +234
-                            </div>
-                            <Input
-                              type="text"
-                              className="form-control phone-input"
-                              onChange={handleValueChange}
-                              name="phone"
-                              maxLength="10"
-                              value={values.phone}
-                            />
-                          </div>
+                            placeholder="+234 801 234 5678"
+                            jumpCursorToEnd={true}
+                            disableCountryCode={false}
+                            value={values.phone}
+                            countryCodeEditable={false}
+                            onChange={(value) => handlePhoneValueChange(value)}
+                            disableDropdown
+                            masks={{ ng: "... ... ...." }}
+                          />
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
+                      <Tooltip
+                        placement="bottom-end"
+                        target="phone"
+                        isOpen={open}
+                        toggle={toggle}
+                        autohide={false}
+                      >
+                        Enter your Mobile Number without the first "0" (e.g 801
+                        234 5678)
+                      </Tooltip>
                       <div className="mb-4 input_password">
                         <label>Password</label>
                         <div className="input-group">
@@ -230,34 +225,58 @@ function UserSignup() {
                       <div className="mb-4">
                         <div className="">
                           <label>How did you hear about us?</label>
-                          <select
-                            className="form-select form-select-lg select-field"
-                            aria-label=".form-select-lg"
-                            onChange={handleValueChange}
-                            name="source"
-                            value={values.source}
-                          >
-                            <option value=""></option>
-                            <option value="ROSABON_SALES">
-                              Rosabon sales executive
-                            </option>
-                            <option value="ANOTHER_USER">Another user</option>
-                            <option value="OTHER">Others</option>
-                          </select>
+                          {sourcer ? (
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                className="form-control"
+                                onChange={handleValueChange}
+                                name="source"
+                                defaultValue={values.source === "ANOTHER_USER" ? "Another user" : "Rosabon sales executive"}
+                                disabled={sourcer}
+                              />
+                            </div>
+                          ) : (
+                            <select
+                              className="form-select form-select-lg select-user-field"
+                              aria-label=".form-select-lg"
+                              onChange={handleValueChange}
+                              name="source"
+                              defaultValue={values.source}
+                            >
+                              <option value="" hidden></option>
+                              <option value="ROSABON_SALES">
+                                Rosabon sales executive
+                              </option>
+                              <option value="ANOTHER_USER">Another user</option>
+                              <option value="OTHER">Others</option>
+                            </select>
+                          )}
                         </div>
                         {errors.source && <h3>{errors.source}</h3>}
                       </div>
                       <div className="referal-link pb-5">
                         <div className="input-group">
                           {values.source === "OTHER" ? (
-                            <Input
-                              type="text"
-                              className="form-control"
-                              placeholder="Source Name"
+                            <select
+                              className="form-select form-select-lg select-user-field"
+                              aria-label=".form-select-lg"
                               onChange={handleValueChange}
-                              name="sourceOthers"
-                              value={values.sourceOthers}
-                            />
+                              name="sourceOthersId"
+                              defaultValue={values.sourceOthersId}
+                            >
+                              <option value="" hidden>
+                                Select Source Name
+                              </option>
+                              {sources?.map((data) => (
+                                <option key={data.id} value={data.id}>
+                                  {data.name}
+                                </option>
+                              ))}
+                              <option value="NOT_IN_LIST">
+                                Not in the List
+                              </option>
+                            </select>
                           ) : values.source === "ANOTHER_USER" ? (
                             <Input
                               type="text"
@@ -265,7 +284,7 @@ function UserSignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           ) : values.source === "ROSABON_SALES" ? (
@@ -275,7 +294,7 @@ function UserSignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           ) : (
@@ -292,6 +311,24 @@ function UserSignup() {
                         </div>
                         {errors.refferedBy && <h3>{errors.refferedBy}</h3>}
                       </div>
+                      {values.source === "OTHER" &&
+                        values.sourceOthersId === "NOT_IN_LIST" && (
+                          <div className="mb-4">
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                placeholder="Enter Other Sources"
+                                className="form-control"
+                                onChange={handleValueChange}
+                                name="sourceNotInTheList"
+                                value={values.sourceNotInTheList}
+                              />
+                            </div>
+                            {errors.sourceNotInTheList && (
+                              <h3>{errors.sourceNotInTheList}</h3>
+                            )}
+                          </div>
+                        )}
                       <div className="">
                         <div className="form-check">
                           <Input
@@ -441,6 +478,10 @@ const RightWrapper = styled.section`
   .select-field {
     height: 54px;
     font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: 1px solid #eee;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;
@@ -448,7 +489,23 @@ const RightWrapper = styled.section`
     letter-spacing: -0.01em;
     color: #242424;
     padding: 15px;
+    background: #ffffff;
   }
+
+  .select-user-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border: 1.5px solid #e0e0e0 !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -504,9 +561,18 @@ const LoginInput = styled.div`
   }
 
   .phone-input {
-    padding-left: 60px !important;
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
   }
-
 `;
 const LoginButton = styled.div`
   display: flex;

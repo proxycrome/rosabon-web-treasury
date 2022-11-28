@@ -6,10 +6,14 @@ import {
   GET_MY_REFERRALS,
   GET_MY_REFERRAL_ACTIVITIES,
   GET_REFERRAL_REDEEM_THRESHOLD,
+  GET_SPECIAL_EARNING_ACTIVITIES,
+  GET_TOTAL_EARNING,
+  GET_TOTAL_REDEEMED_EARNING,
   GET_WALLET_BALANCE,
   GET_WALLET_TRANSACTIONS,
   POKE_USER,
   POST_TRANSFER_TO_PLAN,
+  REDEEEM_SPECIAL_EARNING,
   REDEEM_REFERRAL_BONUS,
   REQUEST_WITHDRAWAL,
 } from "./actionTypes";
@@ -25,6 +29,12 @@ import {
   getMyReferralsSuccess,
   getReferralRedeemThresholdError,
   getReferralRedeemThresholdSuccess,
+  getSpecialEarningActivitiesError,
+  getSpecialEarningActivitiesSuccess,
+  getTotalEarningError,
+  getTotalEarningSuccess,
+  getTotalRedeemedEarningError,
+  getTotalRedeemedEarningSuccess,
   getWalletBalance,
   getWalletBalanceError,
   getWalletBalanceSuccess,
@@ -36,6 +46,8 @@ import {
   postTransferToPlanSuccess,
   redeemReferralBonusError,
   redeemReferralBonusSuccess,
+  redeemSpecialEarningError,
+  redeemSpecialEarningSuccess,
   requestWithdrawalError,
   requestWithdrawalSuccess,
 } from "./actions";
@@ -46,13 +58,18 @@ import {
   getMyReferralActivitiesService,
   getMyReferralsService,
   getReferralRedeemThresholdService,
+  getSpecialEarningActivitiesService,
+  getTotalEarningService,
+  getTotalRedeemedEarningService,
   getWalletBalanceService,
   getWalletTransactionsService,
   pokeUserService,
   postTransferToPlanService,
   redeemReferralBonusService,
+  redeemSpecialEarningService,
   requestWithdrawalService,
 } from "../../services/walletService";
+
 import toast from "react-hot-toast";
 
 function* getWalletBalancer() {
@@ -218,6 +235,60 @@ function* getReferralRedeemThreshold() {
   }
 }
 
+function* redeemSpecialEarning() {
+  try {
+    const response = yield call(redeemSpecialEarningService);
+    console.log(response.data);
+    yield put(redeemSpecialEarningSuccess(response.data));
+    if (response) {
+      setTimeout(() => {
+        toast.success(response.data.message);
+      }, 1000);
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(redeemSpecialEarningError(error?.response?.data));
+    if (error?.response?.data?.message) {
+      setTimeout(() => {
+        toast.error(error?.response?.data?.message);
+      }, 1000);
+    }
+  }
+}
+
+function* getSpecialEarningActivities() {
+  try {
+    const response = yield call(getSpecialEarningActivitiesService);
+    console.log(response.data);
+    yield put(getSpecialEarningActivitiesSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getSpecialEarningActivitiesError(error?.response?.data));
+  }
+}
+
+function* getTotalEarning() {
+  try {
+    const response = yield call(getTotalEarningService);
+    console.log(response.data);
+    yield put(getTotalEarningSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getTotalEarningError(error?.response?.data));
+  }
+}
+
+function* getTotalRedeemedEarning() {
+  try {
+    const response = yield call(getTotalRedeemedEarningService);
+    console.log(response.data);
+    yield put(getTotalRedeemedEarningSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(getTotalRedeemedEarningError(error?.response?.data));
+  }
+}
+
 export function* watchGetWalletBalance() {
   yield takeEvery(GET_WALLET_BALANCE, getWalletBalancer);
 }
@@ -262,6 +333,22 @@ export function* watchGetReferralRedeemThreshold() {
   yield takeEvery(GET_REFERRAL_REDEEM_THRESHOLD, getReferralRedeemThreshold);
 }
 
+export function* watchRedeemSpecialEarning() {
+  yield takeEvery(REDEEEM_SPECIAL_EARNING, redeemSpecialEarning);
+}
+
+export function* watchGetSpecialEarningActivities() {
+  yield takeEvery(GET_SPECIAL_EARNING_ACTIVITIES, getSpecialEarningActivities);
+}
+
+export function* watchGetTotalEarning() {
+  yield takeEvery(GET_TOTAL_EARNING, getTotalEarning);
+}
+
+export function* watchGetTotalRedeemedEarning() {
+  yield takeEvery(GET_TOTAL_REDEEMED_EARNING, getTotalRedeemedEarning);
+}
+
 function* WalletSaga() {
   yield all([
     fork(watchGetWalletBalance),
@@ -275,6 +362,10 @@ function* WalletSaga() {
     fork(watchRedeemReferralBonus),
     fork(watchGetMyDepositActivities),
     fork(watchGetReferralRedeemThreshold),
+    fork(watchRedeemSpecialEarning),
+    fork(watchGetSpecialEarningActivities),
+    fork(watchGetTotalEarning),
+    fork(watchGetTotalRedeemedEarning),
   ]);
 }
 

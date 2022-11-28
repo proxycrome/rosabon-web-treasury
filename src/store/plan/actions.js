@@ -50,6 +50,9 @@ import {
   COMPLETE_TRANSFER,
   COMPLETE_TRANSFER_SUCCESS,
   COMPLETE_TRANSFER_ERROR,
+  GET_CLOSED_PLANS,
+  GET_CLOSED_PLANS_SUCCESS,
+  GET_CLOSED_PLANS_ERROR,
 } from "./actionTypes";
 
 export const getContribVal = () => {
@@ -241,7 +244,8 @@ export const planAction = (
   onSuccess,
   handleShowModalTwo,
   dispatch,
-  setDebitPopup
+  setDebitPopup,
+  rolloverType
 ) => {
   return {
     type: PLAN_ACTION,
@@ -251,6 +255,7 @@ export const planAction = (
       handleShowModalTwo,
       dispatch,
       setDebitPopup,
+      rolloverType,
     },
   };
 };
@@ -412,3 +417,23 @@ export const completeTransferError = (error) => {
     payload: error,
   };
 };
+
+export const getClosedPlans = () => {
+  return {
+    type: GET_CLOSED_PLANS,
+  }
+}
+
+export const getClosedPlansSuccess = (data) => {
+  return {
+    type: GET_CLOSED_PLANS_SUCCESS,
+    payload: data,
+  }
+}
+
+export const getClosedPlansError = (error) => {
+  return {
+    type: GET_CLOSED_PLANS_ERROR,
+    payload: error,
+  }
+}

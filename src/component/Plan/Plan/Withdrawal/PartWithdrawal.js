@@ -13,23 +13,33 @@ import { getBankDetails, getPenalCharge } from "../../../../store/actions";
 const PartWithdrawal = ({ goBack, amount, reason }) => {
   const dispatch = useDispatch();
   const [isClicked, setIsClicked] = useState(false);
-  const { singlePlan, loading, penal_charge } = useSelector(
-    (state) => state.plan
-  );
+  const [penalCharge, setPenalCharge] = useState();
+  const [isTerms, setIsTerms] = useState(false);
+  const { singlePlan, loading } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+
+  const capitalise = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
 
   useEffect(() => {
     dispatch(getBankDetails());
     dispatch(getPenalCharge());
-  }, []);
+  }, [dispatch]);
 
-  if (isClicked) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsClicked(true);
+  };
+
+  if (isClicked && isTerms) {
     return (
       <WithdrawalChannel
         amount={amount}
         type="PARTIAL"
         reason={reason}
         goBack={() => setIsClicked(false)}
+        penalCharge={penalCharge}
       />
     );
   }
@@ -42,89 +52,99 @@ const PartWithdrawal = ({ goBack, amount, reason }) => {
           <span className="fw-bold">Plan</span>
         </NavTitle>
       </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Withdrawal</h4>
-          <div className="plan-content">
-            <div className="plan">
-              <div className="plan-top h-50 p-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>{plan.planName}</h4>
-                    <p className="p-0 m-0">{plan?.product.productName}</p>
+      <form autoComplete="off" autoCorrect="off" onSubmit={handleSubmit}>
+        <Wrapper>
+          <LeftView>
+            <h4 className="pb-3">Withdrawal</h4>
+            <div className="plan-content">
+              <div className="plan">
+                <div className="plan-top h-50 p-4">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div>
+                      <h4>{plan.planName}</h4>
+                      <p className="p-0 m-0">{plan?.product.productName}</p>
+                    </div>
+                    <h4 className={capitalise(plan?.planStatus)}>{capitalise(plan?.planStatus)}</h4>
                   </div>
-                  <h4 className="Active">{plan.planStatus.toLowerCase()}</h4>
+                  <div className="d-flex align-items-center justify-content-between pt-4">
+                    <div>
+                      <h4>Start date</h4>
+                      <p className="p-0 m-0">
+                        {moment(plan?.planSummary?.startDate).format(
+                          "DD/MM/YYYY"
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <h4>End date</h4>
+                      <p className="p-0 m-0">
+                        {moment(plan?.planSummary?.endDate).format("DD/MM/YYYY")}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex align-items-center justify-content-between pt-4">
-                  <div>
-                    <h4>Start date</h4>
-                    <p className="p-0 m-0">
-                      {moment(plan.planSummary.startDate).format("DD/MM/YYYY")}
-                    </p>
-                  </div>
-                  <div>
-                    <h4>End date</h4>
-                    <p className="p-0 m-0">
-                      {moment(plan.planSummary.endDate).format("DD/MM/YYYY")}
-                    </p>
-                  </div>
+                <div className="d-flex position-relative horizontal-line">
+                  <div className="position-absolute horizontal-circle-left"></div>
+                  <hr className="dotted" />
+                  <div className="position-absolute end-0 horizontal-circle-right"></div>
                 </div>
-              </div>
-              <div className="d-flex position-relative horizontal-line">
-                <div className="position-absolute horizontal-circle-left"></div>
-                <hr className="dotted" />
-                <div className="position-absolute end-0 horizontal-circle-right"></div>
-              </div>
 
-              <div className="plan-top h-50 py-1 px-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Balance</h4>
-                    <p className="p-0 m-0 d-flex gap-1">
-                      {getCurrIcon(plan?.currency?.name)}
-                      {plan?.planSummary?.principal?.toLocaleString()}
-                    </p>
+                <div className="plan-top h-50 py-1 px-4">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div>
+                      <h4>Balance</h4>
+                      <p className="p-0 m-0 d-flex gap-1">
+                        {getCurrIcon(plan?.currency?.name)}
+                        {plan?.planSummary?.principal?.toLocaleString()}
+                      </p>
+                    </div>
+                    {/* <i className="fa-solid fa-ellipsis"></i> */}
                   </div>
-                  {/* <i className="fa-solid fa-ellipsis"></i> */}
                 </div>
               </div>
             </div>
-          </div>
-        </LeftView>
-        <RightView>
-          <div className="bank-details">
-            <div className="bank-detail-content">
-              <WithdrawalSummary amount={amount} reason={reason} />
+          </LeftView>
+          <RightView>
+            <div className="bank-details">
+              <div className="bank-detail-content">
+                <WithdrawalSummary
+                  amount={amount}
+                  reason={reason}
+                  compPenalCharge={setPenalCharge}
+                  checkTerms={setIsTerms}
+                />
+              </div>
+            </div>
+          </RightView>
+        </Wrapper>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-between footer-content">
+              <div>
+                <button
+                  type="button"
+                  style={{ color: "#111E6C", width: "300px" }}
+                  onClick={goBack}
+                >
+                  Back
+                </button>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#111E6C",
+                    color: "#FFFFFF",
+                    width: "300px",
+                  }}
+                >
+                  {loading ? "Loading..." : "Proceed"}
+                </button>
+              </div>
             </div>
           </div>
-        </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: "#111E6C", width: "300px" }}
-                onClick={goBack}
-              >
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: "#111E6C",
-                  color: "#FFFFFF",
-                  width: "300px",
-                }}
-                onClick={() => setIsClicked(true)}
-              >
-                {loading ? "Loading..." : "Proceed"}
-              </button>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </>
   );
 };

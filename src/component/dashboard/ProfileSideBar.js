@@ -1,54 +1,73 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Collapse } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
-import Discovery from '../../asset/Discovery.png';
-import RFSLogoFullColour from '../../asset/RFSLogoFullColour.png';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Collapse } from "reactstrap";
+import { NavLink } from "react-router-dom";
+import Discovery from "../../asset/Discovery.png";
+import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSidebar } from "../../store/actions";
 
 export const ProfileSideBarList = ({ profile, handleChange }) => {
-  const styleContent = profile === 'profile' ? 'profile' : ''
+  const styleContent = profile === "profile" ? "profile" : "";
   // const [isActive, setIsActive] = useState(null)
   const [openFeedback, setOpenFeedback] = useState(false);
   const [openPlan, setOpenPlan] = useState(false);
-  const [isTicket, setTicket] = useState(false)
-  const [isOpenTicket, setIsOpenTicket] = useState(false)
-  const [isCloseTicket, setIsCloseTicket] = useState(false)
+  const [isTicket, setTicket] = useState(false);
+  const [isArchive, setArchive] = useState(false);
+  const [isOpenTicket, setIsOpenTicket] = useState(false);
+  const [isCloseTicket, setIsCloseTicket] = useState(false);
+  const dispatch = useDispatch();
+
+  const { sidebar } = useSelector((state) => state.user_profile);
+  
+
+  const handleClick = () => {
+    dispatch(toggleSidebar());
+  };
 
   return (
-    <WrappSideBarList classname="shadow">
-      <div className={`${styleContent}`}>
+    <WrappSideBarList>
+      <div className={sidebar === true ? "show" : `${styleContent}`}>
         <div>
           <div className="text-center">
             <div>
-              <div className="pt-4">
-                <div className="style-log">
+              <div className="px-5 py-3 d-flex justify-content-center">
+                <div
+                  className="style-log"
+                >
                   <img
-                    style={{ width: '70px', height: '30px' }}
+                    style={{ width: "70px", height: "30px", margin: "0 50px" }}
                     src={RFSLogoFullColour}
                     alt="RFSLogo"
                   />
-                  {/* <i className="style-hamburga fa-solid fa-bars"></i> */}
                 </div>
               </div>
             </div>
 
             <div className="content-list">
               <ul className="pt-5">
-                <NavLink className="nav_link" to="/">
+                <NavLink className="nav_link" to="/" onClick={() => handleClick()}>
                   <li>
                     <i className="fas fa-home"></i>
                     <span>Home</span>
                   </li>
                 </NavLink>
 
-                <NavLink className="nav_link" to="/plan-product">
+                <NavLink className="nav_link" to="/plan-product" onClick={() => handleClick()}>
                   <li>
                     <i className="far fa-file-alt"></i>
                     <span>Create</span>
                   </li>
-                </NavLink> 
+                </NavLink>
 
-                <NavLink className="nav_link" to="/plan-list" onClick={() => setOpenPlan(!openPlan)} >
+                <NavLink
+                  className="nav_link"
+                  to="/plan-list"
+                  onClick={() => {
+                    setOpenPlan(!openPlan);
+                    handleClick();
+                  }}
+                >
                   <li>
                     <i className="fas fa-file-alt"></i>
                     <span>Plan</span>
@@ -56,35 +75,32 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                 </NavLink>
                 <Collapse isOpen={openPlan}>
                   <ul>
-                    <NavLink className="nav_link" to="/archives">
+                    <NavLink className="nav_link" to="/archives" onClick={() => handleClick()}>
                       <li>
                         <span>Archives</span>
                       </li>
                     </NavLink>
                   </ul>
                 </Collapse>
-                
-
-                <NavLink className="nav_link" to="/user-wallet">
+                <NavLink className="nav_link" to="/user-wallet" onClick={() => handleClick()}>
                   <li>
                     <i className="fas fa-sticky-note"></i>
                     <span>Wallet</span>
                   </li>
                 </NavLink>
-                <NavLink style={{ textDecoration: 'none' }} to="/statement">
+                <NavLink style={{ textDecoration: "none" }} to="/statement" onClick={() => handleClick()}>
                   <li>
                     <i className="fa fa-envelope"></i>
                     <span>Statement</span>
                   </li>
                 </NavLink>
                 <NavLink
-                  className={
-                    isTicket || isOpenTicket || isCloseTicket
-                      ? 'nav_link active'
-                      : 'nav_link'
-                  }
+                  className="nav_link"
                   to="/feedback"
-                  onClick={() => setOpenFeedback(!openFeedback)}
+                  onClick={() => {
+                    setOpenFeedback(!openFeedback);
+                    handleClick();
+                  }}
                 >
                   <li>
                     <i className="fas fa-thumbs-up"></i>
@@ -94,43 +110,47 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
                 <Collapse isOpen={openFeedback}>
                   <ul>
                     <NavLink
-                      style={{ textDecoration: 'none' }}
-                      className={({ isActive }) => {
-                        isActive ? setTicket(true) : setTicket(false)
-                      }}
+                      style={{ textDecoration: "none" }}
+                      className={isTicket ? "nav_link" : ""}
                       to="/feedback-tickets"
+                      onClick={() => {
+                        setTicket(true);
+                        handleClick();
+                      }}
                     >
-                      <li className={isTicket ? 'active-bg' : ''}>
+                      <li>
                         <span>My Tickets</span>
                       </li>
                     </NavLink>
                     <NavLink
-                      style={{ textDecoration: 'none' }}
-                      className={({ isActive }) => {
-                        isActive ? setIsOpenTicket(true) : setIsOpenTicket(false)
-                      }}
+                      style={{ textDecoration: "none" }}
+                      className={isOpenTicket ? "nav_link" : ""}
                       to="/open-tickets"
+                      onClick={() => {
+                        setIsOpenTicket(true);
+                        handleClick();
+                      }}
                     >
-                      <li className={isOpenTicket ? ' active-bg' : ''}>
+                      <li>
                         <span>My Open Tickets</span>
                       </li>
                     </NavLink>
                     <NavLink
-                      style={{ textDecoration: 'none' }}
-                      className={({ isActive }) => {
-                        isActive
-                          ? setIsCloseTicket(true)
-                          : setIsCloseTicket(false)
-                      }}
+                      style={{ textDecoration: "none" }}
+                      className={isCloseTicket ? "nav_link" : ""}
                       to="/close-tickets"
+                      onClick={() => {
+                        setIsCloseTicket(true);
+                        handleClick();
+                      }}
                     >
-                      <li className={isCloseTicket ? ' active-bg' : ''}>
+                      <li>
                         <span>My Closed Tickets</span>
                       </li>
                     </NavLink>
                   </ul>
                 </Collapse>
-                <NavLink style={{ textDecoration: 'none' }} to="/help">
+                <NavLink style={{ textDecoration: "none" }} to="/help" onClick={() => handleClick()}>
                   <li>
                     <i className="fas fa-exclamation-circle"></i>
                     <span>Help</span>
@@ -147,20 +167,82 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
         </div>
       </div>
     </WrappSideBarList>
-  )
-}
+  );
+};
 
 const WrappSideBarList = styled.div`
-  position: sticky;
+  // width: 20%;
+  position: fixed;
   top: 0;
-  overflow-y: inherit;
+  z-index: 1000;  
+  // background: #ffffff;
+  height: 100vh;
+  overflow-y: auto;
+  // border: 1px solid #eeeeee;
 
-  @media (max-width: 900px) {
-    display: none;
-  }
-  @media (max-width: 1200px) {
+
+  @media (min-width: 0px) and (max-width: 1200px) {
+    border: 1px solid #eeeeee;
     .profile {
       display: none;
+      overflow-y: hidden;
+    }
+    .show {
+      position: sticky !important;
+      width: 100vw !important;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background: #ffffff;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .hamburger {
+      font-size: 30px;
+    }
+    .nav_link {
+      text-decoration: none;
+      &:active {
+        background-color: #111e6c;
+      }
+    }
+    .active {
+      li {
+        background: linear-gradient(92.71deg, #111e6c -64.5%, #4b5dc6 151.56%);
+        border-radius: 5px;
+        color: #ffffff !important;
+      }
+    }
+    .active-bg {
+      color: #111e6c;
+    }
+    li {
+      i {
+        padding-right: 15px;
+      }
+    }
+    span {
+      padding-right: 20px;
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      padding-left: 1.5rem;
+    }
+    li {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 17px;
+      letter-spacing: -0.04em;
+      text-align: left;
+      color: #242424;
+      cursor: pointer;
+      padding: 15px;
+      margin-bottom: 8px;
+      text-decoration: none;
     }
   }
   .nav_link {
@@ -172,7 +254,6 @@ const WrappSideBarList = styled.div`
   .active {
     li {
       background: linear-gradient(92.71deg, #111e6c -64.5%, #4b5dc6 151.56%);
-      border-radius: 5px;
       border-radius: 5px;
       color: #ffffff !important;
     }
@@ -207,7 +288,7 @@ const WrappSideBarList = styled.div`
     margin-bottom: 8px;
     text-decoration: none;
   }
-`
+`;
 
 export const ProfileSideBar = () => {
   return (
@@ -216,30 +297,30 @@ export const ProfileSideBar = () => {
         <div className="text-center">
           <div className="pt-5">
             <img
-              style={{ width: '70px', height: '30px' }}
+              style={{ width: "70px", height: "30px" }}
               src={RFSLogoFullColour}
               alt="RFSLogo"
             />
           </div>
-          <div style={{ paddingTop: '100px' }}>
+          <div style={{ paddingTop: "100px" }}>
             <img
-              style={{ width: '191px', height: '255px' }}
+              style={{ width: "191px", height: "255px" }}
               src={Discovery}
               alt="Discovery"
             />
           </div>
-          <div style={{ paddingTop: '10px' }}>
+          <div style={{ paddingTop: "10px" }}>
             <h3>Almost There!</h3>
             <p>
-              We only need a few info to <br /> review before unlocking your{' '}
-              <br /> full access{' '}
+              We only need a few info to <br /> review before unlocking your{" "}
+              <br /> full access{" "}
             </p>
           </div>
         </div>
       </ProfileSideBarWrapper>
     </div>
-  )
-}
+  );
+};
 
 const ProfileSideBarWrapper = styled.div`
   background: #111e6c;
@@ -264,4 +345,4 @@ const ProfileSideBarWrapper = styled.div`
     letter-spacing: -0.15px;
     color: #bdbdbd;
   }
-`
+`;

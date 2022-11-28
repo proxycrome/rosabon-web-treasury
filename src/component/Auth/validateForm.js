@@ -20,7 +20,8 @@ export const ValidateCompanyForm = (
     password: "",
     phone: "",
     source: "" || sourcer,
-    sourceOthers: "" || sourcer === "OTHER" ? referralCode : null,
+    sourceOthersId: "",
+    sourceNotInTheList: "",
     contactFirstName: "",
     contactLastName: "",
     contactMiddleName: "",
@@ -32,13 +33,36 @@ export const ValidateCompanyForm = (
   const [errors, setErrors] = useState({});
   const [isSubmitted, setisSubmitted] = useState(false);
 
-  const handleValueChange = (e) => {
-    const { name, value } = e.target;
+  const handlePhoneValueChange = (value) => {
     setValues({
       ...values,
-      [name]: value,
+      phone: value,
     });
   };
+
+  const handleValueChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "source") {
+      setValues({
+        ...values,
+        [name]: value,
+        sourceOthersId: "",
+        sourceNotInTheList: "",
+      });
+    } else if (name === "sourceOthersId") {
+      setValues({
+        ...values,
+        [name]: value,
+        sourceNotInTheList: "",
+      });
+    } else {
+      setValues({
+        ...values,
+        [name]: value,
+      });
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors(validateInfo(values, isCompanyTerms, referralCode, sourcer));
@@ -47,42 +71,56 @@ export const ValidateCompanyForm = (
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      // console.log(values, isCompanyNewsLetters);
       const {
         email,
         password,
         source,
         contactFirstName,
         contactLastName,
-        sourceOthers,
+        sourceOthersId,
         phone,
         name,
         refferedBy,
+        sourceNotInTheList,
       } = values;
       let company = {
-        contactFirstName,
-        contactLastName,
-        name,
+        contactFirstName: contactFirstName.trim(),
+        contactLastName: contactLastName.trim(),
+        name: name.trim(),
       };
       let data = {
         company,
-        email,
-        isAssited: true,
+        email: email.trim(),
+        isAssited: false,
         isNewsLetters: isCompanyNewsLetters,
         password,
-        phone: phone.substr( 0, 1 ) === "0" ? phone.trim() : "0" + phone.trim(),
+        phone: phone.startsWith("2340")
+          ? phone.replace(/2340/, "0")
+          : phone.startsWith("234")
+          ? phone.replace(/234/, "0")
+          : phone,
         role: "COMPANY",
         source: source ? source : sourcer,
-        sourceOthers,
+        sourceOthersId:
+          sourceOthersId === "NOT_IN_LIST" || sourceOthersId === ""
+            ? null
+            : Number(sourceOthersId),
+        sourceNotInTheList:
+          sourceOthersId === "NOT_IN_LIST" ? sourceNotInTheList.trim() : null,
         usage: "TREASURY",
-        refferedBy: refferedBy ? refferedBy : referralCode,
+        refferedBy: refferedBy ? refferedBy.trim() : referralCode,
       };
-
       dispatch(registerUser(data, navigate));
     }
   }, [errors]);
 
-  return { handleValueChange, values, handleSubmit, errors };
+  return {
+    handleValueChange,
+    handlePhoneValueChange,
+    values,
+    handleSubmit,
+    errors,
+  };
 };
 
 export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
@@ -91,7 +129,7 @@ export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
   if (!values.name) {
     errors.name = "Name field is required";
   }
-  if (!values.refferedBy && !values.sourceOthers && !referralCode) {
+  if (!values.refferedBy && !values.sourceOthersId && !referralCode) {
     errors.refferedBy = "This field is required";
   }
   if (!values.source && !sourcer) {
@@ -99,6 +137,10 @@ export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
   }
   if (!values.email) {
     errors.email = "Email address is required";
+  }
+
+  if (values.sourceOthersId === "NOT_IN_LIST" && !values.sourceNotInTheList) {
+    errors.sourceNotInTheList = "Field cannot be empty";
   }
   // else if (/\S+@\S+\.\S+/.test(values.email)) {
   //   errors.email = "Email is invalid";
@@ -123,6 +165,15 @@ export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
   if (!values.phone) {
     errors.phone = "Mobile number is required ";
   }
+
+  if (values.phone === "234" || values.phone.startsWith("2340")) {
+    errors.phone = "Enter a valid phone number";
+  }
+
+  if (values.phone.length < 13) {
+    errors.phone = "Enter a valid phone number";
+  }
+
   if (!isCompanyTerms) {
     errors.isCompanyTerms = "Please check the terms and condition";
   }
@@ -143,7 +194,8 @@ export const ValidateUserForm = (
     password: "",
     phone: "",
     source: "" || sourcer,
-    sourceOthers: "" || sourcer === "OTHER" ? referralCode : null,
+    sourceOthersId: "",
+    sourceNotInTheList: "",
     firstName: "",
     lastName: "",
     middleName: "",
@@ -154,12 +206,34 @@ export const ValidateUserForm = (
   const [errors, setErrors] = useState({});
   const [isSubmitted, setisSubmitted] = useState(false);
 
-  const handleValueChange = (e) => {
-    const { name, value } = e.target;
+  const handlePhoneValueChange = (value) => {
     setValues({
       ...values,
-      [name]: value,
+      phone: value,
     });
+  };
+
+  const handleValueChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "source") {
+      setValues({
+        ...values,
+        [name]: value,
+        sourceOthersId: "",
+        sourceNotInTheList: "",
+      });
+    } else if (name === "sourceOthersId") {
+      setValues({
+        ...values,
+        [name]: value,
+        sourceNotInTheList: "",
+      });
+    } else {
+      setValues({
+        ...values,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -176,40 +250,55 @@ export const ValidateUserForm = (
         source,
         firstName,
         lastName,
-        sourceOthers,
         phone,
+        sourceOthersId,
         refferedBy,
+        sourceNotInTheList,
       } = values;
       let individualUser = {
-        firstName,
-        lastName,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
       };
       let data = {
         individualUser,
-        email,
-        isAssited: true,
+        email: email.trim(),
+        isAssited: false,
         isNewsLetters: isUserNewsLetters,
         password,
-        phone: phone.substr( 0, 1 ) === "0" ? phone.trim() : "0" + phone.trim(),
+        phone: phone.startsWith("2340")
+          ? phone.replace(/2340/, "0")
+          : phone.startsWith("234")
+          ? phone.replace(/234/, "0")
+          : phone,
         role: "INDIVIDUAL_USER",
         source: source ? source : sourcer,
-        sourceOthers,
+        sourceOthersId:
+          sourceOthersId === "NOT_IN_LIST" || sourceOthersId === ""
+            ? null
+            : Number(sourceOthersId),
+        sourceNotInTheList:
+          sourceOthersId === "NOT_IN_LIST" ? sourceNotInTheList.trim() : null,
         usage: "TREASURY",
-        refferedBy: refferedBy ? refferedBy : referralCode,
+        refferedBy: refferedBy ? refferedBy.trim() : referralCode,
       };
-
       dispatch(registerUser(data, navigate));
     }
   }, [errors]);
 
-  return { handleValueChange, values, handleSubmit, errors };
+  return {
+    handleValueChange,
+    handlePhoneValueChange,
+    values,
+    handleSubmit,
+    errors,
+  };
 };
 
 export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
   let errors = {};
   var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
-  if (!values.refferedBy && !values.sourceOthers && !referralCode) {
+  if (!values.refferedBy && !values.sourceOthersId && !referralCode) {
     errors.refferedBy = "This field is required";
   }
   if (!values.source && !sourcer) {
@@ -221,6 +310,10 @@ export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
   // else if (/\S+@\S+\.\S+/.test(values.email)) {
   //   errors.email = "Email is invalid";
   // }
+
+  if (values.sourceOthersId === "NOT_IN_LIST" && !values.sourceNotInTheList) {
+    errors.sourceNotInTheList = "Field cannot be empty";
+  }
 
   if (!values.password) {
     errors.password = "Password is required";
@@ -241,13 +334,22 @@ export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
   if (!values.phone) {
     errors.phone = "Mobile number is required ";
   }
+
+  if (values.phone === "234" || values.phone.startsWith("2340")) {
+    errors.phone = "Enter a valid phone number";
+  }
+
+  if (values.phone.length < 13) {
+    errors.phone = "Enter a valid phone number";
+  }
+
   if (!isUserTerms) {
     errors.isUserTerms = "Please check the terms and condition";
   }
   return errors;
 }
 
-export const ValidatePasswordForm = (validatePassword, email, token) => {
+export const ValidatePasswordForm = (validatePassword, email) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [values, setValues] = useState({
@@ -267,7 +369,7 @@ export const ValidatePasswordForm = (validatePassword, email, token) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-   
+
     setErrors(validatePassword(values));
     setisSubmitted(true);
   };
@@ -279,7 +381,7 @@ export const ValidatePasswordForm = (validatePassword, email, token) => {
         email,
         newPassword,
         confirmPassword: c_password,
-      }
+      };
 
       console.log(formData);
       dispatch(resetPassword(formData, navigate));

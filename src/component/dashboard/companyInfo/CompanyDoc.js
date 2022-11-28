@@ -20,6 +20,8 @@ import {
   uploadCompanyDocument,
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const CompanyDoc = ({
   getAuthUsers,
@@ -1120,7 +1122,7 @@ const WrapperBody = styled.div`
     padding: 0 2rem 7rem 1rem;
     .style-attachment {
       .normal-btn {
-        display: none;
+        // display: none;
       }
       .font-awe-btn {
         display: block;

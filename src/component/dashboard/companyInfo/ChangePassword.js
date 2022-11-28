@@ -52,7 +52,7 @@ const ChangePassword = () => {
     (state) => state.user_profile
   );
 
-  const { passChangeMsg, passChangeError } = useSelector(
+  const { loading, passChangeMsg, passChangeError } = useSelector(
     (state) => state.updateProfile
   );
 
@@ -61,7 +61,6 @@ const ChangePassword = () => {
 
   const createOtp = (otp) => {
     setToken(otp);
-    handleSubmit();
   };
 
   const data = {
@@ -101,18 +100,12 @@ const ChangePassword = () => {
 
   const handleSendOtp = (e) => {
     e.preventDefault();
-    dispatch(sendCompanyOtp());
-  };
-
-  const handleSubmit = async (e) => {
     setErrors(validatePassword(formData));
-
     setIsSubmitted(true);
   };
 
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { newPassword, oldPassword } = formData;
+  const handleSubmit = async (e) => {
+    const { newPassword, oldPassword } = formData;
       const data = {
         oldPassword,
         newPassword,
@@ -126,6 +119,17 @@ const ChangePassword = () => {
         newPassword: "",
         cNewPassword: "",
       })
+  };
+
+  useEffect(() => {
+    if(token){
+      handleSubmit();
+    }
+  }, [token])
+
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmitted) {
+      dispatch(sendCompanyOtp());
     }
   }, [errors]);
 
@@ -134,16 +138,20 @@ const ChangePassword = () => {
     dispatch({ type: CLEAR_MESSAGES });
   };
 
-  useEffect(() => {
-    if (validateEmailOtp) {
-      handleOTPModalClose();
-    }
-  }, [validateEmailOtp]);
+  const reset = (e) => {
+    e.preventDefault();
+    setformData({
+      ...formData,
+      oldPassword: "",
+      newPassword: "",
+      cNewPassword: "",
+    });
+  };
 
   return (
     <div>
       <Toaster />
-      <Form autoComplete="off" onSubmit={handleSendOtp}>
+      <Form autoComplete="off" autoCorrect="off" autoSave="off" onSubmit={handleSendOtp}>
         <WrapperBody>
           <div className="container-fluid">
             <div className="row">
@@ -162,7 +170,10 @@ const ChangePassword = () => {
                     <button
                       type="button"
                       className="grey-button"
-                      onClick={toggleEdit}
+                      onClick={(e) => {
+                        toggleEdit(e);
+                        reset(e);
+                      }}
                     >
                       Cancel
                     </button>
@@ -273,7 +284,7 @@ const ChangePassword = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button type="submit" className="blue-btn">
-                  Save
+                  {loading ? "Saving..." : "Save"}
                 </button>
               </div>
             </div>
@@ -291,7 +302,8 @@ const ChangePassword = () => {
           emailOtp={true}
           updateOtp={(otp) => createOtp(otp)}
           otpData={otp?.data}
-          company="company"        />
+          company="company"
+        />
       </ModalComponent>
     </div>
   );

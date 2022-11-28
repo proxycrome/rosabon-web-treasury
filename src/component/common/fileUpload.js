@@ -3,7 +3,7 @@ import styled from "styled-components";
 import FileDoc from "../../asset/file.png";
 import Check from "../../asset/checked.png";
 
-const FileUpload = ({showEdit, setFile, fileName, id}) => {
+const FileUpload = ({ showEdit, setFile, fileName, id }) => {
   const [base64File, setBase64File] = useState({});
   const fileInputRef = useRef(null);
 
@@ -38,10 +38,10 @@ const FileUpload = ({showEdit, setFile, fileName, id}) => {
   };
 
   useEffect(() => {
-    if(Object.keys(base64File).length > 0){
-        setFile(base64File);
+    if (Object.keys(base64File).length > 0) {
+      setFile(base64File);
     }
-  }, [base64File])
+  }, [base64File]);
 
   const handleFileSelect = (e, reference) => {
     e.preventDefault();
@@ -129,7 +129,10 @@ const FileUpload = ({showEdit, setFile, fileName, id}) => {
                     {fileName}{" "}
                     <span
                       style={{ cursor: "pointer" }}
-                      onClick={() => setBase64File("")}
+                      onClick={() => {
+                        setBase64File({});
+                        setFile({});
+                      }}
                     >
                       <i className="fa-solid fa-xmark"></i>
                     </span>

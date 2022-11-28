@@ -16,6 +16,7 @@ import {
   forgotPasswordSuccess,
   loginUserError,
   loginUserSuccess,
+  logoutError,
   logoutSuccess,
   registerUserError,
   registerUserSuccess,
@@ -26,19 +27,22 @@ import {
 import {
   forgotPasswordService,
   loginService,
+  logoutService,
   registerService,
   resetPasswordService,
 } from "../../services/authServices";
+import { getAuthUsers, clearBvn, clearMessages } from "../actions";
 
 //If user is login then dispatch redux action's are directly from here.
-function* loginUser({ payload: { formData, navigate } }) {
+function* loginUser({ payload: { formData, navigate, dispatch } }) {
   try {
     const response = yield call(loginService, formData);
 
     yield put(loginUserSuccess(response.data));
     if (response.data) {
       toast.success("Login was successful");
-      if (response.data.kyc) {
+      dispatch(getAuthUsers());
+      if (response.data.kyc === true) {
         navigate("/");
       } else {
         navigate("/kyc");
@@ -63,13 +67,26 @@ function* loginUser({ payload: { formData, navigate } }) {
   }
 }
 
-function* logoutUser({ payload: { navigate } }) {
-  try {
-    localStorage.clear();
-    yield put(logoutSuccess());
-    navigate("/login");
+function* logoutUser({ payload: { navigate, dispatch } }) {
+  try {  
+    const response = yield call(logoutService)
+    yield put(logoutSuccess(response.data));
+    if (response){
+      localStorage.clear();
+      navigate("/login");
+      toast.success(response.data.message, {position: "top-right"})
+      dispatch(clearBvn());
+      dispatch(clearMessages());
+    } 
   } catch (error) {
     console.log(error);
+    console.log(error?.response);
+    yield put(logoutError(error?.response?.data?.message));
+    if (error?.response?.data?.message) {
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+      });
+    }
   }
 }
 

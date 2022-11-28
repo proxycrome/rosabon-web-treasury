@@ -27,7 +27,7 @@ export const LoginLeftView = ({ signup }) => {
   );
 };
 
-export const SignupLeftView = () => {
+export const SignupLeftView = ({source, referralCode}) => {
   return (
     <Wrapper>
       <div className="wrapper_content">
@@ -46,10 +46,10 @@ export const SignupLeftView = () => {
             </div>
             <div className="continue_login_btn">
               <div className="category-btn">
-                <NavLink to="/register-user">
+                <NavLink to={`/register-user${source && referralCode ? `?referralCode=${referralCode}&source=${source}` : ""}`}>
                   <button className="individual">Register as an Individual</button>
                 </NavLink>
-                <NavLink to="/register-company">
+                <NavLink to={`/register-company${source && referralCode ? `?referralCode=${referralCode}&source=${source}` : ""}`}>
                   <button className="corporate">Register as a Corporate</button>
                 </NavLink>
               </div>

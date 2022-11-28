@@ -44,8 +44,10 @@ export const LeftView = ({ view }) => {
     : [];
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
+  const activeProductList = productList?.filter(
+    (item) => item.status === "ACTIVE"
+  );
 
-  console.log(users);
 
   // fetch interest rate
   const interest_rate = useMemo(() => {
@@ -97,7 +99,7 @@ export const LeftView = ({ view }) => {
 
   const tenors = useMemo(() => {
     if (productStatus === "OK") {
-      let tenorList = productList.find(
+      let tenorList = activeProductList.find(
         (item) => item.id === data.product
       )?.tenors;
       return tenorList;
@@ -142,8 +144,10 @@ export const LeftView = ({ view }) => {
     toast.success("Referral Code Copied");
   };
 
+  console.log(users);
+
   return (
-    <LeftWrapper className="ms-4">
+    <LeftWrapper className="mx-4">
       <div className="calculatoe">
         <div className="interest shadow p-4 my-2">
           <div
@@ -170,11 +174,11 @@ export const LeftView = ({ view }) => {
                     value={data.product}
                     onChange={handleChange}
                   >
-                    <option hidden selected disabled value={0}>
+                    <option hidden value={0}>
                       Select Product
                     </option>
                     {productStatus === "OK" &&
-                      productList.map((item) => (
+                      activeProductList.map((item) => (
                         <option key={item.id} value={item.id}>
                           {item.productName}
                         </option>
@@ -208,15 +212,17 @@ export const LeftView = ({ view }) => {
                     value={data.tenor}
                     onChange={handleChange}
                   >
-                    <option hidden value={0} disabled>
+                    <option hidden value={0}>
                       Select Tenor
                     </option>
                     {productStatus === "OK" &&
-                      tenors?.map((item) => (
-                        <option key={item.id} value={item.tenorDays}>
-                          {item.tenorName}
-                        </option>
-                      ))}
+                      tenors
+                        ?.filter((data) => data.tenorStatus === "ACTIVE")
+                        ?.map((item) => (
+                          <option key={item.id} value={item.tenorDays}>
+                            {item.tenorName}
+                          </option>
+                        ))}
                   </Input>
                 </div>
               </div>
@@ -281,13 +287,15 @@ export const LeftView = ({ view }) => {
                   </div>
                 ))}
             </div>
-            <p
-              className="py-2"
-              onClick={() => setIsView(!isView)}
-              style={{ cursor: "pointer" }}
-            >
-              View all Notifications
-            </p>
+            <a href="#note" style={{ textDecoration: "none" }}>
+              <p
+                className="py-2"
+                onClick={() => setIsView(!isView)}
+                style={{ cursor: "pointer" }}
+              >
+                View all Notifications
+              </p>
+            </a>
           </>
         ) : null}
 
@@ -304,7 +312,7 @@ export const LeftView = ({ view }) => {
               type="text"
               className="form-control"
               aria-label="Text input with checkbox"
-              value={users?.referralLink}
+              defaultValue={users?.referralLink}
             />
             <div className="input-group-text">
               <CopyToClipboard
@@ -323,7 +331,7 @@ export const LeftView = ({ view }) => {
               type="text"
               className="form-control"
               aria-label="Text input with checkbox"
-              value={users?.myReferralCode}
+              defaultValue={users?.myReferralCode}
             />
             <div className="input-group-text">
               <CopyToClipboard
@@ -357,7 +365,7 @@ const LeftWrapper = styled.div`
   }
   .calculatoe {
     background: rgba(28, 68, 141, 0.02);
-    padding: 20px 40px;
+    padding: 20px 20px;
     .interest {
       background: #ffffff;
       box-shadow: 0px 4px 10px rgba(196, 204, 221, 0.18);

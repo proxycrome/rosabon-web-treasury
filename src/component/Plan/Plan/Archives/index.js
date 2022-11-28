@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ProfileNavBar } from '../../../dashboard/ProfileNavbar';
 import moment from "moment";
 import ModalComponent from "../../../ModalComponent";
@@ -14,8 +14,8 @@ import PlanModal from "../PlanModal";
 import { useDispatch, useSelector } from "react-redux";
 import { 
   getProducts, 
-  getPlans, 
   getSinglePlan,
+  getClosedPlans,
 } from "../../../../store/actions";
 import EmptyPlan from "../EmptyPlan";
 
@@ -23,27 +23,30 @@ const Archives = () => {
   const [show, setShow] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { plans } = useSelector((state) => state.plan);
+  // const navigate = useNavigate();
+  const { closed_plans } = useSelector((state) => state.plan);
   const { products  } = useSelector((state) => state.product);
-  const userPlans = plans?.data.body ? plans?.data?.body : [];
-  const planStatus = plans?.statusCode;
+  const closedPlans = closed_plans?.data?.body ? closed_plans?.data?.body : [];
+  const closedPlanStatus = closed_plans?.statusCode;
   const product = products?.data.body ? products?.data.body : []
-  const archivedPlans = userPlans.filter(item => item.planStatus === "CLOSED");
+  const archivedPlans = closedPlans;
+
+  console.log(archivedPlans);
 
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
   useEffect(() => {
-    dispatch(getPlans());
+    dispatch(getClosedPlans());
     dispatch(getProducts());
-  },[])
+  },[dispatch])
 
   const handlePlanModal = async (id) => {
     await dispatch(getSinglePlan(id))
     setShow(true);
   }
+
   return (
     <>
       <ProfileNavBar>
@@ -66,7 +69,7 @@ const Archives = () => {
             <>
               <div className="plan-content">
                 {
-                  planStatus === "OK" && archivedPlans.map((item) => (
+                  closedPlanStatus === "OK" && archivedPlans.map((item) => (
                     <div className="plan" key={item.id} >
                       <div className="plan-top h-50 p-4" onClick={() => handlePlanModal(item.id)} >
                         <div className="d-flex align-items-center justify-content-between">
@@ -238,7 +241,7 @@ const Wrapper = styled.div`
   }
 `;
 
-export const DropDown = ({ status }) => {
+export const DropDown = ({ status, id }) => {
   const [menu, setMenu] = useState(false);
 
   const toggle = () => {
@@ -259,7 +262,7 @@ export const DropDown = ({ status }) => {
       </DropdownToggle>
       <DropdownMenu right className="mt-1">
         {status === 'Closed' ? (
-          <DropdownItem tag={Link} to="/history">
+          <DropdownItem tag={Link} to={`/history/${id}`}>
             History
           </DropdownItem>
         ) : null}

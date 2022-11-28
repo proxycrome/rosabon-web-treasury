@@ -1,86 +1,91 @@
-import React, { useState, useEffect } from 'react'
-import {
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  FormFeedback,
-  InputGroup,
-  InputGroupText,
-} from 'reactstrap'
-import { useSelector, useDispatch, connect } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import toast, { Toaster } from 'react-hot-toast'
-import { SignupLeftView } from './loginLeftView'
-import Footer from '../dashboard/ProfileFooter'
-import { ValidateCompanyForm, validateInfo } from './validateForm'
+import React, { useState, useEffect } from "react";
+import { Input, InputGroup, InputGroupText, Tooltip } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { SignupLeftView } from "./loginLeftView";
+import Footer from "../dashboard/ProfileFooter";
+import { ValidateCompanyForm, validateInfo } from "./validateForm";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { getAllSources } from "../../store/actions";
 
 function CompanySignup() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const auth = useSelector((state) => state.auth)
-  const { isSignedup, isLoading } = auth
-  const user_profile = useSelector((state) => state.user_profile)
-  const { users } = user_profile
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const { isLoading } = auth;
+  const { sources } = useSelector((state) => state.user_profile);
+  const [open, setOpen] = useState(false);
+  const [passwordShown1, setPasswordShown1] = useState(false);
+  const [passwordShown2, setPasswordShown2] = useState(false);
+  const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false);
+  const [isCompanyTerms, setIsCompanyTerms] = useState(false);
 
-  const [passwordShown1, setPasswordShown1] = useState(false)
-  const [passwordShown2, setPasswordShown2] = useState(false)
-  const [isCompanyNewsLetters, setisCompanyNewsLetters] = useState(false)
-  const [isCompanyTerms, setIsCompanyTerms] = useState(false)
+  const location = useLocation();
 
-  const referral = JSON.parse(localStorage.getItem('referral'));
+  const query = new URLSearchParams(location?.search);
 
-  const {referralCode, sourcer} = referral;
+  const referralCode = query.get("referralCode");
+  const sourcer = query.get("source");
 
   const {
     handleValueChange,
+    handlePhoneValueChange,
     values,
     handleSubmit,
     errors,
-  } = ValidateCompanyForm(validateInfo, isCompanyNewsLetters, isCompanyTerms, referralCode, sourcer)
+  } = ValidateCompanyForm(
+    validateInfo,
+    isCompanyNewsLetters,
+    isCompanyTerms,
+    referralCode,
+    sourcer
+  );
+
+  const toggle = () => {
+    setOpen(!open);
+  };
 
   const togglePassword1 = () => {
-    setPasswordShown1(!passwordShown1)
-  }
+    setPasswordShown1(!passwordShown1);
+  };
   const togglePassword2 = () => {
-    setPasswordShown2(!passwordShown2)
-  }
+    setPasswordShown2(!passwordShown2);
+  };
 
-  // useEffect(() => {
-  //   if (isSignedup) {
-  //     navigate('/congrates', { state: 'success_signup' })
-  //   }
-  // }, [isSignedup])
+  useEffect(() => {
+    dispatch(getAllSources());
+  }, [dispatch]);
 
   return (
     <div>
-      <Footer />
+      <div>
+        <Toaster
+          toastOptions={{
+            className: "bg-danger text-white",
+          }}
+        />
+      </div>
+      <Footer source={sourcer} referralCode={referralCode} />
       <Wrapper>
         <div
           style={{
-            height: '100vh',
-            overflow: 'hidden',
+            height: "100vh",
+            overflow: "hidden",
           }}
           className="content"
         >
           <div className="login-left-view">
-            <SignupLeftView />
+            <SignupLeftView source={sourcer} referralCode={referralCode} />
           </div>
           <div
-            style={{ overflowY: 'auto', gridTemplateColumns: 'auto' }}
+            style={{ overflowY: "auto", gridTemplateColumns: "auto" }}
             className="login-right-view"
           >
             <div className="">
               <RightWrapper>
-                <h4>Sign up</h4>
-                <Toaster
-                  toastOptions={{
-                    className: 'bg-danger text-white',
-                  }}
-                  position="bottom-center"
-                />
+                <h4 className="container">Sign up</h4>
                 <div className="container">
                   <form autoComplete="off" onSubmit={handleSubmit}>
                     <LoginInput>
@@ -113,7 +118,7 @@ function CompanySignup() {
                             <h3>{errors.contactFirstName}</h3>
                           )}
                         </div>
-                        <div className="col-md-6 ps-2 mb-4">
+                        <div className="col-md-6 mb-4">
                           <label>Contact Person Last name</label>
                           <div className="input-group">
                             <Input
@@ -143,39 +148,45 @@ function CompanySignup() {
                         {errors.email && <h3>{errors.email}</h3>}
                       </div>
                       <div className="mb-4">
-                        <label>Contact Person Number</label>
-                        <div className="d-flex">
-                          <select
-                            className="form-select-md select-field"
-                            style={{
-                              border: "1.5px solid #E0E0E0",
-                              outline: "none",
+                        <label>Mobile Number</label>
+                        <div className="input-group">
+                          <PhoneInput
+                            country={"ng"}
+                            inputClass="form-control phone-input"
+                            buttonClass="select-field"
+                            inputProps={{
+                              name: "phone",
+                              required: true,
+                              id: "phone",
                             }}
-                          >
-                            <option>NGN</option>
-                          </select>
-                          <div className="input-group">
-                            <div className="input-group-prepend phone-code">
-                              +234
-                            </div>
-                            <Input
-                              type="text"
-                              className="form-control phone-input"
-                              onChange={handleValueChange}
-                              name="phone"
-                              maxLength="10"
-                              value={values.phone}
-                            />
-                          </div>
+                            placeholder="+234 801 234 5678"
+                            jumpCursorToEnd={true}
+                            disableCountryCode={false}
+                            value={values.phone}
+                            countryCodeEditable={false}
+                            onChange={(value) => handlePhoneValueChange(value)}
+                            disableDropdown
+                            masks={{ ng: "... ... ...." }}
+                          />
                         </div>
                         {errors.phone && <h3>{errors.phone}</h3>}
                       </div>
+                      <Tooltip
+                        placement="bottom-end"
+                        target="phone"
+                        isOpen={open}
+                        toggle={toggle}
+                        autohide={false}
+                      >
+                        Enter your Mobile Number without the first "0" (e.g 801
+                        234 5678)
+                      </Tooltip>
                       <div className="mb-4 input_password">
                         <label>Password</label>
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown1 ? 'text' : 'password'}
+                              type={passwordShown1 ? "text" : "password"}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="password"
@@ -184,11 +195,11 @@ function CompanySignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword1}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                                 className={
                                   passwordShown1
-                                    ? 'far fa-eye'
-                                    : 'far fa-eye-slash'
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
                                 }
                               ></i>
                             </InputGroupText>
@@ -201,7 +212,7 @@ function CompanySignup() {
                         <div className="input-group">
                           <InputGroup>
                             <Input
-                              type={passwordShown2 ? 'text' : 'password'}
+                              type={passwordShown2 ? "text" : "password"}
                               bsSize="lg"
                               onChange={handleValueChange}
                               name="c_password"
@@ -210,11 +221,11 @@ function CompanySignup() {
                             <InputGroupText>
                               <i
                                 onClick={togglePassword2}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                                 className={
                                   passwordShown2
-                                    ? 'far fa-eye'
-                                    : 'far fa-eye-slash'
+                                    ? "far fa-eye"
+                                    : "far fa-eye-slash"
                                 }
                               ></i>
                             </InputGroupText>
@@ -225,52 +236,80 @@ function CompanySignup() {
                       <div className="mb-4">
                         <div className="">
                           <label>How did you hear about us?</label>
-                          <select
-                            className="form-select form-select-lg select-field"
-                            aria-label=".form-select-md"
-                            onChange={handleValueChange}
-                            name="source"
-                            value={values.source}
-                          >
-                            <option value=""></option>
-                            <option value="ROSABON_SALES">
-                              Rosabon sales executive
-                            </option>
-                            <option value="ANOTHER_USER">Another user</option>
-                            <option value="OTHER">Others</option>
-                          </select>
+                          {sourcer ? (
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                className="form-control"
+                                onChange={handleValueChange}
+                                name="source"
+                                defaultValue={
+                                  values.source === "ANOTHER_USER"
+                                    ? "Another user"
+                                    : "Rosabon sales executive"
+                                }
+                                disabled={sourcer}
+                              />
+                            </div>
+                          ) : (
+                            <select
+                              className="form-select form-select-lg select-user-field"
+                              aria-label=".form-select-lg"
+                              onChange={handleValueChange}
+                              name="source"
+                              defaultValue={values.source}
+                            >
+                              <option value="" hidden></option>
+                              <option value="ROSABON_SALES">
+                                Rosabon sales executive
+                              </option>
+                              <option value="ANOTHER_USER">Another user</option>
+                              <option value="OTHER">Others</option>
+                            </select>
+                          )}
                         </div>
                         {errors.source && <h3>{errors.source}</h3>}
                       </div>
                       <div className="referal-link pb-5">
                         <div className="input-group">
-                          {values.source === 'OTHER' ? (
-                            <Input
-                              type="text"
-                              className="form-control"
-                              placeholder="Source Name"
+                          {values.source === "OTHER" ? (
+                            <select
+                              className="form-select form-select-lg select-user-field"
+                              aria-label=".form-select-lg"
                               onChange={handleValueChange}
-                              name="sourceOthers"
-                              value={values.sourceOthers}
-                            />
-                          ) : values.source === 'ANOTHER_USER' ? (
+                              name="sourceOthersId"
+                              defaultValue={values.sourceOthersId}
+                            >
+                              <option value="" hidden>
+                                Select Source Name
+                              </option>
+                              {sources?.map((data) => (
+                                <option key={data.id} value={data.id}>
+                                  {data.name}
+                                </option>
+                              ))}
+                              <option value="NOT_IN_LIST">
+                                Not in the List
+                              </option>
+                            </select>
+                          ) : values.source === "ANOTHER_USER" ? (
                             <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
-                          ) : values.source === 'ROSABON_SALES' ? (
+                          ) : values.source === "ROSABON_SALES" ? (
                             <Input
                               type="text"
                               className="form-control"
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           ) : (
@@ -280,13 +319,31 @@ function CompanySignup() {
                               placeholder="Input referral code"
                               onChange={handleValueChange}
                               name="refferedBy"
-                              value={values.refferedBy}
+                              defaultValue={values.refferedBy}
                               disabled={referralCode}
                             />
                           )}
                         </div>
                         {errors.refferedBy && <h3>{errors.refferedBy}</h3>}
                       </div>
+                      {values.source === "OTHER" &&
+                        values.sourceOthersId === "NOT_IN_LIST" && (
+                          <div className="mb-4">
+                            <div className="input-group">
+                              <Input
+                                type="text"
+                                placeholder="Enter Other Sources"
+                                className="form-control"
+                                onChange={handleValueChange}
+                                name="sourceNotInTheList"
+                                value={values.sourceNotInTheList}
+                              />
+                            </div>
+                            {errors.sourceNotInTheList && (
+                              <h3>{errors.sourceNotInTheList}</h3>
+                            )}
+                          </div>
+                        )}
                       <div className="">
                         <div className="form-check">
                           <Input
@@ -335,24 +392,24 @@ function CompanySignup() {
                             className="form-check-label"
                             htmlFor="checkTerms"
                           >
-                            I agree to the{' '}
+                            I agree to the{" "}
                             <span
                               style={{
-                                color: 'rgba(17, 30, 108, 1)',
-                                fontWeight: '500',
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
                               }}
                             >
                               Terms
-                            </span>{' '}
-                            and{' '}
+                            </span>{" "}
+                            and{" "}
                             <span
                               style={{
-                                color: 'rgba(17, 30, 108, 1)',
-                                fontWeight: '500',
+                                color: "rgba(17, 30, 108, 1)",
+                                fontWeight: "500",
                               }}
                             >
                               Privacy
-                            </span>{' '}
+                            </span>{" "}
                             Policy
                           </label>
                         </div>
@@ -368,10 +425,10 @@ function CompanySignup() {
                           className="btn btn-primary px-5 mb-2"
                           disabled={isLoading}
                         >
-                          {isLoading ? 'Signing up...' : 'Sign up'}
+                          {isLoading ? "Signing up..." : "Sign up"}
                         </button>
                         <p className="text-center">
-                          Already have an account?{' '}
+                          Already have an account?{" "}
                           <span className="">
                             <Link to="/login">Sign in </Link>
                           </span>
@@ -386,10 +443,10 @@ function CompanySignup() {
         </div>
       </Wrapper>
     </div>
-  )
+  );
 }
 
-export default CompanySignup
+export default CompanySignup;
 
 const Wrapper = styled.div`
   .content {
@@ -398,7 +455,7 @@ const Wrapper = styled.div`
       grid-template-columns: 1fr 1fr;
     }
   }
-`
+`;
 
 const RightWrapper = styled.section`
   background: #ffffff;
@@ -423,9 +480,9 @@ const RightWrapper = styled.section`
   }
   .login_input {
   }
-  input[type='text'],
-  input[type='email'],
-  input[type='password'] {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
     height: 54px;
     padding: 15px;
     border: 1.5px solid #e0e0e0;
@@ -439,7 +496,11 @@ const RightWrapper = styled.section`
   }
   .select-field {
     height: 54px;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: 1px solid #eee;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;
@@ -447,7 +508,23 @@ const RightWrapper = styled.section`
     letter-spacing: -0.01em;
     color: #242424;
     padding: 15px;
+    background: #ffffff;
   }
+
+  .select-user-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border: 1.5px solid #e0e0e0 !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -459,7 +536,7 @@ const RightWrapper = styled.section`
     padding-left: 10px;
   }
   h3 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
@@ -470,7 +547,7 @@ const RightWrapper = styled.section`
     color: #e20d0d;
     padding-top: 12px;
   }
-`
+`;
 
 const LoginInput = styled.div`
   label,
@@ -503,9 +580,19 @@ const LoginInput = styled.div`
   }
 
   .phone-input {
-    padding-left: 60px !important;
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
   }
-`
+`;
 const LoginButton = styled.div`
   display: flex;
   align-items: center;
@@ -523,4 +610,4 @@ const LoginButton = styled.div`
   span {
     color: rgba(28, 68, 141, 1);
   }
-`
+`;

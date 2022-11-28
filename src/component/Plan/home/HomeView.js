@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import styled from "styled-components";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { RightView } from "./RightView";
@@ -24,37 +24,10 @@ function HomeView() {
   }
 
   // useEffect(() => {
-  //   if(login){
-  //     navigate(0);
+  //   if (login && !login.kyc) {
+  //     navigate("/kyc");
   //   }
-  // }, []);
-
-  
-
-  // const user =
-  //   users && users.role == "COMPANY"
-  //     ? users.company.name
-  //     : users.role == "INDIVIDUAL_USER"
-  //     ? users.individualUser.firstName
-  //     : "";
-
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("token"));
-  //   if (tokenString) {
-  //     dispatch(getAuthUsers(tokenString.token));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
-
-  useEffect(() => {
-    if (users && !users.kyc && users.role === "INDIVIDUAL_USER") {
-      navigate("/kyc");
-    }
-    if (users && !users.kyc && users.role === "COMPANY") {
-      navigate("/kyc");
-    }
-  }, [users]);
+  // }, [login]);
 
   return (
     <div>
@@ -63,9 +36,9 @@ function HomeView() {
           <span>
             Welcome back{" "}
             <span className="fw-bold">
-              {users && users?.role == "COMPANY"
+              {users && users?.role === "COMPANY"
                 ? users?.company.name
-                : users?.role == "INDIVIDUAL_USER"
+                : users?.role === "INDIVIDUAL_USER"
                 ? users?.individualUser.firstName
                 : ""
               }

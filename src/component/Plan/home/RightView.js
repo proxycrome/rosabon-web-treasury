@@ -1,32 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import halfEllipse from '../../../asset/halfEllipse.png'
-import YelloBackgroud from '../../../asset/yello-backgroud.png'
-import ChoosePlanHolder from '../../../asset/chooseplaneHolder.png'
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar'
-import { Collapse } from 'reactstrap'
-import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux';
-import { 
-  getCatWithProducts, 
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import halfEllipse from "../../../asset/halfEllipse.png";
+import YelloBackgroud from "../../../asset/yello-backgroud.png";
+import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
+import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+import { Collapse } from "reactstrap";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getCatWithProducts,
   getSingleProduct,
-  getPlans
-} from '../../../store/actions';
+  getPlans,
+} from "../../../store/actions";
 
 export const RightView = () => {
   const dispatch = useDispatch();
-  const [openFixSavings, setFixSavingsOpen] = useState(false)
-  const [openTargetSavings, setTargetSavingsOpen] = useState(false)
-  const [openTargetIncome, setTargetIncomeOpen] = useState(false)
+  const [openFixSavings, setFixSavingsOpen] = useState(false);
+  const [openTargetSavings, setTargetSavingsOpen] = useState(false);
+  const [openTargetIncome, setTargetIncomeOpen] = useState(false);
   const [categoryDropdown, setCategoryDropdown] = useState(0);
 
-  const { catWithProducts  } = useSelector((state) => state.product);
-  const { plans  } = useSelector((state) => state.plan);
+  const { catWithProducts } = useSelector((state) => state.product);
+  const { plans } = useSelector((state) => state.plan);
   const cat_products = catWithProducts?.data?.body;
   const cat_products_status = catWithProducts?.statusCode;
   const planList = plans?.data?.body ? plans?.data?.body : [];
-  console.log(planList);
-  const activePlanList = planList.filter(data => data.planStatus === "ACTIVE");
+
+  const activePlanList = planList.filter(
+    (data) => data.planStatus === "ACTIVE"
+  );
+  const newWorthPlanList = planList.filter(
+    (data) => data.planStatus === "ACTIVE" || data.planStatus === "MATURED"
+  );
 
   useEffect(() => {
     dispatch(getCatWithProducts());
@@ -34,11 +39,11 @@ export const RightView = () => {
   }, []);
 
   const handleProduct = (id) => {
-    dispatch(getSingleProduct(id))
-  }
+    dispatch(getSingleProduct(id));
+  };
 
   const handleDropdown = (id) => {
-    if(categoryDropdown === id) {
+    if (categoryDropdown === id) {
       setCategoryDropdown(0);
     } else {
       setCategoryDropdown(id);
@@ -46,16 +51,16 @@ export const RightView = () => {
   };
 
   let totalnetWorth = 0;
-  activePlanList.forEach(item => item?.currency?.name === "NGN" ?
-   totalnetWorth += item?.planSummary?.principal : 
-   totalnetWorth += (item?.planSummary?.principal * item?.exchangeRate));
-
-
+  newWorthPlanList.forEach((item) =>
+    item?.currency?.name === "NGN"
+      ? (totalnetWorth += item?.planSummary?.principal)
+      : (totalnetWorth += item?.planSummary?.principal * item?.exchangeRate)
+  );
 
   return (
     <RightWrapper className="border-end border-light">
-      <div className="naira-card position-relative">
-        <div className="naira-card-content">
+      <div className="naira-card">
+        <div className="naira-card-content position-relative">
           <img
             className="position-absolute eclips-image image-fluid"
             src={halfEllipse}
@@ -67,17 +72,19 @@ export const RightView = () => {
             alt="YelloBackgroud"
           /> */}
           <div className="d-flex align-center justify-content-between ">
-            <p className="p-0 m-0">Total Networth</p>
+            <p className="p-0 m-0 rise">Total Networth</p>
             <div className="sqr-box">
               <p className="p-0 m-0">₦</p>
             </div>
           </div>
-          <h3 className="pt-1 pb-3">₦ {totalnetWorth.toLocaleString()}</h3>
+          <h3 className="pt-1 pb-3 rise">₦ {totalnetWorth.toLocaleString()}</h3>
           <div className="down-button pt-4">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex  align-items-center justify-content-between active-box">
+            <div className="d-flex justify-content-between action-det">
+              <div className="d-flex align-items-center justify-content-between active-box">
                 <div className="sqr-box">
-                  <p className="p-0 m-0">{activePlanList.length.toString().padStart(2,"0")}</p>
+                  <p className="p-0 m-0">
+                    {activePlanList.length.toString().padStart(2, "0")}
+                  </p>
                 </div>
                 <p className="p-0 m-0">Active Plans</p>
               </div>
@@ -88,84 +95,98 @@ export const RightView = () => {
               </Link>
             </div>
           </div>
+          <div className="grey-background"></div>
+          <div className="yellow-background"></div>
         </div>
-        <div className="grey-background"></div>
-        <div className="yellow-background"></div>
       </div>
       <div className="home-body">
         <div className="">
           <h5 className="mb-2 fw-bold">Categories</h5>
-          {
-            cat_products_status === "OK" && cat_products.map((category) =>
-              category.products.length > 0 && (
-              <div id={category.productCategoryId}>
-                <div className="shadow-sm p-3 mb-2 rounded">
-                  <div
-                    className="d-flex align-items-center justify-content-between savins-drop "
-                    onClick={() => handleDropdown(category.productCategoryId)}
-                  >
-                    <h6 className="mb-1">{category.productCategoryName} </h6>
-                    <div>
-                      {categoryDropdown === category.productCategoryId ? (
-                        <i className="fa-solid fa-chevron-up"></i>
-                      ) : (
-                        <i className="fa-solid fa-chevron-down"></i>
-                      )}
-                    </div>
-                  </div>
-                  <span 
-                    className="text-muted"
-                  >
-                    Choose from a{" "}
-                    <span className='cat-name' >{category.productCategoryName}</span>{" "} 
-                    plan</span>
-                </div>
-                <Collapse 
-                  isOpen={categoryDropdown === category.productCategoryId} 
-                  className="border rounded p-4 mb-2"
-                >
-                  {
-                    category.products.map((product) => (
-                      <div className="choose-plan shadow-sm mb-2">
-                        <div className="row">
-                          <div className="d-none d-sm-block col-sm-3">
-                            <img
-                              className="image-holder"
-                              src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
-                              alt="Product"
-                            />
-                          </div>
-                          <div className="col-sm-9">
-                            <h5>{product.productName} </h5>
-                            <div>
-                              {
-                                product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
-                                  <p key={id} className="p-0 m-0 pb-2" >{item} </p>
-                                ))
-                              }
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="d-none d-sm-block col-sm-3"></div>
-                          <div className="col-sm-9">
-                          <Link to={`/create-plan/${product.id}`} onClick={()=>handleProduct(product.id)} >
-                            <button>Create Plan</button>
-                          </Link>
-                          </div>
+          {cat_products_status === "OK" &&
+            cat_products.map(
+              (category) =>
+                category.products.length > 0 && (
+                  <div id={category.productCategoryId}>
+                    <div className="shadow-sm p-3 mb-2 rounded">
+                      <div
+                        className="d-flex align-items-center justify-content-between savins-drop "
+                        onClick={() =>
+                          handleDropdown(category.productCategoryId)
+                        }
+                      >
+                        <h6 className="mb-1">
+                          {category.productCategoryName}{" "}
+                        </h6>
+                        <div>
+                          {categoryDropdown === category.productCategoryId ? (
+                            <i className="fa-solid fa-chevron-up"></i>
+                          ) : (
+                            <i className="fa-solid fa-chevron-down"></i>
+                          )}
                         </div>
                       </div>
-                    ))
-                  }
-                </Collapse>
-              </div>
-            ))
-          }
+                      <span className="text-muted">
+                        Choose from a{" "}
+                        <span className="cat-name">
+                          {category.productCategoryName}
+                        </span>{" "}
+                        plan
+                      </span>
+                    </div>
+                    <Collapse
+                      isOpen={categoryDropdown === category.productCategoryId}
+                      className="border rounded p-4 mb-2"
+                    >
+                      {category.products
+                        ?.filter((data) => data.status === "ACTIVE")
+                        ?.map((product) => (
+                          <div className="choose-plan" key={product.id}>
+                            <div
+                              className="d-flex align-items-center "
+                              style={{ gap: 16 }}
+                            >
+                              <img
+                                className="image-holder"
+                                src={
+                                  product?.imageUrl?.length > 10
+                                    ? product.imageUrl
+                                    : ChoosePlanHolder
+                                }
+                                alt="Product"
+                              />
+                              <div>
+                                <h5>{product.productName} </h5>
+                                <div>
+                                  {product.productDescription
+                                    .split(".")
+                                    .slice(0, 3)
+                                    ?.map((item, id) => (
+                                      <p key={id} className="p-0 m-0 pb-2">
+                                        {item}.{" "}
+                                      </p>
+                                    ))}
+                                </div>
+                              </div>
+                            </div>
+                            <Link
+                              to={`/create-plan/${product.id}`}
+                              onClick={() => handleProduct(product.id)}
+                              className="d-flex justify-content-center"
+                              style={{ textDecoration: "none" }}
+                            >
+                              <button>Create Plan</button>
+                            </Link>
+                          </div>
+                        ))}
+                    </Collapse>
+                  </div>
+                )
+            )}
         </div>
       </div>
     </RightWrapper>
-  )
-}
+  );
+};
 
 const RightWrapper = styled.div`
   @media (min-width: 900px) {
@@ -176,9 +197,14 @@ const RightWrapper = styled.div`
     height: 93px;
   }
 
+  .rise {
+    position: sticky;
+    z-index: 10;
+  }
+
   .grey-background {
     position: absolute;
-    bottom: 14px;
+    bottom: -14px;
     right: 1.5%;
     width: 97.3%;
     height: 186px;
@@ -191,7 +217,7 @@ const RightWrapper = styled.div`
   .yellow-background {
     position: absolute;
     right: 6.5%;
-    bottom: 0;
+    bottom: -28px;
     width: 88.7%;
     height: 170px;
     background: #f3a712;
@@ -214,10 +240,10 @@ const RightWrapper = styled.div`
       margin: 0 auto;
     }
   }
-  
+
   .naira-card-content {
     width: 100% !important;
-    height: 192px;
+    height: auto;
     position: absolute;
     top: 0;
     background: #ffffff;
@@ -239,7 +265,7 @@ const RightWrapper = styled.div`
   }
   .naira-card {
     width: 513px;
-    height: 221px;
+    height: auto;
   }
   .eclips-image {
     top: 0;
@@ -308,7 +334,7 @@ const RightWrapper = styled.div`
       color: #4f4f4f;
     }
     button {
-      font-family: 'Montserrat';
+      font-family: "Montserrat";
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -338,4 +364,14 @@ const RightWrapper = styled.div`
   .cat-name {
     text-transform: lowercase;
   }
-`
+
+  @media (max-width: 400px) {
+    .action-det {
+      flex-direction: column;
+      gap: 10px;
+      button {
+        width: 100%;
+      }
+    }
+  }
+`;
