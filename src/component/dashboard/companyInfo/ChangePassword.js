@@ -34,6 +34,7 @@ const ChangePassword = () => {
   const toggleEdit = (e) => {
     e.preventDefault();
     setShowEdit(!showEdit);
+    setTouched(false);
   };
 
   const togglePassword1 = () => {
@@ -70,9 +71,11 @@ const ChangePassword = () => {
     cNewPassword: '',
   };
   const [formData, setformData] = useState(data);
+  const [touched, setTouched] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setTouched(true);
     setformData({
       ...formData,
       [name]: value,
@@ -81,7 +84,7 @@ const ChangePassword = () => {
 
   function validatePassword(values) {
     let errors = {};
-    var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+    var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
     if (!values.oldPassword) {
       errors.oldPassword = 'Current Password is required';
@@ -101,7 +104,9 @@ const ChangePassword = () => {
 
   const handleSendOtp = (e) => {
     e.preventDefault();
-    dispatch(sendCompanyOtp());
+    if(Object.keys(errors).length===0){
+      dispatch(sendCompanyOtp());
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -109,6 +114,10 @@ const ChangePassword = () => {
 
     setIsSubmitted(true);
   };
+
+  useEffect(()=>{
+    setErrors(validatePassword(formData))
+  },[formData]);
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
@@ -196,7 +205,7 @@ const ChangePassword = () => {
                       ></i>
                     </InputGroupText>
                   </InputGroup>
-                  {errors.oldPassword && (
+                  {(errors.oldPassword && touched) && (
                     <span className="text-danger">{errors.oldPassword}</span>
                   )}
                 </FormGroup>
@@ -228,7 +237,7 @@ const ChangePassword = () => {
                       ></i>
                     </InputGroupText>
                   </InputGroup>
-                  {errors.newPassword && (
+                  {(errors.newPassword && touched) && (
                     <span className="text-danger">{errors.newPassword}</span>
                   )}
                 </FormGroup>
