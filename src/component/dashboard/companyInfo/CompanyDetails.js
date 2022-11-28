@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 // import { updateCompanyDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
 // import { getAuthUsers } from "../../../redux/actions/personalInfo/userProfile.actions";
 import { getAuthUsers, updateCompanyDetails } from "../../../store/actions";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -18,8 +20,7 @@ const CompanyDetails = () => {
   const [showEditNOK, setShowEditNOK] = useState(true);
 
   const { users } = useSelector((state) => state.user_profile);
-
-  console.log(users);
+  const { loading, companyInfoMsg } = useSelector((state) => state.updateProfile);
 
   const toggleDetail = () => {
     setShowEditDetail(!showEditDetail);
@@ -38,7 +39,7 @@ const CompanyDetails = () => {
     companyType: "",
     contactFirstName: "",
     contactLastName: "",
-    email: "",
+    // email: "",
     phone: "",
     companyAddress: "",
     natureOfBusiness: "",
@@ -53,12 +54,15 @@ const CompanyDetails = () => {
     });
   };
 
+  const handlePhoneValueChange = (value) => {
+    setformData({
+      ...formData,
+      phone: value,
+    });
+  };
+
   const validateUserInfo = (values) => {
     let errors = {};
-
-    if ((!values.email && !users?.email) || !users?.email) {
-      errors.email = "Email address is required";
-    }
 
     if (
       (!values.contactFirstName && !users?.company?.contactFirstName) ||
@@ -110,8 +114,15 @@ const CompanyDetails = () => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { contactFirstName, contactLastName, email, phone, companyType, natureOfBusiness, companyAddress } =
-        formData;
+      const {
+        contactFirstName,
+        contactLastName,
+        email,
+        phone,
+        companyType,
+        natureOfBusiness,
+        companyAddress,
+      } = formData;
       const data = {
         contactFirstName: contactFirstName
           ? contactFirstName
@@ -119,22 +130,23 @@ const CompanyDetails = () => {
         contactLastName: contactLastName
           ? contactLastName
           : users?.company?.contactLastName,
-        email: email ? email : users?.email,
+        // email: email ? email : users?.email,
         phone: phone ? phone : users?.phone,
         companyType: companyType ? companyType : users?.company?.companyType,
-        natureOfBusiness: natureOfBusiness ? natureOfBusiness : users?.company?.natureOfBusiness,
-        companyAddress: companyAddress ? companyAddress : users?.company?.companyAddress,
+        natureOfBusiness: natureOfBusiness
+          ? natureOfBusiness
+          : users?.company?.natureOfBusiness,
+        companyAddress: companyAddress
+          ? companyAddress
+          : users?.company?.companyAddress,
       };
-      console.log(data);
       dispatch(updateCompanyDetails(data));
     }
   }, [errors, isSubmitted]);
 
   useEffect(() => {
-    if (!users) {
-      dispatch(getAuthUsers());
-    }
-  }, [users]);
+    dispatch(getAuthUsers());
+  }, [companyInfoMsg]);
 
   return (
     <div>
@@ -216,13 +228,15 @@ const CompanyDetails = () => {
                       <input
                         className="form-control"
                         placeholder={
-                          users?.company?.companyAddress ||
-                          "Company Address"
+                          users?.company?.companyAddress || "Company Address"
                         }
                         type="text"
                         name="companyAddress"
                         onChange={handleChange}
-                        defaultValue={formData.companyAddress || users?.company?.companyAddress}
+                        defaultValue={
+                          formData.companyAddress ||
+                          users?.company?.companyAddress
+                        }
                         disabled={showEditDetail}
                       />
                     </div>
@@ -261,7 +275,10 @@ const CompanyDetails = () => {
                         type="text"
                         name="natureOfBusiness"
                         onChange={handleChange}
-                        defaultValue={formData.natureOfBusiness || users?.company?.natureOfBusiness}
+                        defaultValue={
+                          formData.natureOfBusiness ||
+                          users?.company?.natureOfBusiness
+                        }
                         disabled={showEditDetail}
                       />
                     </div>
@@ -339,7 +356,10 @@ const CompanyDetails = () => {
                         }
                         type="text"
                         name="contactFirstName"
-                        defaultValue={formData.contactFirstName || users?.company?.contactFirstName}
+                        defaultValue={
+                          formData.contactFirstName ||
+                          users?.company?.contactFirstName
+                        }
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -361,7 +381,10 @@ const CompanyDetails = () => {
                           "Contact Person Last Name"
                         }
                         name="contactLastName"
-                        defaultValue={formData.contactLastName || users?.company?.contactLastName}
+                        defaultValue={
+                          formData.contactLastName ||
+                          users?.company?.contactLastName
+                        }
                         onChange={handleChange}
                         disabled={showEditCont}
                       />
@@ -374,7 +397,7 @@ const CompanyDetails = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-8 mb-4">
+                  <div className="col-md-6 mb-4">
                     <label>Email Address</label>
                     <div className="input-group">
                       <input
@@ -382,26 +405,34 @@ const CompanyDetails = () => {
                         placeholder={users?.email || "Email Address"}
                         type="email"
                         name="email"
-                        defaultValue={formData.email || users?.email}
-                        onChange={handleChange}
-                        disabled={showEditCont}
+                        value={users?.email}
+                        disabled
                       />
                     </div>
-                    {errors && errors?.email && (
+                    {/* {errors && errors?.email && (
                       <span className="text-danger">{errors?.email}</span>
-                    )}
+                    )} */}
                   </div>
-                  <div className="col-md-4 mb-4">
+                  <div className="col-md-6 mb-4">
                     <label>Phone Number</label>
                     <div className="input-group">
-                      <input
-                        className="form-control"
-                        placeholder={users?.phone || "Phone Number"}
-                        type="number"
+                      <PhoneInput
+                        country={"ng"}
+                        inputClass={`form-control phone-input ${
+                          showEditCont ? "disable" : ""
+                        }`}
+                        buttonClass={`phone-select-field ${
+                          showEditCont ? "disable" : ""
+                        }`}
                         name="phone"
-                        defaultValue={formData.phone || users?.phone}
-                        onChange={handleChange}
+                        value={formData.phone}
+                        // countryCodeEditable={false}
                         disabled={showEditCont}
+                        onChange={(value) => handlePhoneValueChange(value)}
+                        disableCountryCode={true}
+                        placeholder={users?.phone || "Phone Number"}
+                        disableDropdown
+                        masks={{ ng: ".... ... ...." }}
                       />
                     </div>
                     {errors && errors?.phone && (
@@ -418,7 +449,7 @@ const CompanyDetails = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button type="submit" className="blue-btn">
-                  Save
+                  {loading ? "Loading..." : "Save"}
                 </button>
               </div>
             </div>
@@ -520,12 +551,48 @@ const WrapperBody = styled.div`
     text-align: right;
     color: #ffffff;
   }
+  .phone-select-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: 1px solid #eee;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
+  .phone-input {
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
+  }
+
+  .disable {
+    background: rgba(28, 68, 141, 0.09) !important;
+    cursor: not-allowed;
+  }
 `;
 
 const WrapperFooter = styled.div`
   background: #ffffff;
   box-shadow: 8px 0px 18px rgba(173, 173, 173, 0.25);
   padding: 40px 80px;
+  width: 100% !important;
   @media (max-width: 600px) {
     padding: 40px 20px;
   }

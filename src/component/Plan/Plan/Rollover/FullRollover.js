@@ -1,117 +1,193 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Notice, SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
-import ModalComponent from '../../../ModalComponent';
-import { RolloverSummary } from '../../Accesssories';
+import ModalComponent from "../../../ModalComponent";
+import { getCurrIcon, RolloverSummary } from "../../Accesssories";
+import moment from "moment";
+import { getBankDetails } from "../../../../store/actions";
+import { Toaster } from "react-hot-toast";
 
-const FullRollover = ({goBack}) => {
+const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
   const [modalState, setModalState] = useState("Close");
+  const [isTerms, setIsTerms] = useState(false);
+  const [endDate, setEndDate] = useState("");
+  const [formData, setFormData] = useState({
+    contributionValue: 0,
+    calculatedInterest: 0,
+    paymentMaturity: 0,
+    withholdingTax: 0,
+  });
+  const [dataObj, setDataObj] = useState({});
+  const [savingFreq, setSavingFreq] = useState(false);
+  
+  
+
+  const dispatch = useDispatch();
+  const { singlePlan } = useSelector((state) => state.plan);
+  const { withdrawReasons } = useSelector((state) => state.user_profile);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+
+  const capitalise = (str) => {
+    return str?.charAt(0)?.toUpperCase() + str?.slice(1)?.toLowerCase();
+  };
+
+  useEffect(() => {
+    setDataObj({
+      amount: parseFloat(amount).toFixed(2),
+      formData,
+      interestRate,
+      tenor,
+    })
+  }, [formData, amount, interestRate, tenor])
+  
+
+  useEffect(() => {
+    dispatch(getBankDetails());
+  }, [dispatch]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setModalState("modal-one");
+  };
 
   return (
     <>
       <ProfileNavBar>
-          <NavTitle>
-            <span className="fw-bold">Plan</span>
-          </NavTitle>
-        </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Rollover</h4>
-          <div className="plan-content">
-            <div className="plan">
-              <div className="plan-top h-50 p-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Plan 1</h4>
-                    <p className="p-0 m-0">Product 1</p>
+        <NavTitle>
+          <span className="fw-bold">Plan</span>
+        </NavTitle>
+      </ProfileNavBar>
+      <Toaster/>
+      <form autoComplete="off" autoCorrect="off" onSubmit={handleSubmit}>
+        <Wrapper>
+          <LeftView>
+            <h4 className="pb-3">Rollover</h4>
+            <div className="plan-content">
+              <div className="plan">
+                <div className="plan-top h-50 p-4">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div>
+                      <h4>{plan?.planName}</h4>
+                      <p className="p-0 m-0">{plan?.product?.productName}</p>
+                    </div>
+                    <h4 className={capitalise(plan.planStatus)}>
+                      {capitalise(plan.planStatus)}
+                    </h4>
                   </div>
-                  <h4 className="Matured">Matured</h4>
+                  <div className="d-flex align-items-center justify-content-between pt-4">
+                    <div>
+                      <h4>Start date</h4>
+                      <p className="p-0 m-0">
+                        {moment(plan?.planSummary?.startDate).format(
+                          "DD/MM/YYYY"
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <h4>End date</h4>
+                      <p className="p-0 m-0">
+                        {moment(plan?.planSummary?.endDate).format(
+                          "DD/MM/YYYY"
+                        )}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex align-items-center justify-content-between pt-4">
-                  <div>
-                    <h4>Start date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
-                  <div>
-                    <h4>End date</h4>
-                    <p className="p-0 m-0">24/06/2023</p>
-                  </div>
+                <div className="d-flex position-relative horizontal-line">
+                  <div className="position-absolute horizontal-circle-left"></div>
+                  <hr className="dotted" />
+                  <div className="position-absolute end-0 horizontal-circle-right"></div>
                 </div>
-              </div>
-              <div className="d-flex position-relative horizontal-line">
-                <div className="position-absolute horizontal-circle-left"></div>
-                <hr className="dotted" />
-                <div className="position-absolute end-0 horizontal-circle-right"></div>
-              </div>
 
-              <div className="plan-top h-50 py-1 px-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <h4>Balance</h4>
-                    <p className="p-0 m-0">2,000,000</p>
+                <div className="plan-top h-50 py-1 px-4">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div>
+                      <h4>Balance</h4>
+                      <p className="p-0 m-0 d-flex gap-1">
+                        {getCurrIcon(plan?.currency?.name)}
+                        {plan?.planSummary?.principal?.toLocaleString()}
+                      </p>
+                    </div>
+                    {/* <i className="fa-solid fa-ellipsis"></i> */}
                   </div>
-                  {/* <i className="fa-solid fa-ellipsis"></i> */}
                 </div>
               </div>
             </div>
-          </div>
-        </LeftView>
-        <RightView>
-        <div className="bank-details">
-          <div className="bank-detail-content">
-            <RolloverSummary />
-          </div>
-        </div>
-      </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={goBack}
-              >
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
-                }}
-                onClick={() => setModalState("modal-one")}
-              >
-                Proceed
-              </button>
-              <ModalComponent
-                show={modalState === "modal-one"}
-                size={'md'}
-                handleClose={() => setModalState("close")}
-              >
-                <Notice 
-                  handleClose={() => setModalState("close")}
-                  handleShowModalTwo={() => setModalState("modal-two")}
+          </LeftView>
+          <RightView>
+            <div className="bank-details">
+              <div className="bank-detail-content">
+                <RolloverSummary
+                  amount={amount}
+                  tenor={tenor}
+                  interestRate={interestRate}
+                  withholdTax={withholdTax}
+                  checkTerms={setIsTerms}
+                  isTerms={isTerms}
+                  setEndDate={setEndDate}
+                  setFormData={setFormData}
+                  formData={formData}
+                  setSavingsFreq={setSavingFreq}
+                  savingFreq={savingFreq}
                 />
-              </ModalComponent>
+              </div>
+            </div>
+          </RightView>
+        </Wrapper>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-between footer-content">
+              <div>
+                <button
+                  type="button"
+                  style={{ color: "#111E6C", width: "300px" }}
+                  onClick={goBack}
+                >
+                  Back
+                </button>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#111E6C",
+                    color: "#FFFFFF",
+                    width: "300px",
+                  }}
+                >
+                  Proceed
+                </button>
+                <ModalComponent
+                  show={modalState === "modal-one"}
+                  size={"md"}
+                  handleClose={() => setModalState("close")}
+                >
+                  <Notice
+                    handleClose={() => setModalState("close")}
+                    handleShowModalTwo={() => setModalState("modal-two")}
+                    actionType="rollover"
+                    endDate={endDate}
+                    dataObj={dataObj}
+                  />
+                </ModalComponent>
 
-              <ModalComponent
-                show={modalState === "modal-two"}
-                size={'md'}
-                handleClose={() => setModalState("close")}
-              >
-                <SuccessConfirm
-                  confirmNotice="rollover"
+                <ModalComponent
+                  show={modalState === "modal-two"}
+                  size={"md"}
                   handleClose={() => setModalState("close")}
-                />
-              </ModalComponent>
+                >
+                  <SuccessConfirm
+                    confirmNotice="rollover"
+                    handleClose={() => setModalState("close")}
+                  />
+                </ModalComponent>
+              </div>
             </div>
           </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </>
   );
 };
@@ -139,7 +215,9 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active, .Pending, .Matured {
+  .Active,
+  .Pending,
+  .Matured {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
@@ -149,10 +227,10 @@ const LeftView = styled.div`
     color: #219653;
   }
   .Pending {
-    color: #F2994A;
+    color: #f2994a;
   }
   .Matured {
-    color: #2D9CDB;
+    color: #2d9cdb;
   }
 `;
 
@@ -164,7 +242,6 @@ const RightView = styled.div`
   .bank-details {
     height: auto;
     padding: 40px 0;
-    margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
     justify-content: center;

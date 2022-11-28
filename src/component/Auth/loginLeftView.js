@@ -27,12 +27,7 @@ export const LoginLeftView = ({ signup }) => {
   );
 };
 
-export const SignupLeftView = () => {
-  const location = useLocation();
-  const query = new URLSearchParams(location?.search)
-
-  const referralCode = query.get('referralCode');
-  const sourcer = query.get('source');
+export const SignupLeftView = ({source, referralCode}) => {
   return (
     <Wrapper>
       <div className="wrapper_content">
@@ -52,17 +47,17 @@ export const SignupLeftView = () => {
             <div className="continue_login_btn">
               <div className="category-btn">
                 <NavLink to={
-                  referralCode !== null && sourcer !== null ? 
-                  `/register-user/?referralCode=${referralCode}&source=${sourcer}` :
-                  referralCode !== null && sourcer === null ? 
+                  referralCode !== null && source !== null ? 
+                  `/register-user/?referralCode=${referralCode}&source=${source}` :
+                  referralCode !== null && source === null ? 
                   `/register-user/?referralCode=${referralCode}` :
                   `/register-user`}>
                   <button className="individual">Register as an Individual</button>
                 </NavLink>
                 <NavLink to={
-                  referralCode !== null && sourcer !== null ? 
-                  `/register-company/?referralCode=${referralCode}&source=${sourcer}` :
-                  referralCode !== null && sourcer === null ? 
+                  referralCode !== null && source !== null ? 
+                  `/register-company/?referralCode=${referralCode}&source=${source}` :
+                  referralCode !== null && source === null ? 
                   `/register-company/?referralCode=${referralCode}` :
                   `/register-company`}>
                   <button className="corporate">Register as a Corporate</button>

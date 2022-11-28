@@ -24,6 +24,7 @@ import { Toaster } from "react-hot-toast";
 const PlanPayment = () => {
   const [card, setCard] = useState("");
   const [bank, setBank] = useState("");
+  const [paymentType, setPaymentType] = useState("");
   const [amount, setAmount] = useState("");
   const [debitPopup, setDebitPopup] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -37,6 +38,12 @@ const PlanPayment = () => {
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const planStatus = singlePlan?.data.statusCode;
 
+  const capitalise = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
+  console.log(plan);
+
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
     if (plan?.id === parseInt(id)) {
@@ -49,28 +56,22 @@ const PlanPayment = () => {
       amount: parseInt(amount),
       purposeOfPayment: "PLAN_CREATION",
     };
-    if (card && isClicked) {
+    if (paymentType === "card" && isClicked) {
       dispatch(regTransaction(formData));
       setDebitPopup(true);
     }
-  }, [isClicked]);
+  }, [isClicked, paymentType, amount]);
 
   const handleClick = (e) => {
-    if (e.target.value === "card") {
-      setCard("card");
-      setBank("");
-    }
-    if (e.target.value === "bank") {
-      setBank("bank");
-      setCard("");
-    }
+    const { value } = e.target;
+    setPaymentType(value);
   };
 
-  if (bank && isClicked) {
+  if (paymentType === "bank" && isClicked) {
     return (
       <PlanBankTopup
         goBack={() => {
-          setBank("");
+          setPaymentType("");
           setIsClicked(false);
         }}
         amount={parseInt(amount)}
@@ -78,17 +79,10 @@ const PlanPayment = () => {
     );
   }
 
-  // const paymentSuccess = async () => {
-  //   const formData = {
-  //     amount: amount,
-  //     completed: true,
-  //     paymentType: "DEBIT_CARD",
-  //     plan: parseInt(id),
-  //     planToReceive: parseInt(id),
-  //     planAction: "TOP_UP",
-  //   };
-  //   await dispatch(planAction(formData, setSuccess));
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsClicked(true);
+  }
 
   const onSuccess = () => {
     const formData = {
@@ -128,9 +122,9 @@ const PlanPayment = () => {
   return (
     <>
       {planStatus === "OK" && (
-        <>
+        <form autoComplete="off" autoCorrect="off" onSubmit={handleSubmit}>
           <Wrapper>
-            <Toaster/>
+            <Toaster />
             <LeftView>
               <h4 className="pb-3">Top up</h4>
               <div className="plan-content">
@@ -141,8 +135,8 @@ const PlanPayment = () => {
                         <h4>{plan.planName}</h4>
                         <p className="p-0 m-0">{plan?.product.productName}</p>
                       </div>
-                      <h4 className="Active">
-                        {plan.planStatus.toLowerCase()}
+                      <h4 className={capitalise(plan.planStatus)}>
+                        {capitalise(plan.planStatus)}
                       </h4>
                     </div>
                     <div className="d-flex align-items-center justify-content-between pt-4">
@@ -217,6 +211,7 @@ const PlanPayment = () => {
                       name="paymentType"
                       value="card"
                       onClick={handleClick}
+                      required
                     />
                   </div>
                 </div>
@@ -236,6 +231,7 @@ const PlanPayment = () => {
                       name="paymentType"
                       value="bank"
                       onClick={handleClick}
+                      required
                     />
                   </div>
                 </div>
@@ -254,6 +250,7 @@ const PlanPayment = () => {
               <div className="d-flex align-items-center justify-content-between footer-content">
                 <div>
                   <button
+                    type="button"
                     style={{ color: "#111E6C", width: "300px" }}
                     onClick={back}
                   >
@@ -262,12 +259,12 @@ const PlanPayment = () => {
                 </div>
                 <div>
                   <button
+                    type="submit"
                     style={{
                       backgroundColor: "#111E6C",
                       color: "#FFFFFF",
                       width: "300px",
                     }}
-                    onClick={() => setIsClicked(true)}
                   >
                     Submit
                   </button>
@@ -299,7 +296,7 @@ const PlanPayment = () => {
               handleClose={() => setSuccess(false)}
             />
           </ModalComponent>
-        </>
+        </form>
       )}
     </>
   );
@@ -350,11 +347,11 @@ const LeftView = styled.div`
   .curr-icon {
     position: absolute;
     margin-top: 6px;
-    margin-left: 22px;
+    margin-left: 12px;
     z-index: 10;
   }
   .curr-input {
-    padding-left: 34px;
+    padding-left: 24px;
   }
 `;
 

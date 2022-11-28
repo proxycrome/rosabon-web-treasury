@@ -18,6 +18,7 @@ import {
   getWithholdingTax,
 } from "../../../store/actions";
 import { useMemo } from "react";
+import Spinner from "../../common/loading";
 
 export const PlanContext = createContext(null);
 
@@ -26,7 +27,7 @@ const PlanForm = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [conValue, setConValue] = useState("targetAmount");
-  const { products } = useSelector((state) => state.product);
+  const { products, loading } = useSelector((state) => state.product);
   const { currencies } = useSelector((state) => state.currencies);
   const { exRates, investment_rates, withholding_tax } = useSelector(
     (state) => state.plan
@@ -39,20 +40,24 @@ const PlanForm = () => {
   const product = products?.data?.body
     ? products?.data?.body.find((item) => item.id === parseInt(id))
     : {};
-  const ex_rates = exRates?.data.body ? exRates?.data.body : [];
+  const ex_rates = exRates?.data.body
+    ? exRates?.data?.body?.filter((item) => item.status === "ACTIVE")
+    : [];
   const withhold_tax = withholding_tax?.data.body
-    ? withholding_tax?.data.body
+    ? withholding_tax?.data?.body
     : [];
   const inv_rates = investment_rates?.data.body
-    ? investment_rates?.data.body
+    ? investment_rates?.data?.body?.filter((item) => item.status === "ACTIVE")
     : [];
-  const currencies_list = currencies?.data.body ? currencies?.data.body : [];
+  const currencies_list = currencies?.data.body
+    ? currencies?.data?.body?.filter((item) => item.status === "ACTIVE")
+    : [];
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
-  console.log(inv_rates);
+  console.log(ex_rates);
   console.log(product);
-  console.log(product.tenors)
+  console.log(product.tenors);
 
   useEffect(() => {
     dispatch(getExRates());
@@ -71,14 +76,14 @@ const PlanForm = () => {
     productCategory: product?.productCategory?.id,
     planName: "",
     currency: "",
-    exchangeRate: 0.0,
+    exchangeRate: "",
     amount: 0.0,
-    targetAmount: null,
+    targetAmount: 0.0,
     tenor: "",
     planDate: recentDate,
-    savingFrequency: null,
-    weeklyContributionDay: "MONDAY",
-    monthlyContributionDay: 1,
+    savingFrequency: "",
+    weeklyContributionDay: "",
+    monthlyContributionDay: 0,
     interestReceiptOption: "",
     planStatus: "ACTIVE",
     contributionValue: 0.0,
@@ -115,94 +120,183 @@ const PlanForm = () => {
     paymentMaturity: 0.0,
   });
 
-  // const computeCustomTenorDays = () => {
-  //   const customTenorDays = moment(formData.actualMaturityDate).diff(recentDate, "days");
-    
-  //   let tenor;
-  //   const selectedTenor = product?.tenors?.filter(item => customTenorDays < item.tenorDays)
+  // calculate minimum and maximum tenor
+  let minTenor = { tenorDays: Infinity };
+  let maxTenor = { tenorDays: 0 };
+  if (product?.tenors) {
+    if (product.tenors?.length > 1) {
+      product.tenors?.forEach((item) =>
+        item.tenorDays < minTenor.tenorDays ? (minTenor = item) : null
+      );
+      product.tenors?.forEach((item) =>
+        item.tenorDays > maxTenor.tenorDays ? (maxTenor = item) : null
+      );
+    } else {
+      minTenor = product?.tenors[0]?.tenorDays;
+      maxTenor = product?.tenors[0]?.tenorDays;
+    }
+    minTenor = moment(recentDate).add(minTenor?.tenorDays, "days")?._d;
+    maxTenor = moment(recentDate).add(maxTenor?.tenorDays, "days")?._d;
+  }
 
-  //   const newtenorDays =  selectedTenor?.length > 1 ? selectedTenor?.reduce((a, b) => Math.min(a.tenorDays, b.tenorDays)) : selectedTenor?.tenorDays
-    
-  //   return newtenorDays;
-  // } 
+  const checkAtMaturity =
+    formData.actualMaturityDate &&
+    (formData.tenor === 0 || formData.tenor === null);
 
-  // console.log(computeCustomTenorDays());
+  const computeTenorDays = useCallback(() => {
+    if (checkAtMaturity) {
+      const customTenorDays = moment(formData.actualMaturityDate).diff(
+        recentDate,
+        "days"
+      );
+
+      const selectedTenor = product?.tenors?.filter(
+        (item) => customTenorDays < item.tenorDays
+      );
+
+      function findMinValue(arr) {
+        if (arr?.length) {
+          let min = Infinity;
+
+          for (let obj of arr) {
+            min = obj?.tenorDays < min ? obj?.tenorDays : min;
+          }
+
+          return min;
+        }
+      }
+
+      return findMinValue(selectedTenor);
+    } else {
+      return product?.tenors?.find(
+        (item) => item.id === parseInt(formData.tenor)
+      )?.tenorDays;
+    }
+  }, [formData.actualMaturityDate, formData.tenor]);
+
+  console.log(computeTenorDays());
 
   // final update on the user plan details before switching to next screen
   useEffect(() => {
-    let selectedTenor = product?.tenors?.find(
-      (item) => item.id === parseInt(formData.tenor)
-    );
-    const selectedCustomTenor = () => {
-      const customTenorDays = moment(formData.actualMaturityDate).diff(recentDate, "days");
-      let tenor;
-      const selectedTenor = product.tenors.filter(item => customTenorDays < item.tenorDays)
-      const newtenorDays =  selectedTenor.reduce((a, b) => Math.min(a.tenorDays, b.tenorDays))
-    } 
-    let endDate = moment(recentDate).add(selectedTenor?.tenorDays, "days")?._d;
-    setFormData({
-      ...formData,
-      // amount: product.hasTargetAmount !== null ? null : formData.amount,
-      product: product.id,
-      productCategory: product.productCategory?.id,
-      exchangeRate: formData.currency === "NGN" ? 1 : formData.exchangeRate,
-      actualMaturityDate:
-        formData.actualMaturityDate === ""
-          ? moment(endDate).format("YYYY-MM-DD")
-          : formData.actualMaturityDate,
-      contributionValue: formData.contributionValue,
-      currency: currencies_list.find((item) => item.name === formData.currency)
-        ?.id,
-      numberOfTickets: updateNumOfTickets(
-        product?.properties?.hasTargetAmount
-          ? formData.targetAmount
-          : formData.amount
-      ),
-      planSummary: summary,
-      directDebit:
-        formData.directDebit === "true" || formData.directDebit === true
-          ? true
-          : false,
-      autoRenew:
-        formData.autoRenew === "true" || formData.autoRenew === true
-          ? true
-          : false,
-      allowsLiquidation:
-        formData.allowsLiquidation === "true" ||
-        formData.allowsLiquidation === true
-          ? true
-          : false,
-      interestRate: fetchIntRate(formData.interestReceiptOption),
-    });
+    if (isClicked) {
+      let selectedTenor = product?.tenors?.find(
+        (item) => item.id === parseInt(formData.tenor)
+      );
+
+      let endDate = moment(recentDate).add(
+        selectedTenor?.tenorDays,
+        "days"
+      )?._d;
+      setFormData({
+        ...formData,
+        // amount: product.hasTargetAmount !== null ? null : formData.amount,
+        product: product.id,
+        productCategory: product.productCategory?.id,
+        exchangeRate: formData.currency === "NGN" ? 1 : formData.exchangeRate,
+        actualMaturityDate: checkAtMaturity
+          ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
+          : moment(endDate).format("YYYY-MM-DD"),
+        contributionValue: formData.contributionValue,
+        currency: currencies_list.find(
+          (item) => item.name === formData.currency
+        )?.id,
+        numberOfTickets: updateNumOfTickets(
+          product?.properties?.hasTargetAmount
+            ? formData.targetAmount
+            : formData.amount
+        ),
+        monthlyContributionDay:
+          formData.savingFrequency === "MONTHLY"
+            ? formData.monthlyContributionDay
+            : null,
+        weeklyContributionDay:
+          formData.savingFrequency === "WEEKLY"
+            ? formData.weeklyContributionDay
+            : null,
+        tenor: checkAtMaturity ? null : formData.tenor,
+        planSummary: summary,
+        directDebit:
+          formData.directDebit === "true" || formData.directDebit === true
+            ? true
+            : false,
+        autoRenew:
+          formData.autoRenew === "true" || formData.autoRenew === true
+            ? true
+            : false,
+        allowsLiquidation:
+          formData.allowsLiquidation === "true" ||
+          formData.allowsLiquidation === true
+            ? true
+            : false,
+        interestRate: fetchIntRate(formData.interestReceiptOption),
+        savingFrequency:
+          formData.savingFrequency !== "" ? formData.savingFrequency : null,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        tenor: checkAtMaturity ? null : formData.tenor,
+        currency: currencies_list.find((item) => item.id === formData.currency)
+          ?.name,
+      });
+    }
   }, [isClicked]);
+
+  const [validSavingsFreq, setValidSavingsFreq] = useState(true);
 
   // function to compute target amount and computed value
   const contribValue = () => {
     const selectedTenor = product.tenors?.find(
       (item) => item.id === parseInt(formData.tenor)
     );
+
+    const customTenorDays = moment(formData.actualMaturityDate).diff(
+      recentDate,
+      "days"
+    );
+
     if (product?.properties?.hasTargetAmount) {
       if (formData.savingFrequency !== "") {
         if (conValue === "targetAmount") {
-          let computedValue;
+          let computedValue = null;
           switch (formData.savingFrequency) {
             case "DAILY":
-              computedValue = formData.targetAmount / selectedTenor?.tenorDays;
-              // computedValue = return (SI * 100 + Number.EPSILON) / 100
+              computedValue =
+                formData.targetAmount /
+                (checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays);
+              setValidSavingsFreq(true);
               break;
 
             case "WEEKLY":
-              if(selectedTenor?.tenorDays < 7){
-                computedValue = undefined;
+              if (customTenorDays < 7 || selectedTenor?.tenorDays < 7) {
+                computedValue = null;
+                setValidSavingsFreq(false);
               } else {
-                computedValue =
-                formData.targetAmount / (selectedTenor?.tenorDays / 7);
-              } 
+                if (checkAtMaturity) {
+                  computedValue =
+                    formData.targetAmount / Math.floor(customTenorDays / 7);
+                } else {
+                  computedValue =
+                    formData.targetAmount /
+                    Math.floor(selectedTenor?.tenorDays / 7);
+                }
+              }
               break;
 
             case "MONTHLY":
-              computedValue =
-                formData.targetAmount / selectedTenor?.tenorMonths;
+              if (customTenorDays < 30 || selectedTenor?.tenorDays < 30) {
+                computedValue = null;
+                setValidSavingsFreq(false);
+              } else {
+                if (checkAtMaturity) {
+                  computedValue =
+                    formData.targetAmount / Math.floor(customTenorDays / 30);
+                } else {
+                  computedValue =
+                    formData.targetAmount /
+                    Math.floor(selectedTenor?.tenorDays / 30);
+                }
+              }
               break;
 
             default:
@@ -210,8 +304,7 @@ const PlanForm = () => {
           }
           setFormData({
             ...formData,
-            // contributionValue: Number(parseFloat(computedValue).toFixed(2))
-            contributionValue: (computedValue * 100 + Number.EPSILON) / 100,
+            contributionValue: (computedValue * 100) / 100,
           });
         } else {
           if (product?.properties?.hasTargetAmount) {
@@ -219,17 +312,46 @@ const PlanForm = () => {
             switch (formData.savingFrequency) {
               case "DAILY":
                 computedValue =
-                  formData.contributionValue * selectedTenor?.tenorDays;
+                  formData.contributionValue *
+                  (checkAtMaturity
+                    ? customTenorDays
+                    : selectedTenor?.tenorDays);
+                setValidSavingsFreq(true);
                 break;
 
               case "WEEKLY":
-                computedValue =
-                  formData.contributionValue * (selectedTenor?.tenorDays / 7);
+                if (customTenorDays < 7 || selectedTenor?.tenorDays < 7) {
+                  computedValue = undefined;
+                  setValidSavingsFreq(false);
+                } else {
+                  if (checkAtMaturity) {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(customTenorDays / 7);
+                  } else {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(selectedTenor?.tenorDays / 7);
+                  }
+                }
+
                 break;
 
               case "MONTHLY":
-                computedValue =
-                  formData.contributionValue * selectedTenor?.tenorMonths;
+                if (customTenorDays < 30 || selectedTenor?.tenorDays < 30) {
+                  computedValue = undefined;
+                  setValidSavingsFreq(false);
+                } else {
+                  if (checkAtMaturity) {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(customTenorDays / 30);
+                  } else {
+                    computedValue =
+                      formData.contributionValue *
+                      Math.floor(selectedTenor?.tenorDays / 30);
+                  }
+                }
                 break;
 
               default:
@@ -238,7 +360,6 @@ const PlanForm = () => {
             setFormData({
               ...formData,
               targetAmount: (computedValue * 100 + Number.EPSILON) / 100,
-              // targetAmount: Number(parseInt(computedValue))
             });
           }
         }
@@ -246,6 +367,9 @@ const PlanForm = () => {
     }
   };
 
+  console.log("targetAmount", formData.targetAmount);
+  console.log("contributionValue", formData.contributionValue);
+  console.log("valid", validSavingsFreq);
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
     let interestRate;
@@ -253,30 +377,46 @@ const PlanForm = () => {
       ? formData.targetAmount
       : formData.amount;
 
+    const customTenorDays = moment(formData.actualMaturityDate).diff(
+      recentDate,
+      "days"
+    );
+
+    const selectedTenor = product.tenors?.find(
+      (item) => item.id === parseInt(formData.tenor)
+    );
+
+    const maxTenorDays = () => {
+      if (checkAtMaturity) {
+        return customTenorDays;
+      } else {
+        return selectedTenor?.tenorDays;
+      }
+    };
+
     const invRateCurrency = inv_rates
       ?.filter((data) => data.product.id === parseInt(id))
-      ?.find((item) => item.currency.name === formData.currency)?.currency?.name;
-      console.log(invRateCurrency); 
+      ?.find((item) => item.currency.name === formData.currency)
+      ?.currency?.name;
+    console.log(invRateCurrency);
     const currency = ex_rates?.find((item) => item.name === formData.currency);
-    // const newSellingPrice = currency?.sellingPrice;
-    // const oldSellingPrice = ex_rates?.find(
-    //   (item) => item.name === invRateCurrency
-    // )?.sellingPrice;
+
     const convPrincipal = () => {
       let convertPrincipal;
       if (invRateCurrency === currency?.name) {
         convertPrincipal = principal;
-      } 
-      // else {
-      //   convertPrincipal = (newSellingPrice / oldSellingPrice) * principal;
-      // }
+      }
       return convertPrincipal;
     };
+
     let rate = inv_rates?.find((item) => {
       return (
-        item.product.id === parseInt(id) && item.currency.name === formData.currency &&
-        (convPrincipal() >= item.minimumAmount &&
-        convPrincipal() <= item.maximumAmount)
+        item.product.id === parseInt(id) &&
+        item.currency.name === formData.currency &&
+        convPrincipal() >= item.minimumAmount &&
+        convPrincipal() <= item.maximumAmount &&
+        maxTenorDays() >= item.minimumTenor &&
+        maxTenorDays() <= item.maximumTenor
       );
     });
     let directDebitRate = rate?.percentDirectDebit
@@ -305,11 +445,11 @@ const PlanForm = () => {
           break;
 
         default:
-          interestRate = 0;
+          interestRate = null;
           break;
       }
       if (interestRate === null) {
-        interestRate = formData.directDebit ? 0 + directDebitRate : 0;
+        interestRate = formData.directDebit ? 0 + directDebitRate : null;
         // interestRate = formData.directDebit ? 0 : 0;
         return interestRate;
       } else {
@@ -320,7 +460,7 @@ const PlanForm = () => {
         return interestRate;
       }
     } else {
-      interestRate = 0;
+      interestRate = undefined;
       return interestRate;
     }
   };
@@ -344,6 +484,7 @@ const PlanForm = () => {
       formData.tenor,
       formData.targetAmount,
       formData.contributionValue,
+      formData.actualMaturityDate,
     ]
   );
 
@@ -361,17 +502,30 @@ const PlanForm = () => {
     let endDate = moment(recentDate).add(selectedTenor?.tenorDays, "days")?._d;
     // calculate principal
 
+    const customTenorDays = moment(formData.actualMaturityDate).diff(
+      recentDate,
+      "days"
+    );
+
+    const calc_withholding_tax =
+      Math.round(
+        summary.calculatedInterest * (withhold_tax[0]?.rate / 100) * 100 +
+          Number.EPSILON
+      ) / 100;
+
     // }
     setSummary({
       ...summary,
       planName: formData.planName,
       startDate: formData.dateCreated,
-      endDate: moment(endDate).format("YYYY-MM-DD"),
+      endDate: checkAtMaturity
+        ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
+        : moment(endDate).format("YYYY-MM-DD"),
       interestRate: formData.interestRate,
       principal: product?.properties?.hasTargetAmount
         ? formData.targetAmount
         : formData.amount,
-      withholdingTax: withhold_tax[0]?.rate,
+      withholdingTax: calc_withholding_tax,
       // interestPaymentFrequency: formData.interestReceiptOption,
       interestReceiptOption: formData.interestReceiptOption,
       calculatedInterest: calculateSI(
@@ -379,7 +533,7 @@ const PlanForm = () => {
           ? formData.targetAmount
           : formData.amount,
         formData.interestRate,
-        selectedTenor?.tenorDays
+        checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
       ),
       paymentMaturity: paymentAtMaturity(
         formData.interestReceiptOption,
@@ -387,13 +541,17 @@ const PlanForm = () => {
           ? formData.targetAmount
           : formData.amount,
         withhold_tax[0]?.rate,
-        selectedTenor?.tenorMonths,
+        checkAtMaturity
+          ? Math.floor(
+              moment(formData.actualMaturityDate).diff(recentDate, "days") / 30
+            )
+          : Math.floor(selectedTenor?.tenorDays / 30),
         calculateSI(
           product?.properties?.hasTargetAmount
             ? formData.targetAmount
             : formData.amount,
           formData.interestRate,
-          selectedTenor?.tenorDays
+          checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
         )
       ),
     });
@@ -405,6 +563,8 @@ const PlanForm = () => {
     formData.interestReceiptOption,
     formData.targetAmount,
     formData.amount,
+    formData.actualMaturityDate,
+    summary.calculatedInterest,
   ]);
 
   // side effect Update interest rate and exchange rate
@@ -418,6 +578,8 @@ const PlanForm = () => {
         exchangeRate:
           formData.currency === "NGN"
             ? 1
+            : formData.currency === ""
+            ? ""
             : Number(parseFloat(currency?.sellingPrice).toFixed(2)),
         interestRate: fetchIntRate(formData.interestReceiptOption),
       });
@@ -429,14 +591,20 @@ const PlanForm = () => {
     formData.amount,
     formData.directDebit,
     formData.currency,
+    formData.tenor,
+    formData.actualMaturityDate,
   ]);
 
   // Update number of tickets based on target amount or amount to be placed value
   const updateNumOfTickets = (value) => {
     let ticketNo;
     if (product?.properties?.allowsMonthlyDraw) {
-      ticketNo = value / product?.minTransactionLimit;
-      return Math.floor(ticketNo);
+      if (value === null) {
+        return null;
+      } else {
+        ticketNo = value / product?.minTransactionLimit;
+        return Math.floor(ticketNo);
+      }
     } else {
       return 0;
     }
@@ -499,25 +667,6 @@ const PlanForm = () => {
     );
   }
 
-  // calculate minimum and maximum tenor
-  let minTenor = { tenorDays: 999999 };
-  let maxTenor = { tenorDays: 0 };
-  if (product?.tenors) {
-    if (product.tenors?.length > 1) {
-      product.tenors?.forEach((item) =>
-        item.tenorDays < minTenor.tenorDays ? (minTenor = item) : null
-      );
-      product.tenors?.forEach((item) =>
-        item.tenorDays > maxTenor.tenorDays ? (maxTenor = item) : null
-      );
-    } else {
-      minTenor = product?.tenors[0]?.tenorDays;
-      maxTenor = product?.tenors[0]?.tenorDays;
-    }
-    minTenor = moment(recentDate).add(minTenor?.tenorDays, "days")?._d;
-    maxTenor = moment(recentDate).add(maxTenor?.tenorDays, "days")?._d;
-  }
-
   const back = () => {
     navigate("/plan-product");
   };
@@ -538,9 +687,9 @@ const PlanForm = () => {
   const calculateMinContribVal = (contribVal) => {
     if (contribVal !== null) {
       if (formData.tenor !== "") {
-        let selectedTenor = product?.tenors?.filter(
+        let selectedTenor = product?.tenors?.find(
           (item) => item.id === parseInt(formData.tenor)
-        )[0];
+        );
         let minContrib;
         switch (formData.savingFrequency) {
           case "DAILY":
@@ -558,7 +707,7 @@ const PlanForm = () => {
           case "MONTHLY":
             minContrib =
               (product?.minTransactionLimit * selectedTenor?.tenorMonths) /
-              selectedTenor?.tenorMonths;
+              Math.floor(selectedTenor?.tenorDays / 30);
             break;
 
           default:
@@ -598,10 +747,17 @@ const PlanForm = () => {
           [e.target.name]: e.target.value,
         });
       } else if (e.target.name === "tenor") {
-        setFormData({
-          ...formData,
-          [e.target.name]: Number(e.target.value),
-        });
+        if (typeof e.target.value === "number" && e.target.value) {
+          setFormData({
+            ...formData,
+            [e.target.name]: Number(e.target.value),
+          });
+        } else {
+          setFormData({
+            ...formData,
+            [e.target.name]: Number(e.target.value),
+          });
+        }
       } else if (e.target.name === "monthlyContributionDay") {
         setFormData({
           ...formData,
@@ -627,7 +783,11 @@ const PlanForm = () => {
     if (!product?.properties?.hasSavingFrequency) {
       setIsClicked(true);
     } else {
-      if (confirmPeriodicPay) {
+      if (
+        confirmPeriodicPay &&
+        summary.paymentMaturity !== null &&
+        validSavingsFreq
+      ) {
         setIsClicked(true);
       }
     }
@@ -641,511 +801,567 @@ const PlanForm = () => {
           <span className="fw-bold">Choose Plan</span>
         </NavTitle>
       </ProfileNavBar>
-      {/*Interest receipt option UncontrolledTooltip */}
-      <UncontrolledTooltip placement="top" target="intRecOpt">
-        You have an option of choosing when to be paid your interest
-      </UncontrolledTooltip>
-      {/* Direct debit UncontrolledTooltip */}
-      <UncontrolledTooltip placement="top" target="directDebit">
-        The direct debit mandate automatically deducts your contribution value
-        from your bank account at zero cost
-      </UncontrolledTooltip>
-      {/*Auto renew UncontrolledTooltip */}
-      {product?.properties?.acceptsRollover && (
-        <UncontrolledTooltip placement="top" target="autoRenew">
-          Allows for fund to be automatically rolled over at maturity
-        </UncontrolledTooltip>
-      )}
-      {product?.properties?.allowsLiquidation && (
-        <UncontrolledTooltip placement="top" target="allowLiquidation">
-          Allows for you to withdraw before maturity
-        </UncontrolledTooltip>
-      )}
-      <Wrapper>
-        {productStatus === "OK" ? (
-          <div className="choose-plan">
-            <h5>{product.productName} </h5>
-            <div className="d-flex align-items-center" style={{ gap: 16 }}>
-              <img
-                className="image-holder"
-                src={
-                  product?.imageUrl?.length > 10
-                    ? product.imageUrl
-                    : ChoosePlanHolder
-                }
-                alt="Product"
-              />
-              <div>
-                <div>
-                  {product.productDescription
-                    .split(",")
-                    .slice(0, 3)
-                    ?.map((item, id) => (
-                      <p key={id} className="p-0 m-0 pb-2">
-                        {item}{" "}
-                      </p>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
 
-        <div className="container-fluid">
-          <div className="row">
-            <h4>Plan Details</h4>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-              <label>Plan Name</label>
-              <div className="input-group mb-4">
-                <Input
-                  className={`form-control ${validate && "validate"}`}
-                  name="planName"
-                  placeholder="Enter a plan name"
-                  type="text"
-                  required
-                  value={formData.planName}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="col-md-6">
-              <label>Currency</label>
-              <div className="input-group mb-4">
-                <Input
-                  className={`form-select form-select-md ${
-                    validate && "validate"
-                  }`}
-                  type="select"
-                  onChange={handleChange}
-                  name="currency"
-                  required
-                  value={formData.currency}
-                >
-                  <option value="" disabled hidden selected>
-                    Select investment currency
-                  </option>
-                  {product?.currency?.map((item, id) => (
-                    <option key={id} value={item.name}>
-                      {item.name}{" "}
-                    </option>
-                  ))}
-                </Input>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-              <label>Exchange rate</label>
-              <div className="input-group mb-4">
-                <div className=" input-group-prepend curr-icon">
-                  {getCurrIcon(formData.currency)}
-                </div>
-                <Input
-                  className={`form-control ${
-                    formData.currency !== "" && "curr-input"
-                  }`}
-                  name="exchangeRate"
-                  placeholder=""
-                  disabled={formData.currency}
-                  type="number"
-                  value={formData.exchangeRate}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="col-md-6">
-              <label>Amount to be placed</label>
-              <div className="input-group mb-4">
-                <div className="input-group-prepend curr-icon">
-                  {getCurrIcon(formData.currency)}
-                </div>
-                <Input
-                  className={`form-control ${
-                    formData.currency !== "" && "curr-input"
-                  }
-                   ${validate && "validate"}`}
-                  name="amount"
-                  required
-                  placeholder=""
-                  type="number"
-                  // disabled={product?.properties?.hasTargetAmount===null?false:true}
-                  disabled={product?.properties?.hasTargetAmount}
-                  value={formData.amount}
-                  min={product?.minTransactionLimit}
-                  max={product?.maxTransactionLimit}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 mb-4">
-              <label>Target amount</label>
-              <div className="input-group">
-                <div className="input-group-prepend curr-icon">
-                  {getCurrIcon(formData.currency)}
-                </div>
-                <Input
-                  className={`form-control 
-                  ${formData.currency !== "" && "curr-input"} ${
-                    validate && "validate"
-                  }`}
-                  name="targetAmount"
-                  placeholder=""
-                  disabled={
-                    product?.properties?.hasTargetAmount === null ||
-                    !product?.properties?.hasTargetAmount
-                  }
-                  type="number"
-                  required
-                  value={formData.targetAmount}
-                  min={product?.minTransactionLimit}
-                  max={product?.maxTransactionLimit}
-                  onChange={handleChange}
-                />
-              </div>
-              {product?.properties?.hasTargetAmount &&
-              formData.targetAmount < product?.minTransactionLimit ? (
-                <small className="helper-text">
-                  Target value cannot be below {product?.minTransactionLimit}
-                </small>
-              ) : (
-                <></>
+      {loading ? (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : (
+        productStatus === "OK" && (
+          <>
+            <Wrapper>
+              {/*Interest receipt option UncontrolledTooltip */}
+              <UncontrolledTooltip placement="top" target="intRecOpt">
+                You have an option of choosing when to be paid your interest
+              </UncontrolledTooltip>
+              {/* Direct debit UncontrolledTooltip */}
+              {product?.properties?.hasDirectDebit && (
+                <UncontrolledTooltip placement="top" target="directDebit">
+                  The direct debit mandate automatically deducts your
+                  contribution value from your bank account at zero cost
+                </UncontrolledTooltip>
               )}
-              {product?.properties?.hasTargetAmount &&
-              formData.targetAmount > product?.maxTransactionLimit ? (
-                <small className="helper-text">
-                  Target value cannot be above {product?.maxTransactionLimit}
-                </small>
-              ) : (
-                <></>
+              {/*Auto renew UncontrolledTooltip */}
+              {product?.properties?.acceptsRollover && (
+                <UncontrolledTooltip placement="top" target="autoRenew">
+                  Allows for fund to be automatically rolled over at maturity
+                </UncontrolledTooltip>
               )}
-            </div>
-            <div className="col-md-6">
-              <label>Tenor</label>
-              <Input
-                className={`form-select form-select-md mb-3 ${
-                  validate && "validate"
-                }`}
-                type="select"
-                name="tenor"
-                required
-                onChange={handleChange}
-                value={formData.tenor}
-              >
-                <option value="" disabled hidden selected>
-                  Select tenor
-                </option>
-                {product?.tenors?.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.tenorName}{" "}
-                  </option>
-                ))}
-                <option value={0} hidden={!product?.allowCustomization}>
-                  Customize Tenor
-                </option>
-              </Input>
-              {formData.tenor === 0 && (
-                <Input
-                  className={`form-control mb-3`}
-                  style={{ width: "100%" }}
-                  name="actualMaturityDate"
-                  placeholder=""
-                  type="date"
-                  min={moment(minTenor).format("YYYY-MM-DD")}
-                  max={moment(maxTenor).format("YYYY-MM-DD")}
-                  value={moment(formData.actualMaturityDate).format(
-                    "YYYY-MM-DD"
-                  )}
-                  onChange={handleChange}
-                />
+              {product?.properties?.allowsLiquidation && (
+                <UncontrolledTooltip placement="top" target="allowLiquidation">
+                  Allows for you to withdraw before maturity
+                </UncontrolledTooltip>
               )}
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-              <label>Savings frequency</label>
-              <div
-                className={`${
-                  formData.savingFrequency === "WEEKLY" ||
-                  formData.savingFrequency === "MONTHLY"
-                    ? "d-lg-flex"
-                    : ""
-                }`}
-                style={{ gap: 14 }}
-              >
-                <Input
-                  className={`form-select form-select-md mb-3 ${
-                    validate && "validate"
-                  }`}
-                  type="select"
-                  name="savingFrequency"
-                  required
-                  disabled={!product?.properties?.hasSavingFrequency}
-                  onChange={handleChange}
-                  value={formData.savingFrequency}
-                >
-                  <option value="" hidden disabled selected>
-                    Select savings frequency
-                  </option>
-                  <option value="DAILY">Daily</option>
-                  <option value="WEEKLY">Weekly</option>
-                  <option value="MONTHLY">Monthly</option>
-                </Input>
-                {formData.savingFrequency === "WEEKLY" && (
-                  <Input
-                    className="form-select form-select-md option-select mb-3"
-                    name="weeklyContributionDay"
-                    type="select"
-                    onChange={handleChange}
-                    value={formData.weeklyContributionDay}
-                  >
-                    <option value="" selected hidden disabled>
-                      Set weekly contribution day
-                    </option>
-                    <option value="MONDAY">MONDAY</option>
-                    <option value="TUESDAY">TUESDAY</option>
-                    <option value="WEDNESDAY">WEDNESDAY</option>
-                    <option value="THURSDAY">THURSDAY</option>
-                    <option value="FRIDAY">FRIDAY</option>
-                    <option value="SATURDAY">SATURDAY</option>
-                    <option value="SUNDAY">SUNDAY</option>
-                  </Input>
-                )}
-                {formData.savingFrequency === "MONTHLY" && (
-                  <Input
-                    className="form-select form-select-md option-select mb-3"
-                    name="monthlyContributionDay"
-                    type="select"
-                    onChange={handleChange}
-                    value={formData.monthlyContributionDay}
-                  >
-                    <option value="" selected hidden disabled>
-                      Set monthly contribution day
-                    </option>
-                    {[...Array(28).keys()].map((item) => (
-                      <option key={item + 1} value={item + 1}>
-                        {item + 1}{" "}
-                      </option>
-                    ))}
-                  </Input>
-                )}
-              </div>
-            </div>
-            <div className="col-md-6">
-              <label>Interest Reciept Option</label>
-              <div className="input-group mb-4">
-                <Input
-                  className={`form-select form-select-md mb-3 ${
-                    validate && "validate"
-                  }`}
-                  name="interestReceiptOption"
-                  type="select"
-                  required
-                  onChange={handleChange}
-                  id="intRecOpt"
-                  value={formData.interestReceiptOption}
-                >
-                  <option value="" disabled hidden selected>
-                    Select interest receipt option
-                  </option>
-                  {productStatus === "OK" &&
-                    Object.entries(product?.properties?.interestOptions).map(
-                      ([key, value]) =>
-                        value === true && (
-                          <option
-                            key={key}
-                            value={labelIntRecOpt(key)}
-                            style={{ textTransform: "capitalize" }}
-                          >
-                            {labelIntRecOpt(key).toLowerCase()}
-                          </option>
-                        )
-                    )}
-                </Input>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-              <div className="d-flex justify-content-between align-items-center">
-                <label>Contribution value</label>
-              </div>
-              <div className="input-group mb-4">
-                <Input
-                  className={`form-control ${validate && "validate"}`}
-                  name="contributionValue"
-                  placeholder=""
-                  type="number"     
-                  value={formData.contributionValue}
-                  onChange={handleChange}
-                  disabled={!product?.properties?.hasSavingFrequency}
-                  required={product?.properties?.hasTargetAmount}
-                />
-              </div>
-              {product?.properties?.hasSavingFrequency && (
-                <div
-                  className=" d-flex align-content-center"
-                  style={{ gap: 8 }}
-                >
-                  <label className="helper-text">
-                    Kindly confirm periodic payment
-                  </label>
-                  <input
-                    type="checkbox"
-                    style={{
-                      width: 14,
-                      height: 14,
-                      marginTop: 4,
-                      cursor: "pointer",
-                    }}
-                    name="confirmPeriodicPay"
-                    value={confirmPeriodicPay}
-                    checked={confirmPeriodicPay}
-                    required={product?.properties?.hasSavingFrequency}
-                    onChange={() => setConfirmperiodicPay(!confirmPeriodicPay)}
+              <div className="choose-plan">
+                <h5>{product.productName} </h5>
+                <div className="d-flex align-items-center" style={{ gap: 16 }}>
+                  <img
+                    className="image-holder"
+                    src={
+                      product?.imageUrl?.length > 10
+                        ? product.imageUrl
+                        : ChoosePlanHolder
+                    }
+                    alt="Product"
                   />
+                  <div>
+                    <div>
+                      {product.productDescription
+                        .split(",")
+                        .slice(0, 3)
+                        ?.map((item, id) => (
+                          <p key={id} className="p-0 m-0 pb-2">
+                            {item}{" "}
+                          </p>
+                        ))}
+                    </div>
+                  </div>
                 </div>
-              )}
-              {/* {
-                (formData.contributionValue < calculateMinContribVal(formData.contributionValue) 
-                && product?.properties?.hasTargetAmount!==null) ? (
-                  <small>
-                    Target value cannot be below {product?.minTransactionLimit}
-                  </small>
-                ) : (<></>)
-              } */}
-            </div>
-            <div className="col-md-6">
-              <label>Direct Debit</label>
-              <div className="input-group mb-4">
-                <Input
-                  className="form-select form-select-md"
-                  placeholder="Setup Direct Debit"
-                  type="select"
-                  onChange={handleChange}
-                  name="directDebit"
-                  disabled={!product?.properties?.hasDirectDebit}
-                  id="directDebit"
-                  value={formData.directDebit}
-                >
-                  <option value={true} selected>
-                    Yes
-                  </option>
-                  <option value={false}>No</option>
-                </Input>
               </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-              <label>Calculate interest rate</label>
-              <div className="input-group mb-4">
-                <Input
-                  className={`form-control ${validate && "validate"}`}
-                  name="interestRate"
-                  placeholder=""
-                  type="number"
-                  value={formData.interestRate}
-                  min={1}
-                  required
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="col-md-6">
-              <label>Number of tickets</label>
-              <div className="input-group mb-4">
-                <Input
-                  className="form-control"
-                  name="numberOfTickets"
-                  placeholder=""
-                  type="number"
-                  disabled={!product?.properties?.allowsMonthlyDraw}
-                  value={updateNumOfTickets(
-                    product?.properties?.hasTargetAmount
-                      ? formData.targetAmount
-                      : formData.amount
+
+              <div className="container-fluid">
+                <div className="row">
+                  <h4>Plan Details</h4>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 mb-5">
+                    <label>Plan Name</label>
+                    <div className="input-group">
+                      <Input
+                        className={`form-control ${validate && "validate"}`}
+                        name="planName"
+                        placeholder="Enter a plan name"
+                        type="text"
+                        required
+                        defaultValue={formData.planName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6 mb-5">
+                    <label>Currency</label>
+                    <div className="input-group">
+                      <Input
+                        className={`form-select form-select-md ${
+                          validate && "validate"
+                        }`}
+                        type="select"
+                        onChange={handleChange}
+                        name="currency"
+                        required
+                        value={formData.currency}
+                      >
+                        <option value="" disabled hidden>
+                          Select investment currency
+                        </option>
+                        {product?.currency
+                          ?.filter((item) => item.status === "ACTIVE")
+                          ?.map((item, id) => (
+                            <option key={id} value={item.name}>
+                              {item.name}{" "}
+                            </option>
+                          ))}
+                      </Input>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6 mb-5">
+                    <label>Exchange rate</label>
+                    <div className="input-group">
+                      <div className=" input-group-prepend curr-icon">
+                        {getCurrIcon(formData.currency)}
+                      </div>
+                      <Input
+                        className={`form-control ${
+                          formData.currency !== "" && "curr-input"
+                        }`}
+                        name="exchangeRate"
+                        placeholder=""
+                        disabled
+                        type="number"
+                        value={formData.exchangeRate}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                  {!product?.properties?.hasTargetAmount && (
+                    <div className="col-md-6 mb-5">
+                      <label>Amount to be placed</label>
+                      <div className="input-group">
+                        <div className="input-group-prepend curr-icon">
+                          {getCurrIcon(formData.currency)}
+                        </div>
+                        <Input
+                          className={`form-control ${
+                            formData.currency !== "" && "curr-input"
+                          }
+                            ${validate && "validate"}`}
+                          name="amount"
+                          required
+                          placeholder=""
+                          type="number"
+                          disabled={product?.properties?.hasTargetAmount}
+                          value={formData.amount}
+                          min={product?.minTransactionLimit}
+                          max={product?.maxTransactionLimit}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
                   )}
-                  onChange={handleChange}
-                />
+
+                  {product?.properties?.hasTargetAmount && (
+                    <div className="col-md-6 mb-5">
+                      <label>Target amount</label>
+                      <div className="input-group">
+                        <div className="input-group-prepend curr-icon">
+                          {getCurrIcon(formData.currency)}
+                        </div>
+                        <Input
+                          className={`form-control 
+                            ${formData.currency !== "" && "curr-input"} ${
+                            validate && "validate"
+                          }`}
+                          name="targetAmount"
+                          placeholder=""
+                          disabled={
+                            product?.properties?.hasTargetAmount === null ||
+                            !product?.properties?.hasTargetAmount
+                          }
+                          type="number"
+                          required
+                          value={formData.targetAmount}
+                          min={product?.minTransactionLimit}
+                          max={product?.maxTransactionLimit}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      {product?.properties?.hasTargetAmount &&
+                      formData.targetAmount < product?.minTransactionLimit ? (
+                        <small className="helper-text">
+                          Target value cannot be below{" "}
+                          {product?.minTransactionLimit}
+                        </small>
+                      ) : (
+                        <></>
+                      )}
+                      {product?.properties?.hasTargetAmount &&
+                      formData.targetAmount > product?.maxTransactionLimit ? (
+                        <small className="helper-text">
+                          Target value cannot be above{" "}
+                          {product?.maxTransactionLimit}
+                        </small>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="col-md-6 mb-5">
+                    <label>Tenor</label>
+                    <Input
+                      className={`form-select form-select-md ${
+                        validate && "validate"
+                      }`}
+                      type="select"
+                      name="tenor"
+                      required
+                      onChange={handleChange}
+                      defaultValue={formData.tenor}
+                    >
+                      <option value="" disabled hidden>
+                        Select tenor
+                      </option>
+                      {product?.tenors
+                        ?.filter((data) => data.tenorStatus === "ACTIVE")
+                        ?.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.tenorName}{" "}
+                          </option>
+                        ))}
+                      <option value={0} hidden={!product?.allowCustomization}>
+                        Customize Tenor
+                      </option>
+                    </Input>
+                    {formData.tenor === 0 && (
+                      <Input
+                        className={`form-control mt-2`}
+                        style={{ width: "100%" }}
+                        name="actualMaturityDate"
+                        placeholder=""
+                        type="date"
+                        min={moment(minTenor).format("YYYY-MM-DD")}
+                        max={moment(maxTenor).format("YYYY-MM-DD")}
+                        value={formData.actualMaturityDate}
+                        onChange={handleChange}
+                      />
+                    )}
+                  </div>
+
+                  {product?.properties?.hasSavingFrequency && (
+                    <div className="col-md-6 mb-5">
+                      <label>Savings frequency</label>
+                      <div
+                        className={`${
+                          formData.savingFrequency === "WEEKLY" ||
+                          formData.savingFrequency === "MONTHLY"
+                            ? "d-lg-flex"
+                            : ""
+                        }`}
+                        style={{ gap: 14 }}
+                      >
+                        <Input
+                          className={`form-select form-select-md ${
+                            validate && "validate"
+                          }`}
+                          type="select"
+                          name="savingFrequency"
+                          required
+                          disabled={!product?.properties?.hasSavingFrequency}
+                          onChange={handleChange}
+                          defaultValue={formData.savingFrequency}
+                        >
+                          <option value="" hidden disabled>
+                            Select savings frequency
+                          </option>
+                          <option value="DAILY">Daily</option>
+                          <option value="WEEKLY">Weekly</option>
+                          <option value="MONTHLY">Monthly</option>
+                        </Input>
+                        {formData.savingFrequency === "WEEKLY" && (
+                          <Input
+                            className={`form-select form-select-md option-select ${
+                              validate && "validate"
+                            }`}
+                            name="weeklyContributionDay"
+                            type="select"
+                            onChange={handleChange}
+                            defaultValue={formData.weeklyContributionDay}
+                            required={formData.savingFrequency === "WEEKLY"}
+                          >
+                            <option value="" hidden disabled>
+                              Set Weekly Contribution Day
+                            </option>
+                            <option value="MONDAY">MONDAY</option>
+                            <option value="TUESDAY">TUESDAY</option>
+                            <option value="WEDNESDAY">WEDNESDAY</option>
+                            <option value="THURSDAY">THURSDAY</option>
+                            <option value="FRIDAY">FRIDAY</option>
+                            <option value="SATURDAY">SATURDAY</option>
+                            <option value="SUNDAY">SUNDAY</option>
+                          </Input>
+                        )}
+                        {formData.savingFrequency === "MONTHLY" && (
+                          <Input
+                            className={`form-select form-select-md option-select ${
+                              validate && "validate"
+                            }`}
+                            name="monthlyContributionDay"
+                            type="select"
+                            onChange={handleChange}
+                            defaultValue={formData.monthlyContributionDay}
+                            required={formData.savingFrequency === "MONTHLY"}
+                          >
+                            <option value={0} hidden disabled>
+                              Set Monthly Contibution Day
+                            </option>
+                            {[...Array(28).keys()].map((item) => (
+                              <option key={item + 1} value={item + 1}>
+                                {item + 1}{" "}
+                              </option>
+                            ))}
+                          </Input>
+                        )}
+                      </div>
+                      {validSavingsFreq === false ? (
+                        <small className="helper-text text-danger">
+                          Select a Valid Savings Frequency
+                        </small>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="col-md-6 mb-5">
+                    <label>Interest Receipt Option</label>
+                    <div className="input-group">
+                      <Input
+                        className={`form-select form-select-md ${
+                          validate && "validate"
+                        }`}
+                        name="interestReceiptOption"
+                        type="select"
+                        required={
+                          !formData.interestReceiptOption ||
+                          summary.paymentMaturity === null
+                        }
+                        onChange={handleChange}
+                        id="intRecOpt"
+                        defaultValue={formData.interestReceiptOption}
+                      >
+                        <option value="" disabled hidden>
+                          Select interest receipt option
+                        </option>
+                        {productStatus === "OK" &&
+                          Object.entries(
+                            product?.properties?.interestOptions
+                          ).map(
+                            ([key, value]) =>
+                              value === true && (
+                                <option
+                                  key={key}
+                                  value={labelIntRecOpt(key)}
+                                  style={{ textTransform: "capitalize" }}
+                                >
+                                  {labelIntRecOpt(key).toLowerCase()}
+                                </option>
+                              )
+                          )}
+                      </Input>
+                    </div>
+                    {summary.paymentMaturity === null ? (
+                      <small className="helper-text text-danger">
+                        Select a valid Interest receipt option
+                      </small>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+
+                  {product?.properties?.hasSavingFrequency && (
+                    <div className="col-md-6 mb-4">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <label>Contribution value</label>
+                      </div>
+                      <div className="input-group">
+                        <div className=" input-group-prepend curr-icon">
+                          {getCurrIcon(formData.currency)}
+                        </div>
+                        <Input
+                          className={`form-control ${
+                            validate && "validate"
+                          } curr-input`}
+                          name="contributionValue"
+                          placeholder=""
+                          type="number"
+                          value={formData.contributionValue}
+                          onChange={handleChange}
+                          disabled={!product?.properties?.hasSavingFrequency}
+                          required={product?.properties?.hasTargetAmount}
+                        />
+                      </div>
+                      {product?.properties?.hasSavingFrequency && (
+                        <>
+                          <div className=" d-flex flex-column align-items-start">
+                            <div className="d-flex align-items-start">
+                              <label className="helper-text">
+                                I agree to pay this amount periodically
+                              </label>
+                              <input
+                                type="checkbox"
+                                style={{
+                                  width: 14,
+                                  height: 14,
+                                  marginTop: "5px",
+                                  marginLeft: "10px",
+                                  cursor: "pointer",
+                                }}
+                                name="confirmPeriodicPay"
+                                defaultValue={confirmPeriodicPay}
+                                checked={confirmPeriodicPay}
+                                required={
+                                  product?.properties?.hasSavingFrequency
+                                }
+                                onChange={(e) => {
+                                  setConfirmperiodicPay(!confirmPeriodicPay);
+                                  e.target.setCustomValidity("");
+                                }}
+                                onInvalid={(e) => {
+                                  e.target.setCustomValidity(
+                                    "Kindly confirm periodic payment."
+                                  );
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {product?.properties?.hasDirectDebit && (
+                    <div className="col-md-6 mb-5">
+                      <label>Direct Debit</label>
+                      <div className="input-group">
+                        <Input
+                          className="form-select form-select-md"
+                          placeholder="Setup Direct Debit"
+                          type="select"
+                          onChange={handleChange}
+                          name="directDebit"
+                          disabled={!product?.properties?.hasDirectDebit}
+                          id="directDebit"
+                          defaultValue={formData.directDebit}
+                        >
+                          <option value={true}>Yes</option>
+                          <option value={false}>No</option>
+                        </Input>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="col-md-6 mb-5">
+                    <label>Interest Rate (%)</label>
+                    <div className="input-group">
+                      <Input
+                        className={`form-control ${validate && "validate"}`}
+                        name="interestRate"
+                        placeholder=""
+                        type="number"
+                        value={formData.interestRate}
+                        required={!formData.interestRate}
+                        onChange={handleChange}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  {product?.properties?.allowsMonthlyDraw && (
+                    <div className="col-md-6 mb-5">
+                      <label>Number of tickets</label>
+                      <div className="input-group">
+                        <Input
+                          className="form-control"
+                          name="numberOfTickets"
+                          placeholder=""
+                          type="number"
+                          disabled
+                          value={updateNumOfTickets(
+                            product?.properties?.hasTargetAmount
+                              ? formData.targetAmount
+                              : formData.amount
+                          )}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {product?.properties?.acceptsRollover && (
+                    <div className="col-md-6 mb-5">
+                      <label>Auto renew</label>
+                      <div className="input-group">
+                        <Input
+                          className="form-select form-select-md"
+                          type="select"
+                          placeholder=""
+                          disabled={!product?.properties?.acceptsRollover}
+                          name="autoRenew"
+                          onChange={handleChange}
+                          id="autoRenew"
+                          defaultValue={formData.autoRenew}
+                        >
+                          <option value="" disabled hidden>
+                            Setup an option
+                          </option>
+                          <option value={true}>Yes</option>
+                          <option value={false}>No</option>
+                        </Input>
+                      </div>
+                    </div>
+                  )}
+                  {product?.properties?.allowsLiquidation && (
+                    <div className="col-md-6 mb-4">
+                      <label>Allow liquidation</label>
+                      <div className="input-group">
+                        <Input
+                          className="form-select form-select-md"
+                          type="select"
+                          placeholder=""
+                          name="allowsLiquidation"
+                          disabled={!product?.properties?.allowsLiquidation}
+                          id="allowLiquidation"
+                          onChange={handleChange}
+                          defaultValue={formData.allowsLiquidation}
+                        >
+                          <option value={true}>Yes</option>
+                          <option value={false}>No</option>
+                        </Input>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 ">
-              <label>Auto renew</label>
-              <div className="input-group mb-4">
-                <Input
-                  className="form-select form-select-md"
-                  type="select"
-                  placeholder=""
-                  disabled={!product?.properties?.acceptsRollover}
-                  name="autoRenew"
-                  onChange={handleChange}
-                  id="autoRenew"
-                  value={formData.autoRenew}
-                >
-                  <option value="" disabled hidden selected>
-                    Setup an option
-                  </option>
-                  <option value={true}>Yes</option>
-                  <option value={false}>No</option>
-                </Input>
+            </Wrapper>
+            <WrapperFooter>
+              <div className="footer-body">
+                <div className="d-flex align-items-center justify-content-between footer-content">
+                  <div>
+                    <button
+                      style={{ color: "#111E6C", width: "300px" }}
+                      onClick={back}
+                    >
+                      Back
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      style={{
+                        backgroundColor: "#111E6C",
+                        color: "#FFFFFF",
+                        width: "300px",
+                      }}
+                      type="submit"
+                      onClick={handleValidate}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="col-md-6">
-              <label>Allow liquidation</label>
-              <div className="input-group mb-4">
-                <Input
-                  className="form-select form-select-md"
-                  type="select"
-                  placeholder=""
-                  name="allowsLiquidation"
-                  disabled={!product?.properties?.allowsLiquidation}
-                  id="allowLiquidation"
-                  onChange={handleChange}
-                  value={formData.allowsLiquidation}
-                >
-                  <option value={true}>Yes</option>
-                  <option value={false}>No</option>
-                </Input>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: "#111E6C", width: "300px" }}
-                onClick={back}
-              >
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: "#111E6C",
-                  color: "#FFFFFF",
-                  width: "300px",
-                }}
-                type="submit"
-                onClick={handleValidate}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+            </WrapperFooter>
+          </>
+        )
+      )}
     </form>
   );
 };

@@ -20,6 +20,8 @@ import {
   CLOSE_MODAL,
   CLEAR_MESSAGES,
 } from "../../../store/profile/actionTypes";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
@@ -43,6 +45,7 @@ const PersonalInfo = () => {
   } = useSelector((state) => state.user_profile);
 
   const {
+    loading,
     phoneMsg,
     phoneMsgError,
     showPhoneOtpModal,
@@ -61,12 +64,12 @@ const PersonalInfo = () => {
 
   console.log(users);
 
-  console.log(contactMsg);
-  console.log(contactMsgError);
-  console.log(personalInfoMsg);
-  console.log(personalInfoMsgError);
+  // console.log(contactMsg);
+  // console.log(contactMsgError);
+  // console.log(personalInfoMsg);
+  // console.log(personalInfoMsgError);
 
-  console.log(phoneMsg?.data?.otp);
+  // console.log(phoneMsg?.data?.otp);
   // console.log(phoneMsgError);
 
   const toggleProf = (e) => {
@@ -118,6 +121,20 @@ const PersonalInfo = () => {
     });
   };
 
+  const handlePhoneValueChange = (value) => {
+    setformData({
+      ...formData,
+      secondaryPhoneNumber: value,
+    });
+  };
+
+  const handleNokPhoneValueChange = (value) => {
+    setformData({
+      ...formData,
+      phone: value,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -131,8 +148,14 @@ const PersonalInfo = () => {
       return lgas?.find((lga) => lga.name === users?.individualUser?.lga).id;
     };
 
-    const { houseNoAddress, state, secondaryPhoneNumber, country, countryId, city } =
-      formData;
+    const {
+      houseNoAddress,
+      state,
+      secondaryPhoneNumber,
+      country,
+      countryId,
+      city,
+    } = formData;
 
     let contactData = {
       address: {
@@ -144,11 +167,15 @@ const PersonalInfo = () => {
         city: city ? city : users?.individualUser?.address?.city,
       },
       secondaryPhoneNumber: secondaryPhoneNumber
-        ? secondaryPhoneNumber.substr(0, 1) === "0"
+        ? secondaryPhoneNumber.startsWith("0")
           ? secondaryPhoneNumber.trim()
-          : "0" + secondaryPhoneNumber.trim()
+          : secondaryPhoneNumber.startsWith("234")
+          ? secondaryPhoneNumber.replace(/234/, "0")
+          : "0" + secondaryPhoneNumber
         : users.phone,
-      countryId: countryId ? Number(countryId) : users?.individualUser?.coutryOfResidence?.id
+      countryId: countryId
+        ? Number(countryId)
+        : users?.individualUser?.coutryOfResidence?.id,
     };
 
     console.log(contactData);
@@ -218,11 +245,14 @@ const PersonalInfo = () => {
     const { secondaryPhoneNumber } = formData;
     dispatch(
       verifyPhone(
-        secondaryPhoneNumber.substr(0, 1) === "0"
+        secondaryPhoneNumber.startsWith("0")
           ? secondaryPhoneNumber.trim()
+          : secondaryPhoneNumber.startsWith("234")
+          ? secondaryPhoneNumber.replace(/234/, "0")
           : "0" + secondaryPhoneNumber ||
-              users?.individualUser?.secondaryPhoneNumber ||
-              users?.phone
+            users?.individualUser?.secondaryPhoneNumber.startsWith("+234")
+          ? users?.individualUser?.secondaryPhoneNumber.replace(/\+234/, "0")
+          : users?.individualUser?.secondaryPhoneNumber || users?.phone
       )
     );
 
@@ -319,7 +349,7 @@ const PersonalInfo = () => {
                     <input
                       type="text"
                       className="form-control text-capitalize"
-                      value={users?.individualUser?.gender?.gender?.toLowerCase()}
+                      value={users?.individualUser?.gender?.gender}
                       disabled
                     />
                   </div>
@@ -434,62 +464,66 @@ const PersonalInfo = () => {
               )}
               <div>
                 <div className="row">
-                  <div className="col-lg-8 d-flex">
-                    <div className="mb-5">
+                  <div className="col-md-8">
+                    <div className="col-12 mb-5">
                       <label>Secondary Phone Number</label>
-                      <div className="d-flex">
-                        <select
-                          className="form-select-md select-field"
-                          style={{
-                            border: "1.5px solid #E0E0E0",
-                            outline: "none",
-                          }}
-                          disabled={showEditCont}
-                        >
-                          <option>NGN</option>
-                        </select>
-                        <div className="input-group">
-                          <div className="input-group-prepend phone-code">
-                            +234
-                          </div>
-                          <input
-                            type="tel"
-                            className="form-control phone-input"
+                      <div className="d-md-flex align-items-end">
+                        <div className="input-group" id="phone">
+                          <PhoneInput
+                            country={"ng"}
+                            inputClass={`form-control phone-input ${
+                              showEditCont ? "disable" : ""
+                            }`}
+                            buttonClass={`phone-select-field ${
+                              showEditCont ? "disable" : ""
+                            }`}
                             name="secondaryPhoneNumber"
-                            id="phone"
-                            maxLength="10"
-                            value={formData?.secondaryPhoneNumber}
-                            onChange={handleChange}
-                            placeholder={
+                            value={formData.secondaryPhoneNumber}
+                            // countryCodeEditable={false}
+                            disabled={
+                              showEditCont ||
+                              validateInfo?.data?.secondaryPhoneVerified
+                            }
+                            onChange={(value) => handlePhoneValueChange(value)}
+                            disableCountryCode={true}
+                            placeholder={`${
                               users?.individualUser?.secondaryPhoneNumber?.startsWith(
                                 "+234"
                               )
-                                ? users?.individualUser?.secondaryPhoneNumber?.split(
-                                    "+234"
-                                  )[1]
-                                : null || users?.phone
-                            }
-                            disabled={showEditCont}
+                                ? users?.individualUser?.secondaryPhoneNumber.replace(
+                                    /\+234/,
+                                    "0"
+                                  )
+                                : users?.individualUser?.secondaryPhoneNumber ??
+                                  users?.phone ??
+                                  "Secondary phone number"
+                            }`}
+                            disableDropdown
+                            masks={{ ng: ".... ... ...." }}
                           />
                         </div>
+                        <div className="m-2">
+                          <button
+                            className={
+                              validateInfo?.data?.secondaryPhoneVerified
+                                ? "grey-button"
+                                : "profile_vify_btn"
+                            }
+                            disabled={
+                              showEditCont ||
+                              validateInfo?.data?.secondaryPhoneVerified
+                            }
+                            onClick={handleVerify}
+                          >
+                            Verify
+                          </button>
+                        </div>
                       </div>
+
                       <UncontrolledTooltip placement="bottom" target="phone">
                         Please provide your most active phone number here in
                         case this is different from your primary phone number
                       </UncontrolledTooltip>
-                    </div>
-                    <div className="mx-2">
-                      <button
-                        className={
-                          validateInfo?.data?.secondaryPhoneVerified
-                            ? "grey-button"
-                            : "profile_vify_btn"
-                        }
-                        disabled={showEditCont}
-                        onClick={handleVerify}
-                      >
-                        Verify
-                      </button>
                     </div>
                     <ModalComponent
                       show={showPhoneOtpModal}
@@ -505,7 +539,7 @@ const PersonalInfo = () => {
                       />
                     </ModalComponent>
                   </div>
-                  <div className="col-lg-4 ">
+                  <div className="col-md-4">
                     <label>Country of Residence</label>
                     <div className="input-group mb-4">
                       <select
@@ -538,8 +572,7 @@ const PersonalInfo = () => {
                       disabled={showEditCont}
                       onChange={handleChange}
                       value={
-                        formData?.state ||
-                        users?.individualUser?.address?.state
+                        formData?.state || users?.individualUser?.address?.state
                       }
                       name="state"
                     >
@@ -557,8 +590,7 @@ const PersonalInfo = () => {
                       <input
                         className="form-control"
                         placeholder={
-                          users?.individualUser?.address?.city ||
-                          "City"
+                          users?.individualUser?.address?.city || "City"
                         }
                         type="text"
                         name="city"
@@ -762,35 +794,28 @@ const PersonalInfo = () => {
                 <div className="row">
                   <div className="col-md-8 ">
                     <label>Next of kin phone number</label>
-                    <div className="d-flex">
-                      <select
-                        className="form-select-md select-field"
-                        style={{
-                          border: "1.5px solid #E0E0E0",
-                          outline: "none",
-                        }}
+                    <div className="input-group">
+                      <PhoneInput
+                        country={"ng"}
+                        inputClass={`form-control phone-input ${
+                          showEditNOK ? "disable" : ""
+                        }`}
+                        buttonClass={`phone-select-field ${
+                          showEditNOK ? "disable" : ""
+                        }`}
+                        name="phone"
+                        value={formData.phone}
+                        // countryCodeEditable={false}
                         disabled={showEditNOK}
-                      >
-                        <option>NGN</option>
-                      </select>
-                      <div className="input-group mb-4">
-                        <div className="input-group-prepend phone-code">
-                          +234
-                        </div>
-                        <input
-                          className="form-control phone-input"
-                          placeholder={
-                            users?.individualUser?.nokDetail?.phone?.slice(1) ||
-                            "Next of kin phone number"
-                          }
-                          type="tel"
-                          name="phone"
-                          maxLength="10"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          disabled={showEditNOK}
-                        />
-                      </div>
+                        onChange={(value) => handleNokPhoneValueChange(value)}
+                        disableCountryCode={true}
+                        placeholder={
+                          users?.individualUser?.nokDetail?.phone ||
+                          "Next of kin phone number"
+                        }
+                        disableDropdown
+                        masks={{ ng: ".... ... ...." }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -803,7 +828,7 @@ const PersonalInfo = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button type="submit" className="blue-btn">
-                  Save
+                  {loading ? "Sending..." : "Send"}
                 </button>
               </div>
             </div>
@@ -838,7 +863,7 @@ const WrapperBody = styled.div`
 
   .grey-button {
     padding: 10px 10px;
-    margin-top: 40px;
+    // margin-top: 40px;
     border-radius: 8px;
     font-style: normal;
     font-weight: 600;
@@ -847,6 +872,9 @@ const WrapperBody = styled.div`
     text-align: right;
     background: #f2f2f2;
     color: #111e6c;
+    &:disabled {
+      color: #ccc;
+    }
   }
 
   .input-font-awe {
@@ -902,6 +930,7 @@ const WrapperBody = styled.div`
     padding-left: 20px;
     position: relative;
     &:disabled {
+      background: rgba(28, 68, 141, 0.09);
       cursor: not-allowed;
     }
   }
@@ -926,6 +955,23 @@ const WrapperBody = styled.div`
     padding: 15px;
   }
 
+  .phone-select-field {
+    height: 54px;
+    font-family: "Montserrat";
+    border-left: 1.5px solid #e0e0e0 !important;
+    border-top: 1.5px solid #e0e0e0 !important;
+    border-bottom: 1.5px solid #e0e0e0 !important;
+    border-right: 1px solid #eee;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+    background: #ffffff;
+  }
+
   label {
     font-style: normal;
     font-weight: 400;
@@ -938,7 +984,7 @@ const WrapperBody = styled.div`
   }
   .profile_vify_btn {
     padding: 10px 10px;
-    margin-top: 40px;
+    // margin-top: 40px;
     background: #111e6c;
     border-radius: 8px;
     font-style: normal;
@@ -958,7 +1004,22 @@ const WrapperBody = styled.div`
   }
 
   .phone-input {
-    padding-left: 60px !important;
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 15px 15px 15px 80px;
+    position: relative;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 16px;
+    color: #333333;
+    background: #ffffff !important;
+  }
+
+  .disable {
+    background: rgba(28, 68, 141, 0.09) !important;
+    cursor: not-allowed;
   }
 `;
 

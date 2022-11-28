@@ -26,6 +26,7 @@ import {
   getBankDetails,
 } from "../../../store/actions";
 import { useCallback } from "react";
+import moment from "moment";
 
 const BankDetails = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,6 @@ const BankDetails = () => {
   };
 
   const {
-    loading,
     users,
     showEmailOtpModal,
     otp,
@@ -50,7 +50,7 @@ const BankDetails = () => {
     bankDetails,
   } = useSelector((state) => state.user_profile);
 
-  const { accountDetail, accountDetailError, bankUpdateMsg } = useSelector(
+  const { loading, accountDetail, accountDetailError, bankUpdateMsg } = useSelector(
     (state) => state.updateProfile
   );
 
@@ -142,6 +142,7 @@ const BankDetails = () => {
         id: users?.individualUser?.bvn,
         isSubjectConsent: true,
         phoneNumber: users?.phone,
+        dateOfBirth: moment(users?.individualUser?.dateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD"),
       };
 
       console.log(objData);
@@ -324,7 +325,7 @@ const BankDetails = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button className="blue-btn" disabled={!familiarityCheck()}>
-                  Save
+                  {loading ? "Saving..." : "Save"}
                 </button>
               </div>
             </div>

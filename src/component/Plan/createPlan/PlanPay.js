@@ -5,31 +5,39 @@ import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { MakePayment, PlanSummary } from "../Accesssories";
 import PlanBankPayment from "./PlanBankPayment";
 import PlanCardPayment from "./PlanCardPayment";
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 const PlanPay = ({ goBack }) => {
   const [isBank, setIsBank] = useState(false);
   const [isCard, setIsCard] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-  const [isTermsChecked, setIsTermsChecked] = useState(false)
+  const [isTermsChecked, setIsTermsChecked] = useState(false);
+  const [checks, setChecks] = useState(null);
 
   const { singleProduct } = useSelector((state) => state.product);
-  const product = singleProduct?.data.body ? singleProduct?.data.body : {}
+  const product = singleProduct?.data.body ? singleProduct?.data.body : {};
+
 
   const checkDetails = (values) => {
-    const { bank, card, isTerms } = values;
-    if (bank) {
+    setChecks(values)
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { paymentType, isTerms } = checks;
+    if (paymentType === "bank") {
       setIsBank(true);
       setIsCard(false);
-      setIsTermsChecked(isTerms)
+      setIsTermsChecked(isTerms);
     }
-    if (card) {
+    if (paymentType === "card") {
       setIsCard(true);
       setIsBank(false);
-      setIsTermsChecked(isTerms)
+      setIsTermsChecked(isTerms);
     }
-  };
+  }
+
+  
 
   if (isClicked && isBank && isTermsChecked) {
     return (
@@ -52,7 +60,6 @@ const PlanPay = ({ goBack }) => {
       />
     );
   }
-  
 
   return (
     <>
@@ -61,19 +68,24 @@ const PlanPay = ({ goBack }) => {
           <span className="fw-bold">Choose Plan</span>
         </NavTitle>
       </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <div className="choose-plan">
-            <h5>{product.productName} </h5>
-            <div className="d-flex align-items-center" style={{gap:16}}>
-              <img
-                className="image-holder"
-                src={product?.imageUrl?.length > 10 ? product?.imageUrl : ChoosePlanHolder}
-                alt="Product"
-              />
-              <div>
+      <form autoComplete="off" autoCorrect="off" onSubmit={handleSubmit}>
+        <Wrapper>
+          <LeftView>
+            <div className="choose-plan">
+              <h5>{product.productName} </h5>
+              <div className="d-flex align-items-center" style={{ gap: 16 }}>
+                <img
+                  className="image-holder"
+                  src={
+                    product?.imageUrl?.length > 10
+                      ? product?.imageUrl
+                      : ChoosePlanHolder
+                  }
+                  alt="Product"
+                />
                 <div>
-                  {/* <p className="p-0 m-0 pb-2">
+                  <div>
+                    {/* <p className="p-0 m-0 pb-2">
                     Lorem Ipsum is simply dummy text of the{" "}
                   </p>
                   <p className="p-0 m-0 pb-2">
@@ -83,53 +95,61 @@ const PlanPay = ({ goBack }) => {
                   <p className="p-0 m-0 pb-2">
                     Lorem Ipsum is simply dummy text of the{" "}
                   </p> */}
-                  {
-                    product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
-                      <p key={id} className="p-0 m-0 pb-2" >{item} </p>
-                    ))
-                  }
+                    {product.productDescription
+                      .split(",")
+                      .slice(0, 3)
+                      ?.map((item, id) => (
+                        <p key={id} className="p-0 m-0 pb-2">
+                          {item}{" "}
+                        </p>
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="summary">
-            <PlanSummary planPay="planPay" />
-          </div>
-        </LeftView>
-        <RightView>
-          <div className="bank-details">
-            <div className="bank-detail-content">
-              <MakePayment setPaymentType={(values) => checkDetails(values)} />
+            <div className="summary">
+              <PlanSummary planPay="planPay" />
+            </div>
+          </LeftView>
+          <RightView>
+            <div className="bank-details">
+              <div className="bank-detail-content">
+                <MakePayment
+                  setPaymentType={(values) => checkDetails(values)}
+                />
+              </div>
+            </div>
+          </RightView>
+        </Wrapper>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-between footer-content">
+              <div>
+                <button
+                  type="button"
+                  style={{ color: "#111E6C", width: "300px" }}
+                  onClick={goBack}
+                >
+                  Back
+                </button>
+              </div>
+              <div>
+                <button
+                  style={{
+                    backgroundColor: "#111E6C",
+                    color: "#FFFFFF",
+                    width: "300px",
+                  }}
+                  onClick={() => setIsClicked(true)}
+                  type="submit"
+                >
+                  Proceed
+                </button>
+              </div>
             </div>
           </div>
-        </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: "#111E6C", width: "300px" }}
-                onClick={goBack}>
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: "#111E6C",
-                  color: "#FFFFFF",
-                  width: "300px",
-                }}
-                onClick={() => setIsClicked(true)}
-                type="submit"
-              >
-                Proceed
-              </button>
-            </div>
-          </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </>
   );
 };
@@ -155,7 +175,7 @@ const LeftView = styled.div`
     width: 508px;
     height: 213px;
     background: #ffffff;
-    border-bottom: 1px solid #E0E0E0;
+    border-bottom: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 30px;
     p {

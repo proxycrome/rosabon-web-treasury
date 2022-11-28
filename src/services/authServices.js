@@ -27,3 +27,10 @@ export const forgotPasswordService = (email) => {
 
 	return http.postData(null, url);
 };
+
+export const logoutService = () => {
+	const http = new HttpService();
+	const url = "auth/logout";
+
+	return http.postDataWithToken(null, url);
+};

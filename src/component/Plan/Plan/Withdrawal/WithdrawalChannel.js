@@ -1,113 +1,123 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { SuccessConfirm } from '../../../Accessories/BVNConfirm';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
-import ModalComponent from '../../../ModalComponent';
-import { RolloverWithdrawMethod, WithdrawalSummary } from '../../Accesssories';
-import { Toaster } from 'react-hot-toast';
-import {  planAction, getPenalCharge } from "../../../../store/actions";
+import ModalComponent from "../../../ModalComponent";
+import { RolloverWithdrawMethod, WithdrawalSummary } from "../../Accesssories";
+import { Toaster } from "react-hot-toast";
+import { planAction, getPenalCharge } from "../../../../store/actions";
 
-const WithdrawalChannel = ({goBack, amount, type, reason}) => {
+const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
-  const [penalCharge, setPenalCharge] = useState();
+  const [gate, setPenalCharge] = useState();
+  const [isTerms, setIsTerms] = useState(false);
   const [base64File, setBase64File] = useState({
-    corporateUserWithdrawalMandate: ""
+    corporateUserWithdrawalMandate: "",
   });
 
   const dispatch = useDispatch();
-  const { singlePlan, loading, plan_action, plan_action_error } = useSelector((state) => state.plan);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  const { singlePlan, loading } = useSelector((state) => state.plan);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
-
-  const { login } = useSelector(state => state.auth);
+  const { login } = useSelector((state) => state.auth);
   const user_role = login ? login?.role?.name : "";
 
   useEffect(() => {
     dispatch(getPenalCharge());
-  },[])
+  }, [dispatch]);
 
-  const handlePenalCharge = (data) => {
-    setPenalCharge(data);
-  }
-
-  const submit = async() => {
-    const { corporateUserWithdrawalMandate } = base64File;
-    const formData = {
-      amount: amount,
-      completed: true,
-      corporateUserWithdrawalMandate: user_role==="COMPANY" ? corporateUserWithdrawalMandate: null,
-      plan: plan?.id,
-      planAction: "WITHDRAW",
-      withdrawTo: withdrawTo,
-      withdrawType: type
+  const submit = async (e) => {
+    e.preventDefault();
+    if (isTerms && withdrawTo) {
+      const { corporateUserWithdrawalMandate } = base64File;
+      const formData = {
+        amount: parseFloat(amount),
+        completed: true,
+        corporateUserWithdrawalMandate:
+          user_role === "COMPANY" ? corporateUserWithdrawalMandate : null,
+        plan: plan?.id,
+        penalCharge: parseFloat(penalCharge),
+        planAction: "WITHDRAW",
+        withdrawTo: withdrawTo,
+        withdrawType: type,
+      };
+      console.log(formData)
+      await dispatch(planAction(formData, setModalState))
     }
-    await dispatch(planAction(formData, setModalState))
-  }
+  };
 
   return (
     <>
-    <Toaster />
+      <Toaster />
       <ProfileNavBar>
         <NavTitle>
           <span className="fw-bold">Plan</span>
         </NavTitle>
       </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Withdrawal</h4>
-          <WithdrawalSummary amount={amount} reason={reason} compPenalCharge={(data) => handlePenalCharge(data)}/>
-        </LeftView> 
-        <RightView>
-          <div className="bank-details">
-            <div className="bank-detail-content">
-              <RolloverWithdrawMethod 
-                withdrawTo={withdrawTo}
-                setWithdrawTo={setWithdrawTo} 
-                base64File={base64File}
-                setBase64File={setBase64File}
-              />
-            </div>
-          </div>  
-        </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: '#111E6C', width: '300px' }}
-                onClick={goBack}
-              >
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: '#111E6C',
-                  color: '#FFFFFF',
-                  width: '300px',
-                }}
-                onClick={submit}
-              >
-                { loading ? "Loading..." : "Submit" }
-              </button>
-              <ModalComponent
-                show={modalState}
-                size={'md'}
-                handleClose={() => setModalState(false)}
-              >
-                <SuccessConfirm
-                  confirmNotice="withdrawal"
-                  handleClose={() => setModalState(false)}
+      <form autoComplete="off" autoCorrect="off" onSubmit={submit}>
+        <Wrapper>
+          <LeftView>
+            <h4 className="pb-3">Withdrawal</h4>
+            <WithdrawalSummary
+              amount={amount}
+              reason={reason}
+              compPenalCharge={setPenalCharge}
+              checkTerms={setIsTerms}
+            />
+          </LeftView>
+          <RightView>
+            <div className="bank-details">
+              <div className="bank-detail-content">
+                <RolloverWithdrawMethod
+                  withdrawTo={withdrawTo}
+                  setWithdrawTo={setWithdrawTo}
+                  base64File={base64File}
+                  setBase64File={setBase64File}
                 />
-              </ModalComponent>
+              </div>
+            </div>
+          </RightView>
+        </Wrapper>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-between footer-content">
+              <div>
+                <button
+                  type="button"
+                  style={{ color: "#111E6C", width: "300px" }}
+                  onClick={goBack}
+                >
+                  Back
+                </button>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#111E6C",
+                    color: "#FFFFFF",
+                    width: "300px",
+                  }}
+                >
+                  {loading ? "Loading..." : "Submit"}
+                </button>
+                <ModalComponent
+                  show={modalState}
+                  size={"md"}
+                  handleClose={() => setModalState(false)}
+                >
+                  <SuccessConfirm
+                    confirmNotice="withdrawal"
+                    handleClose={() => setModalState(false)}
+                  />
+                </ModalComponent>
+              </div>
             </div>
           </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </>
   );
 };
@@ -135,7 +145,9 @@ const LeftView = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
-  .Active, .Pending, .Matured {
+  .Active,
+  .Pending,
+  .Matured {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
@@ -145,10 +157,10 @@ const LeftView = styled.div`
     color: #219653;
   }
   .Pending {
-    color: #F2994A;
+    color: #f2994a;
   }
   .Matured {
-    color: #2D9CDB;
+    color: #2d9cdb;
   }
 `;
 

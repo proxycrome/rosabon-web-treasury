@@ -51,7 +51,7 @@ const ChangePassword = () => {
     setPasswordShown3(!passwordShown3);
   };
 
-  const { users, showEmailOtpModal, otp, otpError, validateEmailOtp } =
+  const { users, showEmailOtpModal, otp, otpError, loading } =
     useSelector((state) => state.user_profile);
 
   const { passChangeMsg, passChangeError } = useSelector(
@@ -63,7 +63,6 @@ const ChangePassword = () => {
 
   const createOtp = (otp) => {
     setToken(otp);
-    handleSubmit();
   };
 
   const data = {
@@ -105,15 +104,25 @@ const ChangePassword = () => {
 
   const handleSendOtp = (e) => {
     e.preventDefault();
-    if(Object.keys(errors).length===0){
-      dispatch(sendOtp());
-    }
+    setErrors(validatePassword(formData));
+    setIsSubmitted(true);  
   };
 
   const handleSubmit = async (e) => {
-    setErrors(validatePassword(formData));
-
-    setIsSubmitted(true);
+    const { newPassword, oldPassword } = formData;
+    const data = {
+      oldPassword,
+      newPassword,
+      otp: token,
+    };
+    console.log(data);
+    dispatch(changeUserPassword(data));
+    setformData({
+      ...formData,
+      oldPassword: "",
+      newPassword: "",
+      cNewPassword: "",
+    });
   };
 
   useEffect(()=>{
@@ -121,15 +130,14 @@ const ChangePassword = () => {
   },[formData]);
 
   useEffect(() => {
+    if(token){
+      handleSubmit();
+    }
+  }, [token])
+
+  useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      const { newPassword, oldPassword } = formData;
-      const data = {
-        oldPassword,
-        newPassword,
-        otp: token,
-      };
-      console.log(data);
-      dispatch(changeUserPassword(data));
+      dispatch(sendOtp());  
     }
   }, [errors]);
 
@@ -138,11 +146,6 @@ const ChangePassword = () => {
     dispatch({ type: CLEAR_MESSAGES });
   };
 
-  useEffect(() => {
-    if (validateEmailOtp) {
-      handleOTPModalClose();
-    }
-  }, [validateEmailOtp]);
 
   const reset = (e) => {
     e.preventDefault();
@@ -157,7 +160,7 @@ const ChangePassword = () => {
   return (
     <div>
       <Toaster />
-      <Form autoComplete="off" onSubmit={handleSendOtp}>
+      <Form autoComplete="off" autoCorrect="off" autoSave="off" onSubmit={handleSendOtp}>
         <WrapperBody>
           <div className="container-fluid">
             <div className="row">
@@ -291,7 +294,7 @@ const ChangePassword = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button type="submit" className="blue-btn">
-                  Save
+                  {loading  ? "Sending..." : "Save"}
                 </button>
               </div>
             </div>

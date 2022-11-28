@@ -466,7 +466,12 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
             <DropdownItem
               tag={Link}
               to={`/transfer/${id}`}
-              disabled={!(product?.properties?.allowsTransfer && userPlan?.allowsLiquidation)}
+              disabled={
+                !(
+                  product?.properties?.allowsTransfer &&
+                  userPlan?.allowsLiquidation
+                )
+              }
             >
               Transfer
             </DropdownItem>
@@ -515,17 +520,35 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
           </>
         ) : status === "Matured" ? (
           <>
-            <DropdownItem tag={Link} to="/rollover">
+            <DropdownItem
+              tag={Link}
+              to={`/rollover/${id}`}
+              disabled={!product?.properties?.acceptsRollover}
+            >
               Rollover
             </DropdownItem>
             <DropdownItem
               tag={Link}
               to={`/transfer/${id}`}
-              disabled={!product?.properties?.allowsTransfer}
+              disabled={
+                !(
+                  product?.properties?.allowsTransfer &&
+                  userPlan?.allowsLiquidation
+                )
+              }
             >
               Transfer
             </DropdownItem>
-            <DropdownItem tag={Link} to="/withdrawal">
+            <DropdownItem
+              tag={Link}
+              to={`/withdrawal/${id}`}
+              disabled={
+                !(
+                  userPlan?.allowsLiquidation &&
+                  product?.properties?.allowsLiquidation
+                )
+              }
+            >
               Withdraw
             </DropdownItem>
             <DropdownItem tag={Link} to={`/history/${id}`}>

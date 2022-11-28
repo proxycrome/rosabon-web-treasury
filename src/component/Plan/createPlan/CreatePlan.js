@@ -4,460 +4,112 @@ import styled from "styled-components";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
 import { Collapse } from "reactstrap";
 import { Link } from "react-router-dom";
-import { 
-  getCatWithProducts, 
+import {
+  getCatWithProducts,
   getSingleProduct,
-  getInvestmentRates
+  getInvestmentRates,
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
 
 const CreatePlan = () => {
   const [open, setOpen] = useState(false);
 
-  const { catWithProducts, loading } = useSelector((state) => state.product)
-  const productStatus = catWithProducts?.statusCode
-  const products = catWithProducts?.data.body ? catWithProducts?.data.body : []
+  const { catWithProducts, loading } = useSelector((state) => state.product);
+  const productStatus = catWithProducts?.statusCode;
+  const products = catWithProducts?.data.body ? catWithProducts?.data.body : [];
 
-
+  console.log(products);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCatWithProducts());
     dispatch(getInvestmentRates());
-  }, [])
+  }, []);
 
   const handleProduct = (id) => {
-    dispatch(getSingleProduct(id))
-  }
+    dispatch(getSingleProduct(id));
+  };
 
   // console.log(open)
   return (
-    <Wrapper>
+    <>
       {loading ? (
-          <div className="vh-100 w-100">
-            <Spinner />
-          </div>
-        ) : 
-        productStatus === "OK" ?
-         products.map((item) => (item?.products.some(product => product?.status === "ACTIVE") && 
-         item?.products.length > 0) && (
-          <div className=" pb-5" key={item.productCategoryId} >
-            <div>
-              <div className="d-flex align-items-center justify-content-between savins-drop">
-                <h5>{item.productCategoryName} </h5>
-              </div>
-              <p className="para-header">
-                Choose from a {item.productCategoryName} plan
-              </p>
-            </div>
-            <div className="plan-list">
-              {item.products.map((product) => (
-                <div className="choose-plan" key={product.id}>
-                  <div className="d-flex align-items-center " style={{gap:16}}>
-                    <img
-                      className="image-holder"
-                      src={product?.imageUrl?.length > 10 ? product.imageUrl : ChoosePlanHolder}
-                      alt="Product"
-                    />
-                    <div>
-                      <h5>{product.productName} </h5>
-                      <div>
-                        {/* <p className="p-0 m-0 pb-2">
-                          Lorem Ipsum is simply dummy text of the{" "}
-                        </p>
-                        <p className="p-0 m-0 pb-2">
-                          {" "}
-                          printing and typesetting industry.
-                        </p>
-                        <p className="p-0 m-0 pb-2">
-                          Lorem Ipsum is simply dummy text of the{" "}
-                        </p> */}
-                        {
-                          product.productDescription.split(",").slice(0,3)?.map((item,id) =>(
-                            <p key={id} className="p-0 m-0 pb-2" >{item}. </p>
-                          ))
-                        }
-                      </div>
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      ) : (
+        <Wrapper>
+          {productStatus === "OK" ? (
+            products.map(
+              (item) => (item?.products.some(product => product?.status === "ACTIVE") && 
+              item?.products.length > 0) && (
+                <div className=" pb-5" key={item.productCategoryId}>
+                  <div className="">
+                    <div className="d-flex align-items-center justify-content-between savins-drop">
+                      <h5>{item.productCategoryName} </h5>
                     </div>
+                    <p className="para-header">
+                      Choose from a {item.productCategoryName} plan
+                    </p>
                   </div>
-                  <Link to={`/create-plan/${product.id}`} onClick={()=>handleProduct(product.id)} >
-                    <button>Create Plan</button>
-                  </Link>
+                  <div className="plan-list">
+                    {item.products.map((product) => (
+                        <div className="choose-plan" key={product.id}>
+                          <div
+                            className="d-flex align-items-center "
+                            style={{ gap: 16 }}
+                          >
+                            <img
+                              className="image-holder"
+                              src={
+                                product?.imageUrl?.length > 10
+                                  ? product.imageUrl
+                                  : ChoosePlanHolder
+                              }
+                              alt="Product"
+                            />
+                            <div>
+                              <h5>{product.productName} </h5>
+                              <div>
+                                {/* <p className="p-0 m-0 pb-2">
+                        Lorem Ipsum is simply dummy text of the{" "}
+                      </p>
+                      <p className="p-0 m-0 pb-2">
+                        {" "}
+                        printing and typesetting industry.
+                      </p>
+                      <p className="p-0 m-0 pb-2">
+                        Lorem Ipsum is simply dummy text of the{" "}
+                      </p> */}
+                                {product.productDescription
+                                  .split(".")
+                                  .slice(0, 3)
+                                  ?.map((item, id) => (
+                                    <p key={id} className="p-0 m-0 pb-2">
+                                      {item}.{" "}
+                                    </p>
+                                  ))}
+                              </div>
+                            </div>
+                          </div>
+                          <Link
+                            to={`/create-plan/${product.id}`}
+                            onClick={() => handleProduct(product.id)}
+                          >
+                            <button>Create Plan</button>
+                          </Link>
+                        </div>
+                      ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-         ))
-        : (<></>)
-      }
-      {/* <div>
-        <div>
-          <div className="d-flex align-items-center justify-content-between savins-drop">
-            <h5>Fix Savings </h5>
-            <div>
-              {open ? (
-                <i
-                  onClick={() => setOpen(!open)}
-                  className="fa-solid fa-chevron-up"></i>
-              ) : (
-                <i
-                  onClick={() => setOpen(!open)}
-                  className="fa-solid fa-chevron-down"></i>
-              )}
-            </div>
-          </div>
-          <p className="para-header">Choose from a fixed savings plan</p>
-        </div>
-        <div className="plan-list">
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className="pt-5">
-        <div>
-          <div className="d-flex align-items-center justify-content-between savins-drop">
-            <h5>Target Savings </h5>
-            <i className="fa-solid fa-chevron-down"></i>
-          </div>
-          <p className="para-header">Choose from a Target savings plan</p>
-        </div>
-        <div className="plan-list">
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className="pt-5">
-        <div>
-          <div className="d-flex align-items-center justify-content-between savins-drop">
-            <h5>Target Income </h5>
-            <i className="fa-solid fa-chevron-down"></i>
-          </div>
-          <p className="para-header">Choose from a Target Income plan</p>
-        </div>
-        <div className="plan-list">
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-          <div className="choose-plan">
-            <div className="d-flex align-items-center justify-content-around">
-              <img
-                className="image-holder"
-                src={ChoosePlanHolder}
-                alt="ChoosePlanHolder"
-              />
-              <div>
-                <h5>Product 1</h5>
-                <div>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    {" "}
-                    printing and typesetting industry.
-                  </p>
-                  <p className="p-0 m-0 pb-2">
-                    Lorem Ipsum is simply dummy text of the{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to="/create-plan">
-              <button>Create Plan</button>
-            </Link>
-          </div>
-        </div>
-      </div> */}
-    </Wrapper>
+              )
+            )
+          ) : (
+            <></>
+          )}
+        </Wrapper>
+      )}
+    </>
   );
 };
 
@@ -466,18 +118,19 @@ export default CreatePlan;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   justify-content: center;
   padding-top: 60px;
-  width: 90%;
-  padding-left: 30px;
+  width: 100%;
+  padding-left: 60px;
+  margin: 0 auto;
   .image-holder {
     width: 95px;
     height: 93px;
   }
   @media (max-width: 1200px) {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 60px;
+    padding-top: 60px;
   }
   @media (max-width: 970px) and (min-width: 800px) {
     .image-holder {
@@ -485,7 +138,7 @@ const Wrapper = styled.div`
     }
     .choose-plan {
       width: 358px !important;
-      height: 213px;
+      height: auto;
       padding: 10px 5px;
       > div {
         display: block !important;
@@ -497,13 +150,13 @@ const Wrapper = styled.div`
     }
   }
   @media (max-width: 800px) {
-    padding: 0 5rem;
+    padding: 60px 5rem;
     .image-holder {
       display: none;
     }
     .choose-plan {
       width: 448px !important;
-      height: 213px;
+      height: auto;
       padding: 10px 5px;
       > div {
         display: block !important;
@@ -518,16 +171,16 @@ const Wrapper = styled.div`
     }
   }
   @media (max-width: 600px) {
-    padding: 0 1rem;
+    padding: 60px 1rem;
     .choose-plan {
       width: 90% !important;
-      height: 213px;
+      height: autopx;
       padding: 10px 5px;
     }
   }
   .choose-plan {
     width: 448px;
-    height: 213px;
+    height: auto;
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;

@@ -15,12 +15,14 @@ import {
   getNotification,
   logout,
   readNotification,
+  toggleSidebar,
 } from "../../store/actions";
 import arrow from "../../asset/Arrow.png";
 import avatar from "../../asset/avi.jpg";
 
-export function ProfileNavBar({ children, view }) {
+export function ProfileNavBar({ children, view, feedback }) {
   const [menu, setMenu] = useState(false);
+  const [sidebar, setSidebar] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -28,16 +30,20 @@ export function ProfileNavBar({ children, view }) {
   const { users } = profile;
 
   const { notifications } = useSelector((state) => state.notification);
-  const unreadNotifications = notifications?.filter(item => item.readStatus === "UNREAD")
-  // const auth = useSelector((state) => state.auth);
-  // const { login, isLoggedIn } = auth;
+  const unreadNotifications = notifications?.filter(
+    (item) => item.readStatus === "UNREAD"
+  );
 
   const toggle = () => {
     setMenu(!menu);
   };
 
+  const handleClick = () => {
+    dispatch(toggleSidebar());
+  };
+
   const handleLogout = (e) => {
-    dispatch(logout(navigate));
+    dispatch(logout(navigate, dispatch));
   };
 
   useEffect(() => {
@@ -48,33 +54,24 @@ export function ProfileNavBar({ children, view }) {
       navigate("/login");
     }
     dispatch(getNotification());
-  }, [dispatch]);
-
-  // const user =
-  //   users && users.role == 'COMPANY'
-  //     ? users.company.name
-  //     : users.role == 'INDIVIDUAL_USER'
-  //     ? users.individualUser.firstName
-  //     : ''
-
-  // useEffect(() => {
-  //   if (users && !users.kyc && users.role === 'INDIVIDUAL_USER') {
-  //     navigate('/kyc/person');
-  //   }
-  //   if (users && !users.kyc && users.role === 'COMPANY') {
-  //     navigate('/kyc/company');
-  //   }
-  // }, [users]);
+  }, [dispatch, navigate]);
 
   return (
     <WrappeNavBar>
       <div className="shadow-sm pe-4">
         <div className="profile_nav py-2">
           <div className="page-title mx-3">{children}</div>
-          <ul>
+          <div className="hamburger mx-5" onClick={handleClick} style={{ cursor: "pointer" }}>
+            <i className="fa fa-bars"></i>
+          </div>
+          <ul className="d-flex justify-content-end">
             <li className="profile_nav_bel">
               <Badge badgeContent={unreadNotifications?.length} color="primary">
-                <DropDown notifications={unreadNotifications} viewNote={view} />
+                <DropDown
+                  notifications={unreadNotifications}
+                  viewNote={view}
+                  dispatch={dispatch}
+                />
               </Badge>
             </li>
             <li>
@@ -112,7 +109,6 @@ export function ProfileNavBar({ children, view }) {
                       </div>
                     </NavLink>
                   </DropdownItem>
-                  <DropdownItem className="d-block">Settings</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem className="text-danger" onClick={handleLogout}>
                     <i className="ri-shut-down-line align-middle mr-1 text-danger"></i>{" "}
@@ -129,14 +125,33 @@ export function ProfileNavBar({ children, view }) {
 }
 
 const WrappeNavBar = styled.div`
-  // height: 20px;
+  width: 100%;
+  // position: sticky;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(98, 134, 154, 0.12);
   text-align: right;
+  top: 0;
+  z-index: 1000;
 
-  @media (max-width: 650px) {
-    .page-title h2 {
-      font-size: 20px !important;
+  .page-title h2 {
+    font-size: 20px !important;
+  }
+
+  @media (min-width: 1201px) {
+    .hamburger {
+      display: none;
+    }
+  }
+
+  @media only screen and (min-width: 0px) and (max-width: 1200px) {
+    width: 100%;
+    top: 0;
+    left: 0;
+    .page-title {
+      display: none;
+    }
+    .hamburger {
+      font-size: 30px;
     }
   }
   .nav_link {
@@ -178,8 +193,7 @@ const Notification = styled.div`
   }
 `;
 
-export const DropDown = ({ status, notifications, viewNote }) => {
-  const dispatch = useDispatch();
+export const DropDown = ({ status, notifications, viewNote, dispatch }) => {
   const [menu, setMenu] = useState(false);
   const [getStatus, setGetStatus] = useState("");
 
@@ -196,6 +210,11 @@ export const DropDown = ({ status, notifications, viewNote }) => {
     }
   };
 
+  const handleClose = () => {
+    setMenu(false);
+    dispatch(getNotification());
+  };
+
   useEffect(() => {
     setMenu(viewNote);
   }, [viewNote]);
@@ -203,8 +222,6 @@ export const DropDown = ({ status, notifications, viewNote }) => {
   const toggle = () => {
     setMenu(!menu);
   };
-
-  console.log(notifications);
 
   return (
     <Dropdown
@@ -218,14 +235,14 @@ export const DropDown = ({ status, notifications, viewNote }) => {
         id="page-header-user-dropdown"
       >
         <span className="nav-bell">
-          <i className="fas fa-bell"></i>
+          <i className="fas fa-bell" id="note"></i>
         </span>
       </DropdownToggle>
       <DropdownMenu end className="">
         <Notification>
           <header>
             <div>
-              <img src={arrow} alt="arrow" onClick={() => setMenu(false)} />
+              <img src={arrow} alt="arrow" onClick={handleClose} />
             </div>
           </header>
 
@@ -258,7 +275,10 @@ export const DropDown = ({ status, notifications, viewNote }) => {
                         : "text-danger"
                     }
                   >
-                    {getStatus === "READ" && col1 === data.id ? getStatus : data.readStatus}:
+                    {getStatus === "READ" && col1 === data.id
+                      ? getStatus
+                      : data.readStatus}
+                    :
                   </small>
                   {data?.message?.split(" ")?.slice(0, 7)?.join(" ")}...
                 </h6>

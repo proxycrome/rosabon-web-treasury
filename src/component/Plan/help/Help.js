@@ -19,6 +19,9 @@ const Help = () => {
   };
   const dispatch = useDispatch();
   const { faqs, loading } = useSelector((state) => state.help);
+  const faqMessages = faqs?.data?.body ? faqs?.data?.body : [];
+  const activeFaqs = faqMessages.filter((data) => data.status === "ACTIVE");
+  console.log(faqMessages)
 
   useEffect(() => {
     dispatch(getFaq());

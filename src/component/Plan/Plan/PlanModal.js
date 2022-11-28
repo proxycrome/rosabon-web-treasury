@@ -96,7 +96,7 @@ const PlanModal = ({ handleClose }) => {
               <div className='right'>
                 <p className='p-light' >Tenor</p>
                 <p className='p-dark' >
-                  {plan?.tenor?.tenorName}
+                  {plan?.tenor?.tenorName ? plan?.tenor?.tenorName : "Custom Tenor"}
                 </p>
               </div>
             </div>

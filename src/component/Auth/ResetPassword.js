@@ -28,7 +28,6 @@ function ResetPassword() {
   const query = new URLSearchParams(location?.search)
 
   const email = query.get('email');
-  const token = query.get('token');
 
   
 
@@ -37,7 +36,7 @@ function ResetPassword() {
     values,
     handleSubmit,
     errors,
-  } = ValidatePasswordForm(validatePassword, email, token)
+  } = ValidatePasswordForm(validatePassword, email)
 
 
   const togglePassword1 = () => {

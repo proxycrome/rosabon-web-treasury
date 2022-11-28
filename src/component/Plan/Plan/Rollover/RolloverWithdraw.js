@@ -1,12 +1,152 @@
+import moment from "moment";
 import React, { useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { planAction } from "../../../../store/actions";
 import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
 import { RolloverSummary, RolloverWithdrawMethod } from "../../Accesssories";
 
-const RolloverWithdraw = ({ goBack }) => {
+const RolloverWithdraw = ({
+  goBack,
+  amount,
+  tenor,
+  interestRate,
+  withholdTax,
+}) => {
+  const [isTerms, setIsTerms] = useState(false);
   const [modalState, setModalState] = useState(false);
+  const [withdrawTo, setWithdrawTo] = useState("");
+  const [base64File, setBase64File] = useState({
+    corporateUserWithdrawalMandate: "",
+  });
+  // const [savingFreq, setSavingFreq] = useState(false);
+  const [formData, setFormData] = useState({
+    contributionValue: 0,
+    calculatedInterest: 0,
+    paymentMaturity: 0,
+    withholdingTax: 0,
+  });
+
+  const dispatch = useDispatch();
+  const date = new Date();
+  const recentDate = moment(date).format("YYYY-MM-DD");
+  const [endDate, setEndDate] = useState("");
+
+  const { singlePlan } = useSelector((state) => state.plan);
+  // const { withdrawReasons } = useSelector((state) => state.user_profile);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+  const { bankDetails } = useSelector((state) => state.user_profile);
+  const { login } = useSelector((state) => state.auth);
+  const user_role = login ? login?.role?.name : "";
+
+  console.log(plan);
+  console.log(bankDetails);
+
+  const checkUpload = () => {
+    if (
+      user_role === "COMPANY" &&
+      withdrawTo === "TO_BANK" &&
+      !base64File?.corporateUserWithdrawalMandate
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  console.log(checkUpload());
+  console.log(isTerms);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (isTerms && checkUpload()) {
+      const { corporateUserWithdrawalMandate } = base64File;
+      const {
+        // contributionValue,
+        calculatedInterest,
+        paymentMaturity,
+        withholdingTax,
+      } = formData;
+      const data = {
+        amount: parseFloat(amount),
+        balanceAfterRollover: parseFloat(
+          plan?.planSummary?.principal - parseFloat(amount)
+        ),
+        bankAccountDetails:
+          withdrawTo === "TO_BANK" && user_role !== "COMPANY"
+            ? parseInt(bankDetails?.id)
+            : null,
+        completed: true,
+        corporateUserWithdrawalMandate:
+          user_role === "COMPANY" && withdrawTo === "TO_BANK"
+            ? corporateUserWithdrawalMandate
+            : null,
+        plan: parseInt(plan?.id),
+        planAction: "ROLLOVER",
+        rollToPlan: {
+          acceptPeriodicContribution: true,
+          actualMaturityDate: moment(endDate, "DD/MM/YYYY").format(
+            "YYYY-MM-DD"
+          ),
+          allowsLiquidation: plan?.allowsLiquidation,
+          amount: plan?.product?.properties?.hasTargetAmount
+            ? null
+            : parseFloat(amount),
+          autoRenew: plan?.autoRenew,
+          autoRollOver: plan?.autoRenew,
+          bankAccountInfo:
+            withdrawTo === "TO_BANK" && user_role !== "COMPANY"
+              ? {
+                  accountName: bankDetails?.accountName,
+                  accountNumber: bankDetails?.accountNumber,
+                  bankName: bankDetails?.bank?.name,
+                }
+              : null,
+          contributionValue: plan?.contributionValue,
+          currency: parseInt(plan?.currency?.id),
+          dateCreated: recentDate,
+          directDebit: plan?.directDebit,
+          exchangeRate: plan?.exchangeRate,
+          interestRate,
+          interestReceiptOption: plan?.interestReceiptOption,
+          monthlyContributionDay: plan?.monthlyContributionDay,
+          numberOfTickets: Math.floor(
+            amount / plan.product.minTransactionLimit
+          ),
+          paymentMethod: plan?.paymentMethod,
+          planDate: recentDate,
+          planName: plan?.planName,
+          planStatus: "ACTIVE",
+          planSummary: {
+            calculatedInterest: calculatedInterest,
+            endDate: moment(endDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+            interestRate,
+            interestReceiptOption: plan?.interestReceiptOption,
+            paymentMaturity: paymentMaturity,
+            planName: plan?.planName,
+            principal: parseFloat(amount),
+            startDate: recentDate,
+            withholdingTax: withholdingTax,
+          },
+          product: plan?.product?.id,
+          productCategory: plan?.productCategory?.id,
+          savingFrequency: plan?.savingFrequency,
+          targetAmount: plan?.product?.properties?.hasTargetAmount
+            ? parseFloat(amount)
+            : null,
+          tenor,
+          weeklyContributionDay: plan?.weeklyContributionDay,
+        },
+        withdrawTo,
+      };
+
+      console.log(data);
+      await dispatch(planAction(formData, setModalState, null, null, null, "part"));
+    }
+  };
 
   return (
     <>
@@ -15,52 +155,79 @@ const RolloverWithdraw = ({ goBack }) => {
           <span className="fw-bold">Plan</span>
         </NavTitle>
       </ProfileNavBar>
-      <Wrapper>
-        <LeftView>
-          <h4 className="pb-3">Rollover</h4>
-          <RolloverSummary />
-        </LeftView>
-        <RightView>
-          <div className="bank-details">
-            <div className="bank-detail-content">
-              <RolloverWithdrawMethod />
-            </div>
-          </div>
-        </RightView>
-      </Wrapper>
-      <WrapperFooter>
-        <div className="footer-body">
-          <div className="d-flex align-items-center justify-content-between footer-content">
-            <div>
-              <button
-                style={{ color: "#111E6C", width: "300px" }}
-                onClick={goBack}>
-                Back
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  backgroundColor: "#111E6C",
-                  color: "#FFFFFF",
-                  width: "300px",
-                }}
-                onClick={() => setModalState(true)}>
-                Submit
-              </button>
-              <ModalComponent
-                show={modalState}
-                size={"md"}
-                handleClose={() => setModalState(false)}>
-                <SuccessConfirm
-                  confirmNotice="rollover"
-                  handleClose={() => setModalState(false)}
+      <Toaster/>
+      <form autoComplete="off" autoCorrect="off" onSubmit={handleSubmit}>
+        <Wrapper>
+          <LeftView>
+            <h4 className="pb-3">Rollover</h4>
+            <RolloverSummary
+              amount={amount}
+              tenor={tenor}
+              interestRate={interestRate}
+              withholdTax={withholdTax}
+              checkTerms={setIsTerms}
+              isTerms={isTerms}
+              setEndDate={setEndDate}
+              setFormData={setFormData}
+              formData={formData}
+            />
+          </LeftView>
+          <RightView>
+            <div className="bank-details">
+              <div className="bank-detail-content">
+                <RolloverWithdrawMethod
+                  withdrawTo={withdrawTo}
+                  setWithdrawTo={setWithdrawTo}
+                  base64File={base64File}
+                  setBase64File={setBase64File}
+                  // savingFreq={savingFreq}
+                  balance={parseFloat(
+                    plan?.planSummary?.principal - parseFloat(amount)
+                  )}
                 />
-              </ModalComponent>
+              </div>
+            </div>
+          </RightView>
+        </Wrapper>
+        <WrapperFooter>
+          <div className="footer-body">
+            <div className="d-flex align-items-center justify-content-between footer-content">
+              <div>
+                <button
+                  style={{ color: "#111E6C", width: "300px" }}
+                  onClick={goBack}
+                  type="button"
+                >
+                  Back
+                </button>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#111E6C",
+                    color: "#FFFFFF",
+                    width: "300px",
+                  }}
+                  // onClick={() => setModalState(true)}
+                >
+                  Submit
+                </button>
+                <ModalComponent
+                  show={modalState}
+                  size={"md"}
+                  handleClose={() => setModalState(false)}
+                >
+                  <SuccessConfirm
+                    confirmNotice="rollover"
+                    handleClose={() => setModalState(false)}
+                  />
+                </ModalComponent>
+              </div>
             </div>
           </div>
-        </div>
-      </WrapperFooter>
+        </WrapperFooter>
+      </form>
     </>
   );
 };
@@ -130,7 +297,6 @@ const RightView = styled.div`
   .bank-details {
     height: auto;
     padding: 40px 0;
-    margin-top: -17px;
     background: rgba(28, 68, 141, 0.03);
     display: flex;
     justify-content: center;
