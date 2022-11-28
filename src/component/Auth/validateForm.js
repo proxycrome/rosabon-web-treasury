@@ -207,7 +207,7 @@ export const ValidateUserForm = (
 
 export function validateUserInfo(values, isUserTerms, sourcer, referralCode) {
   let errors = {};
-  var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+  var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
   if (!values.refferedBy && !values.sourceOthers && !referralCode) {
     errors.refferedBy = "This field is required";
@@ -291,7 +291,7 @@ export const ValidatePasswordForm = (validatePassword, email, token) => {
 
 export function validatePassword(values) {
   let errors = {};
-  var re = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+  var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
   if (!values.newPassword) {
     errors.password = "Password is required";

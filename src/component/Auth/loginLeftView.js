@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import RFSLogo from "../../asset/RFS-Logo.png";
 import SpiralImage from "../../asset/spiral-arrow.png";
 import styled from "styled-components";
@@ -28,6 +28,11 @@ export const LoginLeftView = ({ signup }) => {
 };
 
 export const SignupLeftView = () => {
+  const location = useLocation();
+  const query = new URLSearchParams(location?.search)
+
+  const referralCode = query.get('referralCode');
+  const sourcer = query.get('source');
   return (
     <Wrapper>
       <div className="wrapper_content">
@@ -46,10 +51,20 @@ export const SignupLeftView = () => {
             </div>
             <div className="continue_login_btn">
               <div className="category-btn">
-                <NavLink to="/register-user">
+                <NavLink to={
+                  referralCode !== null && sourcer !== null ? 
+                  `/register-user/?referralCode=${referralCode}&source=${sourcer}` :
+                  referralCode !== null && sourcer === null ? 
+                  `/register-user/?referralCode=${referralCode}` :
+                  `/register-user`}>
                   <button className="individual">Register as an Individual</button>
                 </NavLink>
-                <NavLink to="/register-company">
+                <NavLink to={
+                  referralCode !== null && sourcer !== null ? 
+                  `/register-company/?referralCode=${referralCode}&source=${sourcer}` :
+                  referralCode !== null && sourcer === null ? 
+                  `/register-company/?referralCode=${referralCode}` :
+                  `/register-company`}>
                   <button className="corporate">Register as a Corporate</button>
                 </NavLink>
               </div>

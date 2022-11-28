@@ -271,7 +271,7 @@ const PersonalInfo = () => {
                       <button onClick={toggleProf} disabled>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleProf}>
-                        Cancel
+                        Save
                       </button>
                     )} */}
                   </div>
@@ -319,7 +319,7 @@ const PersonalInfo = () => {
                     <input
                       type="text"
                       className="form-control text-capitalize"
-                      value={users?.individualUser?.gender?.toLowerCase()}
+                      value={users?.individualUser?.gender?.gender?.toLowerCase()}
                       disabled
                     />
                   </div>
@@ -407,7 +407,7 @@ const PersonalInfo = () => {
                         className="grey-button"
                         onClick={toggleCont}
                       >
-                        Cancel
+                        Save
                       </button>
                     </>
                   )}
@@ -620,7 +620,7 @@ const PersonalInfo = () => {
                       <button onClick={toggleEmploy}>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleEmploy}>
-                        Cancel
+                        Save
                       </button>
                     )}
                   </div>
@@ -694,7 +694,7 @@ const PersonalInfo = () => {
                       <button onClick={toggleNOK}>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleNOK}>
-                        Cancel
+                        Save
                       </button>
                     )}
                   </div>

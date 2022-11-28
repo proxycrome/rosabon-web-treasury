@@ -65,21 +65,25 @@ const Help = () => {
                       style={{ backgroundColor: "#FFFFFF" }}
                       type="button"
                     >
-                      {data.faqCategory.name}
+                      {data?.name}
                     </div>
                   </h2>
                   <Collapse isOpen={col1 === data.id}>
-                    <div
-                      id="collapseOne"
-                      className="accordion-collapse collapse show"
-                      aria-labelledby="headingOne"
-                      data-bs-parent="#accordionExample"
-                    >
-                      <div className="accordion-body">
-                        <h5>{data.question}</h5>
-                        <p className="p-0 m-0">{data.answer}</p>
-                      </div>
-                    </div>
+                    {
+                      data?.faqs?.map(faq => (
+                        <div
+                          id="collapseOne"
+                          className="accordion-collapse collapse show"
+                          aria-labelledby="headingOne"
+                          data-bs-parent="#accordionExample"
+                        >
+                          <div className="accordion-body">
+                            <h5>{faq.question}</h5>
+                            <p className="p-0 m-0">{faq.answer}</p>
+                          </div>
+                        </div>
+                      ))
+                    }
                   </Collapse>
                 </div>
               ))}

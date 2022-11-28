@@ -39,7 +39,8 @@ const CreatePlan = () => {
           </div>
         ) : 
         productStatus === "OK" ?
-         products.map((item) => item?.products.length > 0 && (
+         products.map((item) => (item?.products.some(product => product?.status === "ACTIVE") && 
+         item?.products.length > 0) && (
           <div className=" pb-5" key={item.productCategoryId} >
             <div>
               <div className="d-flex align-items-center justify-content-between savins-drop">
