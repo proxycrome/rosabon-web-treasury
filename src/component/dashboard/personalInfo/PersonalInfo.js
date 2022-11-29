@@ -301,7 +301,7 @@ const PersonalInfo = () => {
                       <button onClick={toggleProf} disabled>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleProf}>
-                        Cancel
+                        Save
                       </button>
                     )} */}
                   </div>
@@ -437,7 +437,7 @@ const PersonalInfo = () => {
                         className="grey-button"
                         onClick={toggleCont}
                       >
-                        Cancel
+                        Save
                       </button>
                     </>
                   )}
@@ -652,7 +652,7 @@ const PersonalInfo = () => {
                       <button onClick={toggleEmploy}>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleEmploy}>
-                        Cancel
+                        Save
                       </button>
                     )}
                   </div>
@@ -726,7 +726,7 @@ const PersonalInfo = () => {
                       <button onClick={toggleNOK}>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleNOK}>
-                        Cancel
+                        Save
                       </button>
                     )}
                   </div>

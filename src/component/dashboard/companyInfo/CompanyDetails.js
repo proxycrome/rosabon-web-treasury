@@ -173,7 +173,7 @@ const CompanyDetails = () => {
                         className="grey-button"
                         onClick={toggleDetail}
                       >
-                        Cancel
+                        Save
                       </button>
                     )}
                   </div>
@@ -338,7 +338,7 @@ const CompanyDetails = () => {
                           className="grey-button"
                           onClick={toggleCont}
                         >
-                          Cancel
+                          Save
                         </button>
                       )}
                     </div>

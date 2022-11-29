@@ -41,70 +41,68 @@ const CreatePlan = () => {
         <Wrapper>
           {productStatus === "OK" ? (
             products.map(
-              (item) =>
-                item?.products.length > 0 && (
-                  <div className=" pb-5" key={item.productCategoryId}>
-                    <div className="">
-                      <div className="d-flex align-items-center justify-content-between savins-drop">
-                        <h5>{item.productCategoryName} </h5>
-                      </div>
-                      <p className="para-header">
-                        Choose from a {item.productCategoryName} plan
-                      </p>
+              (item) => (item?.products.some(product => product?.status === "ACTIVE") && 
+              item?.products.length > 0) && (
+                <div className=" pb-5" key={item.productCategoryId}>
+                  <div className="">
+                    <div className="d-flex align-items-center justify-content-between savins-drop">
+                      <h5>{item.productCategoryName} </h5>
                     </div>
-                    <div className="plan-list">
-                      {item.products
-                        .filter((data) => data.status === "ACTIVE")
-                        .map((product) => (
-                          <div className="choose-plan" key={product.id}>
-                            <div
-                              className="d-flex align-items-center "
-                              style={{ gap: 16 }}
-                            >
-                              <img
-                                className="image-holder"
-                                src={
-                                  product?.imageUrl?.length > 10
-                                    ? product.imageUrl
-                                    : ChoosePlanHolder
-                                }
-                                alt="Product"
-                              />
+                    <p className="para-header">
+                      Choose from a {item.productCategoryName} plan
+                    </p>
+                  </div>
+                  <div className="plan-list">
+                    {item.products.map((product) => (
+                        <div className="choose-plan" key={product.id}>
+                          <div
+                            className="d-flex align-items-center "
+                            style={{ gap: 16 }}
+                          >
+                            <img
+                              className="image-holder"
+                              src={
+                                product?.imageUrl?.length > 10
+                                  ? product.imageUrl
+                                  : ChoosePlanHolder
+                              }
+                              alt="Product"
+                            />
+                            <div>
+                              <h5>{product.productName} </h5>
                               <div>
-                                <h5>{product.productName} </h5>
-                                <div>
-                                  {/* <p className="p-0 m-0 pb-2">
-                          Lorem Ipsum is simply dummy text of the{" "}
-                        </p>
-                        <p className="p-0 m-0 pb-2">
-                          {" "}
-                          printing and typesetting industry.
-                        </p>
-                        <p className="p-0 m-0 pb-2">
-                          Lorem Ipsum is simply dummy text of the{" "}
-                        </p> */}
-                                  {product.productDescription
-                                    .split(".")
-                                    .slice(0, 3)
-                                    ?.map((item, id) => (
-                                      <p key={id} className="p-0 m-0 pb-2">
-                                        {item}.{" "}
-                                      </p>
-                                    ))}
-                                </div>
+                                {/* <p className="p-0 m-0 pb-2">
+                        Lorem Ipsum is simply dummy text of the{" "}
+                      </p>
+                      <p className="p-0 m-0 pb-2">
+                        {" "}
+                        printing and typesetting industry.
+                      </p>
+                      <p className="p-0 m-0 pb-2">
+                        Lorem Ipsum is simply dummy text of the{" "}
+                      </p> */}
+                                {product.productDescription
+                                  .split(".")
+                                  .slice(0, 3)
+                                  ?.map((item, id) => (
+                                    <p key={id} className="p-0 m-0 pb-2">
+                                      {item}.{" "}
+                                    </p>
+                                  ))}
                               </div>
                             </div>
-                            <Link
-                              to={`/create-plan/${product.id}`}
-                              onClick={() => handleProduct(product.id)}
-                            >
-                              <button>Create Plan</button>
-                            </Link>
                           </div>
-                        ))}
-                    </div>
+                          <Link
+                            to={`/create-plan/${product.id}`}
+                            onClick={() => handleProduct(product.id)}
+                          >
+                            <button>Create Plan</button>
+                          </Link>
+                        </div>
+                      ))}
                   </div>
-                )
+                </div>
+              )
             )
           ) : (
             <></>
