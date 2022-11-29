@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import RFSLogo from "../../asset/RFS-Logo.png";
 import SpiralImage from "../../asset/spiral-arrow.png";
 import styled from "styled-components";
@@ -46,10 +46,20 @@ export const SignupLeftView = ({source, referralCode}) => {
             </div>
             <div className="continue_login_btn">
               <div className="category-btn">
-                <NavLink to={`/register-user${source && referralCode ? `?referralCode=${referralCode}&source=${source}` : ""}`}>
+                <NavLink to={
+                  referralCode !== null && source !== null ? 
+                  `/register-user/?referralCode=${referralCode}&source=${source}` :
+                  referralCode !== null && source === null ? 
+                  `/register-user/?referralCode=${referralCode}` :
+                  `/register-user`}>
                   <button className="individual">Register as an Individual</button>
                 </NavLink>
-                <NavLink to={`/register-company${source && referralCode ? `?referralCode=${referralCode}&source=${source}` : ""}`}>
+                <NavLink to={
+                  referralCode !== null && source !== null ? 
+                  `/register-company/?referralCode=${referralCode}&source=${source}` :
+                  referralCode !== null && source === null ? 
+                  `/register-company/?referralCode=${referralCode}` :
+                  `/register-company`}>
                   <button className="corporate">Register as a Corporate</button>
                 </NavLink>
               </div>
