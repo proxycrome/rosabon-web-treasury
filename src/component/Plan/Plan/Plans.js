@@ -34,6 +34,7 @@ export const Plans = () => {
   const [show, setShow] = useState(false);
   const [debitPopup, setDebitPopup] = useState(false);
   const [bankDetail, setBankDetail] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [filter, setFilter] = useState({
     category: 0,
     startDate: "",
@@ -109,8 +110,9 @@ export const Plans = () => {
   };
 
   const removePlan = async (id) => {
-    await dispatch(deletePlan(id));
-    await dispatch(getPlans());
+    // await dispatch(deletePlan(id));
+    // await dispatch(getPlans());
+    setDeleteModal(true);
   };
 
   return (
@@ -122,6 +124,13 @@ export const Plans = () => {
         handleClose={() => setShow(false)}
       >
         <PlanModal handleClose={() => setShow(false)} />
+      </ModalComponent>
+      <ModalComponent
+        show={deleteModal}
+        size={"md"}
+        handleClose={() => setDeleteModal(false)}
+      >
+        <p className="text-center" >Plan will auto delete after 48 hours.</p>
       </ModalComponent>
       <ModalComponent
         show={bankDetail}
@@ -468,8 +477,7 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
               to={`/transfer/${id}`}
               disabled={
                 !(
-                  product?.properties?.allowsTransfer &&
-                  userPlan?.allowsLiquidation
+                  product?.properties?.allowsTransfer
                 )
               }
             >
@@ -532,8 +540,7 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
               to={`/transfer/${id}`}
               disabled={
                 !(
-                  product?.properties?.allowsTransfer &&
-                  userPlan?.allowsLiquidation
+                  product?.properties?.allowsTransfer
                 )
               }
             >

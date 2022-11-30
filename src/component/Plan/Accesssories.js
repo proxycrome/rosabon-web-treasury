@@ -285,7 +285,7 @@ const RightWrapper = styled.div`
   }
 `;
 
-export const MakePayment = ({ setPaymentType }) => {
+export const MakePayment = ({ setPaymentType, isClicked }) => {
   const [paymentType, SetPaymentType] = useState("");
   const [isTerms, setIsTerms] = useState(false);
   const { form, setForm } = useContext(PlanContext);
@@ -367,7 +367,12 @@ export const MakePayment = ({ setPaymentType }) => {
           onChange={() => setIsTerms(!isTerms)}
           required
         />
-        <label htmlFor="scales">I agree to the Terms and Condition</label>
+        <label htmlFor="scales">I agree to the Terms and Condition</label><br/>
+        {
+          isClicked ? !(isTerms) ? <label className="text-danger" >
+            Please check this box to proceed
+          </label> : <></> : <></>
+        }
       </div>
     </PaymentTypeWrapper>
   );
