@@ -1145,7 +1145,7 @@ const PlanForm = () => {
                         </option>
                         {productStatus === "OK" &&
                           Object.entries(
-                            product?.properties?.interestOptions
+                            product?.properties?.interestOptions ?? {}
                           ).map(
                             ([key, value]) =>
                               value === true && (
