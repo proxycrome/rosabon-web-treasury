@@ -359,8 +359,7 @@ const PersonalKYC = () => {
                           </div>
                           {bvnError && bvnError.message && (
                             <small className="text-danger">
-                              BVN validation failed, please provide correct
-                              details
+                              BVN validation failed, please provide a correct details
                             </small>
                           )}
                           <div>

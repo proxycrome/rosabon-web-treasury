@@ -108,7 +108,7 @@ function* registerUser({ payload: { formData, navigate } }) {
       });
     }
   }
-}
+};
 
 function* refreshUser() {
   try {
