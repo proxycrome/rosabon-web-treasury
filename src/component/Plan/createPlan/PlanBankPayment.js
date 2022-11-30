@@ -35,7 +35,8 @@ const PlanBankPayment = ({goBack}) => {
         accountName: dynamic_account?.accountName,
         accountNumber: dynamic_account?.accountNumber,
         bankName: "Rosabon"
-      }
+      },
+      paymentMethod: "BANK_TRANSFER",
     })
   }, [dynamic_account])
 

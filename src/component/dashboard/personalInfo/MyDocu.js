@@ -17,6 +17,7 @@ import {
   getUserDocs,
   sendOtp,
   uploadPersonalDocument,
+  getAllIdTypes
 } from "../../../store/actions";
 
 const MyDocu = () => {
@@ -40,6 +41,7 @@ const MyDocu = () => {
     showEmailOtpModal,
     otp,
     otpError,
+    idTypes,
     validateEmailOtp,
     documents,
     loading,
@@ -52,9 +54,13 @@ const MyDocu = () => {
   };
   const data = {
     idNumber: "",
-    idType: "",
+    idTypeId: "",
   };
   const [formData, setformData] = useState(data);
+
+  useEffect(()=> {
+    dispatch(getAllIdTypes())
+  },[])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,7 +112,7 @@ const MyDocu = () => {
     const { frontEncodedString, photoEncodedString, utilityEncodedString } =
       base64File;
 
-    const { idType, idNumber } = formData;
+    const { idTypeId, idNumber } = formData;
 
     // if (!frontEncodedString && !idType) {
     //   toast.error("Please Select and Upload your ID");
@@ -125,7 +131,7 @@ const MyDocu = () => {
         name: "ID Image",
       },
       idNumber,
-      idType,
+      idTypeId,
       passportPhotographImage: {
         encodedUpload: photoEncodedString,
         name: "Photo Image",
@@ -175,7 +181,7 @@ const MyDocu = () => {
   //     setformData({
   //       ...formData,
   //       idNumber: "",
-  //       idType: "",
+  //       idTypeId: "",
   //     });
   //     setBase64File({
   //       ...base64File,
@@ -324,18 +330,17 @@ const MyDocu = () => {
                 <select
                   className="form-select form-select-md mb-3"
                   aria-label=".form-select-md"
-                  name="idType"
-                  value={formData.idType || documents?.idType}
+                  name="idTypeId"
+                  value={formData.idTypeId || documents?.idType}
                   onChange={handleChange}
                   disabled={showEdit}
                 >
                   <option value="">Select ID Type...</option>
-                  <option value="NATIONAL_ID_CARD">National ID card</option>
-                  <option value="DRIVERS_LICENSE">Driver's License </option>
-                  <option value="INTERNATIONAL_PASSPORT">
-                    International Passport
-                  </option>
-                  <option value="VOTERS_CARD">Voter's Card </option>
+                  {
+                    idTypes?.map((item)=> (
+                      <option value={item.id}>{item.name} </option>
+                    ))
+                  }
                 </select>
               </div>
               <div className="col-md-12 col-lg-6">

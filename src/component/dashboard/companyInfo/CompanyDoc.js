@@ -18,6 +18,7 @@ import {
   sendCompanyOtp,
   getCompanyDocs,
   uploadCompanyDocument,
+  getAllIdTypes
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
 import PhoneInput from "react-phone-input-2";
@@ -25,7 +26,7 @@ import "react-phone-input-2/lib/style.css";
 
 const CompanyDoc = ({
   getAuthUsers,
-  getCompanyDocs,
+  // getCompanyDocs,
   sendCompanyOtp,
   uploadCompanyDocument,
 }) => {
@@ -53,6 +54,7 @@ const CompanyDoc = ({
     companyDocs,
     companyDocsError,
     showEmailOtpModal,
+    idTypes,
     otp,
     otpError,
     validateEmailOtp,
@@ -68,9 +70,13 @@ const CompanyDoc = ({
     setShowEdit(!showEdit);
   };
 
+  useEffect(()=> {
+    dispatch(getAllIdTypes())
+  },[])
+
   const data = {
     idNumber: "",
-    idType: "",
+    idTypeId: "",
   };
   const [formData, setFormData] = useState(data);
 
@@ -129,7 +135,7 @@ const CompanyDoc = ({
       moaEncodedString,
     } = base64File;
 
-    const { idType, idNumber } = formData;
+    const { idTypeId, idNumber } = formData;
 
     let data = {
       cacImage: {
@@ -142,7 +148,7 @@ const CompanyDoc = ({
         encodedUpload: frontEncodedString,
       },
       contactPersonIdNumber: idNumber ? idNumber : companyDocs?.idNumber,
-      idType: idType ? idType : companyDocs?.idType,
+      idType: idTypeId ? idTypeId : companyDocs?.idType,
       contactPersonPhotographImage: {
         encodedUpload: photoEncodedString,
       },
@@ -198,7 +204,7 @@ const CompanyDoc = ({
     setFormData({
       ...formData,
       idNumber: "",
-      idType: "",
+      idTypeId: "",
     });
   };
 
@@ -209,7 +215,7 @@ const CompanyDoc = ({
   }, [users]);
 
   useEffect(() => {
-    if (!companyDocs) {
+    if (companyDocs===null) {
       getCompanyDocs();
     }
   }, [companyDocs]);
@@ -347,18 +353,17 @@ const CompanyDoc = ({
                 <select
                   className="form-select form-select-md mb-3"
                   aria-label=".form-select-md"
-                  name="idType"
-                  value={formData?.idType || companyDocs?.idType}
+                  name="idTypeId"
+                  value={formData?.idTypeId || companyDocs?.idType}
                   onChange={handleChange}
                   disabled={showEdit}
                 >
                   <option value="">Select ID Type...</option>
-                  <option value="NATIONAL_ID_CARD">National ID card</option>
-                  <option value="DRIVERS_LICENSE">Driver's License </option>
-                  <option value="INTERNATIONAL_PASSPORT">
-                    International Passport
-                  </option>
-                  <option value="VOTERS_CARD">Voter's Card </option>
+                  {
+                    idTypes?.map(item => (
+                      <option value={item.id} key={item.id}>{item.name} </option>
+                    ))
+                  }
                 </select>
               </div>
               <div className="col-md-12 col-lg-6">

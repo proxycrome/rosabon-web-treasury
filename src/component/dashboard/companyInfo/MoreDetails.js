@@ -210,9 +210,9 @@ const MoreDetails = () => {
     if (!values.firstName) {
       errors.firstName = "first name is required";
     }
-    if (!values.middleName) {
-      errors.middleName = "Middle name is required";
-    }
+    // if (!values.middleName) {
+    //   errors.middleName = "Middle name is required";
+    // }
 
     if (!values.lastName) {
       errors.lastName = "Last name is required";
@@ -412,6 +412,7 @@ const MoreDetails = () => {
     }
     return num;
   };
+  
 
   const handleDeleteDirector = (id) => {
     dispatch(deleteDirector(id, setShowModal));
@@ -478,7 +479,7 @@ const MoreDetails = () => {
                   ) : (
                     <button
                       type="button"
-                      className="grey-button"
+                      className="grey-btn"
                       onClick={() => {
                         toggleEdit();
                         if (
@@ -532,8 +533,9 @@ const MoreDetails = () => {
                         <div className="d-flex flex-column align-items-end">
                           <button
                             type="button"
-                            className="red-button mb-5"
+                            className={`${directors?.length < 2 ? "grey-button" : " red-button mb-5"}`}
                             onClick={() => setShowModal(true)}
+                            disabled={directors?.length < 2}
                           >
                             Delete Director
                           </button>

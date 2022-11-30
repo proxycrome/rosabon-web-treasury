@@ -93,18 +93,11 @@ const RolloverWithdraw = ({
           ),
           allowsLiquidation: plan?.allowsLiquidation,
           amount: plan?.product?.properties?.hasTargetAmount
-            ? null
+            ? 0
             : parseFloat(amount),
           autoRenew: plan?.autoRenew,
           autoRollOver: plan?.autoRenew,
-          bankAccountInfo:
-            withdrawTo === "TO_BANK" && user_role !== "COMPANY"
-              ? {
-                  accountName: bankDetails?.accountName,
-                  accountNumber: bankDetails?.accountNumber,
-                  bankName: bankDetails?.bank?.name,
-                }
-              : null,
+          bankAccountInfo: null,
           contributionValue: plan?.contributionValue,
           currency: parseInt(plan?.currency?.id),
           dateCreated: recentDate,
@@ -116,7 +109,7 @@ const RolloverWithdraw = ({
           numberOfTickets: Math.floor(
             amount / plan.product.minTransactionLimit
           ),
-          paymentMethod: plan?.paymentMethod,
+          paymentMethod: null,
           planDate: recentDate,
           planName: plan?.planName,
           planStatus: "ACTIVE",

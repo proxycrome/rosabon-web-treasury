@@ -54,7 +54,8 @@ export function BVNConfirm({
     e.preventDefault();
 
     if (!nameMatch && director) {
-      confirmName(firstName, lastName);
+      console.log("worked???", confirmName)
+      confirmName();
       handleClose();
       return;
     }
@@ -126,7 +127,7 @@ export function BVNConfirm({
                         <h4>BVN Verification</h4>
                         {director ? (
                           <p className="pt-5">
-                            Your name on the system should be updated with{" "}
+                            Your name on the system will be updated with{" "}
                             {firstName} {lastName} to reflect exactly as it
                             appears on your BVN
                           </p>
@@ -1027,7 +1028,7 @@ export function ProceedPayCard({
   onSuccess,
   onClose,
   text,
-  setIsClicked,
+  // setIsClicked,
 }) {
   const { reg_transaction, loading } = useSelector((state) => state.paystack);
   const { users } = useSelector((state) => state.user_profile);
@@ -1039,9 +1040,9 @@ export function ProceedPayCard({
     publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
   };
 
-  useEffect(() => {
-    setIsClicked(false);
-  }, []);
+  // useEffect(() => {
+  //   setIsClicked(false);
+  // }, []);
 
   const initializePayment = usePaystackPayment(config);
 

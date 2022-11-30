@@ -51,7 +51,7 @@ export const getRepliesService = (id) => {
 
 export const getTicketCategoriesService = () => {
     const http = new HttpService();
-    const url = `auth/admin/feedback/categories?platform=TREASURY&status=ACTIVE`;
+    const url = `auth/feedback/categories?platform=TREASURY&status=ACTIVE`;
 
     return http.getData(url);
 };

@@ -39,7 +39,7 @@ const PlanPayment = () => {
 
   useEffect(() => {
     if (plan?.id === parseInt(id)) {
-      setAmount(plan?.targetAmount);
+      setAmount(plan?.planSummary?.principal);
     }
   }, [plan]);
 
@@ -159,7 +159,7 @@ const PlanPayment = () => {
                       id="card"
                       name="paymentType"
                       value="card"
-                      checked
+                      defaultChecked
                       onClick={handleClick}
                     />
                   </div>
@@ -173,8 +173,9 @@ const PlanPayment = () => {
                         placeholder="N  0.00"
                         type="number"
                         name="amount"
-                        value={amount}
+                        value={plan?.planSummary?.principal}
                         min={plan?.product?.minTransactionLimit}
+                        disabled
                         required
                         // onChange={(e) => setAmount(parseInt(e.target.value))}
                       />
