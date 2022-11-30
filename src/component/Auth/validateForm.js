@@ -125,7 +125,7 @@ export const ValidateCompanyForm = (
 
 export function validateInfo(values, isCompanyTerms, referralCode, sourcer) {
   let errors = {};
-  var re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+  var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
   if (!values.name) {
     errors.name = "Name field is required";
   }
