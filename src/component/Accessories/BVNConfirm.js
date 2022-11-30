@@ -1028,7 +1028,7 @@ export function ProceedPayCard({
   onSuccess,
   onClose,
   text,
-  setIsClicked,
+  // setIsClicked,
 }) {
   const { reg_transaction, loading } = useSelector((state) => state.paystack);
   const { users } = useSelector((state) => state.user_profile);
@@ -1040,9 +1040,9 @@ export function ProceedPayCard({
     publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
   };
 
-  useEffect(() => {
-    setIsClicked(false);
-  }, []);
+  // useEffect(() => {
+  //   setIsClicked(false);
+  // }, []);
 
   const initializePayment = usePaystackPayment(config);
 
