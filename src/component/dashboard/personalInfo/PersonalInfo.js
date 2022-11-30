@@ -828,7 +828,7 @@ const PersonalInfo = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button type="submit" className="blue-btn">
-                  {loading ? "Sending..." : "Send"}
+                  {loading ? "Loading..." : "Save"}
                 </button>
               </div>
             </div>

@@ -54,7 +54,8 @@ export function BVNConfirm({
     e.preventDefault();
 
     if (!nameMatch && director) {
-      confirmName(firstName, lastName);
+      console.log("worked???", confirmName)
+      confirmName();
       handleClose();
       return;
     }
@@ -126,7 +127,7 @@ export function BVNConfirm({
                         <h4>BVN Verification</h4>
                         {director ? (
                           <p className="pt-5">
-                            Your name on the system should be updated with{" "}
+                            Your name on the system will be updated with{" "}
                             {firstName} {lastName} to reflect exactly as it
                             appears on your BVN
                           </p>
