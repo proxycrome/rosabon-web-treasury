@@ -283,9 +283,7 @@ function* planAction({
   } catch (error) {
     console.log(error?.response?.data);
     yield put(planActionError(error?.response?.data));
-    const message = error?.response?.data
-      ? error?.response?.data?.message
-      : "Unable to Withdraw";
+    const message = error?.response?.data?.message
     if (message) {
       if (planAction === "TOP_UP" && paymentType === "BANK_TRANSFER") {
         toast.error(message, { position: "top-right" });
