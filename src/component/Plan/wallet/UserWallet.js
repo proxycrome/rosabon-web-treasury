@@ -21,7 +21,7 @@ import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
-import { Toaster } from "react-hot-toast";
+import toast,{ Toaster } from "react-hot-toast";
 
 const UserWallet = () => {
   const [show, setShow] = useState(false);
@@ -171,7 +171,12 @@ const UserWallet = () => {
   }, [errors]);
 
   const handleTransferSubmit = () => {
-    dispatch(postTransferToPlan(transferFormData));
+    const {amount, planId} = transferFormData;
+    if ((!amount || !planId) || (amount==="" || planId==="")) {
+      toast.error("Provide an amount and beneficiary account");
+    } else {
+      dispatch(postTransferToPlan(transferFormData));
+    }
   };
 
   const tokenObj = JSON.parse(localStorage.getItem("token"));

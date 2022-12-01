@@ -1858,6 +1858,7 @@ export const TransferCard = ({ walletBalance, transferData, id }) => {
               className="form-control"
               placeholder="N1,500,000"
               type="number"
+              required
               name="amount"
               value={formData.amount}
               onChange={handleChange}
@@ -1872,6 +1873,7 @@ export const TransferCard = ({ walletBalance, transferData, id }) => {
             className="form-select form-select-lg mb-3 select-field"
             aria-label=".form-select-lg"
             name="planId"
+            required
             value={formData.planId}
             onChange={handleChange}
           >
