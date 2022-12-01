@@ -28,6 +28,7 @@ export const LoginLeftView = ({ signup }) => {
 };
 
 export const SignupLeftView = ({source, referralCode}) => {
+  const url = window.location.href;
   return (
     <Wrapper>
       <div className="wrapper_content">
@@ -52,7 +53,11 @@ export const SignupLeftView = ({source, referralCode}) => {
                   referralCode !== null && source === null ? 
                   `/register-user/?referralCode=${referralCode}` :
                   `/register-user`}>
-                  <button className="individual">Register as an Individual</button>
+                  <button 
+                    className={`individual ${url.includes('register-user') && "individual-active"}`}
+                  >
+                    Register as an Individual
+                  </button>
                 </NavLink>
                 <NavLink to={
                   referralCode !== null && source !== null ? 
@@ -170,5 +175,13 @@ const Wrapper = styled.div`
       color: #828282;
     }
     
+  }
+  .individual-active {
+    background: #f2f2f2 !important;
+    color: #111E6C !important;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -0.04em;
   }
 `;

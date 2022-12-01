@@ -733,6 +733,7 @@ export function Notice({
   transferForm = null,
   payType = "",
   actionType,
+  rolloverType,
   endDate,
   dataObj = null,
 }) {
@@ -813,6 +814,7 @@ export function Notice({
         tenor: tenor,
         weeklyContributionDay: plan?.weeklyContributionDay,
       },
+      rolloverType
     };
     console.log(data);
     dispatch(

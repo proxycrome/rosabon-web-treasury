@@ -22,9 +22,11 @@ export const RightView = () => {
 
   const { catWithProducts } = useSelector((state) => state.product);
   const { plans } = useSelector((state) => state.plan);
-  const cat_products = catWithProducts?.data?.body;
+  const cat_products = catWithProducts?.data?.body
   const cat_products_status = catWithProducts?.statusCode;
   const planList = plans?.data?.body ? plans?.data?.body : [];
+
+  console.log(catWithProducts); 
 
   const activePlanList = planList.filter(
     (data) => data.planStatus === "ACTIVE"
@@ -104,7 +106,7 @@ export const RightView = () => {
           <h5 className="mb-2 fw-bold">Categories</h5>
           {cat_products_status === "OK" &&
             cat_products.map(
-              (category) =>
+              (category) => (category?.products?.some(product => product?.status === "ACTIVE")) &&
                 category.products.length > 0 && (
                   <div id={category.productCategoryId}>
                     <div className="shadow-sm p-3 mb-2 rounded">

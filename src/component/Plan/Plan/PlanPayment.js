@@ -42,8 +42,6 @@ const PlanPayment = () => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
 
-  console.log(plan);
-
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
     if (plan?.id === parseInt(id)) {
@@ -53,7 +51,7 @@ const PlanPayment = () => {
 
   useEffect(() => {
     const formData = {
-      amount: parseInt(amount),
+      amount: parseInt(amount)*plan?.exchangeRate,
       purposeOfPayment: "PLAN_CREATION",
     };
     if (paymentType === "card" && isClicked) {
@@ -86,7 +84,7 @@ const PlanPayment = () => {
 
   const onSuccess = () => {
     const formData = {
-      amount: parseInt(amount),
+      amount: parseInt(amount)*plan?.exchangeRate,
       completed: true,
       paymentType: "DEBIT_CARD",
       plan: parseInt(id),
@@ -278,7 +276,7 @@ const PlanPayment = () => {
             handleClose={() => setDebitPopup(false)}
           >
             <ProceedPayCard
-              amount={parseFloat(amount)}
+              amount={parseFloat(amount)*plan?.exchangeRate}
               payType="withdraw-paystack"
               onSuccess={onSuccess}
               onClose={onClose}

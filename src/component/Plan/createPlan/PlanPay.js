@@ -116,6 +116,7 @@ const PlanPay = ({ goBack }) => {
               <div className="bank-detail-content">
                 <MakePayment
                   setPaymentType={(values) => checkDetails(values)}
+                  isClicked={isClicked}
                 />
               </div>
             </div>

@@ -16,6 +16,7 @@ import Spinner from '../../common/loading';
 
 const PlanBankPayment = ({goBack}) => {
   const [show, setShow] = useState(false);
+  const [shell, setShell] = useState(false);
   const { form, setForm } = useContext(PlanContext);
   const [modalCount, setModalCount] = useState(0);
   const dispatch = useDispatch();
@@ -26,6 +27,18 @@ const PlanBankPayment = ({goBack}) => {
   useEffect(() => {
     dispatch(createDynamicAcc(form.planName))
   },[])
+
+  const regBankName = /\(([^)]+)\)/g;
+  let match = dynamic_account !== null ? 
+  [...dynamic_account?.accountName?.matchAll(regBankName)].flat(): null;
+  let planName = match !== null ? match[1] : "";
+
+  useEffect(() => {
+    let VirtualAcc = match !== null ? match[1] : "";
+    if(VirtualAcc === form?.planName) {
+      dispatch(createPlan(form, setShell));
+    }
+  },[dynamic_account])
 
   useEffect(() => {
     console.log("pendwork?", form)
@@ -48,7 +61,8 @@ const PlanBankPayment = ({goBack}) => {
   },[show])
 
   const handleSubmit = () => {
-    dispatch(createPlan(form, setShow));
+    // dispatch(createPlan(form, setShow));
+    setShow(true);
   }
 
   console.log("form here", form)
@@ -62,7 +76,7 @@ const PlanBankPayment = ({goBack}) => {
         </NavTitle>
       </ProfileNavBar>
       {
-        dynamic_account !== null ? (
+        planName === form?.planName ? (
           <div>
             <Wrapper>
               <Toaster />
