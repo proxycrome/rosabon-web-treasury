@@ -2056,7 +2056,10 @@ export const HistoryTable = () => {
       },
     ],
     rows:
-      filteredTransactions?.length > 0
+      (
+        filteredTransactions?.length > 0 || 
+        (formData.startDate !== "" && formData.endDate !== "") 
+      )
         ? filteredTransactions?.map((data) => ({
             id: (
               <Link

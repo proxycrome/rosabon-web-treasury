@@ -233,7 +233,7 @@ const Withdrawal = () => {
                                 {item.reason}
                               </option>
                             ))}
-                          <option>Others</option>
+                          <option value="Others" >Others</option>
                         </select>
                       </div>
                     </div>
@@ -246,6 +246,7 @@ const Withdrawal = () => {
                             name="otherReasons"
                             type="textarea"
                             rows={5}
+                            required={reason==="Others"}
                             value={otherReasons}
                             className="form-control"
                             onChange={(e) => setOtherReasons(e.target.value)}
