@@ -2472,8 +2472,8 @@ export const ReferralBonus = () => {
         width: 100,
       },
       {
-        label: "Balance",
-        field: "balance",
+        label: "Amount",
+        field: "amount",
         width: 100,
       },
     ],
@@ -2481,7 +2481,7 @@ export const ReferralBonus = () => {
       id: data.id,
       date: `${data.createdAt}`,
       description: `${data.description}`,
-      balance: `₦ ${data.amount}`,
+      amount: `₦ ${data.amount}`,
     })),
   };
 
