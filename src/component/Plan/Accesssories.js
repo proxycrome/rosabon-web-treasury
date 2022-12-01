@@ -975,7 +975,13 @@ export const RolloverWithdrawMethod = ({
                       <option value="" hidden>
                         Select withdrawal destination
                       </option>
-                      <option value="TO_BANK">To Bank</option>
+                      <option value="TO_BANK">
+                        {
+                          bankDetails ? 
+                          `${bankDetails?.bank?.name} - ${bankDetails?.accountNumber}` :
+                          "No bank available"
+                        }
+                      </option>
                       <option value="TO_WALLET">My Wallet</option>
                     </select>
                   </div>
