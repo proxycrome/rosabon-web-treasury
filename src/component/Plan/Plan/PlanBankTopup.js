@@ -175,7 +175,7 @@ const PlanBankTopup = ({ goBack, amount }) => {
                     }}
                     onClick={save}
                   >
-                    Save
+                    {loading ? "Saving..." : "Save"}
                   </button>
                 </div>
               </div>

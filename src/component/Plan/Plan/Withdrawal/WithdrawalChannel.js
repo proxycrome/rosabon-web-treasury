@@ -32,19 +32,39 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
     e.preventDefault();
     if (isTerms && withdrawTo) {
       const { corporateUserWithdrawalMandate } = base64File;
-      const formData = {
-        amount: parseFloat(amount),
-        completed: true,
-        corporateUserWithdrawalMandate:
-          user_role === "COMPANY" ? corporateUserWithdrawalMandate : null,
-        plan: plan?.id,
-        penalCharge: parseFloat(penalCharge),
-        planAction: "WITHDRAW",
-        withdrawTo: withdrawTo,
-        withdrawType: type,
-      };
-      console.log(formData)
-      await dispatch(planAction(formData, setModalState))
+      if (user_role === "COMPANY") {
+        if(
+          base64File.corporateUserWithdrawalMandate &&
+          base64File.corporateUserWithdrawalMandate !== ""
+        ) {
+          const formData = {
+            amount: parseFloat(amount),
+            completed: true,
+            corporateUserWithdrawalMandate:
+              user_role === "COMPANY" ? corporateUserWithdrawalMandate : null,
+            plan: plan?.id,
+            penalCharge: parseFloat(penalCharge),
+            planAction: "WITHDRAW",
+            withdrawTo: withdrawTo,
+            withdrawType: type,
+          };
+          console.log(formData)
+          await dispatch(planAction(formData, setModalState))
+        }
+      } else {
+        const formData = {
+          amount: parseFloat(amount),
+          completed: true,
+          corporateUserWithdrawalMandate: null,
+          plan: plan?.id,
+          penalCharge: parseFloat(penalCharge),
+          planAction: "WITHDRAW",
+          withdrawTo: withdrawTo,
+          withdrawType: type,
+        };
+        console.log(formData)
+        await dispatch(planAction(formData, setModalState))
+      }
     }
   };
 

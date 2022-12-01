@@ -133,7 +133,10 @@ const Statement = () => {
   ];
 
   const history_list =
-    filteredPlanTransactions.length > 0
+    (
+      filteredPlanTransactions.length > 0 || 
+      (formData.startDate !== "" && formData.endDate !== "") 
+    )
       ? filteredPlanTransactions.map((item) => ({
           id: `${item?.transactionId}`,
           date: `${moment(item.dateOfTransaction, "YYYY-MM-DD").format(
@@ -225,7 +228,10 @@ const Statement = () => {
       },
     ],
     rows:
-      filteredWalletTransactions?.length > 0
+      (
+        filteredWalletTransactions?.length > 0 || 
+        (formData.startDate !== "" && formData.endDate !== "") 
+      )
         ? filteredWalletTransactions?.map((data) => ({
             id: `${data?.transactionId}`,
             date: `${moment(

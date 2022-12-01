@@ -84,6 +84,7 @@ const AdminMessage = () => {
                     name="reply"
                     placeholder="Type your message"
                     value={reply}
+                    disabled={ticket?.status==="CLOSED"}
                     onChange={(e) => setReply(e.target.value)}
                   />
                 </div>

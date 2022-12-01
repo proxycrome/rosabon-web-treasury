@@ -47,7 +47,7 @@ const MyDocu = () => {
     loading,
   } = useSelector((state) => state.user_profile);
 
-  const { docMsg } = useSelector((state) => state.updateProfile);
+  const { docMsg, loading:updateLoading } = useSelector((state) => state.updateProfile);
 
   const toggleEdit = (e) => {
     setShowEdit(!showEdit);
@@ -131,7 +131,7 @@ const MyDocu = () => {
         name: "ID Image",
       },
       idNumber,
-      idTypeId,
+      idTypeId: parseInt(idTypeId),
       passportPhotographImage: {
         encodedUpload: photoEncodedString,
         name: "Photo Image",
@@ -331,7 +331,7 @@ const MyDocu = () => {
                   className="form-select form-select-md mb-3"
                   aria-label=".form-select-md"
                   name="idTypeId"
-                  value={formData.idTypeId || documents?.idType}
+                  value={formData.idTypeId || documents?.idType?.id}
                   onChange={handleChange}
                   disabled={showEdit}
                 >
@@ -637,7 +637,7 @@ const MyDocu = () => {
                   className={showEdit ? "grey-button" : "blue-btn"}
                   disabled={showEdit}
                 >
-                  Save
+                  { updateLoading ? "Saving..." : "Save" }
                 </button>
               </div>
             </div>
