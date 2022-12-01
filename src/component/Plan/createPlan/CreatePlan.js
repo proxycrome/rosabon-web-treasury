@@ -41,7 +41,7 @@ const CreatePlan = () => {
         <Wrapper>
           {productStatus === "OK" ? (
             products.map(
-              (item) => (item?.products.some(product => product?.status === "ACTIVE") && 
+              (item) => (item?.products?.some(product => product?.status === "ACTIVE") && 
               item?.products.length > 0) && (
                 <div className=" pb-5" key={item.productCategoryId}>
                   <div className="">
