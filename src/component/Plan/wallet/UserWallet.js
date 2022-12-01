@@ -21,7 +21,7 @@ import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
-import { Toaster } from "react-hot-toast";
+import toast,{ Toaster } from "react-hot-toast";
 
 const UserWallet = () => {
   const [show, setShow] = useState(false);
@@ -30,6 +30,7 @@ const UserWallet = () => {
   const [closeFooter, setClosefooter] = useState(false);
   const [formData, setFormData] = useState({});
   const [transferFormData, setTransferFormData] = useState({});
+  const [transferError, setTransferError] = useState({});
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
@@ -171,7 +172,17 @@ const UserWallet = () => {
   }, [errors]);
 
   const handleTransferSubmit = () => {
-    dispatch(postTransferToPlan(transferFormData));
+    const {amount, planId} = transferFormData;
+    if ((!amount || !planId) || (amount===0 || planId==="")) {
+      setTransferError({
+        ...transferError,
+        amount: (amount===0 || !amount) ? true : false,
+        planId: (planId==="" || !planId) ? true : false
+      })
+      toast.error("Provide an amount and beneficiary account");
+    } else {
+      dispatch(postTransferToPlan(transferFormData));
+    }
   };
 
   const tokenObj = JSON.parse(localStorage.getItem("token"));
@@ -349,6 +360,8 @@ const UserWallet = () => {
                             transferData={(data) =>
                               handleTransferFormData(data)
                             }
+                            setTransferError={setTransferError}
+                            transferError={transferError}
                             id="transfer"
                           />
                         </div>

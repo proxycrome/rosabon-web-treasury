@@ -947,6 +947,24 @@ const PlanForm = () => {
                           onChange={handleChange}
                         />
                       </div>
+                      {!(product?.properties?.hasTargetAmount) &&
+                      formData.amount < product?.minTransactionLimit ? (
+                        <small className="helper-text">
+                          Value cannot be below{" "}
+                          {product?.minTransactionLimit}
+                        </small>
+                      ) : (
+                        <></>
+                      )}
+                      {!(product?.properties?.hasTargetAmount) &&
+                      formData.amount > product?.maxTransactionLimit ? (
+                        <small className="helper-text">
+                          Value cannot be above{" "}
+                          {product?.maxTransactionLimit}
+                        </small>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   )}
 

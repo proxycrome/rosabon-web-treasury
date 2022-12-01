@@ -70,7 +70,10 @@ const TransactionDetails = () => {
   ];
 
   const history_list =
-    filteredHistory.length > 0
+    (
+      filteredHistory.length > 0 || 
+      (formData.startDate !== "" && formData.endDate !== "") 
+    )
       ? filteredHistory.map((item) => ({
           id: `${item?.transactionId}`,
           date: `${moment(item.dateOfTransaction, "YYYY-MM-DD").format(

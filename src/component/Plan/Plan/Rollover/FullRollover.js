@@ -168,6 +168,7 @@ const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
                     handleClose={() => setModalState("close")}
                     handleShowModalTwo={() => setModalState("modal-two")}
                     actionType="rollover"
+                    rolloverType="FULL"
                     endDate={endDate}
                     dataObj={dataObj}
                   />

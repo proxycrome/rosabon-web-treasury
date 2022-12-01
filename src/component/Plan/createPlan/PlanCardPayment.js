@@ -47,6 +47,8 @@ const PlanCardPayment = ({goBack}) => {
   //   await console.log("show pay", paySuccess)
   // }
 
+  let amount = JSON.stringify(form?.planSummary?.principal*form?.exchangeRate)+"00"
+
   return (
     <>
       {
@@ -92,7 +94,7 @@ const PlanCardPayment = ({goBack}) => {
                       {loading ? 'LOADING...' : 'Pay'}
                     </button> */}
                     <PayWithCard 
-                      amount={JSON.stringify(form?.planSummary?.principal)+"00"}
+                      amount={amount}
                       email={users?.email}
                       setShow={setShow}
                       transactionRef={reg_transaction?.transactionReference}

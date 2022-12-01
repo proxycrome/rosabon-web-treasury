@@ -68,24 +68,28 @@ const PlanModal = ({ handleClose }) => {
                 <line y1="0.6" x2="346" y2="0.6" stroke="#E0E0E0" stroke-width="0.8" stroke-dasharray="5 5"/>
               </svg>
             </div>
-            <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
-              <div>
-                <p className='p-light' >Target</p>
-                <p className='p-dark flex' >
-                  {getCurrIcon(current_currency)}
-                  { 
-                    planProduct?.properties?.hasTargetAmount ? 
-                    plan.targetAmount : plan.amountToBePlaced
-                  } 
-                </p>
-              </div>
-              <div className='right' >
-                <p className='p-light' >Monthly contribution</p>
-                <p className='p-dark flex justify-content-end'>
-                  {getCurrIcon(current_currency)}{plan.contributionValue} 
-                </p>
-              </div>
-            </div>
+            {
+              (planProduct?.properties?.hasTargetAmount) && (
+                <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
+                  <div>
+                    <p className='p-light' >Target</p>
+                    <p className='p-dark flex' >
+                      {getCurrIcon(current_currency)}
+                      { 
+                        planProduct?.properties?.hasTargetAmount ? 
+                        plan.targetAmount : plan.amountToBePlaced
+                      } 
+                    </p>
+                  </div>
+                  <div className='right' >
+                    <p className='p-light' >Monthly contribution</p>
+                    <p className='p-dark flex justify-content-end'>
+                      {getCurrIcon(current_currency)}{plan.contributionValue} 
+                    </p>
+                  </div>
+                </div>
+              )
+            }
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
               <div >
                 <p className='p-light' >Principal</p>
@@ -149,10 +153,14 @@ const PlanModal = ({ handleClose }) => {
               </div>
             </div>
             <div className=' d-flex justify-content-between flex-nowrap plan-row no-gutters' >
-              <div>
-                <p className='p-light' >Number of Tickets</p>
-                <p className='p-dark' >{plan.numberOfTickets} </p>
-              </div>
+              {
+                (planProduct?.properties?.allowsMonthlyDraw) && (
+                  <div>
+                    <p className='p-light' >Number of Tickets</p>
+                    <p className='p-dark' >{plan.numberOfTickets} </p>
+                  </div>
+                )
+              }
               <div className='right' >
                 <p className='p-light' >Auto Renewal</p>
                 <p className='p-dark' >
