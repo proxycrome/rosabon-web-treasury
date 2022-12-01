@@ -1797,8 +1797,15 @@ export const AvailableBalance = ({
   );
 };
 
-export const TransferCard = ({ walletBalance, transferData, id }) => {
+export const TransferCard = ({ 
+  walletBalance, 
+  transferData, 
+  id,
+  transferError,
+  setTransferError
+}) => {
   const dispatch = useDispatch();
+  
   const { eligiblePlans } = useSelector((state) => state.plan);
   const activeEligiblePlans = eligiblePlans?.filter(
     (plan) =>
@@ -1819,6 +1826,11 @@ export const TransferCard = ({ walletBalance, transferData, id }) => {
       ...formData,
       [name]: value,
     });
+
+    setTransferError({
+      ...transferError,
+      [name]: value === "" ? true : false
+    })
   };
 
   const planName = (id) => {
@@ -1853,9 +1865,9 @@ export const TransferCard = ({ walletBalance, transferData, id }) => {
       <div className="pt-3">
         <div className=" ">
           <label>Transfer Amount</label>
-          <div className="input-group mb-4">
+          <div className="input-group">
             <input
-              className="form-control"
+              className={`form-control ${transferError?.amount ? "tr-error": "mb-4"}`}
               placeholder="N1,500,000"
               type="number"
               required
@@ -1864,13 +1876,19 @@ export const TransferCard = ({ walletBalance, transferData, id }) => {
               onChange={handleChange}
             />
           </div>
+          {
+            transferError?.amount && (
+              <small className="text-danger mb-4" >Provide an amount</small>
+            )
+          }
         </div>
       </div>
       <div className="pt-1 pb-5">
         <div className=" ">
           <label>Beneficiary Account</label>
           <select
-            className="form-select form-select-lg mb-3 select-field"
+            className={`form-select form-select-lg select-field 
+            ${transferError?.planId ? "tr-error" : "mb-3"}`}
             aria-label=".form-select-lg"
             name="planId"
             required
@@ -1885,6 +1903,11 @@ export const TransferCard = ({ walletBalance, transferData, id }) => {
             ))}
             {/* <option value="others">Credit wallet</option> */}
           </select>
+          {
+            transferError?.planId && (
+              <small className="text-danger mb-3" >Provide a beneficiary account</small>
+            )
+          }
         </div>
       </div>
     </AvailableBalanceWapper>
@@ -1957,6 +1980,9 @@ const AvailableBalanceWapper = styled.div`
   }
   input[type="number"] {
     -moz-appearance: textfield;
+  }
+  .tr-error {
+    border: 2px solid red;
   }
 `;
 
