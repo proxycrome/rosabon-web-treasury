@@ -19,6 +19,7 @@ import {
 } from "../../store/actions";
 import arrow from "../../asset/Arrow.png";
 import avatar from "../../asset/avi.jpg";
+import moment from "moment";
 
 export function ProfileNavBar({ children, view, feedback }) {
   const [menu, setMenu] = useState(false);
@@ -29,7 +30,11 @@ export function ProfileNavBar({ children, view, feedback }) {
   const profile = useSelector((state) => state.user_profile);
   const { users } = profile;
 
+  const today = moment();
   const { notifications } = useSelector((state) => state.notification);
+  const currentNotifications = notifications?.filter(
+    (item) => today.diff(moment(new Date(item?.dateSent)), 'days') <= 7
+  );
   const unreadNotifications = notifications?.filter(
     (item) => item.readStatus === "UNREAD"
   );
@@ -68,7 +73,7 @@ export function ProfileNavBar({ children, view, feedback }) {
             <li className="profile_nav_bel">
               <Badge badgeContent={unreadNotifications?.length} color="primary">
                 <DropDown
-                  notifications={unreadNotifications}
+                  notifications={currentNotifications}
                   viewNote={view}
                   dispatch={dispatch}
                 />
@@ -195,18 +200,20 @@ const Notification = styled.div`
 
 export const DropDown = ({ status, notifications, viewNote, dispatch }) => {
   const [menu, setMenu] = useState(false);
-  const [getStatus, setGetStatus] = useState("");
+  const [getStatus, setGetStatus] = useState([]);
 
   const [col1, setCol1] = useState("");
 
   const t_col1 = (val) => {
+    console.log("ddd", getStatus)
     if (col1 === val) {
       setCol1("");
-      setGetStatus("");
+      // setGetStatus(getStatus.filter(item => item !== val));
     } else {
       setCol1(val);
-      setGetStatus("READ");
+      setGetStatus(getStatus => getStatus.concat(val));
       dispatch(readNotification(val));
+      // dispatch(getNotification());
     }
   };
 
@@ -265,18 +272,22 @@ export const DropDown = ({ status, notifications, viewNote, dispatch }) => {
                     className={
                       data.readStatus === "READ" ||
                       (data.readStatus === "READ" &&
-                        getStatus === "READ" &&
+                        getStatus.includes(data.id) &&
                         col1 === data.id)
                         ? "text-success"
+                        // : data.readStatus === "UNREAD" &&
+                        //   getStatus.includes(data.id) &&
+                        //   col1 === data.id
                         : data.readStatus === "UNREAD" &&
-                          getStatus === "READ" &&
-                          col1 === data.id
+                          getStatus.includes(data.id)
                         ? "text-success"
                         : "text-danger"
                     }
                   >
-                    {getStatus === "READ" && col1 === data.id
-                      ? getStatus
+                    {
+                    // getStatus.includes(data.id) && col1 === data.id
+                    getStatus.includes(data.id)
+                      ? "READ"
                       : data.readStatus}
                     :
                   </small>

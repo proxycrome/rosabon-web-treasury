@@ -47,6 +47,8 @@ export function BVNConfirm({
     }
   }, [nameMatch, director]);
 
+  console.log("confirm bvn", confirmName)
+
   const { success } = useSelector((state) => state.auth);
   const { kycData } = useSelector((state) => state.user_profile);
 
@@ -54,8 +56,9 @@ export function BVNConfirm({
     e.preventDefault();
 
     if (!nameMatch && director) {
-      console.log("worked???", confirmName)
-      confirmName();
+      if (confirmName !== undefined) {
+        confirmName(firstName, lastName);
+      } 
       handleClose();
       return;
     }
