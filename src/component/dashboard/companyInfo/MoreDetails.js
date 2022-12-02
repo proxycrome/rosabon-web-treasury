@@ -412,7 +412,6 @@ const MoreDetails = () => {
     }
     return num;
   };
-  
 
   const handleDeleteDirector = (id) => {
     dispatch(deleteDirector(id, setShowModal));
@@ -1534,16 +1533,20 @@ const MoreDetails = () => {
                     </div>
                   ))}
                 <Collapse isOpen={addDirectors}>
-                  <AddDirectors
-                    updateDirector={(data) => updateMoreDirector(data)}
-                    countNumbers={countNumbers}
-                    number={
-                      directorField[directorField.length - 1]?.no ||
-                      directors?.length
-                    }
-                    removeForm={setAddDirectors}
-                    idTypes={idTypes}
-                  />
+                  {
+                    addDirectors && (
+                      <AddDirectors
+                        updateDirector={(data) => updateMoreDirector(data)}
+                        countNumbers={countNumbers}
+                        number={
+                          directorField[directorField.length - 1]?.no ||
+                          directors?.length
+                        }
+                        removeForm={setAddDirectors}
+                        idTypes={idTypes}
+                      />
+                    )
+                  }
                 </Collapse>
                 <div className="row">
                   <div
@@ -1844,8 +1847,9 @@ const MoreDetails = () => {
                           formData.phone &&
                           formData.email &&
                           formData.bvn &&
-                          !showEdit &&
-                          !bvnMessage?.isNameMatched ? (
+                          // !showEdit &&
+                          (!(formData.firstName === bvnMessage?.data?.firstName) ||
+                          !(formData.lastName === bvnMessage?.data?.lastName)) ? (
                             <div className="col-4 mt-3">
                               <button
                                 type="button"
@@ -1887,7 +1891,7 @@ const MoreDetails = () => {
                                   lastName={bvnMessage?.data?.lastName}
                                   bvn={formData.bvn}
                                   confirmName={(firstName, lastName) =>
-                                    updateNames(firstName, lastName)
+                                    {updateNames(firstName, lastName)}
                                   }
                                   director="director"
                                   nameMatch={bvnMessage?.isNameMatched}
@@ -2566,13 +2570,17 @@ const MoreDetails = () => {
                       </div>
                     ))}
                   <Collapse isOpen={addDirectors}>
-                    <AddDirectors
-                      updateDirector={(data) => updateMoreDirector(data)}
-                      countNumbers={countNumbers}
-                      number={directorField[directorField.length - 1]?.no || 1}
-                      removeForm={setAddDirectors}
-                      idTypes={idTypes}
-                    />
+                    {
+                      addDirectors && (
+                        <AddDirectors
+                          updateDirector={(data) => updateMoreDirector(data)}
+                          countNumbers={countNumbers}
+                          number={directorField[directorField.length - 1]?.no || 1}
+                          removeForm={setAddDirectors}
+                          idTypes={idTypes}
+                        />
+                      )
+                    }
                   </Collapse>
                   <div className="row">
                     <div
