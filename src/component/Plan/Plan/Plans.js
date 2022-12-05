@@ -21,13 +21,14 @@ import {
   getProductCategories,
   deletePlan,
   planAction,
+  updatePlan,
   viewBankDetail,
 } from "../../../store/actions";
 import EmptyPlan from "./EmptyPlan";
 import { UserBankDetails } from "../Accesssories";
 import { Toaster } from "react-hot-toast";
 import { Notice } from "../../Accessories/BVNConfirm";
-import Spinner from "../../common/loading";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export const Plans = () => {
   const [more, setMore] = useState(false);
@@ -417,10 +418,10 @@ const Wrapper = styled.div`
 
 export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
   const [menu, setMenu] = useState(false);
-  const [checkRollover, setCheckRollover] = useState(false);
   const dispatch = useDispatch();
-  const { plans } = useSelector((state) => state.plan);
+  const { plans, singlePlan, loading } = useSelector((state) => state.plan);
   const { products } = useSelector((state) => state.product);
+  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
 
   const userPlan = plans?.data.body
     ? plans?.data.body?.find((item) => item.id === id)
@@ -431,18 +432,17 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
 
   console.log("plan", userPlan);
   console.log("product", product);
+  const [checkRollover, setCheckRollover] = useState(plan?.autoRollOver);
 
-  const autoRollover = () => {
-    const data = {
-      completed: true,
-      plan: id,
-      planAction: "AUTO_ROLLOVER",
-    };
-    dispatch(planAction(data));
-    dispatch(getSinglePlan(id));
+  const autoRollover = async() => {
+    setCheckRollover(!checkRollover)
+    await dispatch(updatePlan(null, id));
+    // dispatch(getSinglePlan(id));
   };
 
   const toggle = () => {
+    dispatch(getSinglePlan(id));
+    setCheckRollover(plan?.autoRollOver)
     setMenu(!menu);
   };
 
@@ -501,15 +501,23 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
                 style={{ width: "150px" }}
               >
                 <div>Auto rollover</div>{" "}
-                <Switch
-                  className="mr-2 mt-1"
-                  onColor="#111E6C"
-                  onChange={autoRollover}
-                  checked={userPlan?.autoRenew}
-                  uncheckedIcon={false}
-                  width={35}
-                  height={18}
-                />
+                {
+                  loading ?
+                  <ClipLoader 
+                    color="#111E6C"
+                    loading={loading}
+                    size={35}
+                  /> :
+                  <Switch
+                    className="mr-2 mt-1"
+                    onColor="#111E6C"
+                    onChange={autoRollover}
+                    checked={checkRollover}
+                    uncheckedIcon={false}
+                    width={35}
+                    height={18}
+                  />
+                }
               </div>
             </DropdownItem>
             <DropdownItem tag={Link} to={`/history/${id}`}>
