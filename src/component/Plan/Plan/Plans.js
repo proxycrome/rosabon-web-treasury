@@ -45,7 +45,9 @@ export const Plans = () => {
   const navigate = useNavigate();
   const { plans, loading, deletePlanMsg } = useSelector((state) => state.plan);
   const { products, categories } = useSelector((state) => state.product);
-  const userPlans = plans?.data.body ? plans?.data.body : [];
+  const userPlans = plans?.data.body
+    ? plans?.data.body?.filter((item) => item.planStatus !== "CLOSED")
+    : [];
   const prodCategories = categories?.data.body ? categories?.data.body : [];
   const planStatus = plans?.statusCode;
   const product = products?.data.body ? products?.data.body : [];
@@ -131,7 +133,7 @@ export const Plans = () => {
         size={"md"}
         handleClose={() => setDeleteModal(false)}
       >
-        <p className="text-center" >Plan will auto delete after 48 hours.</p>
+        <p className="text-center">Plan will auto delete after 48 hours.</p>
       </ModalComponent>
       <ModalComponent
         show={bankDetail}
@@ -492,11 +494,7 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
             <DropdownItem
               tag={Link}
               to={`/transfer/${id}`}
-              disabled={
-                !(
-                  product?.properties?.allowsTransfer
-                )
-              }
+              disabled={!product?.properties?.allowsTransfer}
             >
               Transfer
             </DropdownItem>
@@ -563,11 +561,7 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
             <DropdownItem
               tag={Link}
               to={`/transfer/${id}`}
-              disabled={
-                !(
-                  product?.properties?.allowsTransfer
-                )
-              }
+              disabled={!product?.properties?.allowsTransfer}
             >
               Transfer
             </DropdownItem>

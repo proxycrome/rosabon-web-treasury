@@ -781,7 +781,7 @@ export function Notice({
           ? null
           : parseFloat(amount),
         autoRenew: plan?.autoRenew,
-        autoRollOver: plan?.autoRenew,
+        autoRollOver: plan?.autoRollOver,
         contributionValue: contributionValue,
         currency: parseInt(plan?.currency?.id),
         dateCreated: recentDate,
@@ -793,7 +793,6 @@ export function Notice({
         numberOfTickets: Math.floor(
           amount / plan?.product?.minTransactionLimit
         ),
-        paymentMethod: plan?.paymentMethod,
         planDate: recentDate,
         planName: plan?.planName,
         planStatus: "ACTIVE",
