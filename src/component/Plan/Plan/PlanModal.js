@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Switch from "react-switch";
-import { getProducts, getCurrencies } from "../../../store/actions";
+import { 
+  getProducts, 
+  getCurrencies ,
+  getSinglePlan,
+  updatePlan
+} from "../../../store/actions";
 import Spinner from '../../../component/common/loading';
 import { getCurrIcon } from '../Accesssories';
 
@@ -18,10 +23,18 @@ const PlanModal = ({ handleClose }) => {
   const planProduct = products ? products?.data?.body?.find(item => item.id === plan?.product?.id) 
   : {};
   console.log("planProd", planProduct?.properties?.hasTargetAmount)
+  const [autoRenew, setAutoRenew] = useState(plan?.autoRenew);
+
+  const toggleAutoRenew = async() => {
+    setAutoRenew(!autoRenew);
+    await dispatch(updatePlan(null, plan.id));
+    // dispatch(getSinglePlan(plan.id));
+  };
 
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getCurrencies());
+    setAutoRenew(plan?.autoRenew);
   },[])
 
   return (
@@ -168,7 +181,8 @@ const PlanModal = ({ handleClose }) => {
                     className="mr-2 mt-1"
                     onColor="#111E6C"
                     offColor="#E0E0E0"
-                    checked={plan.autoRenew}
+                    onChange={toggleAutoRenew}
+                    checked={autoRenew}
                     uncheckedIcon={false}
                     width={35}
                     height={18}

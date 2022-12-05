@@ -20,6 +20,7 @@ import {
   VIEW_BANK_DETAIL,
   COMPLETE_TRANSFER,
   GET_CLOSED_PLANS,
+  UPDATE_PLAN
 } from "./actionTypes";
 
 import {
@@ -60,6 +61,8 @@ import {
   completeTransfer,
   getClosedPlansSuccess,
   getClosedPlansError,
+  updatePlanSuccess,
+  updatePlanError
 } from "./actions";
 
 import {
@@ -80,6 +83,7 @@ import {
   penalChargeService,
   planActionService,
   singlePlanHistoryService,
+  updatePlanService,
   viewBankDetailService,
 } from "../../services/planService";
 
@@ -366,6 +370,17 @@ function* getClosedPlans() {
   }
 }
 
+function* updatePlan({ payload: { formData, id } }) {
+  try {
+    const response = yield call(updatePlanService, formData, id);
+    console.log(response.data);
+    yield put(updatePlanSuccess(response.data));
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(updatePlanError(error?.response?.data));
+  }
+}
+
 export function* watchGetContribVal() {
   yield takeEvery(GET_CONTRIB_VAL, getContribVal);
 }
@@ -437,6 +452,10 @@ export function* watchGetClosedPlans() {
   yield takeEvery(GET_CLOSED_PLANS, getClosedPlans);
 }
 
+export function* watchUpdatePlan() {
+  yield takeEvery(UPDATE_PLAN, updatePlan);
+}
+
 function* PlanSaga() {
   yield all([
     fork(watchGetContribVal),
@@ -457,6 +476,7 @@ function* PlanSaga() {
     fork(watchPayWithCard),
     fork(watchCompleteTransfer),
     fork(watchGetClosedPlans),
+    fork(watchUpdatePlan),
   ]);
 }
 
