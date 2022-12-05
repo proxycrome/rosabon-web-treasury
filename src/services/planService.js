@@ -118,3 +118,10 @@ export const getClosedPlansService = () => {
   const url = `auth/trcreate-plan/get-all-closed-plans`;
   return http.getData(url);
 };
+
+export const updatePlanService = (formData, id) => {
+  const http = new HttpService();
+  const url = `auth/trcreate-plan/${id}`;
+
+  return http.putData(formData,url);
+}
