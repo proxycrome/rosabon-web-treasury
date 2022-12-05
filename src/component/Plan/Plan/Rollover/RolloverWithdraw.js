@@ -96,8 +96,8 @@ const RolloverWithdraw = ({
             ? 0
             : parseFloat(amount),
           autoRenew: plan?.autoRenew,
-          autoRollOver: plan?.autoRenew,
-          bankAccountInfo: null,
+          autoRollOver: plan?.autoRollOver,
+          // bankAccountInfo: null,
           contributionValue: plan?.contributionValue,
           currency: parseInt(plan?.currency?.id),
           dateCreated: recentDate,
@@ -109,7 +109,7 @@ const RolloverWithdraw = ({
           numberOfTickets: Math.floor(
             amount / plan.product.minTransactionLimit
           ),
-          paymentMethod: null,
+          // paymentMethod: null,
           planDate: recentDate,
           planName: plan?.planName,
           planStatus: "ACTIVE",
@@ -133,11 +133,12 @@ const RolloverWithdraw = ({
           tenor,
           weeklyContributionDay: plan?.weeklyContributionDay,
         },
+        rolloverType: "PARTIAL",
         withdrawTo,
       };
 
-      console.log(data);
-      await dispatch(planAction(formData, setModalState, null, null, null, "part"));
+      // console.log(data);
+      await dispatch(planAction(data, setModalState, null, null, null, "part"));
     }
   };
 
