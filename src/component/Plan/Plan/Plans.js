@@ -235,9 +235,16 @@ export const Plans = () => {
                           }
                         </p>
                       </div>
-                      <h4 className={capitalise(item.planStatus)}>
-                        {capitalise(item.planStatus)}{" "}
-                      </h4>
+                      <div className={`${item?.toppingUp && "status-contain"}`} >
+                        <h4 className={capitalise(item.planStatus)}>
+                          {capitalise(item.planStatus)}{" "}
+                        </h4>
+                        {
+                          item?.toppingUp && (
+                            <small className="topping-up" >Topping Up</small>
+                          )
+                        }
+                      </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-between pt-4">
                       <div>
@@ -413,6 +420,16 @@ const Wrapper = styled.div`
     font-size: 18px;
     line-height: 22px
     color: #111E6C;
+  }
+  .status-contain {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-top: 10px;
+  }
+  .topping-up {
+    color: #2D9CDB;
+    font-size: 12px;
   }
 `;
 
