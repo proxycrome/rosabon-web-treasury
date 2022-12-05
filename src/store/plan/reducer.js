@@ -53,6 +53,9 @@ import {
   GET_CLOSED_PLANS,
   GET_CLOSED_PLANS_SUCCESS,
   GET_CLOSED_PLANS_ERROR,
+  UPDATE_PLAN,
+  UPDATE_PLAN_SUCCESS,
+  UPDATE_PLAN_ERROR
 } from "./actionTypes";
 
 const initialState = {
@@ -93,6 +96,8 @@ const initialState = {
   deletePlanError: null,
   closed_plans: null,
   closed_plans_error: null,
+  plan_update: null,
+  plan_update_err: null
 };
 
 const plan = (state = initialState, action) => {
@@ -115,6 +120,7 @@ const plan = (state = initialState, action) => {
     case COMPLETE_TRANSFER:
     case DELETE_PLAN:
     case GET_CLOSED_PLANS:
+    case UPDATE_PLAN:
       state = {
         ...state,
         loading: true,
@@ -142,6 +148,7 @@ const plan = (state = initialState, action) => {
     case GET_PLANS_SUCCESS:
       state = {
         ...state,
+        loading: false,
         plans: action.payload,
         plansError: null,
       };
@@ -150,6 +157,7 @@ const plan = (state = initialState, action) => {
     case GET_PLANS_ERROR:
       state = {
         ...state,
+        loading: false,
         plans: null,
         plansError: action.payload,
       };
@@ -440,6 +448,24 @@ const plan = (state = initialState, action) => {
         loading: false,
         closed_plans: null,
         closed_plans_error: action.payload,
+      };
+      break;
+
+    case UPDATE_PLAN_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        plan_update: action.payload,
+        plan_update_err: null
+      };
+      break;
+    
+    case UPDATE_PLAN_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        plan_update: null,
+        plan_update_err: action.payload
       };
       break;
 

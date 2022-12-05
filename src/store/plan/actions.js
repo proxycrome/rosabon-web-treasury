@@ -53,6 +53,9 @@ import {
   GET_CLOSED_PLANS,
   GET_CLOSED_PLANS_SUCCESS,
   GET_CLOSED_PLANS_ERROR,
+  UPDATE_PLAN,
+  UPDATE_PLAN_SUCCESS,
+  UPDATE_PLAN_ERROR
 } from "./actionTypes";
 
 export const getContribVal = () => {
@@ -435,5 +438,26 @@ export const getClosedPlansError = (error) => {
   return {
     type: GET_CLOSED_PLANS_ERROR,
     payload: error,
+  }
+}
+
+export const updatePlan = (formData, id) => {
+  return {
+    type: UPDATE_PLAN,
+    payload: { formData, id }
+  }
+}
+
+export const updatePlanSuccess = (data) => {
+  return {
+    type: UPDATE_PLAN_SUCCESS,
+    payload: data
+  }
+}
+
+export const updatePlanError = (error) => {
+  return {
+    type: UPDATE_PLAN_ERROR,
+    payload: error
   }
 }

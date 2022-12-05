@@ -9,28 +9,28 @@ export const postFeedbackService = (formData) => {
 
 export const getTicketsService = () => {
     const http = new HttpService();
-    const url = `auth/feedback/my-tickets`;
+    const url = `auth/feedback/my-tickets?platform=TREASURY`;
 
     return http.getData(url);
 }
 
 export const getSingleTicketService = (id) => {
     const http = new HttpService();
-    const url = `auth/feedback/${id}`;
+    const url = `auth/feedback/${id}?platform=TREASURY`;
 
     return http.getData(url);
 }
 
 export const getOpenTicketsService = () => {
     const http = new HttpService();
-    const url = `auth/feedback/open-tickets`;
+    const url = `auth/feedback/open-tickets?platform=TREASURY`;
 
     return http.getData(url);
 }
 
 export const getClosedTicketsService = () => {
     const http = new HttpService();
-    const url = `auth/feedback/closed-tickets`;
+    const url = `auth/feedback/closed-tickets?platform=TREASURY`;
 
     return http.getData(url);
 }
