@@ -826,7 +826,7 @@ export function Notice({
 
   const submit = async () => {
     const formData = {
-      amount: parseFloat(receive_amount).toFixed(2),
+      amount: parseFloat(receive_amount),
       completed: true,
       // corporateUserWithdrawalMandate: null,
       // extraDetails: null,

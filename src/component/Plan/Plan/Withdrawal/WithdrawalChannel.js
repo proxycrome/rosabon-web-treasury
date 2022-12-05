@@ -12,7 +12,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
   const [gate, setPenalCharge] = useState();
-  const [isTerms, setIsTerms] = useState(false);
+  // const [isTerms, setIsTerms] = useState(false);
   const [base64File, setBase64File] = useState({
     corporateUserWithdrawalMandate: "",
   });
@@ -30,15 +30,15 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (isTerms && withdrawTo) {
+    if (withdrawTo) {
       const { corporateUserWithdrawalMandate } = base64File;
-      if (user_role === "COMPANY") {
+      if (user_role === "COMPANY" && withdrawTo==="TO_BANK") {
         if(
           base64File.corporateUserWithdrawalMandate &&
           base64File.corporateUserWithdrawalMandate !== ""
         ) {
           const formData = {
-            amount: parseFloat(amount),
+            amount: parseFloat(amount) * plan?.exchangeRate,
             completed: true,
             corporateUserWithdrawalMandate:
               user_role === "COMPANY" ? corporateUserWithdrawalMandate : null,
@@ -53,7 +53,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
         }
       } else {
         const formData = {
-          amount: parseFloat(amount),
+          amount: parseFloat(amount) * plan?.exchangeRate,
           completed: true,
           corporateUserWithdrawalMandate: null,
           plan: plan?.id,
@@ -84,7 +84,8 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
               amount={amount}
               reason={reason}
               compPenalCharge={setPenalCharge}
-              checkTerms={setIsTerms}
+              checkTerms={()=>{}}
+              termRequired={"nil"}
             />
           </LeftView>
           <RightView>
