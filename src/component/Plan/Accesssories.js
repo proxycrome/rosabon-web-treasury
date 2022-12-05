@@ -968,7 +968,7 @@ export const RolloverWithdrawMethod = ({
                       aria-label=".form-select-md"
                       name="withdraw"
                       onChange={(e) => setWithdrawTo(e.target.value)}
-                      value={withdrawTo}
+                      defaultValue={withdrawTo}
                       required
                       // disabled={savingFreq}
                     >

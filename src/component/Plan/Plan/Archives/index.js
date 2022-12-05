@@ -16,6 +16,7 @@ import {
   getProducts, 
   getSinglePlan,
   getClosedPlans,
+  getPlans,
 } from "../../../../store/actions";
 import EmptyPlan from "../EmptyPlan";
 
@@ -24,10 +25,12 @@ const Archives = () => {
 
   const dispatch = useDispatch();
   // const navigate = useNavigate();
-  const { closed_plans } = useSelector((state) => state.plan);
+  const { plans, closed_plans } = useSelector((state) => state.plan);
   const { products  } = useSelector((state) => state.product);
-  const closedPlans = closed_plans?.data?.body ? closed_plans?.data?.body : [];
-  const closedPlanStatus = closed_plans?.statusCode;
+  const closedPlans = plans?.data.body
+  ? plans?.data.body?.filter((item) => item.planStatus === "CLOSED")
+  : [];
+  const closedPlanStatus = plans?.statusCode;
   const product = products?.data.body ? products?.data.body : []
   const archivedPlans = closedPlans;
 
@@ -38,7 +41,8 @@ const Archives = () => {
   }
 
   useEffect(() => {
-    dispatch(getClosedPlans());
+    dispatch(getPlans());
+    // dispatch(getClosedPlans());
     dispatch(getProducts());
   },[dispatch])
 
