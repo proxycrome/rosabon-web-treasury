@@ -117,8 +117,8 @@ const userProfileReducer = (state = initialState, action) => {
     case SEND_OTP:
     case VALIDATE_OTP:
     case SEND_COMPANY_OTP:
-    case GET_BANKS:
     case GET_COMPANY_DOCS:
+    case GET_BANKS:
     case GET_BANK_DETAILS:
     case GET_WITHDRAW_REASON:
     case GET_USER_DOCS:
@@ -378,6 +378,7 @@ const userProfileReducer = (state = initialState, action) => {
 
     case GET_COMPANY_DOCS_SUCCESS:
       state = {
+        ...state,
         loading: false,
         companyDocs: action.payload,
         companyDocsError: null,
@@ -386,6 +387,7 @@ const userProfileReducer = (state = initialState, action) => {
 
     case GET_COMPANY_DOCS_ERROR:
       state = {
+        ...state,
         loading: false,
         companyDocs: null,
         companyDocsError: action.payload,

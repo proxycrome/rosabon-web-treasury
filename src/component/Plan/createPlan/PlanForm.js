@@ -56,6 +56,7 @@ const PlanForm = () => {
   const recentDate = moment(date).format("YYYY-MM-DD");
 
   console.log(ex_rates);
+  console.log(inv_rates);
   console.log(product);
   console.log(product.tenors);
 

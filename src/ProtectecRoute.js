@@ -13,7 +13,7 @@ const ProtectedRoute = ({ isAuth, children, user}) => {
 
 export default ProtectedRoute
 
-export const KYCRoute = ({isAuth, children, user, login}) => {
+export const KYCRoute = ({isAuth, children, login}) => {
   if (!isAuth) {
     return <Navigate to="/login" replace />
   } else {

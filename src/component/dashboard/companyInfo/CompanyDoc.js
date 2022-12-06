@@ -18,18 +18,13 @@ import {
   sendCompanyOtp,
   getCompanyDocs,
   uploadCompanyDocument,
-  getAllIdTypes
+  getAllIdTypes,
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-const CompanyDoc = ({
-  getAuthUsers,
-  // getCompanyDocs,
-  sendCompanyOtp,
-  uploadCompanyDocument,
-}) => {
+const CompanyDoc = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [token, setToken] = useState("");
@@ -61,18 +56,18 @@ const CompanyDoc = ({
     loading,
   } = useSelector((state) => state.user_profile);
 
-  const { companyDocMsg } = useSelector((state) => state.updateProfile);
+  const { loading:updateLoading } = useSelector((state) => state.updateProfile);
 
-  // console.log(companyDocs);
+  console.log(companyDocs);
   // console.log(users);
 
   const toggleEdit = () => {
     setShowEdit(!showEdit);
   };
 
-  useEffect(()=> {
-    dispatch(getAllIdTypes())
-  },[])
+  useEffect(() => {
+    dispatch(getAllIdTypes());
+  }, []);
 
   const data = {
     idNumber: "",
@@ -148,7 +143,7 @@ const CompanyDoc = ({
         encodedUpload: frontEncodedString,
       },
       contactPersonIdNumber: idNumber ? idNumber : companyDocs?.idNumber,
-      idType: idTypeId ? idTypeId : companyDocs?.idType,
+      idTypeId: idTypeId ? parseInt(idTypeId) : companyDocs?.idType?.id,
       contactPersonPhotographImage: {
         encodedUpload: photoEncodedString,
       },
@@ -164,9 +159,9 @@ const CompanyDoc = ({
       setShowEdit,
       setFormData,
       setBase64File,
-      getCompanyDocs,
+      dispatch,
     };
-    uploadCompanyDocument(data, reset);
+    dispatch(uploadCompanyDocument(data, reset));
   };
 
   const handleFileSelect = (e, reference) => {
@@ -175,7 +170,7 @@ const CompanyDoc = ({
   };
 
   const handleSendOtp = () => {
-    sendCompanyOtp();
+    dispatch(sendCompanyOtp());
   };
 
   const handleOTPModalClose = () => {
@@ -210,15 +205,13 @@ const CompanyDoc = ({
 
   useEffect(() => {
     if (!users) {
-      getAuthUsers();
+      dispatch(getAuthUsers());
     }
   }, [users]);
 
   useEffect(() => {
-    if (companyDocs===null) {
-      getCompanyDocs();
-    }
-  }, [companyDocs]);
+    dispatch(getCompanyDocs());
+  }, [dispatch]);
 
   return (
     <div>
@@ -354,16 +347,16 @@ const CompanyDoc = ({
                   className="form-select form-select-md mb-3"
                   aria-label=".form-select-md"
                   name="idTypeId"
-                  value={formData?.idTypeId || companyDocs?.idType}
+                  value={formData?.idTypeId || companyDocs?.idType?.id}
                   onChange={handleChange}
                   disabled={showEdit}
                 >
                   <option value="">Select ID Type...</option>
-                  {
-                    idTypes?.map(item => (
-                      <option value={item.id} key={item.id}>{item.name} </option>
-                    ))
-                  }
+                  {idTypes?.map((item) => (
+                    <option value={item.id} key={item.id}>
+                      {item.name}{" "}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="col-md-12 col-lg-6">
@@ -1084,7 +1077,7 @@ const CompanyDoc = ({
                   className={showEdit ? "grey-button" : "blue-btn"}
                   disabled={showEdit}
                 >
-                  Save
+                  { updateLoading ? "Saving..." : "Save" }
                 </button>
               </div>
             </div>
@@ -1095,12 +1088,7 @@ const CompanyDoc = ({
   );
 };
 
-export default connect(null, {
-  getAuthUsers,
-  getCompanyDocs,
-  sendCompanyOtp,
-  uploadCompanyDocument,
-})(CompanyDoc);
+export default CompanyDoc;
 
 const WrapperBody = styled.div`
   .grey-button {

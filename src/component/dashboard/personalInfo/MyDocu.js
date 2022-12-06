@@ -130,8 +130,8 @@ const MyDocu = () => {
         encodedUpload: frontEncodedString,
         name: "ID Image",
       },
-      idNumber,
-      idTypeId: parseInt(idTypeId),
+      idNumber: idNumber ? idNumber : documents?.idNumber,
+      idTypeId: idTypeId ? parseInt(idTypeId) : documents?.idType?.id,
       passportPhotographImage: {
         encodedUpload: photoEncodedString,
         name: "Photo Image",
