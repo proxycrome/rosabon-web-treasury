@@ -19,6 +19,8 @@ const PlanBankPayment = ({goBack}) => {
   const [shell, setShell] = useState(false);
   const { form, setForm } = useContext(PlanContext);
   const [modalCount, setModalCount] = useState(0);
+  const [accountCheck, setAccountCheck] = useState(false);
+  const [siteCount, setSiteCount] = useState(0);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.plan);
   const { dynamic_account } = useSelector((state) => state.providus);
@@ -28,20 +30,14 @@ const PlanBankPayment = ({goBack}) => {
     dispatch(createDynamicAcc(form.planName))
   },[])
 
-  const regBankName = /\(([^)]+)\)/g;
-  let match = dynamic_account !== null ? 
-  [...dynamic_account?.accountName?.matchAll(regBankName)].flat(): null;
-  let planName = match !== null ? match[1] : "";
-
   useEffect(() => {
-    let VirtualAcc = match !== null ? match[1] : "";
-    if(VirtualAcc === form?.planName) {
-      dispatch(createPlan(form, setShell));
+
+    let planNameLen = form?.planName.length;
+    let dynamicCheck = dynamic_account?.accountName !== null ?
+    dynamic_account?.accountName.slice(9, planNameLen+9) : null;
+    const timer = () => {
+      setSiteCount(siteCount + 2);
     }
-  },[dynamic_account])
-
-  useEffect(() => {
-    console.log("pendwork?", form)
     setForm({
       ...form,
       bankAccountInfo: {
@@ -51,7 +47,23 @@ const PlanBankPayment = ({goBack}) => {
       },
       paymentMethod: "BANK_TRANSFER",
     })
-  }, [dynamic_account])
+
+    
+    if(dynamic_account) {
+      setAccountCheck(true);
+    }
+    if (
+      siteCount >= 8  && 
+      dynamicCheck === form?.planName && 
+      dynamic_account?.accountName === form?.bankAccountInfo?.accountName
+    ) {
+      dispatch(createPlan(form, setShell));
+      return;
+    }
+    const id = setInterval(timer, 2000);
+    // dispatch(createPlan(form, setShell));
+    return () => clearInterval(id);
+  },[dynamic_account, siteCount]);
 
   useEffect(() => {
     setModalCount(modalCount+1);
@@ -65,7 +77,8 @@ const PlanBankPayment = ({goBack}) => {
     setShow(true);
   }
 
-  console.log("form here", form)
+  console.log("form here", form);
+  
 
 
   return (
@@ -76,7 +89,7 @@ const PlanBankPayment = ({goBack}) => {
         </NavTitle>
       </ProfileNavBar>
       {
-        planName === form?.planName ? (
+        accountCheck ? (
           <div>
             <Wrapper>
               <Toaster />

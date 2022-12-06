@@ -129,6 +129,9 @@ function* createPlan({ payload: { formData, setShow } }) {
     const response = yield call(createPlanService, formData);
     console.log(response.data);
     yield put(createPlanSuccess(response.data));
+    toast.success("Plan Saved", {
+      position: "top-right",
+    });
     if (response) {
       setShow(true);
     }
