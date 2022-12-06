@@ -1057,6 +1057,7 @@ export const WithdrawalSummary = ({
   reason,
   compPenalCharge,
   checkTerms,
+  termRequired
 }) => {
   const [isTerms, setIsTerms] = useState(false);
   const { singlePlan, penal_charge } = useSelector((state) => state.plan);
@@ -1218,20 +1219,23 @@ export const WithdrawalSummary = ({
                   <p>{reason}</p>
                 </div>
               </div>
-              <div className="py-5 check-box-bank">
-                <input
-                  type="checkbox"
-                  id="scales"
-                  name="term"
-                  value={isTerms}
-                  checked={isTerms}
-                  onChange={() => setIsTerms(!isTerms)}
-                  required
-                />
-                <label htmlFor="scales">
-                  I agree to the Terms and Condition
-                </label>
-              </div>
+              {
+                termRequired === "nil" ? <></> :
+                <div className="py-5 check-box-bank">
+                  <input
+                    type="checkbox"
+                    id="scales"
+                    name="term"
+                    value={isTerms}
+                    checked={isTerms}
+                    onChange={() => setIsTerms(!isTerms)}
+                    required
+                  />
+                  <label htmlFor="scales">
+                    I agree to the Terms and Condition
+                  </label>
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -1294,7 +1298,7 @@ export const PlanSummary = ({ planPay }) => {
   //       Number.EPSILON
   //   ) / 100;
 
-  console.log("form check", form);
+  // console.log("form check", form);
 
   return (
     <div>
