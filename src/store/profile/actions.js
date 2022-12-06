@@ -292,6 +292,7 @@ export const getCompanyDocs = () => {
 };
 
 export const getCompanyDocsSuccess = (data) => {
+  console.log(data);
   return {
     type: GET_COMPANY_DOCS_SUCCESS,
     payload: data,

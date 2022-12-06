@@ -35,7 +35,6 @@ import {
   getBanksError,
   getBanksSuccess,
   getCompanyDocsError,
-  getCompanyDocsSuccess,
   getCountriesError,
   getCountriesSuccess,
   getLgasError,
@@ -60,6 +59,7 @@ import {
   verifyBvnSuccess,
   getAllIdTypesSuccess,
   getAllIdTypesError,
+  getCompanyDocsSuccess,
 } from "./actions";
 
 import {
@@ -80,7 +80,7 @@ import {
   validateOtpService,
   verifyBvnService,
   getAllSourcesService,
-  getAllIdTypesService
+  getAllIdTypesService,
 } from "../../services/profileService";
 
 function* getAuthentUsers() {
@@ -203,7 +203,7 @@ function* validateOtp({ payload: { otp } }) {
     const response = yield call(validateOtpService, otp);
     console.log(response.data);
     yield put(validateOtpSuccess(response.data));
-    if (response?.data?.message){
+    if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
@@ -217,7 +217,7 @@ function* sendCompanyOtp() {
     const response = yield call(sendCompanyOtpService);
     console.log(response.data);
     yield put(sendCompanyOtpSuccess(response.data));
-    if (response?.data?.message){
+    if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
@@ -237,11 +237,12 @@ function* getBanks() {
   }
 }
 
-function* getCompanyDocs() {
+function* getCompanyDocument() {
   try {
     const response = yield call(getCompanyDocsService);
+
+    yield put(getCompanyDocsSuccess(response?.data));
     console.log(response.data);
-    yield put(getCompanyDocsSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
     yield put(getCompanyDocsError(error?.response?.data));
@@ -357,7 +358,7 @@ export function* watchGetBanks() {
 }
 
 export function* watchGetCompanyDocs() {
-  yield takeEvery(GET_COMPANY_DOCS, getCompanyDocs);
+  yield takeEvery(GET_COMPANY_DOCS, getCompanyDocument);
 }
 
 export function* watchGetBankDetails() {

@@ -147,7 +147,7 @@ function* verifyPhone({ payload: { recipient } }) {
     const response = yield call(verifyPhoneService, recipient);
     console.log(response.data);
     yield put(verifyPhoneSuccess(response.data));
-    if (response?.data?.message){
+    if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
@@ -161,7 +161,7 @@ function* validatePhoneOtp({ payload: { otp } }) {
     const response = yield call(validatePhoneOtpService, otp);
     console.log(response.data);
     yield put(validatePhoneOtpSuccess(response.data));
-    if (response?.data?.message){
+    if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
@@ -190,14 +190,26 @@ function* updateCompanyDocument({ payload: { formData, reset } }) {
       setTimeout(() => {
         toast.success("Your documents have been updated successfully");
       }, 1000);
-      const { setShowEdit } = reset;
+      const { setShowEdit, dispatch, setFormData, setBase64File } = reset;
       setShowEdit(true);
-      yield put(getCompanyDocs());
+      dispatch(getCompanyDocs());
+      setFormData({
+        idNumber: "",
+        idTypeId: "",
+      });
+      setBase64File({
+        frontEncodedString: "",
+        certOfIncoEncodedString: "",
+        utilityEncodedString: "",
+        photoEncodedString: "",
+        cacEncodedString: "",
+        moaEncodedString: "",
+      });
     }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(uploadCompanyDocumentError(error?.response?.data));
-    if (error?.response) {
+    if (error?.response?.data?.message) {
       setTimeout(() => {
         toast.error(error?.response?.data?.message);
       }, 1000);
@@ -221,7 +233,7 @@ function* updatePersonalDocument({ payload: { formData, reset } }) {
   } catch (error) {
     console.log(error?.response?.data);
     yield put(uploadPersonalDocumentError(error?.response?.data));
-    if (error?.response) {
+    if (error?.response?.data?.message) {
       setTimeout(() => {
         toast.error(error?.response?.data?.message);
       }, 1000);
@@ -269,9 +281,9 @@ function* updateBankDetails({ payload: { formData, reset } }) {
       setTimeout(() => {
         toast.success("Your bank details have been updated");
       }, 1000);
-      const {setShowEdit, getBankDetails} = reset;
+      const { setShowEdit, getBankDetails } = reset;
       setShowEdit(true);
-      yield put(getBankDetails())
+      yield put(getBankDetails());
     }
   } catch (error) {
     console.log(error?.response?.data);

@@ -79,15 +79,13 @@ const CompanyDetails = () => {
     }
 
     if (
-      (!values.natureOfBusiness && !users?.company?.natureOfBusiness) ||
-      !users?.company?.natureOfBusiness
+      !values.natureOfBusiness && !users?.company?.natureOfBusiness
     ) {
       errors.natureOfBusiness = "Nature of Business field is required";
     }
 
     if (
-      (!values.companyType && !users?.company?.companyType) ||
-      !users?.company?.companyType
+      (!values.companyType && !users?.company?.companyType)
     ) {
       errors.companyType = "Company type field is required";
     }
