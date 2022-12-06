@@ -39,10 +39,12 @@ const Withdrawal = () => {
   const handleClick = (e) => {
     const { name, value } = e.target;
     if (name === "withdrawType") {
+      console.log("work?", value)
+      if (value === "full") {
+        console.log("here", value)
+        setAmount(plan?.planSummary?.principal);
+      }
       setWithdrawType(value);
-    }
-    if (value === "full") {
-      setAmount(plan?.planSummary?.principal);
     }
   };
 
@@ -192,7 +194,7 @@ const Withdrawal = () => {
                           placeholder={plan?.planSummary?.principal?.toFixed(2)}
                           type="number"
                           name="amount"
-                          defaultValue={amount}
+                          value={amount}
                           onChange={(e) => setAmount(e.target.value)}
                           max={plan?.planSummary?.principal}
                           required
