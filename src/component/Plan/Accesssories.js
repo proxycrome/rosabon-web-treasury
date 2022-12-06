@@ -1298,7 +1298,7 @@ export const PlanSummary = ({ planPay }) => {
   //       Number.EPSILON
   //   ) / 100;
 
-  console.log("form check", form);
+  // console.log("form check", form);
 
   return (
     <div>
