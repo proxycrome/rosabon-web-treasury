@@ -46,7 +46,7 @@ const PlanPayment = () => {
   useEffect(() => {
     if(amount){
       const formData = {
-        amount: amount,
+        amount: parseFloat(amount*plan?.exchangeRate),
         purposeOfPayment: "PLAN_CREATION",
       };
       dispatch(regTransaction(formData));
@@ -216,7 +216,7 @@ const PlanPayment = () => {
                     </button>
                   </div> */}
                 <ProceedPayCard
-                  amount={amount}
+                  amount={parseFloat(amount) * plan?.exchangeRate}
                   payType="withdraw-paystack"
                   onSuccess={onSuccess}
                   onClose={onClose}

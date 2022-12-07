@@ -51,7 +51,7 @@ const PlanPayment = () => {
 
   useEffect(() => {
     const formData = {
-      amount: parseInt(amount)*plan?.exchangeRate,
+      amount: parseFloat(amount*plan?.exchangeRate),
       purposeOfPayment: "PLAN_CREATION",
     };
     if (paymentType === "card" && isClicked) {
@@ -84,7 +84,7 @@ const PlanPayment = () => {
 
   const onSuccess = () => {
     const formData = {
-      amount: parseInt(amount)*plan?.exchangeRate,
+      amount: parseInt(amount),
       completed: true,
       paymentType: "DEBIT_CARD",
       plan: parseInt(id),

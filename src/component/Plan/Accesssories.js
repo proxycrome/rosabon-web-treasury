@@ -667,51 +667,6 @@ export const RolloverSummary = ({
 
   const customTenorDays = moment(addedDate).diff(date, "days");
 
-  // const contribValue = useCallback(
-  //   (savingFrequency) => {
-  //     // const selectedTenor = productTenors?.find(
-  //     //   (item) => item.id === parseInt(formData.tenor)
-  //     // );
-
-  //     if (plan?.product?.properties?.hasTargetAmount) {
-  //       if (plan?.savingFrequency !== "") {
-  //         let computedValue;
-  //         switch (savingFrequency) {
-  //           case "DAILY":
-  //             computedValue = amount / customTenorDays;
-  //             break;
-
-  //           case "WEEKLY":
-  //             if (customTenorDays < 7) {
-  //               computedValue = undefined;
-  //               setSavingsFreq(true);
-  //             } else {
-  //               computedValue = amount / Math.floor(customTenorDays / 7);
-  //               setSavingsFreq(false);
-  //             }
-  //             break;
-
-  //           case "MONTHLY":
-  //             if (customTenorDays < 30) {
-  //               computedValue = undefined;
-  //               setSavingsFreq(true);
-  //             } else {
-  //               computedValue = amount / Math.floor(customTenorDays / 30);
-  //               setSavingsFreq(false);
-  //             }
-  //             break;
-
-  //           default:
-  //             computedValue = 0;
-  //             break;
-  //         }
-  //         return computedValue;
-  //       }
-  //     }
-  //   },
-  //   [tenor, setSavingsFreq]
-  // );
-
   const calculateSI = (principal, rate, time) => {
     const SI = (principal * rate * (time / 365)) / 100;
     return Math.round(SI * 100 + Number.EPSILON) / 100;
