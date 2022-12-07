@@ -781,12 +781,13 @@ const PlanForm = () => {
   // submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!product?.properties?.hasSavingFrequency) {
+    if (!product?.properties?.hasSavingFrequency && formData.interestRate) {
       setIsClicked(true);
     } else {
       if (
         confirmPeriodicPay &&
         summary.paymentMaturity !== null &&
+        formData.interestRate &&
         validSavingsFreq
       ) {
         setIsClicked(true);
@@ -948,20 +949,18 @@ const PlanForm = () => {
                           onChange={handleChange}
                         />
                       </div>
-                      {!(product?.properties?.hasTargetAmount) &&
+                      {!product?.properties?.hasTargetAmount &&
                       formData.amount < product?.minTransactionLimit ? (
                         <small className="helper-text">
-                          Value cannot be below{" "}
-                          {product?.minTransactionLimit}
+                          Value cannot be below {product?.minTransactionLimit}
                         </small>
                       ) : (
                         <></>
                       )}
-                      {!(product?.properties?.hasTargetAmount) &&
+                      {!product?.properties?.hasTargetAmount &&
                       formData.amount > product?.maxTransactionLimit ? (
                         <small className="helper-text">
-                          Value cannot be above{" "}
-                          {product?.maxTransactionLimit}
+                          Value cannot be above {product?.maxTransactionLimit}
                         </small>
                       ) : (
                         <></>
@@ -1172,8 +1171,15 @@ const PlanForm = () => {
                                   key={key}
                                   value={labelIntRecOpt(key)}
                                   style={{ textTransform: "capitalize" }}
+                                  hidden={
+                                    key === "hasBackendMaturityRate" ||
+                                    key === "hasBackendUpfrontInterestRate" ||
+                                    key === "hasBackendMonthlyInterestRate" ||
+                                    key === "hasBackendQuarterlyInterestRate" ||
+                                    key === "hasBackendBiAnnualInterestRate"
+                                  }
                                 >
-                                  {labelIntRecOpt(key).toLowerCase()}
+                                  {labelIntRecOpt(key)?.toLowerCase()}
                                 </option>
                               )
                           )}
