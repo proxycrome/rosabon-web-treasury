@@ -38,7 +38,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
           base64File.corporateUserWithdrawalMandate !== ""
         ) {
           const formData = {
-            amount: parseFloat(amount) * plan?.exchangeRate,
+            amount: parseFloat(amount),
             completed: true,
             corporateUserWithdrawalMandate:
               user_role === "COMPANY" ? corporateUserWithdrawalMandate : null,
@@ -53,7 +53,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
         }
       } else {
         const formData = {
-          amount: parseFloat(amount) * plan?.exchangeRate,
+          amount: parseFloat(amount),
           completed: true,
           corporateUserWithdrawalMandate: null,
           plan: plan?.id,
@@ -96,6 +96,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
                   setWithdrawTo={setWithdrawTo}
                   base64File={base64File}
                   setBase64File={setBase64File}
+                  balance={parseFloat(amount)}
                 />
               </div>
             </div>

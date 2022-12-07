@@ -1040,7 +1040,7 @@ export function ProceedPayCard({
   const config = {
     reference: reg_transaction?.transactionReference,
     email: users?.email,
-    amount: JSON.stringify(amount) + "00",
+    amount: String(amount * 100),
     publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
   };
 

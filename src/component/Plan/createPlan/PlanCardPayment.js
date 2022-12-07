@@ -24,7 +24,7 @@ const PlanCardPayment = ({goBack}) => {
   // register transaction and fetch transaction reference 
   useEffect(() => {
     const formData = {
-      amount: form?.planSummary.principal,
+      amount: parseFloat(form?.planSummary.principal*form?.exchangeRate),
       purposeOfPayment: "PLAN_CREATION"
     }
     dispatch(regTransaction(formData))
@@ -47,7 +47,7 @@ const PlanCardPayment = ({goBack}) => {
   //   await console.log("show pay", paySuccess)
   // }
 
-  let amount = JSON.stringify(form?.planSummary?.principal*form?.exchangeRate)+"00"
+  let amount = String(parseFloat(form?.planSummary?.principal*form?.exchangeRate*100));
 
   return (
     <>
