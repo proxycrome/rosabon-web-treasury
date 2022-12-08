@@ -3469,8 +3469,10 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const { loading } = useSelector((state) => state.plan);
   const { verify_paystack } = useSelector((state) => state.paystack);
 
+  console.log(form);
+
   const success = async () => {
-    // console.log(form);
+    
     await dispatch(
       verifyPaystack("PAYSTACK", transactionRef, dispatch, form, setShow)
     );
