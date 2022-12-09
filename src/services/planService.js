@@ -123,5 +123,5 @@ export const updatePlanService = (formData, id) => {
   const http = new HttpService();
   const url = `auth/trcreate-plan/${id}`;
 
-  return http.putData(formData,url);
+  return http.putData(formData, url);
 }

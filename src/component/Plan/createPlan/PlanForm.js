@@ -536,25 +536,30 @@ const PlanForm = () => {
         formData.interestRate,
         checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
       ),
-      paymentMaturity: paymentAtMaturity(
-        formData.interestReceiptOption,
-        product?.properties?.hasTargetAmount
-          ? formData.targetAmount
-          : formData.amount,
-        withhold_tax[0]?.rate,
-        checkAtMaturity
-          ? Math.floor(
-              moment(formData.actualMaturityDate).diff(recentDate, "days") / 30
+      paymentMaturity: formData.interestRate
+        ? paymentAtMaturity(
+            formData.interestReceiptOption,
+            product?.properties?.hasTargetAmount
+              ? formData.targetAmount
+              : formData.amount,
+            withhold_tax[0]?.rate,
+            checkAtMaturity
+              ? Math.floor(
+                  moment(formData.actualMaturityDate).diff(recentDate, "days") /
+                    30
+                )
+              : Math.floor(selectedTenor?.tenorDays / 30),
+            calculateSI(
+              product?.properties?.hasTargetAmount
+                ? formData.targetAmount
+                : formData.amount,
+              formData.interestRate,
+              checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
             )
-          : Math.floor(selectedTenor?.tenorDays / 30),
-        calculateSI(
-          product?.properties?.hasTargetAmount
-            ? formData.targetAmount
-            : formData.amount,
-          formData.interestRate,
-          checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
-        )
-      ),
+          )
+        : product?.properties?.hasTargetAmount
+        ? formData.targetAmount
+        : formData.amount,
     });
   }, [
     formData.planName,
@@ -781,13 +786,12 @@ const PlanForm = () => {
   // submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!product?.properties?.hasSavingFrequency && formData.interestRate) {
+    if (!product?.properties?.hasSavingFrequency) {
       setIsClicked(true);
     } else {
       if (
         confirmPeriodicPay &&
         summary.paymentMaturity !== null &&
-        formData.interestRate &&
         validSavingsFreq
       ) {
         setIsClicked(true);

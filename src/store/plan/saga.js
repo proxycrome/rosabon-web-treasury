@@ -62,7 +62,9 @@ import {
   getClosedPlansSuccess,
   getClosedPlansError,
   updatePlanSuccess,
-  updatePlanError
+  updatePlanError,
+  getSinglePlan,
+  getPlans
 } from "./actions";
 
 import {
@@ -150,7 +152,7 @@ function* createPlan({ payload: { formData, setShow } }) {
   }
 }
 
-function* getPlans() {
+function* getInvPlans() {
   try {
     const response = yield call(getPlansService);
     console.log(response.data);
@@ -161,7 +163,7 @@ function* getPlans() {
   }
 }
 
-function* getSinglePlan({ payload: { id } }) {
+function* getSingleInvPlan({ payload: { id } }) {
   try {
     const response = yield call(getSinglePlanService, id);
     console.log(response.data);
@@ -373,11 +375,14 @@ function* getClosedPlans() {
   }
 }
 
-function* updatePlan({ payload: { formData, id } }) {
+function* updatePlan({ payload: { formData, id, dispatch } }) {
   try {
     const response = yield call(updatePlanService, formData, id);
     console.log(response.data);
     yield put(updatePlanSuccess(response.data));
+    if(response){
+      dispatch(getPlans())
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(updatePlanError(error?.response?.data));
@@ -397,11 +402,11 @@ export function* watchCreatePlan() {
 }
 
 export function* watchGetPlans() {
-  yield takeEvery(GET_PLANS, getPlans);
+  yield takeEvery(GET_PLANS, getInvPlans);
 }
 
 export function* watchGetSinglePlan() {
-  yield takeEvery(GET_SINGLE_PLAN, getSinglePlan);
+  yield takeEvery(GET_SINGLE_PLAN, getSingleInvPlan);
 }
 
 export function* watchGetTenor() {

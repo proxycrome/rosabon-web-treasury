@@ -159,7 +159,7 @@ export const Plans = () => {
               name="category"
               onChange={handleChange}
             >
-              <option value={0} hidden disabled selected>
+              <option value={0} hidden>
                 Choose Investment Category
               </option>
               <option value={9999999}>All</option>
@@ -287,9 +287,11 @@ export const Plans = () => {
                       </div>
                       <DropDown
                         id={item.id}
+                        plan={item}
                         status={capitalise(item.planStatus)}
                         handleBankModal={handleBankModal}
                         removePlan={removePlan}
+                        currentPlans={currentPlans}
                       />
                     </div>
                   </div>
@@ -435,12 +437,12 @@ const Wrapper = styled.div`
   }
 `;
 
-export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
+export const DropDown = ({ id, status, handleBankModal, removePlan, plan, currentPlans }) => {
   const [menu, setMenu] = useState(false);
   const dispatch = useDispatch();
   const { plans, singlePlan, loading } = useSelector((state) => state.plan);
   const { products } = useSelector((state) => state.product);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
+  // const plan = singlePlan?.data.body ? singlePlan?.data.body : {}
 
   const userPlan = plans?.data.body
     ? plans?.data.body?.find((item) => item.id === id)
@@ -449,30 +451,42 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
     ? products?.data.body?.find((item) => item.id === userPlan?.product?.id)
     : {};
 
-  console.log("plan", userPlan);
-  console.log("product", product);
+  console.log("plan", plan);
+  // console.log("product", product);
   const [checkRollover, setCheckRollover] = useState(plan?.autoRollOver);
 
-  const autoRollover = async() => {
+  const autoRollover = () => {
     setCheckRollover(!checkRollover)
-    await dispatch(updatePlan(null, id));
     // dispatch(getSinglePlan(id));
   };
 
-  const toggle = () => {
-    dispatch(getSinglePlan(id));
-    setCheckRollover(plan?.autoRollOver)
-    setMenu(!menu);
+  console.log(checkRollover);
+  useEffect(() => {
+    const selectedPlan = currentPlans?.find(item => item.id === id)
+    // console.log({selectedPlan});
+    if(menu){
+      dispatch(updatePlan(null, selectedPlan?.id, dispatch));
+    }  
+  }, [checkRollover])
+
+  // useEffect(() => {
+  //   dispatch(getSinglePlan(id));
+  // }, [])
+
+  const toggle = () => { 
+    setMenu((prevState) => !prevState);
   };
 
   return (
     <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
       <DropdownToggle
-        tag="button"
+        tag="a"
+        caret={false}
         className="btn header-item waves-effect"
         id="page-header-user-dropdown"
+        data-toggle
       >
-        <div style={{ width: "100%", height: "100%" }}>
+        <div style={{ width: "100%", height: "100%" }} >
           <i className="fa-solid fa-ellipsis"></i>
         </div>
       </DropdownToggle>
@@ -510,7 +524,7 @@ export const DropDown = ({ id, status, handleBankModal, removePlan }) => {
             >
               Withdraw
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem toggle={false}>
               <div
                 className="d-flex align-items-center justify-content-between"
                 style={{ width: "150px" }}

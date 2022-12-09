@@ -47,6 +47,7 @@ import {
   getSpecialEarningActivities,
   getTotalEarning,
   getTotalRedeemedEarning,
+  getBankDetails,
 } from "../../store/actions";
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
@@ -367,12 +368,19 @@ export const MakePayment = ({ setPaymentType, isClicked }) => {
           onChange={() => setIsTerms(!isTerms)}
           required
         />
-        <label htmlFor="scales">I agree to the Terms and Condition</label><br/>
-        {
-          isClicked ? !(isTerms) ? <label className="text-danger" >
-            Please check this box to proceed
-          </label> : <></> : <></>
-        }
+        <label htmlFor="scales">I agree to the Terms and Condition</label>
+        <br />
+        {isClicked ? (
+          !isTerms ? (
+            <label className="text-danger">
+              Please check this box to proceed
+            </label>
+          ) : (
+            <></>
+          )
+        ) : (
+          <></>
+        )}
       </div>
     </PaymentTypeWrapper>
   );
@@ -879,6 +887,7 @@ export const RolloverWithdrawMethod = ({
   // savingFreq,
   balance,
 }) => {
+  const dispatch = useDispatch();
   const [withdraw, setWithdraw] = useState("");
   const { login } = useSelector((state) => state.auth);
   const { singlePlan, investment_rates } = useSelector((state) => state.plan);
@@ -891,10 +900,23 @@ export const RolloverWithdrawMethod = ({
   const { bankDetails, bankDetailsError } = useSelector(
     (state) => state.user_profile
   );
-  const corporateUserWithdrawalMandateRef = useRef();
+  // const corporateUserWithdrawalMandateRef = useRef();
   console.log("bank dets", bankDetails);
 
   console.log("hhh", withdrawTo);
+
+  useEffect(() => {
+    dispatch(getBankDetails());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if(withdrawTo !== "TO_BANK"){
+      setBase64File({
+        corporateUserWithdrawalMandate: "",
+      });
+    }
+  }, [withdrawTo])
+
   // console.log("hhh", savingFreq);
 
   return (
@@ -931,11 +953,9 @@ export const RolloverWithdrawMethod = ({
                         Select withdrawal destination
                       </option>
                       <option value="TO_BANK">
-                        {
-                          bankDetails ? 
-                          `${bankDetails?.bank?.name} - ${bankDetails?.accountNumber}` :
-                          "No bank available"
-                        }
+                        {bankDetails
+                          ? `${bankDetails?.bank?.name} - ${bankDetails?.accountNumber}`
+                          : "No bank available"}
                       </option>
                       <option value="TO_WALLET">My Wallet</option>
                     </select>
@@ -1012,7 +1032,7 @@ export const WithdrawalSummary = ({
   reason,
   compPenalCharge,
   checkTerms,
-  termRequired
+  termRequired,
 }) => {
   const [isTerms, setIsTerms] = useState(false);
   const { singlePlan, penal_charge } = useSelector((state) => state.plan);
@@ -1174,8 +1194,9 @@ export const WithdrawalSummary = ({
                   <p>{reason}</p>
                 </div>
               </div>
-              {
-                termRequired === "nil" ? <></> :
+              {termRequired === "nil" ? (
+                <></>
+              ) : (
                 <div className="py-5 check-box-bank">
                   <input
                     type="checkbox"
@@ -1190,7 +1211,7 @@ export const WithdrawalSummary = ({
                     I agree to the Terms and Condition
                   </label>
                 </div>
-              }
+              )}
             </div>
           </div>
         </div>
@@ -1289,7 +1310,10 @@ export const PlanSummary = ({ planPay }) => {
                   <p className="p-0 m-0">Interest Rate </p>
                   {/* <h4>20.00 %</h4> */}
                   <h4 className="d-flex justify-content-end">
-                    {planData.planSummary.interestRate} %
+                    {planData.planSummary.interestRate
+                      ? planData.planSummary.interestRate
+                      : 0}{" "}
+                    %
                   </h4>
                 </div>
               </div>
@@ -1306,7 +1330,9 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4>₦200,000</h4> */}
                   <h4 className="flex justify-content-end">
                     {getCurrIcon(current_currency)}{" "}
-                    {planData.planSummary.calculatedInterest.toFixed(2)}
+                    {isNaN(planData.planSummary.calculatedInterest)
+                      ? 0
+                      : planData.planSummary.calculatedInterest.toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -1316,7 +1342,9 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4 className="">₦2,000</h4> */}
                   <h4 className="flex">
                     {getCurrIcon(current_currency)}{" "}
-                    {planData?.planSummary?.withholdingTax?.toFixed(2)}
+                    {isNaN(planData?.planSummary?.withholdingTax)
+                      ? 0
+                      : planData?.planSummary?.withholdingTax?.toFixed(2)}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1324,7 +1352,9 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4>₦2,700,000</h4> */}
                   <h4 className="flex justify-content-end">
                     {getCurrIcon(current_currency)}{" "}
-                    {planData?.planSummary?.paymentMaturity?.toFixed(2)}
+                    {isNaN(planData?.planSummary?.paymentMaturity)
+                      ? planData.planSummary.principal
+                      : planData?.planSummary?.paymentMaturity?.toFixed(2)}
                   </h4>
                 </div>
               </div>
@@ -1762,15 +1792,15 @@ export const AvailableBalance = ({
   );
 };
 
-export const TransferCard = ({ 
-  walletBalance, 
-  transferData, 
+export const TransferCard = ({
+  walletBalance,
+  transferData,
   id,
   transferError,
-  setTransferError
+  setTransferError,
 }) => {
   const dispatch = useDispatch();
-  
+
   const { eligiblePlans } = useSelector((state) => state.plan);
   const activeEligiblePlans = eligiblePlans?.filter(
     (plan) =>
@@ -1794,8 +1824,8 @@ export const TransferCard = ({
 
     setTransferError({
       ...transferError,
-      [name]: value === "" ? true : false
-    })
+      [name]: value === "" ? true : false,
+    });
   };
 
   const planName = (id) => {
@@ -1832,7 +1862,9 @@ export const TransferCard = ({
           <label>Transfer Amount</label>
           <div className="input-group">
             <input
-              className={`form-control ${transferError?.amount ? "tr-error": "mb-4"}`}
+              className={`form-control ${
+                transferError?.amount ? "tr-error" : "mb-4"
+              }`}
               placeholder="N1,500,000"
               type="number"
               required
@@ -1841,11 +1873,9 @@ export const TransferCard = ({
               onChange={handleChange}
             />
           </div>
-          {
-            transferError?.amount && (
-              <small className="text-danger mb-4" >Provide an amount</small>
-            )
-          }
+          {transferError?.amount && (
+            <small className="text-danger mb-4">Provide an amount</small>
+          )}
         </div>
       </div>
       <div className="pt-1 pb-5">
@@ -1868,11 +1898,11 @@ export const TransferCard = ({
             ))}
             {/* <option value="others">Credit wallet</option> */}
           </select>
-          {
-            transferError?.planId && (
-              <small className="text-danger mb-3" >Provide a beneficiary account</small>
-            )
-          }
+          {transferError?.planId && (
+            <small className="text-danger mb-3">
+              Provide a beneficiary account
+            </small>
+          )}
         </div>
       </div>
     </AvailableBalanceWapper>
@@ -2049,10 +2079,8 @@ export const HistoryTable = () => {
       },
     ],
     rows:
-      (
-        filteredTransactions?.length > 0 || 
-        (formData.startDate !== "" && formData.endDate !== "") 
-      )
+      filteredTransactions?.length > 0 ||
+      (formData.startDate !== "" && formData.endDate !== "")
         ? filteredTransactions?.map((data) => ({
             id: (
               <Link
@@ -3472,7 +3500,6 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   console.log(form);
 
   const success = async () => {
-    
     await dispatch(
       verifyPaystack("PAYSTACK", transactionRef, dispatch, form, setShow)
     );
