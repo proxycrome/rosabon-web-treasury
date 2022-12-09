@@ -441,10 +441,10 @@ export const getClosedPlansError = (error) => {
   }
 }
 
-export const updatePlan = (formData, id) => {
+export const updatePlan = (formData, id, dispatch) => {
   return {
     type: UPDATE_PLAN,
-    payload: { formData, id }
+    payload: { formData, id, dispatch }
   }
 }
 

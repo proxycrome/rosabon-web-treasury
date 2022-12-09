@@ -18,6 +18,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
   });
 
   const dispatch = useDispatch();
+  const { bankDetails } = useSelector((state) => state.user_profile);
   const { singlePlan, loading } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
@@ -32,8 +33,8 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
     e.preventDefault();
     if (withdrawTo) {
       const { corporateUserWithdrawalMandate } = base64File;
-      if (user_role === "COMPANY" && withdrawTo==="TO_BANK") {
-        if(
+      if (user_role === "COMPANY" && withdrawTo === "TO_BANK") {
+        if (
           base64File.corporateUserWithdrawalMandate &&
           base64File.corporateUserWithdrawalMandate !== ""
         ) {
@@ -46,28 +47,32 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
             penalCharge: parseFloat(penalCharge),
             planAction: "WITHDRAW",
             withdrawTo: withdrawTo,
-            withdrawType: type,
+            withdrawType:type,
           };
-          console.log(formData)
-          await dispatch(planAction(formData, setModalState))
+          console.log(formData);
+          await dispatch(planAction(formData, setModalState));
         }
       } else {
         const formData = {
           amount: parseFloat(amount),
+          bankAccountDetails:
+            user_role === "INDIVIDUAL_USER" && withdrawTo === "TO_BANK"
+              ? bankDetails?.id
+              : undefined,
           completed: true,
-          corporateUserWithdrawalMandate: null,
           plan: plan?.id,
           penalCharge: parseFloat(penalCharge),
           planAction: "WITHDRAW",
           withdrawTo: withdrawTo,
           withdrawType: type,
         };
-        console.log(formData)
+        console.log(formData);
         await dispatch(planAction(formData, setModalState))
       }
     }
   };
 
+  console.log(bankDetails);
   return (
     <>
       <Toaster />
@@ -84,7 +89,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
               amount={amount}
               reason={reason}
               compPenalCharge={setPenalCharge}
-              checkTerms={()=>{}}
+              checkTerms={() => {}}
               termRequired={"nil"}
             />
           </LeftView>
