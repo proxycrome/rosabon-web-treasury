@@ -258,12 +258,12 @@ function* planAction({
   const { planAction, paymentType } = formData;
   try {
     const response = yield call(planActionService, formData);
-    console.log(response.data);
+    console.log({response});
     yield put(planActionSuccess(response.data));
     if (response) {
       if (planAction === "WITHDRAW") {
         onSuccess(true);
-        toast.success(response.data.message);
+        toast.success(response.data.message, {position: "top-right"});
       } else if (planAction === "TOP_UP" && paymentType === "BANK_TRANSFER") {
         toast.success("Top-up saved", { position: "top-right" });
         setTimeout(() => {

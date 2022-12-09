@@ -910,12 +910,12 @@ export const RolloverWithdrawMethod = ({
   }, [dispatch]);
 
   useEffect(() => {
-    if(withdrawTo !== "TO_BANK"){
+    if (withdrawTo !== "TO_BANK") {
       setBase64File({
         corporateUserWithdrawalMandate: "",
       });
     }
-  }, [withdrawTo])
+  }, [withdrawTo]);
 
   // console.log("hhh", savingFreq);
 
@@ -1046,9 +1046,6 @@ export const WithdrawalSummary = ({
     [penal_charge]
   );
 
-  console.log(plan);
-  console.log(penalCharges);
-
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
@@ -1068,52 +1065,65 @@ export const WithdrawalSummary = ({
       const currentNumberOfDays =
         moment(recentDate).diff(plan?.planSummary?.startDate, "days") || 1;
 
+      const penalDays = moment(plan?.planSummary?.endDate).diff(
+        recentDate,
+        "days"
+      );
+
       planProductCharges.forEach((item) => {
         const maxDays = (item.maxDaysElapsed * maxNumberDays) / 100;
         const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
-        if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
+        if (
+          currentNumberOfDays >= minDays &&
+          currentNumberOfDays <= maxDays &&
+          penalDays > 0
+        ) {
           penalRate = item.penalRate;
         }
       });
 
-      switch (intRecOption) {
-        case "MATURITY":
-          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-            penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
-          } else if (
-            plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
-          ) {
-            const totalEarnedInt =
-              (plan?.planSummary?.principal *
-                plan?.interestRate *
-                (currentNumberOfDays / 365)) /
-              100;
-            penalCharge = totalEarnedInt * penalRate;
-          }
-          break;
+      if (penalDays > 0) {
+        switch (intRecOption) {
+          case "MATURITY":
+            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+              penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
+            } else if (
+              plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
+            ) {
+              const totalEarnedInt =
+                (plan?.planSummary?.principal *
+                  plan?.interestRate *
+                  (currentNumberOfDays / 365)) /
+                100;
+              penalCharge = totalEarnedInt * penalRate;
+            }
+            break;
 
-        case "UPFRONT":
-          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-            const excessIntPaid =
-              amount * plan?.interestRate * (maxNumberDays / 365) -
-              amount * plan?.interestRate * (currentNumberOfDays / 365);
-            penalCharge =
-              (currentNumberOfDays / 365) * penalRate * amount + excessIntPaid;
-          }
-          break;
+          case "UPFRONT":
+            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+              const excessIntPaid =
+                amount * plan?.interestRate * (maxNumberDays / 365) -
+                amount * plan?.interestRate * (currentNumberOfDays / 365);
+              penalCharge =
+                (currentNumberOfDays / 365) * penalRate * amount +
+                excessIntPaid;
+            }
+            break;
 
-        case "MONTHLY":
-        case "QUARTERLY":
-        case "BI_ANNUAL":
-          if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-            penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
-          }
-          break;
+          case "MONTHLY":
+          case "QUARTERLY":
+          case "BI_ANNUAL":
+            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+              penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
+            }
+            break;
 
-        default:
-          penalCharge = 0;
-          break;
+          default:
+            penalCharge = 0;
+            break;
+        }
       }
+
       return penalCharge.toFixed(2);
     },
     [plan, amount, recentDate, planProductCharges]
@@ -1161,7 +1171,7 @@ export const WithdrawalSummary = ({
                   <p className="p-0 m-0">Withdrawal Amount</p>
                   <h4 className="d-flex gap-1 justify-content-end">
                     {getCurrIcon(plan?.currency?.name)}
-                    {amount.toLocaleString()}
+                    {parseFloat(amount).toLocaleString()}
                   </h4>
                 </div>
               </div>
@@ -1170,7 +1180,7 @@ export const WithdrawalSummary = ({
                   <p className="p-0 m-0">Penal Charges </p>
                   <h4 className="d-flex gap-1">
                     {getCurrIcon(plan?.currency?.name)}
-                    {computePenalCharge(plan?.interestReceiptOption)}
+                    {computePenalCharge(plan?.interestReceiptOption).toLocaleString()}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1180,11 +1190,11 @@ export const WithdrawalSummary = ({
                   </p>
                   <h4 className="d-flex gap-1 justify-content-end">
                     {getCurrIcon(plan?.currency?.name)}
-                    {(
+                    {parseFloat((
                       plan?.planSummary?.principal -
                       amount -
                       computePenalCharge(plan?.interestReceiptOption)
-                    ).toFixed(2)}
+                    ).toFixed(2)).toLocaleString()}
                   </h4>
                 </div>
               </div>
