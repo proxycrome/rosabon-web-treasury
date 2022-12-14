@@ -2,10 +2,10 @@ import axios from "axios";
 
 const checkAuthTokens = () => {
 	let authTokens = localStorage.getItem("token")
-		? `Bearer ${JSON.parse(localStorage.getItem("token")).token}`
+		? `Bearer ${localStorage.getItem("token")}`
 		: null;
 	return authTokens;
-};
+}; 
 
 const axiosInstance = axios.create({
 	baseURL: process.env.REACT_APP_BASE_URL,

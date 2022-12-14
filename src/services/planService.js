@@ -30,7 +30,7 @@ export const getInvestmentRatesService = () => {
 
 export const getPlansService = () => {
   const http = new HttpService();
-  const url = `auth/trcreate-plan`;
+  const url = `auth/user/trcreate-plan`;
 
   return http.getData(url);
 };

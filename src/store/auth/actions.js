@@ -9,6 +9,7 @@ import {
   LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
   REFRESH_USER,
+  REFRESH_USER_SUCCESS,
   REGISTER_USER,
   REGISTER_USER_ERROR,
   REGISTER_USER_SUCCESS,
@@ -80,9 +81,17 @@ export const logoutError = (error) => {
   };
 };
 
-export const refreshUser = () => {
+export const refreshUser = (login) => {
   return {
     type: REFRESH_USER,
+    payload: { login },
+  };
+};
+
+export const refreshUserSuccess = (data) => {
+  return {
+    type: REFRESH_USER_SUCCESS,
+    payload: data,
   };
 };
 

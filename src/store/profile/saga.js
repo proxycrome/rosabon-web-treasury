@@ -114,7 +114,7 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
       setTimeout(() => {
         toast.success("KYC Updated Successfully");
       }, 2000);
-      dispatch(getAuthUsers());
+      yield put(getAuthUsers());
       pathCred?.navigate(pathCred?.route);
     }
 
@@ -122,7 +122,7 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
       setTimeout(() => {
         toast.success("KYC Updated Successfully");
       }, 2000);
-      dispatch(getAuthUsers());
+      yield put(getAuthUsers());
       pathCred?.navigate(pathCred?.route);
     }
     if (response && !pathCred) {

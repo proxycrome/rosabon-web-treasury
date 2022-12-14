@@ -90,7 +90,7 @@ const CompanyKYC = () => {
   };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
+    const tokenString = localStorage.getItem("token");
     if (tokenString) {
       dispatch(getAuthUsers());
     } else {

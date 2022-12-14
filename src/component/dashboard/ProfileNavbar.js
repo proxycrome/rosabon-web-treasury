@@ -52,13 +52,13 @@ export function ProfileNavBar({ children, view, feedback }) {
   };
 
   useEffect(() => {
-    const tokenString = JSON.parse(localStorage.getItem("token"));
+    const tokenString = localStorage.getItem("token");
     if (tokenString) {
       dispatch(getAuthUsers());
+      dispatch(getNotification());
     } else {
       navigate("/login");
     }
-    dispatch(getNotification());
   }, [dispatch, navigate]);
 
   return (

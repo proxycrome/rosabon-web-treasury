@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Confetti from "../../asset/confetti-cake.png";
-// import ConfettiLetter from "../../asset/confetti-letter.png";
 import { useLocation } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import * as types from "../../redux/constant/auth";
-// import { successMessage } from "../../redux/actions/auth/SignupAction";
-// import { getAuthUsers } from "../../redux/actions/personalInfo/userProfile.actions";
 
 function Congratulatios(props) {
   const dispatch = useDispatch();
@@ -16,34 +12,11 @@ function Congratulatios(props) {
 
   const auth = useSelector((state) => state.auth);
   const { register, email } = auth;
-  const user_details = useSelector((state) => state.user_profile.users);
   console.log(register);
 
-
-
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("token"));
-  //   console.log(tokenString)
-  //   if (tokenString) {
-  //     dispatch(getAuthUsers(tokenString));
-  //   } else {
-  //     navigate("/login");
-  //   }
-    
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!email) {
-  //     navigate("/login");
-  //   } 
-  // }, [email]);
-
   const handleClick = () => {
-    // if(email){
-    //   dispatch({ type: types.USERS_EMAIL, payload: null });
-    // }
-    navigate("/login")
-  } 
+    navigate("/login");
+  };
 
   return (
     <Wrapper>
@@ -77,19 +50,26 @@ function Congratulatios(props) {
                     <p className="">
                       Your account was created successfully. Please take a
                       moment to verify your <br /> email address. We sent an
-                      email with a verification link to{" "}
-                      {email} <br />if you did not
-                      receive this in your inbox, please check your spam folder.
+                      email with a verification link to {email} <br />
+                      if you did not receive this in your inbox, please check
+                      your spam folder.
                     </p>
                   </>
-                ) : location.state === "forgotpassword" ?  (
+                ) : location.state === "forgotpassword" ? (
                   <>
                     <p>Password reset link has been sent to {email} </p>
                   </>
-                ) : <></>}
+                ) : (
+                  <></>
+                )}
 
                 <Link to="/login">
-                  <button className="verify_congrates_btn" onClick={handleClick}>Ok</button>
+                  <button
+                    className="verify_congrates_btn"
+                    onClick={handleClick}
+                  >
+                    Ok
+                  </button>
                 </Link>
               </div>
             </div>

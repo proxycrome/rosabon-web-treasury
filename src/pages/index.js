@@ -23,11 +23,11 @@ const Profile = () => {
         <ProfileSideBarList profile="profile" />
       </div>
 
-      {login.role.name === "INDIVIDUAL_USER" ? (
+      {users.role === "INDIVIDUAL_USER" ? (
         <div className="main-body">
           <PersonalProfile />
         </div>
-      ) : login.role.name === "COMPANY" ? (
+      ) : users.role === "COMPANY" ? (
         <div className="main-body">
           <CompanyProfile />
         </div>

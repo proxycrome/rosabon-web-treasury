@@ -108,7 +108,7 @@ export const RightView = () => {
             cat_products.map(
               (category) => (category?.products?.some(product => product?.status === "ACTIVE")) &&
                 category.products.length > 0 && (
-                  <div id={category.productCategoryId}>
+                  <div id={category.productCategoryId} key={category.productCategoryId}>
                     <div className="shadow-sm p-3 mb-2 rounded">
                       <div
                         className="d-flex align-items-center justify-content-between savins-drop "

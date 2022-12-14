@@ -1,13 +1,20 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { getAuthUsers } from '../../../store/actions'
 import Company from './CompanyKYC'
 import Personale from './PersonalKYC'
 
 const Index = () => {
-  const { login } = useSelector((state) => state.auth)
-  if (login.role.name === 'INDIVIDUAL_USER') {
+  const { users } = useSelector((state) => state.user_profile)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAuthUsers());
+  }, [])
+
+  if (users?.role === 'INDIVIDUAL_USER') {
     return <Personale />
-  } else if (login.role.name === 'COMPANY') {
+  } else if (users?.role === 'COMPANY') {
     return (
       <>
         <Company />
