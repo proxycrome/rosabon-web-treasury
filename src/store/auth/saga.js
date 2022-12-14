@@ -18,6 +18,7 @@ import {
   loginUserSuccess,
   logoutError,
   logoutSuccess,
+  refreshUserSuccess,
   registerUserError,
   registerUserSuccess,
   resetPasswordError,
@@ -39,10 +40,10 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
     const response = yield call(loginService, formData);
 
     yield put(loginUserSuccess(response.data));
-    if (response.data) {
+    if (response) {
       toast.success("Login was successful");
       dispatch(getAuthUsers());
-      if (response.data.kyc === true) {
+      if (response.data.kyc) {
         navigate("/");
       } else {
         navigate("/kyc");
@@ -110,11 +111,11 @@ function* registerUser({ payload: { formData, navigate } }) {
   }
 };
 
-function* refreshUser() {
+function* refreshUser({payload: {login}}) {
   try {
-    const data = JSON.parse(localStorage.getItem("token"));
+    const data = localStorage.getItem("token");
     if (data) {
-      yield put(loginUserSuccess(data));
+      yield put(refreshUserSuccess(data));
     } else {
       yield put(logoutSuccess());
     }

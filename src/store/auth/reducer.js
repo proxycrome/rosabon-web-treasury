@@ -10,6 +10,7 @@ import {
   LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
   REFRESH_USER,
+  REFRESH_USER_SUCCESS,
   REGISTER_USER,
   REGISTER_USER_ERROR,
   REGISTER_USER_SUCCESS,
@@ -87,7 +88,8 @@ const authReducer = (state = initialState, action) => {
       break;
 
     case LOGIN_USER_SUCCESS:
-      localStorage.setItem("token", JSON.stringify(action.payload));
+      JSON.stringify(localStorage.setItem("token", action?.payload?.token));
+      console.log(action.payload);
       state = {
         ...state,
         isLoading: false,
@@ -145,6 +147,16 @@ const authReducer = (state = initialState, action) => {
         isLoading: true,
       };
       break;
+
+      case REFRESH_USER_SUCCESS:
+        state = {
+          ...state,
+          isLoading: false,
+          isAuth: true,
+          login: action.payload,
+          isLoggedIn: true,
+        };
+        break;
 
     case RESET_PASSWORD:
       state = {

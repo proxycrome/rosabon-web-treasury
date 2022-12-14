@@ -21,7 +21,7 @@ const Help = () => {
   const { faqs, loading } = useSelector((state) => state.help);
   const faqMessages = faqs?.data?.body ? faqs?.data?.body : [];
   const activeFaqs = faqMessages.filter((data) => data.status === "ACTIVE");
-  console.log(faqMessages)
+  console.log(faqMessages);
 
   useEffect(() => {
     dispatch(getFaq());
@@ -54,42 +54,46 @@ const Help = () => {
             </div>
             <hr className="my-5" />
             <div className="accordion" id="accordionExample">
-              {faqs?.data?.body?.map((data) => (
-                <div className="accordion-item" key={data.id}>
-                  <h2
-                    className="accordion-header"
-                    id="heading"
-                    onClick={() => t_col1(data.id)}
-                  >
-                    <div
-                      className={`accordion-button ${
-                        col1 === data.id ? "" : "collapsed"
-                      }`}
-                      style={{ backgroundColor: "#FFFFFF" }}
-                      type="button"
-                    >
-                      {data?.name}
-                    </div>
-                  </h2>
-                  <Collapse isOpen={col1 === data.id}>
-                    {
-                      data?.faqs?.map(faq => (
+              {faqMessages.map(
+                (data) =>
+                  data?.faqs?.some((item) => item.status === "ACTIVE") &&
+                  data?.faqs?.length > 0 && (
+                    <div className="accordion-item" key={data.id}>
+                      <h2
+                        className="accordion-header"
+                        id="heading"
+                        onClick={() => t_col1(data.id)}
+                      >
                         <div
-                          id="collapseOne"
-                          className="accordion-collapse collapse show"
-                          aria-labelledby="headingOne"
-                          data-bs-parent="#accordionExample"
+                          className={`accordion-button ${
+                            col1 === data.id ? "" : "collapsed"
+                          }`}
+                          style={{ backgroundColor: "#FFFFFF" }}
+                          type="button"
                         >
-                          <div className="accordion-body">
-                            <h5>{faq.question}</h5>
-                            <p className="p-0 m-0">{faq.answer}</p>
-                          </div>
+                          {data?.name}
                         </div>
-                      ))
-                    }
-                  </Collapse>
-                </div>
-              ))}
+                      </h2>
+                      <Collapse isOpen={col1 === data.id}>
+                        {data?.faqs
+                          ?.filter((item) => item.status === "ACTIVE")
+                          ?.map((faq) => (
+                            <div
+                              id="collapseOne"
+                              className="accordion-collapse collapse show"
+                              aria-labelledby="headingOne"
+                              data-bs-parent="#accordionExample"
+                            >
+                              <div className="accordion-body">
+                                <h5>{faq.question}</h5>
+                                <p className="p-0 m-0">{faq.answer}</p>
+                              </div>
+                            </div>
+                          ))}
+                      </Collapse>
+                    </div>
+                  )
+              )}
             </div>
           </Wrapper>
         )}

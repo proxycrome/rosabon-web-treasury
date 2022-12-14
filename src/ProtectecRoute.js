@@ -1,37 +1,43 @@
-import { Navigate } from 'react-router-dom'
-const ProtectedRoute = ({ isAuth, children, user}) => {
-  if (!isAuth) {
-    return <Navigate to="/login" replace />
-  }else{
-    if(user){
-      if(user.kyc){
-        return children
-      }
-    }
-  }
-}
+import { Navigate, Outlet } from "react-router-dom";
 
-export default ProtectedRoute
-
-export const KYCRoute = ({isAuth, children, login}) => {
+const ProtectedRoute = ({ isAuth, children, user }) => {
   if (!isAuth) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace />;
   } else {
-    if(login){
-      if(!login?.kyc){
-        return children
+    if (user) {
+      if (user?.kyc) {
+        return children;
+      } 
+    }
+  }
+};
+
+export default ProtectedRoute;
+
+export const KYCRoute = ({ isAuth, children, user }) => {
+  if (!isAuth) {
+    return <Navigate to="/login" replace />;
+  } else {
+    if (user) {
+      if (!user?.kyc) {
+        return children;
+      } else {
+        <Navigate to="" replace />
       }
     }
   }
-}
+};
 
-export const NotProtectedRoute = ({ isAuth, children, login }) => {
+export const NotProtectedRoute = ({ isAuth, children, user }) => {
   if (isAuth) {
-    if(!login?.kyc){
-      return <Navigate to="/kyc" replace />
+    if (user) {
+      if (!user?.kyc) {
+        return <Navigate to="/kyc" replace />;
+      } else {
+        return <Navigate to="/" replace />;
+      }
     }
-    return <Navigate to="/" replace />
   }
 
-  return children
-}
+  return children;
+};

@@ -27,10 +27,10 @@ const Archives = () => {
   // const navigate = useNavigate();
   const { plans, closed_plans } = useSelector((state) => state.plan);
   const { products  } = useSelector((state) => state.product);
-  const closedPlans = plans?.data.body
-  ? plans?.data.body?.filter((item) => item.planStatus === "CLOSED")
+  const closedPlans = closed_plans?.data.body
+  ? closed_plans?.data.body?.filter((item) => item.planStatus === "CLOSED")
   : [];
-  const closedPlanStatus = plans?.statusCode;
+  const closedPlanStatus = closed_plans?.statusCode;
   const product = products?.data.body ? products?.data.body : []
   const archivedPlans = closedPlans;
 
@@ -41,8 +41,8 @@ const Archives = () => {
   }
 
   useEffect(() => {
-    dispatch(getPlans());
-    // dispatch(getClosedPlans());
+    // dispatch(getPlans());
+    dispatch(getClosedPlans());
     dispatch(getProducts());
   },[dispatch])
 

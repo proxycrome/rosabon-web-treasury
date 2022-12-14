@@ -312,7 +312,7 @@ function PageRoutes({ login, isAuth, user }) {
 			<Route
 				path="/kyc"
 				element={
-					<KYCRoute isAuth={isAuth} user={user} login={login}>
+					<KYCRoute isAuth={isAuth} user={user}>
 						<KYC />
 					</KYCRoute>
 				}>
@@ -338,7 +338,7 @@ function PageRoutes({ login, isAuth, user }) {
 			<Route
 				path="/login"
 				element={
-					<NotProtectedRoute isAuth={isAuth} login={login}>
+					<NotProtectedRoute isAuth={isAuth} user={user}>
 						<Login />
 					</NotProtectedRoute>
 				}

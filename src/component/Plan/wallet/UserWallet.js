@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useNavigate, NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 // import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
 import {
   getAuthUsers,
@@ -17,7 +17,6 @@ import Telephone from "../../../asset/telephone.png";
 import HistoryImag from "../../../asset/history.png";
 import TransferImg from "../../../asset/transfer.png";
 import { AvailableBalance, TransferCard } from "../Accesssories";
-import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
@@ -41,9 +40,11 @@ const UserWallet = () => {
   const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
     (state) => state.user_profile
   );
-  const { walletBalance, loading, withdrawMsg } = useSelector(
+  const { walletBalance, loading } = useSelector(
     (state) => state.wallet
   );
+  // const { login } = useSelector((state) => state.auth);
+
 
   const handleClick = (value) => {
     if (value === "transfer") {
@@ -114,11 +115,6 @@ const UserWallet = () => {
         errors.withdrawalReasonOthers = "Withdrawal Reason is required";
       }
 
-      // if (Object.keys(values.withdrawalInstructionImage).length === 0) {
-      //   errors.withdrawalInstructionImage =
-      //     "Upload a withdrawal instruction document";
-      // }
-
       if (Object.keys(values.withdrawalMandateLetterImage).length === 0) {
         errors.withdrawalMandateLetterImage =
           "Upload a withdrawal mandate Letter";
@@ -185,14 +181,13 @@ const UserWallet = () => {
     }
   };
 
-  const tokenObj = JSON.parse(localStorage.getItem("token"));
-  console.log(tokenObj);
+  // const tokenObj = localStorage.getItem("token");
 
   useEffect(() => {
     dispatch(getWalletBalance());
     dispatch(getAuthUsers());
     dispatch(getWithdrawReason());
-    if (tokenObj?.role?.name !== "COMPANY") {
+    if (users?.role !== "COMPANY") {
       dispatch(getBankDetails());
     }
   }, [dispatch]);
@@ -241,7 +236,7 @@ const UserWallet = () => {
                   </div>
                   <div className="caption">Providus Bank</div>
                   <h3 className="pt-1 pb-3 accountDet">
-                    {tokenObj?.virtualAccountNo} ({tokenObj?.virtualAccountName}
+                    {users?.virtualAccountNo} ({users?.virtualAccountName}
                     )
                   </h3>
                   <div className="down-button">
