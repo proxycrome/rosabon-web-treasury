@@ -915,7 +915,7 @@ const PlanForm = () => {
                     <label>Exchange rate</label>
                     <div className="input-group">
                       <div className=" input-group-prepend curr-icon">
-                        {getCurrIcon(formData.currency)}
+                        {formData.currency && getCurrIcon("NGN")}
                       </div>
                       <Input
                         className={`form-control ${
