@@ -26,6 +26,8 @@ const AdminMessage = () => {
     dispatch(getSingleTicket(parseInt(id)));
   }, []);
 
+  console.log({ replies });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = {
@@ -33,7 +35,7 @@ const AdminMessage = () => {
       images: [],
       ticketId: parseInt(id),
       title: moment(),
-      platform: "TREASURY"
+      platform: "TREASURY",
     };
     await dispatch(postReply(form));
     await dispatch(getReplies(parseInt(id)));
@@ -58,19 +60,23 @@ const AdminMessage = () => {
             <Wrapper>
               <h4 className="title">Title </h4>
               <p className="p-0 m-0">{ticket?.title} </p>
-              {messages.map((item) =>
-                item.replyType === "USER_REPLY" ? (
-                  <div key={item.id}>
-                    <h4 className="pt-4">Message</h4>
-                    <p className="p-0 m-0">{item.content} </p>
-                  </div>
-                ) : (
-                  <div className="message pt-4">
-                    <h4>Admin</h4>
-                    <p className="p-0 m-0">{item.content} </p>
-                  </div>
-                )
-              )}
+              {messages.map((item) => (
+                <div key={item.id}>
+                  {item.replyType === "USER_REPLY" ? (
+                    <div className="user-box mt-4">
+                      <h4 className="">Your Message</h4>
+                      <p className="p-0 m-0">{item.content} </p>
+                      <small className="my-2">{item.createdAt}</small>
+                    </div>
+                  ) : (
+                    <div className="message mt-4">
+                      <h4>Admin</h4>
+                      <p className="p-0 m-0">{item.content} </p>
+                      <small className="my-2">{item.createdAt}</small>
+                    </div>
+                  )}
+                </div>
+              ))}
             </Wrapper>
             <WrapperFooter className="">
               <form
@@ -84,7 +90,7 @@ const AdminMessage = () => {
                     name="reply"
                     placeholder="Type your message"
                     value={reply}
-                    disabled={ticket?.status==="CLOSED"}
+                    disabled={ticket?.status === "CLOSED"}
                     onChange={(e) => setReply(e.target.value)}
                   />
                 </div>
@@ -177,8 +183,44 @@ const Wrapper = styled.div`
     color: #242424;
   }
   .message {
-    padding-left: 50px;
-    padding-bottom: 100px;
+    margin-left: 250px;
+    width: 300px;
+    padding: 20px 20px 5px 20px;
+    background: #87CEEB;
+    border-radius: 10px 10px 0px 10px;
+    p {
+      color: #ffffff;
+      font-weight: 600;
+    }
+    h4 {
+      color: #ffffff;
+    }
+    small {
+      color: #ffffff;
+      font-size: 10px;
+      display: flex;
+      justify-content: end;
+    }
+  }
+
+  .user-box {
+    background: #111e6c;
+    padding: 20px 20px 5px 20px;
+    border-radius: 10px 10px 10px 0px;
+    width: 300px;
+    p {
+      color: #ffffff;
+      font-weight: 600;
+    }
+    h4 {
+      color: #ffffff;
+    }
+    small {
+      color: #ffffff;
+      font-size: 10px;
+      display: flex;
+      justify-content: end;
+    }
   }
 `;
 
