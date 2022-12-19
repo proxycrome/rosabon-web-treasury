@@ -47,7 +47,7 @@ export function BVNConfirm({
     }
   }, [nameMatch, director]);
 
-  console.log("confirm bvn", confirmName)
+  console.log("confirm bvn", confirmName);
 
   const { success } = useSelector((state) => state.auth);
   const { kycData } = useSelector((state) => state.user_profile);
@@ -58,7 +58,7 @@ export function BVNConfirm({
     if (!nameMatch && director) {
       if (confirmName !== undefined) {
         confirmName(firstName, lastName);
-      } 
+      }
       handleClose();
       return;
     }
@@ -816,7 +816,7 @@ export function Notice({
         tenor: tenor,
         weeklyContributionDay: plan?.weeklyContributionDay,
       },
-      rolloverType
+      rolloverType,
     };
     console.log(data);
     dispatch(
@@ -1037,10 +1037,12 @@ export function ProceedPayCard({
   const { reg_transaction, loading } = useSelector((state) => state.paystack);
   const { users } = useSelector((state) => state.user_profile);
 
+  console.log(amount);
+
   const config = {
     reference: reg_transaction?.transactionReference,
     email: users?.email,
-    amount: String(amount * 100),
+    amount: amount,
     publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
   };
 

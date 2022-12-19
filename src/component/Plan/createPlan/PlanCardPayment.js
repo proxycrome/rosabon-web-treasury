@@ -1,88 +1,105 @@
-import React, { useState, useContext, useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import Verve from '../../../asset/master-card-logo.png';
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
-import { PlanSummary, PayWithCard } from '../Accesssories';
-import ModalComponent from '../../ModalComponent';
-import { SuccessConfirm } from '../../Accessories/BVNConfirm';
+import React, { useState, useContext, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import Verve from "../../../asset/master-card-logo.png";
+import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+import { PlanSummary, PayWithCard } from "../Accesssories";
+import ModalComponent from "../../ModalComponent";
+import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { PlanContext } from './PlanForm';
-import { regTransaction } from '../../../store/actions';
-import Spinner from '../../common/loading';
+import { PlanContext } from "./PlanForm";
+import { regTransaction } from "../../../store/actions";
+import Spinner from "../../common/loading";
 
-const PlanCardPayment = ({goBack}) => {
+const PlanCardPayment = ({ goBack }) => {
   const [show, setShow] = useState(false);
   const [modalCount, setModalCount] = useState(0);
   const { form } = useContext(PlanContext);
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user_profile);
   const { reg_transaction } = useSelector((state) => state.paystack);
+  const { products } = useSelector((state) => state.product);
   const navigate = useNavigate();
 
-  // register transaction and fetch transaction reference 
+  const product = products?.data?.body
+    ? products?.data?.body.find((item) => item.id === form?.product)
+    : {};
+
+  // register transaction and fetch transaction reference
   useEffect(() => {
     const formData = {
-      amount: parseFloat(form?.planSummary.principal*form?.exchangeRate),
-      purposeOfPayment: "PLAN_CREATION"
-    }
-    dispatch(regTransaction(formData))
-  }, [])
+      amount: parseFloat(
+        product.properties.hasTargetAmount === true
+          ? form?.contributionValue * form?.exchangeRate
+          : form?.planSummary.principal * form?.exchangeRate
+      ),
+      purposeOfPayment: "PLAN_CREATION",
+    };
+    dispatch(regTransaction(formData));
+  }, []);
 
   useEffect(() => {
-    setModalCount(modalCount+1);
-    if(modalCount >= 2){
-      navigate("/plan-product")
+    setModalCount(modalCount + 1);
+    if (modalCount >= 2) {
+      navigate("/plan-product");
     }
-  },[show])
+  }, [show]);
 
   // const handleSubmit = async () => {
   //   const formData = {
   //     amount: JSON.stringify(form?.targetAmount),
-  //     email: users?.email, 
+  //     email: users?.email,
   //   }
   //   await dispatch(initPayment(formData));
   //   await dispatch(createPlan(form, setShow));
   //   await console.log("show pay", paySuccess)
   // }
 
-  let amount = String(parseFloat(form?.planSummary?.principal*form?.exchangeRate*100));
+  let amount = String(
+    parseFloat(product.properties.hasTargetAmount === true
+      ? form?.contributionValue * form?.exchangeRate * 100
+      : form?.planSummary.principal * form?.exchangeRate * 100)
+  );
 
   return (
     <>
-      {
-        reg_transaction !== null ? (
-          <>
-            <ProfileNavBar>
-              <NavTitle>
-                <span className="fw-bold">Choose Plan</span>
-              </NavTitle>
-            </ProfileNavBar>
-            <Wrapper>
-              <Toaster />
-              <LeftView>
-                <h6>Kindly confirm your transaction details below</h6>
-                <div className="choose-plan mt-5">
-                  <div className="d-flex align-items-center justify-content-between">
-                      <div>Payment Type:</div>
-                      <div className="d-flex align-items-center">
-                          <img className="verve-card" src={Verve} alt="Verve" />
-                          <p className="p-0 m-0">Debit Card</p>
-                      </div>
+      {reg_transaction !== null ? (
+        <>
+          <ProfileNavBar>
+            <NavTitle>
+              <span className="fw-bold">Choose Plan</span>
+            </NavTitle>
+          </ProfileNavBar>
+          <Wrapper>
+            <Toaster />
+            <LeftView>
+              <h6>Kindly confirm your transaction details below</h6>
+              <div className="choose-plan mt-5">
+                <div className="d-flex align-items-center justify-content-between">
+                  <div>Payment Type:</div>
+                  <div className="d-flex align-items-center">
+                    <img className="verve-card" src={Verve} alt="Verve" />
+                    <p className="p-0 m-0">Debit Card</p>
                   </div>
                 </div>
-                <PlanSummary />
-              </LeftView>
-            </Wrapper>
-            <WrapperFooter>
-              <div className="footer-body">
-                <div className="d-flex align-items-center justify-content-between footer-content">
-                  <div>
-                    <button style={{ color: '#111E6C', width: '300px' }} onClick={goBack}>Back</button>
-                  </div>
-                  <div>
-                    {/* <button
+              </div>
+              <PlanSummary />
+            </LeftView>
+          </Wrapper>
+          <WrapperFooter>
+            <div className="footer-body">
+              <div className="d-flex align-items-center justify-content-between footer-content">
+                <div>
+                  <button
+                    style={{ color: "#111E6C", width: "300px" }}
+                    onClick={goBack}
+                  >
+                    Back
+                  </button>
+                </div>
+                <div>
+                  {/* <button
                       style={{
                         backgroundColor: '#111E6C',
                         color: '#FFFFFF',
@@ -93,33 +110,32 @@ const PlanCardPayment = ({goBack}) => {
                     >
                       {loading ? 'LOADING...' : 'Pay'}
                     </button> */}
-                    <PayWithCard 
-                      amount={amount}
-                      email={users?.email}
-                      setShow={setShow}
-                      transactionRef={reg_transaction?.transactionReference}
-                    />
-                    <ModalComponent
-                      show={show}
-                      size={'md'}
+                  <PayWithCard
+                    amount={amount}
+                    email={users?.email}
+                    setShow={setShow}
+                    transactionRef={reg_transaction?.transactionReference}
+                  />
+                  <ModalComponent
+                    show={show}
+                    size={"md"}
+                    handleClose={() => setShow(false)}
+                  >
+                    <SuccessConfirm
+                      createPlan="paid"
                       handleClose={() => setShow(false)}
-                    >
-                      <SuccessConfirm 
-                        createPlan="paid"
-                        handleClose={() => setShow(false)}
-                      />
-                    </ModalComponent>
-                  </div>
+                    />
+                  </ModalComponent>
                 </div>
               </div>
-            </WrapperFooter>
-          </>
-        ) : (
-          <div className="vh-100 w-100">
-            <Spinner />
-          </div>
-        )
-      }
+            </div>
+          </WrapperFooter>
+        </>
+      ) : (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      )}
     </>
   );
 };
@@ -155,7 +171,7 @@ const LeftView = styled.div`
     }
   }
   h4 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 600;
     font-size: 20px;

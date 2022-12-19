@@ -18,6 +18,7 @@ import {
   SuccessConfirm,
 } from "../../../Accessories/BVNConfirm";
 import ModalComponent from "../../../ModalComponent";
+import { getCurrIcon } from "../../Accesssories";
 
 const PlanPayment = () => {
   const [card, setCard] = useState("card");
@@ -39,14 +40,18 @@ const PlanPayment = () => {
 
   useEffect(() => {
     if (plan?.id === parseInt(id)) {
-      setAmount(plan?.planSummary?.principal);
+      setAmount(
+        plan?.product?.properties?.hasTargetAmount === true
+          ? plan?.contributionValue
+          : plan?.planSummary?.principal
+      );
     }
   }, [plan]);
 
   useEffect(() => {
-    if(amount){
+    if (amount) {
       const formData = {
-        amount: parseFloat(amount*plan?.exchangeRate),
+        amount: parseFloat(amount * plan?.exchangeRate),
         purposeOfPayment: "PLAN_CREATION",
       };
       dispatch(regTransaction(formData));
@@ -73,6 +78,8 @@ const PlanPayment = () => {
   //   await dispatch(getSinglePlan(parseInt(id)));
   //   setSuccess(true);
   // }
+
+  console.log({ amount });
 
   const onSuccess = (reference) => {
     dispatch(payWithCard(parseInt(id), setSuccess));
@@ -137,7 +144,8 @@ const PlanPayment = () => {
                     <div className="d-flex align-items-center justify-content-between">
                       <div>
                         <h4>Balance</h4>
-                        <p className="p-0 m-0">
+                        <p className="d-flex gap-1">
+                          {getCurrIcon(plan?.currency?.name)}
                           {plan?.planSummary?.principal?.toLocaleString()}
                         </p>
                       </div>
@@ -166,15 +174,21 @@ const PlanPayment = () => {
                 </div>
                 <div className="row">
                   <div className="col ">
-                    <label>Input amout to Top-up</label>
+                    <label>Amount to Top-up</label>
                     <div className="input-group mb-4">
+                      <div className=" input-group-prepend curr-icon">
+                        {getCurrIcon(plan?.currency?.name)}
+                      </div>
                       <input
-                        className="form-control"
+                        className="form-control curr-input"
                         placeholder="N  0.00"
                         type="number"
                         name="amount"
-                        value={plan?.planSummary?.principal}
-                        min={plan?.product?.minTransactionLimit}
+                        value={
+                          plan?.product?.properties?.hasTargetAmount === true
+                            ? plan?.contributionValue
+                            : plan?.planSummary?.principal
+                        }
                         disabled
                         required
                         // onChange={(e) => setAmount(parseInt(e.target.value))}
@@ -216,7 +230,7 @@ const PlanPayment = () => {
                     </button>
                   </div> */}
                 <ProceedPayCard
-                  amount={parseFloat(amount) * plan?.exchangeRate}
+                  amount={(amount * plan?.exchangeRate).toFixed(2) * 100}
                   payType="withdraw-paystack"
                   onSuccess={onSuccess}
                   onClose={onClose}
@@ -281,6 +295,16 @@ const LeftView = styled.div`
   }
   .Matured {
     color: #2d9cdb;
+  }
+
+  .curr-icon {
+    position: absolute;
+    margin-top: 6px;
+    margin-left: 12px;
+    z-index: 10;
+  }
+  .curr-input {
+    padding-left: 24px;
   }
 `;
 
