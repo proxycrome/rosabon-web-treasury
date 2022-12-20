@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   CLEAR_BVN,
   CLEAR_MESSAGES,
@@ -515,6 +516,13 @@ const userProfileReducer = (state = initialState, action) => {
         ...state,
         sidebar: !state.sidebar,
       };
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = {
+        ...state,
+        users: null,
+      }
       break;
 
     default:
