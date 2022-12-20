@@ -238,7 +238,7 @@ const Statement = () => {
               data?.transactionDate?.split(" ")[0],
               "DD-MM-YYYY"
             ).format("DD-MM-YYYY")}`,
-            description: `${data?.transactionCategory}`,
+            description: `${data?.description ? data?.description : ""}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
@@ -250,7 +250,7 @@ const Statement = () => {
         : checkHistoryDisplay()?.map((data) => ({
             id: `${data?.transactionId}`,
             date: `${data?.transactionDate?.split(" ")[0]}`,
-            description: `${data?.transactionCategory}`,
+            description: `${data?.description ? data?.description : ""}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"

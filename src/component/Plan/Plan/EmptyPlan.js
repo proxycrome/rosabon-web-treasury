@@ -1,25 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import img1 from "../../../asset/checkboard.png";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 
-const EmptyPlan = () => {
-  const { fullName } = useSelector((state) => state.auth?.login);
+const EmptyPlan = ({ plan }) => {
+  const { users } = useSelector((state) => state.user_profile);
+  console.log(users);
   return (
     <Wrapper>
-      <div className='row justify-content-center' >
-        <img src={img1} alt="no-plan" style={{width:290,height:290}} />
-        <p className='text-msg' >
-          Hello{" "} {fullName}, You have not created any investment<br/> plans yet,{" "}
-          <Link to="/plan-product" className='link' >Click to Add Plan</Link>
-        </p>
-      </div>
+      {plan === "archive" ? (
+        <div className="row justify-content-center">
+          <img src={img1} alt="no-plan" style={{ width: 290, height: 290 }} />
+          <p className="text-msg">
+            Hello{" "}
+            {users?.role === "INDIVIDUAL_USER"
+              ? users?.individualUser?.firstName
+              : users?.company?.name}
+            , You do not have any Closed
+            <br /> plans yet,{" "}
+            <Link to="/plan-product" className="link">
+              Click to Add Plan
+            </Link>
+          </p>
+        </div>
+      ) : (
+        <div className="row justify-content-center">
+          <img src={img1} alt="no-plan" style={{ width: 290, height: 290 }} />
+          <p className="text-msg">
+            Hello{" "}
+            {users?.role === "INDIVIDUAL_USER"
+              ? users?.individualUser?.firstName
+              : users?.company?.name}
+            , You have not created any investment
+            <br /> plans yet,{" "}
+            <Link to="/plan-product" className="link">
+              Click to Add Plan
+            </Link>
+          </p>
+        </div>
+      )}
     </Wrapper>
-  )
-}
+  );
+};
 
-export default EmptyPlan
+export default EmptyPlan;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -41,4 +66,4 @@ const Wrapper = styled.div`
     cursor: pointer;
     text-decoration: none;
   }
-`
+`;

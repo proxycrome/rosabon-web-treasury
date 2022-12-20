@@ -123,7 +123,7 @@ const Archives = () => {
               </div>
             </>
           ) : 
-          <EmptyPlan />
+          <EmptyPlan plan="archive"/>
         }
         {/* <div className="row">
           <div className="d-flex justify-content-center my-5">
