@@ -2101,7 +2101,7 @@ export const HistoryTable = () => {
               </Link>
             ),
             date: `${data?.transactionDate?.split(" ")[0]}`,
-            description: `${data?.transactionCategory}`,
+            description: `${data?.description}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
@@ -2120,7 +2120,7 @@ export const HistoryTable = () => {
               </Link>
             ),
             date: `${data?.transactionDate?.split(" ")[0]}`,
-            description: `${data?.transactionCategory}`,
+            description: `${data?.description ? data?.description : ""}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
