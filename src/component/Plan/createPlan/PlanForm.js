@@ -799,6 +799,12 @@ const PlanForm = () => {
     }
   };
 
+  document.querySelector('#amount')?.addEventListener('keydown', function(e) {
+    if (e.which === 38 || e.which === 40) {
+        e.preventDefault();
+    }
+});
+
   return (
     <form onSubmit={handleSubmit}>
       {calcContribValue}
@@ -943,6 +949,7 @@ const PlanForm = () => {
                           }
                             ${validate && "validate"}`}
                           name="amount"
+                          id="amount"
                           required
                           placeholder=""
                           type="number"
@@ -984,6 +991,7 @@ const PlanForm = () => {
                             ${formData.currency !== "" && "curr-input"} ${
                             validate && "validate"
                           }`}
+                          id="amount"
                           name="targetAmount"
                           placeholder=""
                           disabled={
