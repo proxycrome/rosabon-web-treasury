@@ -236,7 +236,7 @@ const PlanForm = () => {
     } else {
       setFormData({
         ...formData,
-        tenor: checkAtMaturity ? null : formData.tenor,
+        tenor: checkAtMaturity ? 0 : formData.tenor,
         currency: currencies_list.find((item) => item.id === formData.currency)
           ?.name,
       });
@@ -1029,7 +1029,7 @@ const PlanForm = () => {
                       name="tenor"
                       required
                       onChange={handleChange}
-                      defaultValue={formData.tenor}
+                      value={formData.tenor}
                     >
                       <option value="" disabled hidden>
                         Select tenor
