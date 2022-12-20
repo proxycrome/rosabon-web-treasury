@@ -31,8 +31,8 @@ const PlanCardPayment = ({ goBack }) => {
     const formData = {
       amount: parseFloat(
         product.properties.hasTargetAmount === true
-          ? form?.contributionValue * form?.exchangeRate
-          : form?.planSummary.principal * form?.exchangeRate
+          ? (form?.contributionValue * form?.exchangeRate).toFixed(2)
+          : (form?.planSummary.principal * form?.exchangeRate).toFixed(2)
       ),
       purposeOfPayment: "PLAN_CREATION",
     };
@@ -56,10 +56,10 @@ const PlanCardPayment = ({ goBack }) => {
   //   await console.log("show pay", paySuccess)
   // }
 
-  let amount = String(
-    parseFloat(product.properties.hasTargetAmount === true
-      ? form?.contributionValue * form?.exchangeRate * 100
-      : form?.planSummary.principal * form?.exchangeRate * 100)
+  let amount = parseInt(
+    product.properties.hasTargetAmount === true
+      ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100
+      : (form?.planSummary.principal * form?.exchangeRate).toFixed(2) * 100
   );
 
   return (

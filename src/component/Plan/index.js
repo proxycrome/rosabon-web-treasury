@@ -20,9 +20,6 @@ const PlanHome = ({ product, list, topup, payment, details, children }) => {
     if (!isLoggedIn) {
       navigate("/login");
     }
-    if (users && !users?.kyc) {
-      navigate("/kyc");
-    }
   }, [users]);
 
   return (

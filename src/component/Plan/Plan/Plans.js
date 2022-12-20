@@ -48,7 +48,9 @@ export const Plans = () => {
   const userPlans = plans?.data.body
     ? plans?.data.body?.filter((item) => item.planStatus !== "CLOSED")
     : [];
-  const prodCategories = categories?.data.body ? categories?.data.body : [];
+  const prodCategories = categories?.data.body
+    ? categories?.data?.body?.filter((item) => item.status === "ACTIVE")
+    : [];
   const planStatus = plans?.statusCode;
   const product = products?.data.body ? products?.data.body : [];
 
@@ -237,15 +239,13 @@ export const Plans = () => {
                           }
                         </p>
                       </div>
-                      <div className={`${item?.toppingUp && "status-contain"}`} >
+                      <div className={`${item?.toppingUp && "status-contain"}`}>
                         <h4 className={capitalise(item.planStatus)}>
                           {capitalise(item.planStatus)}{" "}
                         </h4>
-                        {
-                          item?.toppingUp && (
-                            <small className="topping-up" >Topping Up</small>
-                          )
-                        }
+                        {item?.toppingUp && (
+                          <small className="topping-up">Topping Up</small>
+                        )}
                       </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-between pt-4">
@@ -437,7 +437,14 @@ const Wrapper = styled.div`
   }
 `;
 
-export const DropDown = ({ id, status, handleBankModal, removePlan, plan, currentPlans }) => {
+export const DropDown = ({
+  id,
+  status,
+  handleBankModal,
+  removePlan,
+  plan,
+  currentPlans,
+}) => {
   const [menu, setMenu] = useState(false);
   const dispatch = useDispatch();
   const { plans, singlePlan, loading } = useSelector((state) => state.plan);
@@ -456,24 +463,24 @@ export const DropDown = ({ id, status, handleBankModal, removePlan, plan, curren
   const [checkRollover, setCheckRollover] = useState(plan?.autoRollOver);
 
   const autoRollover = () => {
-    setCheckRollover(!checkRollover)
+    setCheckRollover(!checkRollover);
     // dispatch(getSinglePlan(id));
   };
 
   console.log(checkRollover);
   useEffect(() => {
-    const selectedPlan = currentPlans?.find(item => item.id === id)
+    const selectedPlan = currentPlans?.find((item) => item.id === id);
     // console.log({selectedPlan});
-    if(menu){
+    if (menu) {
       dispatch(updatePlan(null, selectedPlan?.id, dispatch));
-    }  
-  }, [checkRollover])
+    }
+  }, [checkRollover]);
 
   // useEffect(() => {
   //   dispatch(getSinglePlan(id));
   // }, [])
 
-  const toggle = () => { 
+  const toggle = () => {
     setMenu((prevState) => !prevState);
   };
 
@@ -486,7 +493,7 @@ export const DropDown = ({ id, status, handleBankModal, removePlan, plan, curren
         id="page-header-user-dropdown"
         data-toggle
       >
-        <div style={{ width: "100%", height: "100%" }} >
+        <div style={{ width: "100%", height: "100%" }}>
           <i className="fa-solid fa-ellipsis"></i>
         </div>
       </DropdownToggle>
@@ -530,13 +537,9 @@ export const DropDown = ({ id, status, handleBankModal, removePlan, plan, curren
                 style={{ width: "150px" }}
               >
                 <div>Auto rollover</div>{" "}
-                {
-                  loading ?
-                  <ClipLoader 
-                    color="#111E6C"
-                    loading={loading}
-                    size={35}
-                  /> :
+                {loading ? (
+                  <ClipLoader color="#111E6C" loading={loading} size={35} />
+                ) : (
                   <Switch
                     className="mr-2 mt-1"
                     onColor="#111E6C"
@@ -546,7 +549,7 @@ export const DropDown = ({ id, status, handleBankModal, removePlan, plan, curren
                     width={35}
                     height={18}
                   />
-                }
+                )}
               </div>
             </DropdownItem>
             <DropdownItem tag={Link} to={`/history/${id}`}>
