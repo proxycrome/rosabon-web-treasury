@@ -11,23 +11,17 @@ const Profile = () => {
   const { login } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.user_profile);
 
-  useEffect(() => {
-    if (users && !users.kyc) {
-      navigate("/kyc");
-    }
-  }, [users])
-
   return (
     <WrapperBody>
       <div className="side-bar shadow-sm style-log">
         <ProfileSideBarList profile="profile" />
       </div>
 
-      {users.role === "INDIVIDUAL_USER" ? (
+      {users?.role === "INDIVIDUAL_USER" ? (
         <div className="main-body">
           <PersonalProfile />
         </div>
-      ) : users.role === "COMPANY" ? (
+      ) : users?.role === "COMPANY" ? (
         <div className="main-body">
           <CompanyProfile />
         </div>

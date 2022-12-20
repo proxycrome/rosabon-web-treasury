@@ -63,7 +63,7 @@ import {
   getClosedPlansError,
   updatePlanSuccess,
   updatePlanError,
-  getSinglePlan,
+  // getSinglePlan,
   getPlans
 } from "./actions";
 
@@ -131,11 +131,11 @@ function* createPlan({ payload: { formData, setShow } }) {
     const response = yield call(createPlanService, formData);
     console.log(response.data);
     yield put(createPlanSuccess(response.data));
-    toast.success("Plan Saved", {
-      position: "top-right",
-    });
     if (response) {
       setShow(true);
+      toast.success("Plan Saved", {
+        position: "top-right",
+      });
     }
   } catch (error) {
     console.log(error?.response?.data);

@@ -40,7 +40,7 @@ const PlanModal = ({ handleClose }) => {
     setAutoRenew(plan?.autoRenew);
   }, []);
 
-  console.log(plan);
+  console.log({ plan });
 
   return (
     <Wrapper>
@@ -112,7 +112,13 @@ const PlanModal = ({ handleClose }) => {
                   </p>
                 </div>
                 <div className="right">
-                  <p className="p-light">Monthly contribution</p>
+                  <p className="p-light">
+                    {plan?.savingFrequency === "MONTHLY"
+                      ? "Monthly contribution"
+                      : plan?.savingFrequency === "WEEKLY"
+                      ? "Weekly contribution"
+                      : "Daily contribution"}
+                  </p>
                   <p className="p-dark flex justify-content-end">
                     {getCurrIcon(current_currency)}
                     {plan.contributionValue}
@@ -159,7 +165,7 @@ const PlanModal = ({ handleClose }) => {
               <div>
                 <p className="p-light">Interest rate</p>
                 <p className="p-dark">
-                  {plan.interestRate ? plan.interestRate : 0}{" "}%
+                  {plan.interestRate ? plan.interestRate : 0} %
                 </p>
               </div>
               <div className="right">

@@ -24,7 +24,7 @@ function HomeView() {
   }
 
   // useEffect(() => {
-  //   if (login && !login.kyc) {
+  //   if (users && !users.kyc) {
   //     navigate("/kyc");
   //   }
   // }, [login]);

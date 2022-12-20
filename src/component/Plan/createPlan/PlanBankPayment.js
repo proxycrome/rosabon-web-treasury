@@ -1,22 +1,21 @@
-import React, { useState, useContext, useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import MOneyTransfer from '../../../asset/money-transfer.png';
-import { ProfileNavBar } from '../../dashboard/ProfileNavbar';
-import { PlanSummary, UserBankDetails } from '../Accesssories';
-import ModalComponent from '../../ModalComponent';
-import { SuccessConfirm } from '../../Accessories/BVNConfirm';
+import React, { useState, useContext, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import MOneyTransfer from "../../../asset/money-transfer.png";
+import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+import { PlanSummary, UserBankDetails } from "../Accesssories";
+import ModalComponent from "../../ModalComponent";
+import { SuccessConfirm } from "../../Accessories/BVNConfirm";
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 // import { createPlan } from "../../../redux/actions/plan/planAction";
-import { createPlan, createDynamicAcc } from '../../../store/actions';
+import { createPlan, createDynamicAcc } from "../../../store/actions";
 import { PlanContext } from "./PlanForm";
-import Spinner from '../../common/loading';
+import Spinner from "../../common/loading";
 
-
-const PlanBankPayment = ({goBack}) => {
+const PlanBankPayment = ({ goBack }) => {
   const [show, setShow] = useState(false);
-  const [shell, setShell] = useState(false);
+  const [checkPlanName, setCheckPlanName] = useState("");
   const { form, setForm } = useContext(PlanContext);
   const [modalCount, setModalCount] = useState(0);
   const [accountCheck, setAccountCheck] = useState(false);
@@ -27,59 +26,58 @@ const PlanBankPayment = ({goBack}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(createDynamicAcc(form.planName))
-  },[])
+    dispatch(createDynamicAcc(form.planName));
+  }, []);
 
   useEffect(() => {
+    if (dynamic_account) {
+      let planNameLen = form?.planName.length;
+      let dynamicCheck =
+        dynamic_account?.accountName !== null
+          ? dynamic_account?.accountName.slice(9, planNameLen + 9)
+          : null;
 
-    let planNameLen = form?.planName.length;
-    let dynamicCheck = dynamic_account?.accountName !== null ?
-    dynamic_account?.accountName.slice(9, planNameLen+9) : null;
-    const timer = () => {
-      setSiteCount(siteCount + 2);
-    }
-    setForm({
-      ...form,
-      bankAccountInfo: {
-        accountName: dynamic_account?.accountName,
-        accountNumber: dynamic_account?.accountNumber,
-        bankName: "Rosabon"
-      },
-      paymentMethod: "BANK_TRANSFER",
-    })
+      setCheckPlanName(dynamicCheck);
 
-    
-    if(dynamic_account) {
+      setForm({
+        ...form,
+        bankAccountInfo: {
+          accountName: dynamic_account?.accountName,
+          accountNumber: dynamic_account?.accountNumber,
+          bankName: "Providus Bank",
+        },
+        paymentMethod: "BANK_TRANSFER",
+      });
+
       setAccountCheck(true);
     }
-    if (
-      siteCount >= 8  && 
-      dynamicCheck === form?.planName && 
-      dynamic_account?.accountName === form?.bankAccountInfo?.accountName
-    ) {
-      dispatch(createPlan(form, setShell));
-      return;
-    }
-    const id = setInterval(timer, 2000);
-    // dispatch(createPlan(form, setShell));
-    return () => clearInterval(id);
-  },[dynamic_account, siteCount]);
+
+    // if (
+    //   siteCount >= 8  &&
+    //   dynamicCheck === form?.planName &&
+    //   dynamic_account?.accountName === form?.bankAccountInfo?.accountName
+    // ) {
+    //   dispatch(createPlan(form, setShell));
+    //   return;
+    // }
+  }, [dynamic_account]);
 
   useEffect(() => {
-    setModalCount(modalCount+1);
-    if(modalCount >= 2){
-      navigate("/plan-product")
+    setModalCount(modalCount + 1);
+    if (modalCount >= 2) {
+      navigate("/plan-product");
     }
-  },[show])
+  }, [show]);
 
   const handleSubmit = () => {
-    // dispatch(createPlan(form, setShow));
-    setShow(true);
-  }
-
+    if (
+      checkPlanName === form?.planName &&
+      dynamic_account?.accountName === form?.bankAccountInfo?.accountName
+    ) {
+      dispatch(createPlan(form, setShow));
+    }
+  };
   console.log("form here", form);
-  
-
 
   return (
     <>
@@ -88,71 +86,78 @@ const PlanBankPayment = ({goBack}) => {
           <span className="fw-bold">Choose Plan</span>
         </NavTitle>
       </ProfileNavBar>
-      {
-        accountCheck ? (
-          <div>
-            <Wrapper>
-              <Toaster />
-              <LeftView>
-                <h6>Kindly confirm your transaction details below</h6>
-                <div className="choose-plan mt-5">
-                  <div className="d-flex align-items-center justify-content-between">
-                      <div>Payment Type:</div>
-                      <div className="d-flex align-items-center">
-                          <img className="verve-card" src={MOneyTransfer} alt="Verve" />
-                          <p className="p-0 m-0">Bank Transfer</p>
-                      </div>
-                  </div>
-                </div>
-                <PlanSummary />
-              </LeftView>
-              <RightView>
-                <div className="bank-details">
-                  <div className="bank-detail-content">
-                    <UserBankDetails />
-                  </div>
-                </div>
-              </RightView>
-            </Wrapper>
-            <WrapperFooter>
-              <div className="footer-body">
-                <div className="d-flex align-items-center justify-content-between footer-content">
-                  <div>
-                    <button style={{ color: '#111E6C', width: '300px' }} onClick={goBack}>Back</button>
-                  </div>
-                  <div>
-                    <button
-                      style={{
-                        backgroundColor: '#111E6C',
-                        color: '#FFFFFF',
-                        width: '300px',
-                      }}
-                      // onClick={() => setShow(true)}
-                      onClick={handleSubmit}
-                    >
-                      {loading ? 'LOADING...' : 'Save'}
-                    </button>
-                    <ModalComponent
-                      show={show}
-                      size={'md'}
-                      handleClose={() => setShow(false)}
-                    >
-                      <SuccessConfirm 
-                        createPlan="paid"
-                        handleClose={() => setShow(false)}
-                      />
-                    </ModalComponent>
+      {accountCheck ? (
+        <div>
+          <Wrapper>
+            <Toaster />
+            <LeftView>
+              <h6>Kindly confirm your transaction details below</h6>
+              <div className="choose-plan mt-5">
+                <div className="d-flex align-items-center justify-content-between">
+                  <div>Payment Type:</div>
+                  <div className="d-flex align-items-center">
+                    <img
+                      className="verve-card"
+                      src={MOneyTransfer}
+                      alt="Verve"
+                    />
+                    <p className="p-0 m-0">Bank Transfer</p>
                   </div>
                 </div>
               </div>
-            </WrapperFooter>
-          </div>
-        ) : (
-          <div className="vh-100 w-100">
-            <Spinner />
-          </div>
-        )
-      }
+              <PlanSummary />
+            </LeftView>
+            <RightView>
+              <div className="bank-details">
+                <div className="bank-detail-content">
+                  <UserBankDetails />
+                </div>
+              </div>
+            </RightView>
+          </Wrapper>
+          <WrapperFooter>
+            <div className="footer-body">
+              <div className="d-flex align-items-center justify-content-between footer-content">
+                <div>
+                  <button
+                    style={{ color: "#111E6C", width: "300px" }}
+                    onClick={goBack}
+                  >
+                    Back
+                  </button>
+                </div>
+                <div>
+                  <button
+                    style={{
+                      backgroundColor: "#111E6C",
+                      color: "#FFFFFF",
+                      width: "300px",
+                    }}
+                    // onClick={() => setShow(true)}
+                    onClick={handleSubmit}
+                  >
+                    {loading ? "LOADING..." : "Save"}
+                  </button>
+                  <ModalComponent
+                    show={show}
+                    size={"md"}
+                    handleClose={() => setShow(false)}
+                  >
+                    <SuccessConfirm
+                      createPlan="paid"
+                      handleClose={() => setShow(false)}
+                    />
+                  </ModalComponent>
+                </div>
+              </div>
+            </div>
+          </WrapperFooter>
+        </div>
+      ) : (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      )}
     </>
   );
 };
@@ -188,7 +193,7 @@ const LeftView = styled.div`
     }
   }
   h4 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-style: normal;
     font-weight: 600;
     font-size: 20px;

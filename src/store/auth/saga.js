@@ -41,12 +41,14 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
 
     yield put(loginUserSuccess(response.data));
     if (response) {
-      toast.success("Login was successful");
-      dispatch(getAuthUsers());
-      if (response.data.kyc) {
+      if (response.data.kyc === true) {
         navigate("/");
+        toast.success("Login was successful", {position: "top-right"});
+        dispatch(getAuthUsers());
       } else {
         navigate("/kyc");
+        toast.success("Login was successful", {position: "top-right"});
+        dispatch(getAuthUsers());
       }
     }
     console.log(response.data);

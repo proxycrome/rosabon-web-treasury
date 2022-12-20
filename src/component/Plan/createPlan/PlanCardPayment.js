@@ -56,7 +56,7 @@ const PlanCardPayment = ({ goBack }) => {
   //   await console.log("show pay", paySuccess)
   // }
 
-  let amount = parseFloat(
+  let amount = parseInt(
     product.properties.hasTargetAmount === true
       ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100
       : (form?.planSummary.principal * form?.exchangeRate).toFixed(2) * 100

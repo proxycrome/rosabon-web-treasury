@@ -50,9 +50,8 @@ const BankDetails = () => {
     bankDetails,
   } = useSelector((state) => state.user_profile);
 
-  const { loading, accountDetail, accountDetailError, bankUpdateMsg } = useSelector(
-    (state) => state.updateProfile
-  );
+  const { loading, accountDetail, accountDetailError, bankUpdateMsg } =
+    useSelector((state) => state.updateProfile);
 
   console.log(accountDetail);
   console.log(accountDetailError);
@@ -142,7 +141,10 @@ const BankDetails = () => {
         id: users?.individualUser?.bvn,
         isSubjectConsent: true,
         phoneNumber: users?.phone,
-        dateOfBirth: moment(users?.individualUser?.dateOfBirth, "DD-MM-YYYY").format("YYYY-MM-DD"),
+        dateOfBirth: moment(
+          users?.individualUser?.dateOfBirth,
+          "DD-MM-YYYY"
+        ).format("YYYY-MM-DD"),
       };
 
       console.log(objData);
@@ -152,10 +154,12 @@ const BankDetails = () => {
 
   const familiarityCheck = useCallback(() => {
     if (
-      accountDetail?.data?.account_name?.includes(
-        bvnMessage?.data?.firstName
-      ) &&
-      accountDetail?.data?.account_name?.includes(bvnMessage?.data?.lastName)
+      accountDetail?.data?.account_name
+        ?.toLowerCase()
+        ?.includes(bvnMessage?.data?.firstName?.toLowerCase()) &&
+      accountDetail?.data?.account_name
+        ?.toLowerCase()
+        ?.includes(bvnMessage?.data?.lastName?.toLowerCase())
     ) {
       return accountDetail?.data?.account_name;
     } else {

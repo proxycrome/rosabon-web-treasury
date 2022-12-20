@@ -4,11 +4,7 @@ const ProtectedRoute = ({ isAuth, children, user }) => {
   if (!isAuth) {
     return <Navigate to="/login" replace />;
   } else {
-    if (user) {
-      if (user?.kyc) {
-        return children;
-      } 
-    }
+    return children
   }
 };
 
