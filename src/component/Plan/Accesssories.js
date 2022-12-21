@@ -906,11 +906,10 @@ export const RolloverWithdrawMethod = ({
     [singlePlan]
   );
 
-  const user_role = login ? login?.role?.name : "";
-  const { bankDetails, bankDetailsError } = useSelector(
+  const { bankDetails, bankDetailsError, users } = useSelector(
     (state) => state.user_profile
   );
-  // const corporateUserWithdrawalMandateRef = useRef();
+  const user_role = users?.role;
   console.log("bank dets", bankDetails);
 
   console.log("hhh", withdrawTo);
@@ -963,7 +962,9 @@ export const RolloverWithdrawMethod = ({
                         Select withdrawal destination
                       </option>
                       <option value="TO_BANK">
-                        {bankDetails
+                        {user_role === "COMPANY"
+                          ? "To Bank"
+                          : bankDetails
                           ? `${bankDetails?.bank?.name} - ${bankDetails?.accountNumber}`
                           : "No bank available"}
                       </option>

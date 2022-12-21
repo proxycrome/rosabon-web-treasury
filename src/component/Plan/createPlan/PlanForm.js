@@ -536,30 +536,25 @@ const PlanForm = () => {
         formData.interestRate,
         checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
       ),
-      paymentMaturity: formData.interestRate
-        ? paymentAtMaturity(
-            formData.interestReceiptOption,
-            product?.properties?.hasTargetAmount
-              ? formData.targetAmount
-              : formData.amount,
-            withhold_tax[0]?.rate,
-            checkAtMaturity
-              ? Math.floor(
-                  moment(formData.actualMaturityDate).diff(recentDate, "days") /
-                    30
-                )
-              : Math.floor(selectedTenor?.tenorDays / 30),
-            calculateSI(
-              product?.properties?.hasTargetAmount
-                ? formData.targetAmount
-                : formData.amount,
-              formData.interestRate,
-              checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
+      paymentMaturity: paymentAtMaturity(
+        formData.interestReceiptOption,
+        product?.properties?.hasTargetAmount
+          ? formData.targetAmount
+          : formData.amount,
+        withhold_tax[0]?.rate,
+        checkAtMaturity
+          ? Math.floor(
+              moment(formData.actualMaturityDate).diff(recentDate, "days") / 30
             )
-          )
-        : product?.properties?.hasTargetAmount
-        ? formData.targetAmount
-        : formData.amount,
+          : Math.floor(selectedTenor?.tenorDays / 30),
+        calculateSI(
+          product?.properties?.hasTargetAmount
+            ? formData.targetAmount
+            : formData.amount,
+          formData.interestRate,
+          checkAtMaturity ? customTenorDays : selectedTenor?.tenorDays
+        )
+      ),
     });
   }, [
     formData.planName,
@@ -786,7 +781,11 @@ const PlanForm = () => {
   // submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!product?.properties?.hasSavingFrequency) {
+    if (
+      !product?.properties?.hasSavingFrequency &&
+      summary.paymentMaturity !== null &&
+      validSavingsFreq
+    ) {
       setIsClicked(true);
     } else {
       if (
@@ -799,11 +798,13 @@ const PlanForm = () => {
     }
   };
 
-  document.querySelector('#amount')?.addEventListener('keydown', function(e) {
+  console.log(summary.paymentAtMaturity);
+
+  document.querySelector("#amount")?.addEventListener("keydown", function (e) {
     if (e.which === 38 || e.which === 40) {
-        e.preventDefault();
+      e.preventDefault();
     }
-});
+  });
 
   return (
     <form onSubmit={handleSubmit}>

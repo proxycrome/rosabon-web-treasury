@@ -744,14 +744,16 @@ export function Notice({
   const dispatch = useDispatch();
   const date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
-  const { login } = useSelector((state) => state.auth);
-  const user_role = login ? login?.role?.name : "";
+  const { users } = useSelector((state) => state.user_profile);
+  const user_role = users ? users?.role : "";
   const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
-  const receive_amount = transferForm !== null && transferForm?.amount;
   const receiving_plan =
     transferForm !== null && JSON.parse(transferForm?.receive);
+  const receive_amount =
+    transferForm !== null &&
+    (transferForm?.amount * plan?.exchangeRate) / receiving_plan?.exchangeRate;
 
   const handleFullRoll = (e) => {
     e.preventDefault();
@@ -829,18 +831,15 @@ export function Notice({
     const formData = {
       amount: parseFloat(receive_amount),
       completed: true,
-      // corporateUserWithdrawalMandate: null,
-      // extraDetails: null,
       paymentType: null,
       plan: plan?.id,
       planAction: "TRANSFER",
       planToReceive: receiving_plan?.id,
-      // withdrawTo: null,
-      // withdrawType: null
     };
     dispatch(planAction(formData, null, handleShowModalTwo, dispatch));
     // await handleShowModalTwo("modal-two");
   };
+  
   return (
     <>
       <Wrapper>
@@ -854,7 +853,7 @@ export function Notice({
                     <p className="">
                       You are about to transfer{" "}
                       {getCurrIcon(plan?.currency?.name)}
-                      {parseFloat(receive_amount).toFixed(2)} from your{" "}
+                      {parseFloat(transferForm?.amount).toFixed(2)} from your{" "}
                       {plan?.planName} plan into {receiving_plan?.planName} plan
                     </p>
                   ) : payType === "pay-card" ? (

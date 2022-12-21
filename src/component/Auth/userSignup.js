@@ -232,7 +232,11 @@ function UserSignup() {
                                 className="form-control"
                                 onChange={handleValueChange}
                                 name="source"
-                                defaultValue={values.source === "ANOTHER_USER" ? "Another user" : "Rosabon sales executive"}
+                                defaultValue={
+                                  values.source === "ANOTHER_USER"
+                                    ? "Another user"
+                                    : "Rosabon sales executive"
+                                }
                                 disabled={sourcer}
                               />
                             </div>
