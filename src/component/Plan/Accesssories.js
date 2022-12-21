@@ -52,6 +52,7 @@ import {
 import Spinner from "../common/loading";
 import FileUpload from "../common/fileUpload";
 import toast, { Toaster } from "react-hot-toast";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export const NairaCard = () => {
   return (
@@ -406,9 +407,9 @@ const PaymentTypeWrapper = styled.div`
 `;
 
 export const UserBankDetails = ({ type = null }) => {
-  const { login } = useSelector((state) => state.auth);
+  const { users } = useSelector((state) => state.user_profile);
   const { singlePlan, bank_detail } = useSelector((state) => state.plan);
-  const { dynamic_account } = useSelector((state) => state.providus);
+  const { dynamic_account, loading } = useSelector((state) => state.providus);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
   let date = new Date();
@@ -429,47 +430,56 @@ export const UserBankDetails = ({ type = null }) => {
   return (
     <div>
       <UserBankDetailsWrapper>
-        <div>
-          <h4>Bank Details</h4>
-          <div className="pt-3">
-            <p className="p-0 m-0">
-              Hi {login.fullName}, Kindly make payment into the displayed
-              account details
+        {loading ? (
+          <div className="d-flex justify-content-center">
+            <ClipLoader color="#111E6C" loading={loading} size={35} />
+          </div>
+        ) : (
+          <div>
+            <h4>Bank Details</h4>
+            <div className="pt-3">
+              <p className="p-0 m-0">
+                Hi{" "}
+                {users?.role === "INDIVIDUAL_USER"
+                  ? users?.individualUser?.firstName
+                  : users?.company?.name}
+                , Kindly make payment into the displayed account details
+              </p>
+            </div>
+            <div className="pt-4 d-flex justify-content-between w-100">
+              <div>
+                <div>
+                  <p className="p-0 m-0">Account Number</p>
+                </div>
+                <p className="p-0 m-0 bold-text">{account?.accountNumber} </p>
+              </div>
+              <div>
+                <CopyToClipboard text={text} onCopy={copied}>
+                  <img src={Copy} alt="copy" className="copy" />
+                </CopyToClipboard>
+              </div>
+            </div>
+            <div className="pt-3">
+              <div>
+                <p className="p-0 m-0">Account Name</p>
+              </div>
+              <p className="p-0 m-0 bold-text">{account?.accountName} </p>
+            </div>
+            <div className="pt-3">
+              <div>
+                <p className="p-0 m-0">Bank Name</p>
+              </div>
+              <p className="p-0 m-0 bold-text">Providus Bank</p>
+            </div>
+            <p className="pt-4">
+              Account details expires in 48 hours, kindly endeavour to make
+              transfer{" "}
+              <span style={{ display: type === null ? "auto" : "none" }}>
+                before {expire_date}, {time_format}
+              </span>
             </p>
           </div>
-          <div className="pt-4 d-flex justify-content-between w-100">
-            <div>
-              <div>
-                <p className="p-0 m-0">Account Number</p>
-              </div>
-              <p className="p-0 m-0 bold-text">{account?.accountNumber} </p>
-            </div>
-            <div>
-              <CopyToClipboard text={text} onCopy={copied}>
-                <img src={Copy} alt="copy" className="copy" />
-              </CopyToClipboard>
-            </div>
-          </div>
-          <div className="pt-3">
-            <div>
-              <p className="p-0 m-0">Account Name</p>
-            </div>
-            <p className="p-0 m-0 bold-text">{account?.accountName} </p>
-          </div>
-          <div className="pt-3">
-            <div>
-              <p className="p-0 m-0">Bank Name</p>
-            </div>
-            <p className="p-0 m-0 bold-text">Providus Bank</p>
-          </div>
-          <p className="pt-4">
-            Account details expires in 48 hours, kindly endeavour to make
-            transfer{" "}
-            <span style={{ display: type === null ? "auto" : "none" }}>
-              before {expire_date}, {time_format}
-            </span>
-          </p>
-        </div>
+        )}
       </UserBankDetailsWrapper>
     </div>
   );
@@ -1180,7 +1190,9 @@ export const WithdrawalSummary = ({
                   <p className="p-0 m-0">Penal Charges </p>
                   <h4 className="d-flex gap-1">
                     {getCurrIcon(plan?.currency?.name)}
-                    {computePenalCharge(plan?.interestReceiptOption).toLocaleString()}
+                    {computePenalCharge(
+                      plan?.interestReceiptOption
+                    ).toLocaleString()}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1190,11 +1202,13 @@ export const WithdrawalSummary = ({
                   </p>
                   <h4 className="d-flex gap-1 justify-content-end">
                     {getCurrIcon(plan?.currency?.name)}
-                    {parseFloat((
-                      plan?.planSummary?.principal -
-                      amount -
-                      computePenalCharge(plan?.interestReceiptOption)
-                    ).toFixed(2)).toLocaleString()}
+                    {parseFloat(
+                      (
+                        plan?.planSummary?.principal -
+                        amount -
+                        computePenalCharge(plan?.interestReceiptOption)
+                      ).toFixed(2)
+                    ).toLocaleString()}
                   </h4>
                 </div>
               </div>
@@ -2013,7 +2027,7 @@ export const HistoryTable = () => {
     dispatch(getWalletTransactions());
   }, [dispatch]);
 
-  const { walletTransactions, transaction } = useSelector(
+  const { walletTransactions, transaction, loading } = useSelector(
     (state) => state.wallet
   );
 
@@ -2078,12 +2092,12 @@ export const HistoryTable = () => {
         width: 100,
       },
       {
-        label: "Amount",
+        label: "Amount (NGN)",
         field: "amount",
         width: 100,
       },
       {
-        label: "Balance",
+        label: "Balance (NGN)",
         field: "balance",
         width: 100,
       },
@@ -2207,6 +2221,7 @@ export const HistoryTable = () => {
             <TransactionPreview
               handleClose={() => setShow(false)}
               transaction={transaction}
+              loading={loading}
             />
           </ModalComponent>
         </div>
@@ -3129,7 +3144,7 @@ export const FeedbackTickets = () => {
                       </tr>
                     ))
                   ) : (
-                    <h4 style={{ alignText: "center" }}>
+                    <h4 style={{ textAlign: "center" }}>
                       No Tickets Available
                     </h4>
                   )}

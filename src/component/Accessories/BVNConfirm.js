@@ -24,6 +24,7 @@ import { useSelector, useDispatch, connect } from "react-redux";
 import { CLEAR_MESSAGES } from "../../store/updateProfile/actionTypes";
 import { getCurrIcon } from "../Plan/Accesssories";
 import moment from "moment";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export function BVNConfirm({
   bank,
@@ -900,7 +901,7 @@ export function Notice({
   );
 }
 
-export function TransactionPreview({ handleClose, transaction }) {
+export function TransactionPreview({ handleClose, transaction, loading }) {
   const generatePDF = () => {
     const input = document.getElementById("print");
     const pxToMm = (px) => {
@@ -937,59 +938,66 @@ export function TransactionPreview({ handleClose, transaction }) {
     });
   };
 
+  console.log(transaction);
   return (
     <div>
       <Wrapper>
         <div className="d-flex justify-content-center align-items-center">
           <WrapDetails>
-            <div className="container">
-              <div className="row">
-                <div
-                  className="col"
-                  id="print"
-                  style={{ border: "1px solid black" }}
-                >
-                  <div className="d-flex flex-column justify-content-center align-items-center pb-5">
-                    <h4>
-                      {transaction?.transactionType === "CREDIT" ? "+" : "-"}{" "}
-                      NGN
-                      {transaction?.debit.toLocaleString()}
-                    </h4>
-                    <p style={{ fontSize: "12px" }}>
-                      {transaction?.transactionCategory}
-                    </p>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-start">
-                    <p>Transaction ID:</p>
-                    <h6>{transaction?.transactionId}</h6>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-start">
-                    <p>Transaction Date:</p>
-                    <h6>{transaction?.transactionDate.split(" ")[0]}</h6>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-start">
-                    <p>Transaction Type:</p>
-                    <h6>{transaction?.transactionType}</h6>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-start">
-                    <p>Balance:</p>
-                    <h6>
-                      NGN{" "}
-                      {transaction?.balanceAfterTransaction.toLocaleString()}
-                    </h6>
-                  </div>
-                </div>
-                <div className="pt-5 d-flex justify-content-center">
-                  <button
-                    type="button"
-                    className="btn grey_btn"
-                    onClick={generatePDF}
+            {loading ? (
+              <div className="d-flex justify-content-center">
+                <ClipLoader color="#111E6C" loading={loading} size={35} />
+              </div>
+            ) : (
+              <div className="container">
+                <div className="row">
+                  <div
+                    className="col"
+                    id="print"
+                    style={{ border: "1px solid black" }}
                   >
-                    Download PDF
-                  </button>
+                    <div className="d-flex flex-column justify-content-center align-items-center pb-5">
+                      <h4>
+                        {transaction?.transactionType === "CREDIT" ? "+" : "-"}{" "}
+                        NGN
+                        {transaction?.debit.toLocaleString()}
+                      </h4>
+                      <p style={{ fontSize: "12px" }}>
+                        {transaction?.description}
+                      </p>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-start">
+                      <p>Transaction ID:</p>
+                      <h6>{transaction?.transactionId}</h6>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-start">
+                      <p>Transaction Date:</p>
+                      <h6>{transaction?.transactionDate.split(" ")[0]}</h6>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-start">
+                      <p>Transaction Type:</p>
+                      <h6>{transaction?.transactionType}</h6>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-start">
+                      <p>Balance:</p>
+                      <h6>
+                        NGN{" "}
+                        {transaction?.balanceAfterTransaction.toLocaleString()}
+                      </h6>
+                    </div>
+                  </div>
+                  <div className="pt-5 d-flex justify-content-center">
+                    <button
+                      type="button"
+                      className="btn grey_btn"
+                      onClick={generatePDF}
+                    >
+                      Download PDF
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </WrapDetails>
         </div>
       </Wrapper>

@@ -228,6 +228,7 @@ export const DropDown = ({ status, notifications, viewNote, dispatch }) => {
 
   const toggle = () => {
     setMenu(!menu);
+    dispatch(getNotification());
   };
 
   return (

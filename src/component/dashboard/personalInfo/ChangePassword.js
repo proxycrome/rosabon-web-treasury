@@ -51,8 +51,9 @@ const ChangePassword = () => {
     setPasswordShown3(!passwordShown3);
   };
 
-  const { users, showEmailOtpModal, otp, otpError, loading } =
-    useSelector((state) => state.user_profile);
+  const { users, showEmailOtpModal, otp, otpError, loading } = useSelector(
+    (state) => state.user_profile
+  );
 
   const { passChangeMsg, passChangeError } = useSelector(
     (state) => state.updateProfile
@@ -65,12 +66,11 @@ const ChangePassword = () => {
     setToken(otp);
   };
 
-  const data = {
+  const [formData, setformData] = useState({
     newPassword: "",
     oldPassword: "",
     cNewPassword: "",
-  };
-  const [formData, setformData] = useState(data);
+  });
   const [touched, setTouched] = useState(false);
 
   const handleChange = (e) => {
@@ -84,7 +84,8 @@ const ChangePassword = () => {
 
   function validatePassword(values) {
     let errors = {};
-    var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+    var re =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
     if (!values.oldPassword) {
       errors.oldPassword = "Current Password is required";
@@ -105,7 +106,7 @@ const ChangePassword = () => {
   const handleSendOtp = (e) => {
     e.preventDefault();
     setErrors(validatePassword(formData));
-    setIsSubmitted(true);  
+    setIsSubmitted(true);
   };
 
   const handleSubmit = async (e) => {
@@ -125,19 +126,22 @@ const ChangePassword = () => {
     });
   };
 
-  useEffect(()=>{
-    setErrors(validatePassword(formData))
-  },[formData]);
+  useEffect(() => {
+    const { oldPassword, newPassword, cNewPassword } = formData;
+    if (oldPassword && newPassword && cNewPassword) {
+      setErrors(validatePassword(formData));
+    }
+  }, [formData]);
 
   useEffect(() => {
-    if(token){
+    if (token) {
       handleSubmit();
     }
-  }, [token])
+  }, [token]);
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      dispatch(sendOtp());  
+      dispatch(sendOtp());
     }
   }, [errors]);
 
@@ -145,7 +149,6 @@ const ChangePassword = () => {
     dispatch({ type: CLOSE_MODAL });
     dispatch({ type: CLEAR_MESSAGES });
   };
-
 
   const reset = (e) => {
     e.preventDefault();
@@ -160,7 +163,12 @@ const ChangePassword = () => {
   return (
     <div>
       <Toaster />
-      <Form autoComplete="off" autoCorrect="off" autoSave="off" onSubmit={handleSendOtp}>
+      <Form
+        autoComplete="off"
+        autoCorrect="off"
+        autoSave="off"
+        onSubmit={handleSendOtp}
+      >
         <WrapperBody>
           <div className="container-fluid">
             <div className="row">
@@ -217,7 +225,7 @@ const ChangePassword = () => {
                       ></i>
                     </InputGroupText>
                   </InputGroup>
-                  {(errors.oldPassword && touched) && (
+                  {errors.oldPassword && touched && (
                     <span className="text-danger">{errors.oldPassword}</span>
                   )}
                 </FormGroup>
@@ -249,7 +257,7 @@ const ChangePassword = () => {
                       ></i>
                     </InputGroupText>
                   </InputGroup>
-                  {(errors.newPassword && touched) && (
+                  {errors.newPassword && touched && (
                     <span className="text-danger">{errors.newPassword}</span>
                   )}
                 </FormGroup>
@@ -294,7 +302,7 @@ const ChangePassword = () => {
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
                 <button type="submit" className="blue-btn">
-                  {loading  ? "Sending..." : "Save"}
+                  {loading ? "Sending..." : "Save"}
                 </button>
               </div>
             </div>

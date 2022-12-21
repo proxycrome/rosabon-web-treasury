@@ -172,6 +172,8 @@ const PersonalInfo = () => {
           : secondaryPhoneNumber.startsWith("234")
           ? secondaryPhoneNumber.replace(/234/, "0")
           : "0" + secondaryPhoneNumber
+        : users?.individualUser?.secondaryPhoneNumber
+        ? users?.individualUser?.secondaryPhoneNumber
         : users.phone,
       countryId: countryId
         ? Number(countryId)
@@ -435,7 +437,10 @@ const PersonalInfo = () => {
                       <button
                         type="button"
                         className="grey-button"
-                        onClick={toggleCont}
+                        onClick={(e) => {
+                          toggleCont();
+                          handleSubmit(e);
+                        }}
                       >
                         Save
                       </button>
