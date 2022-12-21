@@ -41,7 +41,8 @@ const PlanPayment = () => {
   useEffect(() => {
     if (plan?.id === parseInt(id)) {
       setAmount(
-        plan?.product?.properties?.hasTargetAmount === true
+        plan?.product?.properties?.hasTargetAmount &&
+          plan?.product?.properties?.hasSavingFrequency
           ? plan?.contributionValue
           : plan?.planSummary?.principal
       );
@@ -65,27 +66,11 @@ const PlanPayment = () => {
     }
   };
 
-  // const paymentSuccess = async () => {
-  //   const formData = {
-  //     amount: amount,
-  //     completed: true,
-  //     paymentType: "DEBIT_CARD",
-  //     plan: parseInt(id),
-  //     planToReceive: parseInt(id),
-  //     planAction: "TOP_UP",
-  //   }
-  //   await dispatch(planAction(formData))
-  //   await dispatch(getSinglePlan(parseInt(id)));
-  //   setSuccess(true);
-  // }
-
   console.log({ amount });
 
   const onSuccess = (reference) => {
     dispatch(payWithCard(parseInt(id), setSuccess));
-    console.log(reference);
-    // setDebitPopup(false);
-    // paymentSuccess();
+    // console.log(reference);
   };
 
   const onClose = () => {
@@ -185,7 +170,8 @@ const PlanPayment = () => {
                         type="number"
                         name="amount"
                         value={
-                          plan?.product?.properties?.hasTargetAmount === true
+                          plan?.product?.properties?.hasTargetAmount &&
+                          plan?.product?.properties?.hasSavingFrequency
                             ? plan?.contributionValue
                             : plan?.planSummary?.principal
                         }

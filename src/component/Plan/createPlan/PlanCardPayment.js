@@ -30,7 +30,7 @@ const PlanCardPayment = ({ goBack }) => {
   useEffect(() => {
     const formData = {
       amount: parseFloat(
-        product.properties.hasTargetAmount === true
+        product.properties.hasTargetAmount && product?.properties?.hasSavingFrequency
           ? (form?.contributionValue * form?.exchangeRate).toFixed(2)
           : (form?.planSummary.principal * form?.exchangeRate).toFixed(2)
       ),
@@ -57,8 +57,8 @@ const PlanCardPayment = ({ goBack }) => {
   // }
 
   let amount = parseInt(
-    product.properties.hasTargetAmount === true
-      ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100
+    product.properties.hasTargetAmount && product?.properties?.hasSavingFrequency
+      ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100 
       : (form?.planSummary.principal * form?.exchangeRate).toFixed(2) * 100
   );
 
