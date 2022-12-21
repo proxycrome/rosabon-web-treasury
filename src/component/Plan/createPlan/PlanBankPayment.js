@@ -21,12 +21,14 @@ const PlanBankPayment = ({ goBack }) => {
   const [accountCheck, setAccountCheck] = useState(false);
   const [siteCount, setSiteCount] = useState(0);
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.plan);
-  const { dynamic_account } = useSelector((state) => state.providus);
+  const { loading: planLoading } = useSelector((state) => state.plan);
+  const { dynamic_account, loading } = useSelector((state) => state.providus);
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(createDynamicAcc(form.planName));
+    if (form.planName) {
+      dispatch(createDynamicAcc(form.planName));
+    }
   }, []);
 
   useEffect(() => {
@@ -62,12 +64,12 @@ const PlanBankPayment = ({ goBack }) => {
     // }
   }, [dynamic_account]);
 
-  useEffect(() => {
-    setModalCount(modalCount + 1);
-    if (modalCount >= 2) {
-      navigate("/plan-product");
-    }
-  }, [show]);
+  // useEffect(() => {
+  //   setModalCount(modalCount + 1);
+  //   if (modalCount) {
+  //     navigate("/plan-product");
+  //   }
+  // }, [show]);
 
   const handleSubmit = () => {
     if (
@@ -121,7 +123,10 @@ const PlanBankPayment = ({ goBack }) => {
                 <div>
                   <button
                     style={{ color: "#111E6C", width: "300px" }}
-                    onClick={goBack}
+                    onClick={() => {
+                      goBack();
+                      setAccountCheck(false);
+                    }}
                   >
                     Back
                   </button>
@@ -133,10 +138,10 @@ const PlanBankPayment = ({ goBack }) => {
                       color: "#FFFFFF",
                       width: "300px",
                     }}
-                    // onClick={() => setShow(true)}
+                    disabled={loading}
                     onClick={handleSubmit}
                   >
-                    {loading ? "LOADING..." : "Save"}
+                    {planLoading ? "LOADING..." : "Save"}
                   </button>
                   <ModalComponent
                     show={show}
@@ -246,6 +251,9 @@ const WrapperFooter = styled.div`
     outline: none;
     border: none;
     padding: 10px 15px;
+    &:disabled{
+      cursor: not-allowed;
+    }
   }
   .blue-btn {
     color: #f2f2f2;
