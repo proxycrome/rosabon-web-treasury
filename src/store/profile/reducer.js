@@ -55,6 +55,9 @@ import {
   UPDATE_USER_KYC,
   UPDATE_USER_KYC_ERROR,
   UPDATE_USER_KYC_SUCCESS,
+  UPDATE_USER_NAME,
+  UPDATE_USER_NAME_ERROR,
+  UPDATE_USER_NAME_SUCCESS,
   VALIDATE_OTP,
   VALIDATE_OTP_ERROR,
   VALIDATE_OTP_SUCCESS,
@@ -104,6 +107,8 @@ const initialState = {
   sourcesError: null,
   idTypes: null,
   idTypesError: null,
+  nameUpdateMsg: null,
+  nameUpdateError: null,
 };
 
 const userProfileReducer = (state = initialState, action) => {
@@ -126,6 +131,7 @@ const userProfileReducer = (state = initialState, action) => {
     case GET_ALL_GENDER:
     case GET_ALL_SOURCES:
     case GET_ALL_ID_TYPES:
+    case UPDATE_USER_NAME:
       state = {
         ...state,
         loading: true,
@@ -197,6 +203,24 @@ const userProfileReducer = (state = initialState, action) => {
         loading: false,
         kycData: null,
         kycDataError: action.payload,
+      };
+      break;
+
+    case UPDATE_USER_NAME_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        nameUpdateMsg: action.payload,
+        nameUpdateError: null,
+      };
+      break;
+
+    case UPDATE_USER_NAME_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        nameUpdateMsg: null,
+        nameUpdateError: action.payload,
       };
       break;
 
@@ -522,7 +546,7 @@ const userProfileReducer = (state = initialState, action) => {
       state = {
         ...state,
         users: null,
-      }
+      };
       break;
 
     default:

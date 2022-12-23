@@ -50,6 +50,9 @@ import {
   UPDATE_USER_KYC,
   UPDATE_USER_KYC_ERROR,
   UPDATE_USER_KYC_SUCCESS,
+  UPDATE_USER_NAME,
+  UPDATE_USER_NAME_ERROR,
+  UPDATE_USER_NAME_SUCCESS,
   VALIDATE_OTP,
   VALIDATE_OTP_ERROR,
   VALIDATE_OTP_SUCCESS,
@@ -119,6 +122,27 @@ export const updateUserKycError = (error) => {
     payload: error,
   };
 };
+
+export const updateUserName = (formData, dispatch) => {
+  return {
+    type: UPDATE_USER_NAME,
+    payload: {formData, dispatch},
+  }
+}
+
+export const updateUserNameSuccess = (data) => {
+  return {
+    type: UPDATE_USER_NAME_SUCCESS,
+    payload: data,
+  }
+}
+
+export const updateUserNameError = (error) => {
+  return {
+    type: UPDATE_USER_NAME_ERROR,
+    payload: error,
+  }
+}
 
 export const verifyBvn = (formData, id, setComplete) => {
   return {

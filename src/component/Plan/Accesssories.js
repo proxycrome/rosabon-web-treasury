@@ -2129,20 +2129,20 @@ export const HistoryTable = () => {
             id: (
               <Link
                 to="#"
-                onClick={() => previewTransaction(data?.transactionId)}
+                onClick={() => previewTransaction(data?.id)}
               >
-                <div>{data?.transactionId}</div>
+                <div>{data?.id}</div>
               </Link>
             ),
-            date: `${data?.transactionDate?.split(" ")[0]}`,
-            description: `${data?.description ? data?.description : ""}`,
+            date: `${data?.createdAt?.split(" ")[0]}`,
+            description: `${data?.transactionDescription ? data?.transactionDescription : ""}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
-                ? "+ " + data?.debit.toLocaleString()
-                : "- " + data?.debit.toLocaleString()
+                ? "+ " + data?.amount?.toLocaleString()
+                : "- " + data?.amount?.toLocaleString()
             }`,
-            balance: `${data?.balanceAfterTransaction.toLocaleString()}`,
+            balance: `${data?.balanceAfterTransaction?.toLocaleString()}`,
           })),
   };
 

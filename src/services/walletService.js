@@ -9,7 +9,7 @@ export const getWalletBalanceService = () => {
 
 export const getWalletTransactionsService = () => {
   const http = new HttpService();
-  const url = `auth/transactions/history?limit=1000000000`;
+  const url = `auth/wallet-transactions`;
   return http.getData(url);
 };
 
