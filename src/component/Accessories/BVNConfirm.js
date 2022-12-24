@@ -8,7 +8,7 @@ import JsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import html2canvas from "html2canvas";
 import {
-  updateUserKyc,
+  // updateUserKyc,
   sendOtp,
   validateOtp,
   sendCompanyOtp,
@@ -16,6 +16,7 @@ import {
   validatePhoneOtp,
   planAction,
   verifyBvn,
+  updateUserName,
 } from "../../store/actions";
 
 import { Link, useNavigate, NavLink } from "react-router-dom";
@@ -51,7 +52,7 @@ export function BVNConfirm({
   console.log("confirm bvn", confirmName);
 
   const { success } = useSelector((state) => state.auth);
-  const { kycData } = useSelector((state) => state.user_profile);
+  const { nameUpdateMsg } = useSelector((state) => state.user_profile);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,25 +66,18 @@ export function BVNConfirm({
     }
 
     const data = {
-      role: "INDIVIDUAL_USER",
-      usage: "TREASURY",
-      individualUser: {
-        bvn,
-        firstName:
-          firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
-        lastName:
-          lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),
-        isKyc: false,
-        status: "ACTIVE",
-      },
+      firstName:
+        firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
+      lastName:
+        lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),
     };
 
     console.log(data);
-    dispatch(updateUserKyc(data, null, dispatch));
+    dispatch(updateUserName(data, dispatch));
   };
 
   useEffect(() => {
-    if (kycData) {
+    if (nameUpdateMsg) {
       if (!nameMatch) {
         const objData = {
           firstName: firstName?.toUpperCase(),
@@ -97,7 +91,7 @@ export function BVNConfirm({
         dispatch(verifyBvn(objData, null, setComplete));
       }
     }
-  }, [kycData]);
+  }, [nameUpdateMsg]);
 
   return !complete ? (
     <ConfirmBVN>
@@ -751,9 +745,7 @@ export function Notice({
 
   const receiving_plan =
     transferForm !== null && JSON.parse(transferForm?.receive);
-  const receive_amount =
-    transferForm !== null &&
-    (transferForm?.amount * plan?.exchangeRate) / receiving_plan?.exchangeRate;
+  const receive_amount = transferForm !== null && transferForm?.amount;
 
   const handleFullRoll = (e) => {
     e.preventDefault();
@@ -836,10 +828,11 @@ export function Notice({
       planAction: "TRANSFER",
       planToReceive: receiving_plan?.id,
     };
+    console.log(formData);
     dispatch(planAction(formData, null, handleShowModalTwo, dispatch));
     // await handleShowModalTwo("modal-two");
   };
-  
+
   return (
     <>
       <Wrapper>
@@ -853,7 +846,7 @@ export function Notice({
                     <p className="">
                       You are about to transfer{" "}
                       {getCurrIcon(plan?.currency?.name)}
-                      {parseFloat(transferForm?.amount).toFixed(2)} from your{" "}
+                      {parseFloat(receive_amount).toFixed(2)} from your{" "}
                       {plan?.planName} plan into {receiving_plan?.planName} plan
                     </p>
                   ) : payType === "pay-card" ? (

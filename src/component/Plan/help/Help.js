@@ -83,6 +83,7 @@ const Help = () => {
                               className="accordion-collapse collapse show"
                               aria-labelledby="headingOne"
                               data-bs-parent="#accordionExample"
+                              key={faq?.id}
                             >
                               <div className="accordion-body">
                                 <h5>{faq.question}</h5>

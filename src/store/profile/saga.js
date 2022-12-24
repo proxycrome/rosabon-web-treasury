@@ -18,6 +18,7 @@ import {
   SEND_COMPANY_OTP,
   SEND_OTP,
   UPDATE_USER_KYC,
+  UPDATE_USER_NAME,
   VALIDATE_OTP,
   VERIFY_BVN,
 } from "./actionTypes";
@@ -60,6 +61,8 @@ import {
   getAllIdTypesSuccess,
   getAllIdTypesError,
   getCompanyDocsSuccess,
+  updateUserNameSuccess,
+  updateUserNameError,
 } from "./actions";
 
 import {
@@ -81,6 +84,7 @@ import {
   verifyBvnService,
   getAllSourcesService,
   getAllIdTypesService,
+  updateUserNameService,
 } from "../../services/profileService";
 
 function* getAuthentUsers() {
@@ -134,6 +138,20 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message);
     }
+  }
+}
+
+function* updateUserName({ payload: { formData, dispatch } }) {
+  try {
+    const response = yield call(updateUserNameService, formData);
+    console.log(response.data);
+    yield put(updateUserNameSuccess(response.data));
+    if(response){
+      dispatch(getAuthUsers());
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(updateUserNameError(error?.response?.data));
   }
 }
 
@@ -385,6 +403,10 @@ export function* watchGetAllIdTypes() {
   yield takeEvery(GET_ALL_ID_TYPES, getAllIdTypes);
 }
 
+export function* watchUpdateUserName() {
+  yield takeEvery(UPDATE_USER_NAME, updateUserName);
+}
+
 function* ProfileSaga() {
   yield all([
     fork(watchGetAuthUsers),
@@ -405,6 +427,7 @@ function* ProfileSaga() {
     fork(watchGetAllGender),
     fork(watchGetAllSources),
     fork(watchGetAllIdTypes),
+    fork(watchUpdateUserName),
   ]);
 }
 

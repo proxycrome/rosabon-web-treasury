@@ -21,6 +21,13 @@ export const updateUserKycService = (formData) => {
   return http.putData(formData, url);
 };
 
+export const updateUserNameService = (formData) => {
+  const http = new HttpService();
+  const url = `auth/users/update-first-last-name`;
+
+  return http.putData(formData, url);
+};
+
 export const verifyBvnService = (formData) => {
   const http = new HttpService();
   const url = `auth/verify-bvn`;

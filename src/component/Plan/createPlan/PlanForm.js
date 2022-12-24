@@ -783,8 +783,7 @@ const PlanForm = () => {
     e.preventDefault();
     if (
       !product?.properties?.hasSavingFrequency &&
-      summary.paymentMaturity !== null &&
-      validSavingsFreq
+      summary.paymentMaturity !== null
     ) {
       setIsClicked(true);
     } else {
@@ -798,13 +797,26 @@ const PlanForm = () => {
     }
   };
 
-  console.log(summary.paymentAtMaturity);
+  console.log(summary.paymentMaturity);
 
-  document.querySelector("#amount")?.addEventListener("keydown", function (e) {
+  const arrowBtnPreventChange = (e) => {
     if (e.which === 38 || e.which === 40) {
       e.preventDefault();
     }
-  });
+  };
+
+  const numberInputOnWheelPreventChange = (e) => {
+    // Prevent the input value change
+    e.target.blur();
+
+    // Prevent the page/container scrolling
+    e.stopPropagation();
+
+    // Refocus immediately, on the next tick (after the current function is done)
+    setTimeout(() => {
+      e.target.focus();
+    }, 0);
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -950,7 +962,6 @@ const PlanForm = () => {
                           }
                             ${validate && "validate"}`}
                           name="amount"
-                          id="amount"
                           required
                           placeholder=""
                           type="number"
@@ -959,6 +970,8 @@ const PlanForm = () => {
                           min={product?.minTransactionLimit}
                           max={product?.maxTransactionLimit}
                           onChange={handleChange}
+                          onWheel={numberInputOnWheelPreventChange}
+                          onKeyDown={arrowBtnPreventChange}
                         />
                       </div>
                       {!product?.properties?.hasTargetAmount &&
@@ -992,7 +1005,6 @@ const PlanForm = () => {
                             ${formData.currency !== "" && "curr-input"} ${
                             validate && "validate"
                           }`}
-                          id="amount"
                           name="targetAmount"
                           placeholder=""
                           disabled={
@@ -1005,6 +1017,8 @@ const PlanForm = () => {
                           min={product?.minTransactionLimit}
                           max={product?.maxTransactionLimit}
                           onChange={handleChange}
+                          onWheel={numberInputOnWheelPreventChange}
+                          onKeyDown={arrowBtnPreventChange}
                         />
                       </div>
                       {product?.properties?.hasTargetAmount &&
@@ -1227,6 +1241,8 @@ const PlanForm = () => {
                           onChange={handleChange}
                           disabled={!product?.properties?.hasSavingFrequency}
                           required={product?.properties?.hasTargetAmount}
+                          onWheel={numberInputOnWheelPreventChange}
+                          onKeyDown={arrowBtnPreventChange}
                         />
                       </div>
                       {product?.properties?.hasSavingFrequency && (
