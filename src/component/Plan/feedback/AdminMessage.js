@@ -132,7 +132,7 @@ const NavTitle = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 95%;
+  width: 100%;
   height: calc(90% - 141px);
   padding-right: 40%;
   padding-left: 50px;
