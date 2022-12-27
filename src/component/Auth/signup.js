@@ -45,8 +45,6 @@
 
 //   const [formData, setformData] = useState(data);
 
-//   console.log(formData, isCompanyTerms, isUserTerms);
-
 //   function confirmPassword(c_password) {
 //     return c_password == formData.password ;
 //   }
@@ -134,7 +132,6 @@
 //         refferedBy,
 //         usage: "TREASURY",
 //       };
-//       console.log(data);
 //       dispatch(registerUser(data));
 //     } else {
 //     }
@@ -173,11 +170,9 @@
 //         usage: "TREASURY",
 //         refferedBy,
 //       };
-//       console.log(data);
 //       dispatch(registerCompany(data));
 //     } else {
 //       // toast.error(error);
-//       // console.log(formData);
 //     }
 //   };
 
@@ -926,7 +921,6 @@
 
 //   let value = formData;
 
-//   console.log(!companyTermsError);
 
 //   const {
 //     email,
@@ -958,7 +952,6 @@
 //     usage: "TREASURY",
 //     refferedBy,
 //   };
-//   console.log(data);
 //   // dispatch(registerCompany(data));
 // };
 
@@ -977,8 +970,6 @@
 // }
 
 // const [formData, setformData] = useState(data);
-
-// console.log(errors);
 
 // const data = {
 //   email: "",

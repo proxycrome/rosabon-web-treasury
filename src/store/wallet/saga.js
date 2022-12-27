@@ -75,7 +75,6 @@ import toast from "react-hot-toast";
 function* getWalletBalancer() {
   try {
     const response = yield call(getWalletBalanceService);
-    console.log(response.data);
     yield put(getWalletBalanceSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -86,7 +85,6 @@ function* getWalletBalancer() {
 function* getWalletTransactions() {
   try {
     const response = yield call(getWalletTransactionsService);
-    console.log(response.data);
     yield put(getWalletTransactionsSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -97,7 +95,6 @@ function* getWalletTransactions() {
 function* requestWithdrawal({ payload: { formData } }) {
   try {
     const response = yield call(requestWithdrawalService, formData);
-    console.log(response.data);
     yield put(requestWithdrawalSuccess(response.data));
     if (response) {
       yield put(getWalletBalance());
@@ -119,7 +116,6 @@ function* requestWithdrawal({ payload: { formData } }) {
 function* getEachWalletTransaction({ payload: { transId } }) {
   try {
     const response = yield call(getEachWalletTransactionService, transId);
-    console.log(response.data);
     yield put(getEachWalletTransactionSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -130,7 +126,6 @@ function* getEachWalletTransaction({ payload: { transId } }) {
 function* getMyReferrals() {
   try {
     const response = yield call(getMyReferralsService);
-    console.log(response.data);
     yield put(getMyReferralsSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -141,7 +136,6 @@ function* getMyReferrals() {
 function* postTransferToPlan({ payload: { formData } }) {
   try {
     const response = yield call(postTransferToPlanService, formData);
-    console.log(response.data);
     yield put(postTransferToPlanSuccess(response.data));
     if (response) {
       yield put(getWalletBalance());
@@ -163,7 +157,6 @@ function* postTransferToPlan({ payload: { formData } }) {
 function* pokeUser({ payload: { id } }) {
   try {
     const response = yield call(pokeUserService, id);
-    console.log(response.data);
     yield put(pokeUserSuccess(response.data));
     if (response) {
       setTimeout(() => {
@@ -184,7 +177,6 @@ function* pokeUser({ payload: { id } }) {
 function* getMyReferralActivities() {
   try {
     const response = yield call(getMyReferralActivitiesService);
-    console.log(response.data);
     yield put(getMyReferralActivitiesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -195,7 +187,6 @@ function* getMyReferralActivities() {
 function* redeemReferralBonus() {
   try {
     const response = yield call(redeemReferralBonusService);
-    console.log(response.data);
     yield put(redeemReferralBonusSuccess(response.data));
     if (response) {
       setTimeout(() => {
@@ -216,7 +207,6 @@ function* redeemReferralBonus() {
 function* getMyDepositActivities() {
   try {
     const response = yield call(getMyDepositActivitiesService);
-    console.log(response.data);
     yield put(getMyDepositActivitiesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -227,7 +217,6 @@ function* getMyDepositActivities() {
 function* getReferralRedeemThreshold() {
   try {
     const response = yield call(getReferralRedeemThresholdService);
-    console.log(response.data);
     yield put(getReferralRedeemThresholdSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -238,7 +227,6 @@ function* getReferralRedeemThreshold() {
 function* redeemSpecialEarning() {
   try {
     const response = yield call(redeemSpecialEarningService);
-    console.log(response.data);
     yield put(redeemSpecialEarningSuccess(response.data));
     if (response) {
       setTimeout(() => {
@@ -259,7 +247,6 @@ function* redeemSpecialEarning() {
 function* getSpecialEarningActivities() {
   try {
     const response = yield call(getSpecialEarningActivitiesService);
-    console.log(response.data);
     yield put(getSpecialEarningActivitiesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -270,7 +257,6 @@ function* getSpecialEarningActivities() {
 function* getTotalEarning() {
   try {
     const response = yield call(getTotalEarningService);
-    console.log(response.data);
     yield put(getTotalEarningSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -281,7 +267,6 @@ function* getTotalEarning() {
 function* getTotalRedeemedEarning() {
   try {
     const response = yield call(getTotalRedeemedEarningService);
-    console.log(response.data);
     yield put(getTotalRedeemedEarningSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);

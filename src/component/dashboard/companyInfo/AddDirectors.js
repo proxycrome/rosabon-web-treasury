@@ -93,8 +93,6 @@ const AddDirectors = ({
   const handleFileChange = (e, name) => {
     const { files } = e.target;
 
-    console.log(files[0]);
-
     const encodedFileBase64 = (file) => {
       let reader = new FileReader();
       if (file) {
@@ -106,7 +104,7 @@ const AddDirectors = ({
           });
         };
         reader.onerror = (error) => {
-          console.log("error", error);
+          console.log({error});
         };
       }
     };
@@ -213,7 +211,6 @@ const AddDirectors = ({
           encodedUpload: photoEncodedString,
         },
       };
-      console.log(data);
 
       updateDirector(data);
 
@@ -258,7 +255,6 @@ const AddDirectors = ({
       phoneNumber: phone,
     };
 
-    console.log(objData);
     dispatch(verifyBvn(objData, id));
   };
 

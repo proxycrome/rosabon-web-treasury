@@ -10,8 +10,6 @@ const FileUpload = ({ showEdit, setFile, fileName, id }) => {
   const handleFileChange = (e, name) => {
     const { files } = e.target;
 
-    console.log(files[0]);
-
     const encodedFileBase64 = (file) => {
       let reader = new FileReader();
       if (file) {
@@ -23,7 +21,7 @@ const FileUpload = ({ showEdit, setFile, fileName, id }) => {
           });
         };
         reader.onerror = (error) => {
-          console.log("error", error);
+          console.log({error});
         };
       }
     };

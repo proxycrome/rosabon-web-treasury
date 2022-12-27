@@ -25,8 +25,6 @@ const Withdrawal = () => {
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const planStatus = singlePlan?.data?.statusCode;
 
-  console.log(withdrawReasons);
-
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
@@ -39,9 +37,7 @@ const Withdrawal = () => {
   const handleClick = (e) => {
     const { name, value } = e.target;
     if (name === "withdrawType") {
-      console.log("work?", value)
       if (value === "full") {
-        console.log("here", value)
         setAmount(plan?.planSummary?.principal);
       }
       setWithdrawType(value);

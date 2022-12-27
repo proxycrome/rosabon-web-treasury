@@ -13,7 +13,6 @@ const CompanyKYC = () => {
 
   const { users, loading } = useSelector((state) => state.user_profile);
 
-  // console.log(users);
 
   const data = {
     rcNumber: "",
@@ -21,10 +20,8 @@ const CompanyKYC = () => {
     businessType: "",
     dateOfInco: "",
     companyAddress: "",
-    // name: "",
     contactFirstName: "",
     contactLastName: "",
-    // email: "",
     phone: "",
   };
 

@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const EmptyPlan = ({ plan }) => {
   const { users } = useSelector((state) => state.user_profile);
-  console.log(users);
+
   return (
     <Wrapper>
       {plan === "archive" ? (

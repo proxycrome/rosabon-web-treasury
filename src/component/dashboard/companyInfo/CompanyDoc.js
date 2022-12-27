@@ -58,9 +58,6 @@ const CompanyDoc = () => {
 
   const { loading:updateLoading } = useSelector((state) => state.updateProfile);
 
-  console.log(companyDocs);
-  // console.log(users);
-
   const toggleEdit = () => {
     setShowEdit(!showEdit);
   };
@@ -90,8 +87,6 @@ const CompanyDoc = () => {
   const handleFileChange = (e, name) => {
     const { files } = e.target;
 
-    console.log(files[0]);
-
     const encodedFileBase64 = (file) => {
       let reader = new FileReader();
       if (file) {
@@ -103,7 +98,7 @@ const CompanyDoc = () => {
           });
         };
         reader.onerror = (error) => {
-          console.log("error", error);
+          console.log({error});
         };
       }
     };
@@ -117,7 +112,6 @@ const CompanyDoc = () => {
     e.target.value = null;
   };
 
-  // console.log(base64File);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -154,7 +148,6 @@ const CompanyDoc = () => {
         encodedUpload: utilityEncodedString,
       },
     };
-    console.log(data);
     const reset = {
       setShowEdit,
       setFormData,

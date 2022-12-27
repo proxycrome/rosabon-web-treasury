@@ -14,8 +14,6 @@
 //   const company_details = useSelector((state) => state.user_profile.users);
 //   const [show, setShow] = useState(false);
 
-//   console.log(company_details)
-
 //   useEffect(() => {
 //     const tokenString = JSON.parse(localStorage.getItem("company-token"));
 //     if (tokenString) {

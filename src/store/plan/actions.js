@@ -180,10 +180,10 @@ export const getPlansError = (error) => {
   };
 };
 
-export const getSinglePlan = (id) => {
+export const getSinglePlan = (id, setShow, source) => {
   return {
     type: GET_SINGLE_PLAN,
-    payload: { id },
+    payload: { id, setShow, source },
   };
 };
 

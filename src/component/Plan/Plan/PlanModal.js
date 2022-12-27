@@ -25,22 +25,19 @@ const PlanModal = ({ handleClose }) => {
   const planProduct = products
     ? products?.data?.body?.find((item) => item.id === plan?.product?.id)
     : {};
-  console.log("planProd", planProduct?.properties?.hasTargetAmount);
-  const [autoRenew, setAutoRenew] = useState(plan?.autoRenew);
+  // console.log("planProd", planProduct?.properties?.hasTargetAmount);
+  const [autoRenew, setAutoRenew] = useState(plan?.autoRollOver);
 
   const toggleAutoRenew = async () => {
     setAutoRenew(!autoRenew);
-    await dispatch(updatePlan(null, plan.id));
+    await dispatch(updatePlan(null, plan.id, dispatch));
     // dispatch(getSinglePlan(plan.id));
   };
 
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getCurrencies());
-    setAutoRenew(plan?.autoRenew);
-  }, []);
-
-  console.log({ plan });
+  }, [dispatch]);
 
   return (
     <Wrapper>
@@ -67,7 +64,7 @@ const PlanModal = ({ handleClose }) => {
                     style={{ cursor: "pointer" }}
                     className="fa-solid fa-xmark"
                   ></i>{" "}
-                  {"  "}
+                  {" "}
                   Close
                 </button>
               </div>
@@ -95,8 +92,8 @@ const PlanModal = ({ handleClose }) => {
                   x2="346"
                   y2="0.6"
                   stroke="#E0E0E0"
-                  stroke-width="0.8"
-                  stroke-dasharray="5 5"
+                  strokeWidth="0.8"
+                  strokeDasharray="5 5"
                 />
               </svg>
             </div>
@@ -156,8 +153,8 @@ const PlanModal = ({ handleClose }) => {
                   x2="346"
                   y2="0.6"
                   stroke="#E0E0E0"
-                  stroke-width="0.8"
-                  stroke-dasharray="5 5"
+                  strokeWidth="0.8"
+                  strokeDasharray="5 5"
                 />
               </svg>
             </div>
@@ -204,8 +201,8 @@ const PlanModal = ({ handleClose }) => {
                   x2="346"
                   y2="0.6"
                   stroke="#E0E0E0"
-                  stroke-width="0.8"
-                  stroke-dasharray="5 5"
+                  strokeWidth="0.8"
+                  strokeDasharray="5 5"
                 />
               </svg>
             </div>
@@ -226,9 +223,9 @@ const PlanModal = ({ handleClose }) => {
                   <p className="p-dark">{plan.numberOfTickets} </p>
                 </div>
               )}
-              <div className="right">
+              <div className="left">
                 <p className="p-light">Auto Renewal</p>
-                <p className="p-dark">
+                <div className="p-dark">
                   <Switch
                     className="mr-2 mt-1"
                     onColor="#111E6C"
@@ -239,7 +236,7 @@ const PlanModal = ({ handleClose }) => {
                     width={35}
                     height={18}
                   />
-                </p>
+                </div>
               </div>
             </div>
           </div>
@@ -265,14 +262,20 @@ const Wrapper = styled.div`
     font-size: 14px;
     font-weight: 600;
   }
+
   .right {
     text-align: right;
   }
+
+  .left {
+    text-align: left;
+  }
+
   .p-dark {
     font-size: 11px;
     font-weight: 600;
     letter-spacing: -0.01em;
-    line-height: 14px;
+    line-height: 12px;
   }
   .p-light {
     font-size: 11px;

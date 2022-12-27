@@ -23,7 +23,7 @@ export const LeftView = ({ view }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState({
     product: 0,
-    amount: null,
+    amount: "",
     tenor: 0,
   });
   const [result, setResult] = useState();
@@ -144,8 +144,6 @@ export const LeftView = ({ view }) => {
     toast.success("Referral Code Copied");
   };
 
-  console.log(users);
-
   return (
     <LeftWrapper className="mx-4">
       <div className="calculatoe">
@@ -166,10 +164,8 @@ export const LeftView = ({ view }) => {
               <div className="mt-2">
                 <label>Select Product</label>
                 <div className="input-group mb-2">
-                  <Input
+                  <select
                     className="form-control"
-                    placeholder="Select Product"
-                    type="select"
                     name="product"
                     value={data.product}
                     onChange={handleChange}
@@ -183,7 +179,7 @@ export const LeftView = ({ view }) => {
                           {item.productName}
                         </option>
                       ))}
-                  </Input>
+                  </select>
                 </div>
               </div>
             </div>
@@ -205,9 +201,8 @@ export const LeftView = ({ view }) => {
               <div className=" ">
                 <label>Tenor</label>
                 <div className="input-group mb-4">
-                  <Input
+                  <select
                     className="form-control"
-                    type="select"
                     name="tenor"
                     value={data.tenor}
                     onChange={handleChange}
@@ -223,7 +218,7 @@ export const LeftView = ({ view }) => {
                             {item.tenorName}
                           </option>
                         ))}
-                  </Input>
+                  </select>
                 </div>
               </div>
             </div>

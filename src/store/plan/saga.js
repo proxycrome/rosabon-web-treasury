@@ -20,7 +20,7 @@ import {
   VIEW_BANK_DETAIL,
   COMPLETE_TRANSFER,
   GET_CLOSED_PLANS,
-  UPDATE_PLAN
+  UPDATE_PLAN,
 } from "./actionTypes";
 
 import {
@@ -64,7 +64,7 @@ import {
   updatePlanSuccess,
   updatePlanError,
   // getSinglePlan,
-  getPlans
+  getPlans,
 } from "./actions";
 
 import {
@@ -92,7 +92,6 @@ import {
 function* getContribVal() {
   try {
     const response = yield call(getContribValService);
-    console.log(response.data);
     yield put(getContribValSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -104,7 +103,6 @@ function* completeTransfers({ payload: { data } }) {
   const { id, handleShowModalTwo } = data;
   try {
     const response = yield call(completeTransferService, id);
-    console.log(response.data);
     yield put(completeTransferSuccess(response.data));
     if (response) {
       handleShowModalTwo("modal-two");
@@ -118,7 +116,6 @@ function* completeTransfers({ payload: { data } }) {
 function* getExRates() {
   try {
     const response = yield call(getExRatesService);
-    console.log(response.data);
     yield put(getExRatesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -129,7 +126,6 @@ function* getExRates() {
 function* createPlan({ payload: { formData, setShow } }) {
   try {
     const response = yield call(createPlanService, formData);
-    console.log(response.data);
     yield put(createPlanSuccess(response.data));
     if (response) {
       setShow(true);
@@ -155,7 +151,6 @@ function* createPlan({ payload: { formData, setShow } }) {
 function* getInvPlans() {
   try {
     const response = yield call(getPlansService);
-    console.log(response.data);
     yield put(getPlansSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -163,13 +158,15 @@ function* getInvPlans() {
   }
 }
 
-function* getSingleInvPlan({ payload: { id } }) {
+function* getSingleInvPlan({ payload: { id, setShow, source } }) {
   try {
     const response = yield call(getSinglePlanService, id);
-    console.log(response.data);
     yield put(getSinglePlanSuccess(response.data));
+    if (response && source === "planModal") {
+      setShow(true);
+    }
   } catch (error) {
-    console.log(error?.response?.data);
+    console.log(error);
     yield put(getSinglePlanError(error?.response?.data));
   }
 }
@@ -177,7 +174,6 @@ function* getSingleInvPlan({ payload: { id } }) {
 function* getTenor({ payload: { formData } }) {
   try {
     const response = yield call(getTenorService, formData);
-    console.log(response.data);
     yield put(getTenorSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -188,7 +184,6 @@ function* getTenor({ payload: { formData } }) {
 function* getWithholdingTax() {
   try {
     const response = yield call(getWithholdingTaxService);
-    console.log(response.data);
     yield put(getWithholdingTaxSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -199,7 +194,6 @@ function* getWithholdingTax() {
 function* getInvestmentRates() {
   try {
     const response = yield call(getInvestmentRatesService);
-    console.log(response.data);
     yield put(getInvestmentRatesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -210,7 +204,6 @@ function* getInvestmentRates() {
 function* getEligiblePlans() {
   try {
     const response = yield call(getEligiblePlansService);
-    console.log(response.data);
     yield put(getEligiblePlansSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -221,7 +214,6 @@ function* getEligiblePlans() {
 function* deletePlan({ payload: { id } }) {
   try {
     const response = yield call(deletePlanService, id);
-    console.log(response.data);
     yield put(deletePlanSuccess(response.data));
     if (response) {
       toast.success(
@@ -258,12 +250,11 @@ function* planAction({
   const { planAction, paymentType } = formData;
   try {
     const response = yield call(planActionService, formData);
-    console.log({response});
     yield put(planActionSuccess(response.data));
     if (response) {
       if (planAction === "WITHDRAW") {
         onSuccess(true);
-        toast.success(response.data.message, {position: "top-right"});
+        toast.success(response.data.message, { position: "top-right" });
       } else if (planAction === "TOP_UP" && paymentType === "BANK_TRANSFER") {
         toast.success("Top-up saved", { position: "top-right" });
         setTimeout(() => {
@@ -292,7 +283,7 @@ function* planAction({
   } catch (error) {
     console.log(error?.response?.data);
     yield put(planActionError(error?.response?.data));
-    const message = error?.response?.data?.message
+    const message = error?.response?.data?.message;
     if (message) {
       if (planAction === "TOP_UP" && paymentType === "BANK_TRANSFER") {
         toast.error(message, { position: "top-right" });
@@ -309,7 +300,6 @@ function* planAction({
 function* getPlanHistory() {
   try {
     const response = yield call(getAllPlanHistoryService);
-    console.log(response.data);
     yield put(getPlanHistorySuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -320,7 +310,6 @@ function* getPlanHistory() {
 function* getSinglePlanHistory({ payload: { id } }) {
   try {
     const response = yield call(singlePlanHistoryService, id);
-    console.log(response.data);
     yield put(getSinglePlanHistorySuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -331,7 +320,6 @@ function* getSinglePlanHistory({ payload: { id } }) {
 function* viewBankDetail({ payload: { id } }) {
   try {
     const response = yield call(viewBankDetailService, id);
-    console.log(response.data);
     yield put(viewBankDetailSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -342,7 +330,6 @@ function* viewBankDetail({ payload: { id } }) {
 function* getPenalCharge() {
   try {
     const response = yield call(penalChargeService);
-    console.log(response.data);
     yield put(getPenalChargeSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -353,7 +340,6 @@ function* getPenalCharge() {
 function* payWithCard({ payload: { id, setSuccess } }) {
   try {
     const response = yield call(payWithCardService, id);
-    console.log(response.data);
     yield put(payWithCardSuccess(response.data));
     if (response) {
       setSuccess(true);
@@ -367,7 +353,6 @@ function* payWithCard({ payload: { id, setSuccess } }) {
 function* getClosedPlans() {
   try {
     const response = yield call(getClosedPlansService);
-    console.log(response.data);
     yield put(getClosedPlansSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -378,10 +363,9 @@ function* getClosedPlans() {
 function* updatePlan({ payload: { formData, id, dispatch } }) {
   try {
     const response = yield call(updatePlanService, formData, id);
-    console.log(response.data);
     yield put(updatePlanSuccess(response.data));
-    if(response){
-      dispatch(getPlans())
+    if (response) {
+      dispatch(getPlans());
     }
   } catch (error) {
     console.log(error?.response?.data);

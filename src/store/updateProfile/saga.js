@@ -66,7 +66,6 @@ import { getCompanyDocs } from "../actions";
 function* verifyAccountNo({ payload: { formData } }) {
   try {
     const response = yield call(verifyAccountNoService, formData);
-    console.log(response.data);
     yield put(verifyAccountNoSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -77,7 +76,6 @@ function* verifyAccountNo({ payload: { formData } }) {
 function* changeUserPassword({ payload: { formData } }) {
   try {
     const response = yield call(changeUserPasswordService, formData);
-    console.log(response.data);
     yield put(changeUserPasswordSuccess(response.data));
     if (response) {
       setTimeout(() => {
@@ -98,7 +96,6 @@ function* changeUserPassword({ payload: { formData } }) {
 function* updateCompanyDetails({ payload: { formData } }) {
   try {
     const response = yield call(updateCompanyDetailsService, formData);
-    console.log(response.data);
     yield put(updateCompanyDetailsSuccess(response.data));
     if (response) {
       toast.success("Company Details Updated Successfully");
@@ -115,7 +112,6 @@ function* updateCompanyDetails({ payload: { formData } }) {
 function* updateContactDetails({ payload: { formData } }) {
   try {
     const response = yield call(updateContactDetailsService, formData);
-    console.log(response.data);
     yield put(updateContactDetailsSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -126,7 +122,6 @@ function* updateContactDetails({ payload: { formData } }) {
 function* updateDirectorDetails({ payload: { formData, reset, dispatch } }) {
   try {
     const response = yield call(updateDirectorDetailsService, formData);
-    console.log(response.data);
     yield put(updateDirectorDetailsSuccess(response.data));
     if (response) {
       toast.success("Director Details Updated Successfully");
@@ -145,7 +140,6 @@ function* updateDirectorDetails({ payload: { formData, reset, dispatch } }) {
 function* verifyPhone({ payload: { recipient } }) {
   try {
     const response = yield call(verifyPhoneService, recipient);
-    console.log(response.data);
     yield put(verifyPhoneSuccess(response.data));
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
@@ -159,7 +153,6 @@ function* verifyPhone({ payload: { recipient } }) {
 function* validatePhoneOtp({ payload: { otp } }) {
   try {
     const response = yield call(validatePhoneOtpService, otp);
-    console.log(response.data);
     yield put(validatePhoneOtpSuccess(response.data));
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
@@ -173,7 +166,6 @@ function* validatePhoneOtp({ payload: { otp } }) {
 function* updatePersonalInfo({ payload: { formData } }) {
   try {
     const response = yield call(updatePersonalInfoService, formData);
-    console.log(response.data);
     yield put(updatePersonalInfoSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -184,7 +176,6 @@ function* updatePersonalInfo({ payload: { formData } }) {
 function* updateCompanyDocument({ payload: { formData, reset } }) {
   try {
     const response = yield call(updateCompanyDocsService, formData);
-    console.log(response.data);
     yield put(uploadCompanyDocumentSuccess(response.data));
     if (response) {
       setTimeout(() => {
@@ -220,7 +211,6 @@ function* updateCompanyDocument({ payload: { formData, reset } }) {
 function* updatePersonalDocument({ payload: { formData, reset } }) {
   try {
     const response = yield call(updatePersonalDocsService, formData);
-    console.log(response.data);
     yield put(uploadPersonalDocumentSuccess(response.data));
     if (response) {
       setTimeout(() => {
@@ -244,7 +234,6 @@ function* updatePersonalDocument({ payload: { formData, reset } }) {
 function* getDirectorDetail() {
   try {
     const response = yield call(getDirectorDetailsService);
-    console.log(response.data);
     yield put(getDirectorDetailsSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -255,7 +244,6 @@ function* getDirectorDetail() {
 function* deleteDirector({ payload: { id, setShowModal } }) {
   try {
     const response = yield call(deleteDirectorService, id);
-    console.log(response.data);
     yield put(deleteDirectorSuccess(response.data));
     if (response) {
       toast.success(response.data.message);
@@ -275,24 +263,19 @@ function* deleteDirector({ payload: { id, setShowModal } }) {
 function* updateBankDetails({ payload: { formData, reset } }) {
   try {
     const response = yield call(updateBankDetailsService, formData);
-    console.log(response.data);
     yield put(updateBankDetailsSuccess(response.data));
     if (response) {
       setTimeout(() => {
         toast.success("Your bank details have been updated");
       }, 1000);
-      const { setShowEdit, getBankDetails } = reset;
+      const { setShowEdit, getBankDetails, dispatch } = reset;
       setShowEdit(true);
-      yield put(getBankDetails());
+      dispatch(getBankDetails());
     }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(updateBankDetailsError(error?.response?.data));
-    if (error?.response) {
-      // if (error?.response?.data?.message?.startsWith("More")) {
-      //   toast.error("This Bank details has already been used by another user");
-      //   return;
-      // }
+    if (error?.response?.data?.message) {
       setTimeout(() => {
         toast.error(error?.response?.data?.message);
       }, 1000);

@@ -49,8 +49,6 @@ export function BVNConfirm({
     }
   }, [nameMatch, director]);
 
-  console.log("confirm bvn", confirmName);
-
   const { success } = useSelector((state) => state.auth);
   const { nameUpdateMsg } = useSelector((state) => state.user_profile);
 
@@ -71,8 +69,6 @@ export function BVNConfirm({
       lastName:
         lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),
     };
-
-    console.log(data);
     dispatch(updateUserName(data, dispatch));
   };
 
@@ -87,7 +83,6 @@ export function BVNConfirm({
           phoneNumber: phone,
           dateOfBirth: dateOfBirth,
         };
-        console.log(objData);
         dispatch(verifyBvn(objData, null, setComplete));
       }
     }
@@ -813,7 +808,6 @@ export function Notice({
       },
       rolloverType,
     };
-    console.log(data);
     dispatch(
       planAction(data, null, handleShowModalTwo, dispatch, null, "full")
     );
@@ -828,7 +822,6 @@ export function Notice({
       planAction: "TRANSFER",
       planToReceive: receiving_plan?.id,
     };
-    console.log(formData);
     dispatch(planAction(formData, null, handleShowModalTwo, dispatch));
     // await handleShowModalTwo("modal-two");
   };
@@ -929,8 +922,6 @@ export function TransactionPreview({ handleClose, transaction, loading }) {
       pdf.save(`transaction.pdf`);
     });
   };
-
-  console.log(transaction);
   return (
     <div>
       <Wrapper>
@@ -1036,8 +1027,6 @@ export function ProceedPayCard({
 }) {
   const { reg_transaction, loading } = useSelector((state) => state.paystack);
   const { users } = useSelector((state) => state.user_profile);
-
-  console.log(amount);
 
   const config = {
     reference: reg_transaction?.transactionReference,

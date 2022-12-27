@@ -77,8 +77,6 @@ const MyDocu = () => {
   const handleFileChange = (e, name) => {
     const { files } = e.target;
 
-    console.log(files[0]);
-
     const encodedFileBase64 = (file) => {
       let reader = new FileReader();
       if (file) {
@@ -89,9 +87,9 @@ const MyDocu = () => {
             [name]: reader.result.split("base64,")[1],
           });
         };
-        console.log(reader);
+    
         reader.onerror = (error) => {
-          console.log("error", error);
+          console.log({error});
         };
       }
     };
@@ -105,7 +103,6 @@ const MyDocu = () => {
     e.target.value = null;
   };
 
-  console.log(base64File);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -149,7 +146,6 @@ const MyDocu = () => {
       getUserDocs,
     };
 
-    console.log(data);
     dispatch(uploadPersonalDocument(data, reset));
   };
 
@@ -197,8 +193,6 @@ const MyDocu = () => {
       dispatch(getUserDocs());
     }
   }, [documents]);
-
-  console.log(documents);
 
   return (
     <div>
@@ -337,8 +331,8 @@ const MyDocu = () => {
                 >
                   <option value="">Select ID Type...</option>
                   {
-                    idTypes?.map((item)=> (
-                      <option value={item.id}>{item.name} </option>
+                    idTypes?.map((item, index) => (
+                      <option key={index} value={item.id}>{item.name} </option>
                     ))
                   }
                 </select>

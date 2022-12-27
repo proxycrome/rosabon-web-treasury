@@ -30,7 +30,6 @@ import toast from 'react-hot-toast';
 function* initPayment({ payload: { formData } }) {
 	try {
 		const response = yield call(initializePaymentService, formData);
-		console.log(response.data);
 		yield put(initPaymentSuccess(response.data));
     window.open(response.data);
 	} catch (error) {
@@ -69,7 +68,6 @@ function* verifyPaystack({ payload: {
 function* regTransaction({ payload: { formData } }) {
 	try {
 		const response = yield call(registerTransService, formData);
-		console.log(response.data);
 		yield put(regTransactionSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);

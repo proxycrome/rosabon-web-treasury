@@ -57,21 +57,6 @@ const PersonalInfo = () => {
     validatePhone,
   } = useSelector((state) => state.updateProfile);
 
-  // console.log('otp.....', otp);
-  // console.log(otpError);
-
-  console.log(validatePhone);
-
-  console.log(users);
-
-  // console.log(contactMsg);
-  // console.log(contactMsgError);
-  // console.log(personalInfoMsg);
-  // console.log(personalInfoMsgError);
-
-  // console.log(phoneMsg?.data?.otp);
-  // console.log(phoneMsgError);
-
   const toggleProf = (e) => {
     e.preventDefault();
     setShowEditProf(!showEditProf);
@@ -180,8 +165,6 @@ const PersonalInfo = () => {
         : users?.individualUser?.coutryOfResidence?.id,
     };
 
-    console.log(contactData);
-
     dispatch(updateContactDetails(contactData));
   };
 
@@ -219,7 +202,6 @@ const PersonalInfo = () => {
       },
     };
 
-    console.log(PersonalData);
     dispatch(updatePersonalInfo(PersonalData));
     dispatch(getAuthUsers());
   };
@@ -251,6 +233,8 @@ const PersonalInfo = () => {
           ? secondaryPhoneNumber.trim()
           : secondaryPhoneNumber.startsWith("234")
           ? secondaryPhoneNumber.replace(/234/, "0")
+          : secondaryPhoneNumber.startsWith("+234")
+          ? secondaryPhoneNumber.replace(/\+234/, "0")
           : "0" + secondaryPhoneNumber ||
             users?.individualUser?.secondaryPhoneNumber.startsWith("+234")
           ? users?.individualUser?.secondaryPhoneNumber.replace(/\+234/, "0")
@@ -258,7 +242,6 @@ const PersonalInfo = () => {
       )
     );
 
-    console.log(formData.secondaryPhoneNumber);
   };
 
   const handlePhoneData = (data) => {

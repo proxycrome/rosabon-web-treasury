@@ -35,7 +35,7 @@ const Feedback = () => {
   // const [tabs, setTabs] = useState("");
   // const user_details = useSelector((state) => state.user_profile.users);
   const { loading, categories } = useSelector((state) => state.feedback);
-  console.log(categories);
+
 
   useEffect(() => {
     
@@ -45,7 +45,6 @@ const Feedback = () => {
   const [show, setShow] = useState(false);
 
   // const handleClick = (value) => {
-  //   console.log(value);
   //   if (value === "transter") {
   //     setIsWithDraw(true);
   //     setIsTransfer(false);
@@ -90,7 +89,6 @@ const Feedback = () => {
     }
 
   }
-  console.log("feedb", errors)
 
   const handleSubmit = async (e) => {
     e.preventDefault();

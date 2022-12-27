@@ -79,7 +79,6 @@ const PlanBankPayment = ({ goBack }) => {
       dispatch(createPlan(form, setShow));
     }
   };
-  console.log("form here", form);
 
   return (
     <>

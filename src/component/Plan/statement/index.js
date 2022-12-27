@@ -87,7 +87,6 @@ const Statement = () => {
           "YYYY-MM-DD"
         );
 
-        // console.log(itemDate);
         const date = new Date(itemDate);
 
         return date >= startDate && date <= endDate;
@@ -104,7 +103,6 @@ const Statement = () => {
           "YYYY-MM-DD"
         );
 
-        console.log(itemDate);
         const date = new Date(itemDate);
 
         return date >= startDate && date <= endDate;

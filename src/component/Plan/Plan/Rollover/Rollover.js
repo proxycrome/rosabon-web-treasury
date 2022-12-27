@@ -43,9 +43,6 @@ const Rollover = () => {
     ? withholding_tax?.data.body
     : [];
 
-  console.log(plan);
-  console.log(inv_rates);
-
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
     dispatch(getInvestmentRates());
@@ -63,8 +60,6 @@ const Rollover = () => {
     () => (singleProduct ? singleProduct?.data?.body.tenors : []),
     [singleProduct]
   );
-
-  console.log(productTenors);
 
   const fetchIntRate = useCallback(
     (intRecOption) => {

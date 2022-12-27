@@ -43,7 +43,7 @@ export const Plans = () => {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { plans, loading, deletePlanMsg } = useSelector((state) => state.plan);
+  const { plans, loading, singlePlan } = useSelector((state) => state.plan);
   const { products, categories } = useSelector((state) => state.product);
   const userPlans = plans?.data.body
     ? plans?.data.body?.filter((item) => item.planStatus !== "CLOSED")
@@ -53,8 +53,6 @@ export const Plans = () => {
     : [];
   const planStatus = plans?.statusCode;
   const product = products?.data.body ? products?.data.body : [];
-
-  console.log(deletePlanMsg);
 
   let filterPlans = userPlans;
   // filter list of plans
@@ -104,8 +102,7 @@ export const Plans = () => {
   };
 
   const handlePlanModal = async (id) => {
-    await dispatch(getSinglePlan(id));
-    setShow(true);
+    await dispatch(getSinglePlan(id, setShow, "planModal"));
   };
 
   const handleBankModal = async (id) => {
@@ -115,8 +112,6 @@ export const Plans = () => {
   };
 
   const removePlan = async (id) => {
-    // await dispatch(deletePlan(id));
-    // await dispatch(getPlans());
     setDeleteModal(true);
   };
 
@@ -458,8 +453,6 @@ export const DropDown = ({
     ? products?.data.body?.find((item) => item.id === userPlan?.product?.id)
     : {};
 
-  console.log("plan", plan);
-  // console.log("product", product);
   const [checkRollover, setCheckRollover] = useState(plan?.autoRollOver);
 
   const autoRollover = () => {
@@ -467,10 +460,8 @@ export const DropDown = ({
     // dispatch(getSinglePlan(id));
   };
 
-  console.log(checkRollover);
   useEffect(() => {
     const selectedPlan = currentPlans?.find((item) => item.id === id);
-    // console.log({selectedPlan});
     if (menu) {
       dispatch(updatePlan(null, selectedPlan?.id, dispatch));
     }
@@ -485,7 +476,11 @@ export const DropDown = ({
   };
 
   return (
-    <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
+    <Dropdown
+      isOpen={menu}
+      toggle={toggle}
+      className="d-inline-block"
+    >
       <DropdownToggle
         tag="a"
         caret={false}
@@ -497,7 +492,7 @@ export const DropDown = ({
           <i className="fa-solid fa-ellipsis"></i>
         </div>
       </DropdownToggle>
-      <DropdownMenu end className="mt-1">
+      <DropdownMenu end>
         {status === "Active" ? (
           <>
             <DropdownItem
