@@ -26,8 +26,6 @@ const AdminMessage = () => {
     dispatch(getSingleTicket(parseInt(id)));
   }, []);
 
-  console.log({ replies });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = {

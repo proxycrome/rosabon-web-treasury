@@ -910,9 +910,6 @@ export const RolloverWithdrawMethod = ({
     (state) => state.user_profile
   );
   const user_role = users?.role;
-  console.log("bank dets", bankDetails);
-
-  console.log("hhh", withdrawTo);
 
   useEffect(() => {
     dispatch(getBankDetails());
@@ -925,8 +922,6 @@ export const RolloverWithdrawMethod = ({
       });
     }
   }, [withdrawTo]);
-
-  // console.log("hhh", savingFreq);
 
   return (
     <div>
@@ -1299,8 +1294,6 @@ export const PlanSummary = ({ planPay }) => {
   //       Number.EPSILON
   //   ) / 100;
 
-  // console.log("form check", form);
-
   return (
     <div>
       <PlanSummaryWrapper>
@@ -1659,8 +1652,6 @@ export const AvailableBalance = ({
     }
   };
 
-  console.log(withdrawReasons);
-  console.log(bankDetails);
   return (
     <AvailableBalanceWapper id={id}>
       {role === "COMPANY" && (
@@ -1831,7 +1822,6 @@ export const TransferCard = ({
     (plan) =>
       plan.interestReceiptOption === "MATURITY" && plan.planStatus === "ACTIVE"
   );
-  console.log(activeEligiblePlans);
 
   const data = {
     amount: "",
@@ -2041,7 +2031,6 @@ export const HistoryTable = () => {
         "YYYY-MM-DD"
       );
 
-      console.log(itemDate);
       const date = new Date(itemDate);
 
       return date >= startDate && date <= endDate;
@@ -2066,7 +2055,7 @@ export const HistoryTable = () => {
 
   const previewTransaction = async (transId) => {
     dispatch(getEachWalletTransaction(transId));
-    console.log(transId);
+
     setShow(true);
   };
 
@@ -2129,18 +2118,18 @@ export const HistoryTable = () => {
             id: (
               <Link
                 to="#"
-                onClick={() => previewTransaction(data?.id)}
+                onClick={() => previewTransaction(data?.transactionId)}
               >
-                <div>{data?.id}</div>
+                <div>{data?.transactionId}</div>
               </Link>
             ),
-            date: `${data?.createdAt?.split(" ")[0]}`,
-            description: `${data?.transactionDescription ? data?.transactionDescription : ""}`,
+            date: `${data?.transactionDate?.split(" ")[0]}`,
+            description: `${data?.description ? data?.description : ""}`,
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
-                ? "+ " + data?.amount?.toLocaleString()
-                : "- " + data?.amount?.toLocaleString()
+                ? "+ " + data?.debit?.toLocaleString()
+                : "- " + data?.debit?.toLocaleString()
             }`,
             balance: `${data?.balanceAfterTransaction?.toLocaleString()}`,
           })),
@@ -2280,7 +2269,6 @@ export const ReferalTable = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user_profile);
   const { myReferrals, loading } = useSelector((state) => state.wallet);
-  console.log(myReferrals);
 
   const handleClick = (id) => {
     dispatch(pokeUser(id));
@@ -2487,9 +2475,6 @@ export const ReferralBonus = () => {
   const { users } = useSelector((state) => state.user_profile);
   const { loading, refActivities, refRedeemMsg, referralThreshold } =
     useSelector((state) => state.wallet);
-  console.log(refActivities);
-  console.log(refRedeemMsg);
-  console.log(users);
 
   const handleRedeemClick = () => {
     dispatch(redeemReferralBonus());
@@ -2703,7 +2688,6 @@ export const TransferDeposit = () => {
   const bankDeposits = depositActivites?.entities.filter(
     (item) => item.category === "BANK_ACCOUNT_TO_WALLET_FUNDING"
   );
-  console.log(depositActivites);
 
   const [deposits, setDeposits] = useState(bankDeposits);
 
@@ -2870,9 +2854,6 @@ export const SpecialEarnings = () => {
   const earningsActivities = specialEarnings?.entities
     ? specialEarnings?.entities
     : [];
-  console.log(specialEarnings);
-  console.log(totalEarning);
-  console.log(totalRedeemedEarning);
 
   const handleClick = () => {
     dispatch(redeemSpecialEarning());
@@ -3086,7 +3067,6 @@ export const FeedbackTickets = () => {
         <FeedbackticketWarapper>
           <div className="mt-5">
             <h3>My Tickets</h3>
-
             <div>
               <table
                 id="dtBasicExample"
@@ -3145,9 +3125,13 @@ export const FeedbackTickets = () => {
                       </tr>
                     ))
                   ) : (
-                    <h4 style={{ textAlign: "center" }}>
-                      No Tickets Available
-                    </h4>
+                    <tr>
+                      <td colSpan={5}>
+                        <h4 style={{ textAlign: "center" }}>
+                          No Tickets Available
+                        </h4>
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
@@ -3299,9 +3283,13 @@ export const FeedbackOpenTickets = () => {
                       </tr>
                     ))
                   ) : (
-                    <h4 style={{ textAlign: "center" }}>
-                      No Open Tickets Available
-                    </h4>
+                    <tr>
+                      <td colSpan={5}>
+                        <h4 style={{ textAlign: "center" }}>
+                          No Tickets Available
+                        </h4>
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
@@ -3396,9 +3384,13 @@ export const FeedbackCloseTickets = () => {
                       </tr>
                     ))
                   ) : (
-                    <h4 style={{ textAlign: "center" }}>
-                      No Closed Tickets Available
-                    </h4>
+                    <tr>
+                      <td colSpan={5}>
+                        <h4 style={{ textAlign: "center" }}>
+                          No Tickets Available
+                        </h4>
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </Table>
@@ -3523,9 +3515,6 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const { loading } = useSelector((state) => state.plan);
   const { verify_paystack } = useSelector((state) => state.paystack);
 
-  console.log(form);
-  console.log(amount);
-
   const success = async () => {
     await dispatch(
       verifyPaystack("PAYSTACK", transactionRef, dispatch, form, setShow)
@@ -3542,7 +3531,7 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   // you can call this function anything
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
-    console.log(reference);
+    // console.log(reference);
     success();
   };
 

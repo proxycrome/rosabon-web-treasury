@@ -10,7 +10,6 @@ const PlanHome = ({ product, list, topup, payment, details, children }) => {
   const auth = useSelector((state) => state.auth);
   const { login, isLoggedIn } = auth;
   const { users } = useSelector((state) => state.user_profile);
-  console.log(users);
 
   useEffect(() => {
     const tokenString = localStorage.getItem("token");

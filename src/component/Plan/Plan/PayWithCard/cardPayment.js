@@ -66,11 +66,9 @@ const PlanPayment = () => {
     }
   };
 
-  console.log({ amount });
 
   const onSuccess = (reference) => {
     dispatch(payWithCard(parseInt(id), setSuccess));
-    // console.log(reference);
   };
 
   const onClose = () => {

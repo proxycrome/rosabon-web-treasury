@@ -53,7 +53,6 @@ const PlanCardPayment = ({ goBack }) => {
   //   }
   //   await dispatch(initPayment(formData));
   //   await dispatch(createPlan(form, setShow));
-  //   await console.log("show pay", paySuccess)
   // }
 
   let amount = parseInt(

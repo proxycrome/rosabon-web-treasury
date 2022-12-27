@@ -205,7 +205,7 @@ export const DropDown = ({ status, notifications, viewNote, dispatch }) => {
   const [col1, setCol1] = useState("");
 
   const t_col1 = (val) => {
-    console.log("ddd", getStatus)
+  
     if (col1 === val) {
       setCol1("");
       // setGetStatus(getStatus.filter(item => item !== val));

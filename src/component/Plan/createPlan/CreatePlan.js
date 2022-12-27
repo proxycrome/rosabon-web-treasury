@@ -18,8 +18,6 @@ const CreatePlan = () => {
   const productStatus = catWithProducts?.statusCode;
   const products = catWithProducts?.data.body ? catWithProducts?.data.body : [];
 
-  console.log(products);
-
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCatWithProducts());
@@ -30,7 +28,6 @@ const CreatePlan = () => {
     dispatch(getSingleProduct(id));
   };
 
-  // console.log(open)
   return (
     <>
       {loading ? (

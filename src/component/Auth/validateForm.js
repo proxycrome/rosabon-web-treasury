@@ -382,8 +382,6 @@ export const ValidatePasswordForm = (validatePassword, email) => {
         newPassword,
         confirmPassword: c_password,
       };
-
-      console.log(formData);
       dispatch(resetPassword(formData, navigate));
     }
   }, [errors]);

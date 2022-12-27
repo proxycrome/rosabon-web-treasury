@@ -53,9 +53,6 @@ const BankDetails = () => {
   const { loading, accountDetail, accountDetailError, bankUpdateMsg } =
     useSelector((state) => state.updateProfile);
 
-  console.log(accountDetail);
-  console.log(accountDetailError);
-
   useEffect(() => {
     if (accountDetailError) {
       setShow(true);
@@ -92,8 +89,8 @@ const BankDetails = () => {
     const reset = {
       setShowEdit,
       getBankDetails,
+      dispatch,
     };
-    console.log(data);
     dispatch(updateBankDetails(data, reset));
   };
 
@@ -104,7 +101,6 @@ const BankDetails = () => {
       bankCode: formData.bankCode || bankDetails?.bank?.code,
     };
 
-    console.log(data);
     dispatch(verifyAccountNo(data));
   };
 
@@ -147,7 +143,6 @@ const BankDetails = () => {
         ).format("YYYY-MM-DD"),
       };
 
-      console.log(objData);
       dispatch(verifyBvn(objData));
     }
   }, [users, dispatch]);

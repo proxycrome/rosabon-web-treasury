@@ -38,12 +38,9 @@ const RolloverWithdraw = ({
   const { singlePlan } = useSelector((state) => state.plan);
   // const { withdrawReasons } = useSelector((state) => state.user_profile);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
-  const { bankDetails } = useSelector((state) => state.user_profile);
-  const { login } = useSelector((state) => state.auth);
-  const user_role = login ? login?.role?.name : "";
+  const { bankDetails, users } = useSelector((state) => state.user_profile);
+  const user_role = users ? users?.role : "";
 
-  console.log(plan);
-  console.log(bankDetails);
 
   const checkUpload = () => {
     if (
@@ -57,8 +54,6 @@ const RolloverWithdraw = ({
     }
   };
 
-  console.log(checkUpload());
-  console.log(isTerms);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -137,7 +132,6 @@ const RolloverWithdraw = ({
         withdrawTo,
       };
 
-      // console.log(data);
       await dispatch(planAction(data, setModalState, null, null, null, "part"));
     }
   };

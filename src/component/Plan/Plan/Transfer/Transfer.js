@@ -23,8 +23,6 @@ const Transfer = () => {
   const userPlans = plans?.data.body ? plans?.data.body : [];
   const planStatus = singlePlan?.data.statusCode;
 
-  console.log(userPlans);
-
   const capitalise = (str) => {
     return str?.charAt(0)?.toUpperCase() + str?.slice(1)?.toLowerCase();
   };
@@ -41,7 +39,7 @@ const Transfer = () => {
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
     dispatch(getPlans());
-  }, []);
+  }, [dispatch, id]);
 
   const back = () => {
     navigate("/plan-list");
@@ -130,12 +128,12 @@ const Transfer = () => {
                             Select an active plan to transfer into
                           </option>
                           {userPlans
-                            .filter(
+                            ?.filter(
                               (item) =>
                                 item.id !== plan.id &&
                                 item.planStatus === "ACTIVE"
                             )
-                            .map(
+                            ?.map(
                               (item) =>
                                 item?.product?.properties?.allowsTopUp &&
                                 item?.interestReceiptOption === "MATURITY" && (
@@ -165,7 +163,6 @@ const Transfer = () => {
                           )}`}
                           type="number"
                           value={amount}
-                          min={0}
                           onChange={(e) => setAmount(e.target.value)}
                           max={plan.planSummary.principal}
                           required

@@ -35,7 +35,6 @@ const TransactionDetails = () => {
 
   const { single_plan_history } = useSelector((state) => state.plan);
   const history = single_plan_history ? single_plan_history?.content : [];
-  console.log(history);
 
   useEffect(() => {
     const filteredPlanHistory = history?.filter((item) => {
@@ -46,7 +45,6 @@ const TransactionDetails = () => {
         "YYYY-MM-DD"
       );
 
-      // console.log(itemDate);
       const date = new Date(itemDate);
 
       return date >= startDate && date <= endDate;

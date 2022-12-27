@@ -295,7 +295,7 @@ const CompanyDetails = () => {
                         disabled={showEditDetail}
                         onChange={handleChange}
                         name="companyType"
-                        value={
+                        defaultValue={
                           formData?.companyType || users?.company?.companyType
                         }
                       >

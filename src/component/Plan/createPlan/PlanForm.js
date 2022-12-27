@@ -55,11 +55,6 @@ const PlanForm = () => {
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
-  console.log(ex_rates);
-  console.log(inv_rates);
-  console.log(product);
-  console.log(product.tenors);
-
   useEffect(() => {
     dispatch(getExRates());
     dispatch(getCurrencies());
@@ -78,8 +73,8 @@ const PlanForm = () => {
     planName: "",
     currency: "",
     exchangeRate: "",
-    amount: 0.0,
-    targetAmount: 0.0,
+    amount: "",
+    targetAmount: "",
     tenor: "",
     planDate: recentDate,
     savingFrequency: "",
@@ -87,7 +82,7 @@ const PlanForm = () => {
     monthlyContributionDay: 0,
     interestReceiptOption: "",
     planStatus: "ACTIVE",
-    contributionValue: 0.0,
+    contributionValue: "",
     directDebit: false,
     interestRate: 0.0,
     acceptPeriodicContribution: true,
@@ -175,8 +170,6 @@ const PlanForm = () => {
     }
   }, [formData.actualMaturityDate, formData.tenor]);
 
-  console.log(computeTenorDays());
-
   // final update on the user plan details before switching to next screen
   useEffect(() => {
     if (isClicked) {
@@ -257,8 +250,12 @@ const PlanForm = () => {
     );
 
     if (product?.properties?.hasTargetAmount) {
-      if (formData.savingFrequency !== "") {
-        if (conValue === "targetAmount") {
+      if (
+        formData.savingFrequency !== "" && checkAtMaturity
+          ? customTenorDays
+          : selectedTenor?.tenorDays
+      ) {
+        if (conValue === "targetAmount" && formData.targetAmount) {
           let computedValue = null;
           switch (formData.savingFrequency) {
             case "DAILY":
@@ -301,15 +298,16 @@ const PlanForm = () => {
               break;
 
             default:
+              computedValue = null;
               break;
           }
           setFormData({
             ...formData,
-            contributionValue: (computedValue * 100) / 100,
+            contributionValue: Number(computedValue),
           });
-        } else {
+        } else if (conValue === "contributionValue" && formData.contributionValue) {
           if (product?.properties?.hasTargetAmount) {
-            let computedValue;
+            let computedValue = null;
             switch (formData.savingFrequency) {
               case "DAILY":
                 computedValue =
@@ -322,7 +320,7 @@ const PlanForm = () => {
 
               case "WEEKLY":
                 if (customTenorDays < 7 || selectedTenor?.tenorDays < 7) {
-                  computedValue = undefined;
+                  computedValue = null;
                   setValidSavingsFreq(false);
                 } else {
                   if (checkAtMaturity) {
@@ -340,7 +338,7 @@ const PlanForm = () => {
 
               case "MONTHLY":
                 if (customTenorDays < 30 || selectedTenor?.tenorDays < 30) {
-                  computedValue = undefined;
+                  computedValue = null;
                   setValidSavingsFreq(false);
                 } else {
                   if (checkAtMaturity) {
@@ -356,21 +354,24 @@ const PlanForm = () => {
                 break;
 
               default:
+                computedValue = null;
                 break;
             }
             setFormData({
               ...formData,
-              targetAmount: (computedValue * 100 + Number.EPSILON) / 100,
+              targetAmount: Number(computedValue),
             });
           }
         }
+      } else {
+        setFormData({
+          ...formData,
+          contributionValue: 0,
+        });
       }
     }
   };
 
-  console.log("targetAmount", formData.targetAmount);
-  console.log("contributionValue", formData.contributionValue);
-  console.log("valid", validSavingsFreq);
   // function to get investment rate
   const fetchIntRate = (intRecOption) => {
     let interestRate;
@@ -399,7 +400,7 @@ const PlanForm = () => {
       ?.filter((data) => data.product.id === parseInt(id))
       ?.find((item) => item.currency.name === formData.currency)
       ?.currency?.name;
-    console.log(invRateCurrency);
+
     const currency = ex_rates?.find((item) => item.name === formData.currency);
 
     const convPrincipal = () => {
@@ -725,19 +726,28 @@ const PlanForm = () => {
       if (e.target.name === "contributionValue") {
         setFormData({
           ...formData,
-          [e.target.name]: Number(parseFloat(e.target.value).toFixed(2)),
+          [e.target.name]:
+            e.target.value === ""
+              ? ""
+              : Number(parseFloat(e.target.value)),
         });
         setConValue(e.target.name);
       } else if (e.target.name === "targetAmount") {
         setFormData({
           ...formData,
-          [e.target.name]: Number(parseFloat(e.target.value).toFixed(2)),
+          [e.target.name]:
+            e.target.value === ""
+              ? ""
+              : Number(parseFloat(e.target.value)),
         });
         setConValue(e.target.name);
       } else {
         setFormData({
           ...formData,
-          [e.target.name]: Number(parseFloat(e.target.value).toFixed(2)),
+          [e.target.name]:
+            e.target.value === ""
+              ? ""
+              : Number(parseFloat(e.target.value)),
         });
       }
     } else {
@@ -796,8 +806,6 @@ const PlanForm = () => {
       }
     }
   };
-
-  console.log(summary.paymentMaturity);
 
   const arrowBtnPreventChange = (e) => {
     if (e.which === 38 || e.which === 40) {
@@ -966,7 +974,7 @@ const PlanForm = () => {
                           placeholder=""
                           type="number"
                           disabled={product?.properties?.hasTargetAmount}
-                          value={formData.amount}
+                          defaultValue={formData.amount}
                           min={product?.minTransactionLimit}
                           max={product?.maxTransactionLimit}
                           onChange={handleChange}
@@ -1052,7 +1060,7 @@ const PlanForm = () => {
                       name="tenor"
                       required
                       onChange={handleChange}
-                      value={formData.tenor}
+                      defaultValue={formData.tenor}
                     >
                       <option value="" disabled hidden>
                         Select tenor
@@ -1312,7 +1320,7 @@ const PlanForm = () => {
                         name="interestRate"
                         placeholder=""
                         type="number"
-                        value={formData.interestRate}
+                        defaultValue={formData.interestRate}
                         required={!formData.interestRate}
                         onChange={handleChange}
                         disabled

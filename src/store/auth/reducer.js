@@ -45,8 +45,6 @@ const authReducer = (state = initialState, action) => {
       state = {
         ...state,
         isLoading: true,
-        register: null,
-        isSignedup: false,
       };
       break;
 
@@ -89,7 +87,6 @@ const authReducer = (state = initialState, action) => {
 
     case LOGIN_USER_SUCCESS:
       JSON.stringify(localStorage.setItem("token", action?.payload?.token));
-      console.log(action.payload);
       state = {
         ...state,
         isLoading: false,

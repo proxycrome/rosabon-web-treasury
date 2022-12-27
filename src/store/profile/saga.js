@@ -90,7 +90,6 @@ import {
 function* getAuthentUsers() {
   try {
     const response = yield call(getAuthUsersService);
-    console.log(response.data);
     yield put(getAuthUsersSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -101,7 +100,6 @@ function* getAuthentUsers() {
 function* getAuthUser({ payload: { email } }) {
   try {
     const response = yield call(getAuthUserService, email);
-    console.log(response.data);
     yield put(getAuthUserSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -112,7 +110,6 @@ function* getAuthUser({ payload: { email } }) {
 function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
   try {
     const response = yield call(updateUserKycService, formData);
-    console.log(response.data);
     yield put(updateUserKycSuccess(response.data));
     if (response && pathCred?.route === "/plan-product") {
       setTimeout(() => {
@@ -144,7 +141,6 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
 function* updateUserName({ payload: { formData, dispatch } }) {
   try {
     const response = yield call(updateUserNameService, formData);
-    console.log(response.data);
     yield put(updateUserNameSuccess(response.data));
     if(response){
       dispatch(getAuthUsers());
@@ -158,13 +154,12 @@ function* updateUserName({ payload: { formData, dispatch } }) {
 function* verifyBvn({ payload: { formData, id, setComplete } }) {
   try {
     const response = yield call(verifyBvnService, formData);
-    console.log(response.data);
     yield put(verifyBvnSuccess(response.data));
     if (response.data && setComplete) {
       setComplete(true);
     }
   } catch (error) {
-    console.log(error?.response);
+    console.log(error?.response?.data);
     yield put(verifyBvnError(error?.response?.data, id));
   }
 }
@@ -172,7 +167,6 @@ function* verifyBvn({ payload: { formData, id, setComplete } }) {
 function* getCountries() {
   try {
     const response = yield call(getCountriesService);
-    console.log(response.data);
     yield put(getCountriesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -183,7 +177,6 @@ function* getCountries() {
 function* getStates({ payload: { countryId } }) {
   try {
     const response = yield call(getStatesService, countryId);
-    console.log(response.data);
     yield put(getStatesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -194,7 +187,6 @@ function* getStates({ payload: { countryId } }) {
 function* getLgas({ payload: { stateId } }) {
   try {
     const response = yield call(getLgasService, stateId);
-    console.log(response.data);
     yield put(getLgasSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -205,7 +197,6 @@ function* getLgas({ payload: { stateId } }) {
 function* sendOtp() {
   try {
     const response = yield call(sendOtpService);
-    console.log(response.data);
     yield put(sendOtpSuccess(response.data));
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
@@ -219,7 +210,6 @@ function* sendOtp() {
 function* validateOtp({ payload: { otp } }) {
   try {
     const response = yield call(validateOtpService, otp);
-    console.log(response.data);
     yield put(validateOtpSuccess(response.data));
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
@@ -233,7 +223,6 @@ function* validateOtp({ payload: { otp } }) {
 function* sendCompanyOtp() {
   try {
     const response = yield call(sendCompanyOtpService);
-    console.log(response.data);
     yield put(sendCompanyOtpSuccess(response.data));
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
@@ -247,7 +236,6 @@ function* sendCompanyOtp() {
 function* getBanks() {
   try {
     const response = yield call(getBanksService);
-    console.log(response.data);
     yield put(getBanksSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -258,9 +246,7 @@ function* getBanks() {
 function* getCompanyDocument() {
   try {
     const response = yield call(getCompanyDocsService);
-
     yield put(getCompanyDocsSuccess(response?.data));
-    console.log(response.data);
   } catch (error) {
     console.log(error?.response?.data);
     yield put(getCompanyDocsError(error?.response?.data));
@@ -270,7 +256,6 @@ function* getCompanyDocument() {
 function* getBankDetails() {
   try {
     const response = yield call(getBankDetailsService);
-    console.log(response.data);
     yield put(getBankDetailsSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -281,7 +266,6 @@ function* getBankDetails() {
 function* getWithdrawReason() {
   try {
     const response = yield call(getWithdrawReasonService);
-    console.log(response.data);
     yield put(getWithdrawReasonSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -292,7 +276,6 @@ function* getWithdrawReason() {
 function* getUserDocs() {
   try {
     const response = yield call(getUserDocsService);
-    console.log(response.data);
     yield put(getUserDocsSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);
@@ -303,7 +286,6 @@ function* getUserDocs() {
 function* getAllGender() {
   try {
     const response = yield call(getAllGenderService);
-    console.log(response.data);
     yield put(getAllGenderSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);

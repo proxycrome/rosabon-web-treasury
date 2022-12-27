@@ -11,8 +11,7 @@ function Congratulatios(props) {
   const location = useLocation();
 
   const auth = useSelector((state) => state.auth);
-  const { register, email } = auth;
-  console.log(register);
+  const { email } = auth;
 
   const handleClick = () => {
     navigate("/login");

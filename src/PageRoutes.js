@@ -44,7 +44,6 @@ import {
 import DebitCardCallback from "./component/Accessories/DebitCardCallback";
 
 function PageRoutes({ login, isAuth, user }) {
-	// console.log(isAuth);
 	return (
 		// <HashRouter>
 		<Routes>

@@ -23,7 +23,6 @@ function ResetPassword() {
   const [passwordShown2, setPasswordShown2] = useState(false)
 
   const location = useLocation();
-  console.log(location);
 
   const query = new URLSearchParams(location?.search)
 

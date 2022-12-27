@@ -9,7 +9,6 @@ import { getCurrenciesService } from "../../services/currencyServices";
 function* getCurrencies() {
   try {
     const response = yield call(getCurrenciesService);
-		console.log(response.data);
 		yield put(getCurrenciesSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);

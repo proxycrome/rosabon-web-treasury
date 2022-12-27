@@ -46,8 +46,6 @@ const MoreDetails = () => {
     photoEncodedString: "",
   });
 
-  console.log(base64File);
-
   const photoFileInputRef = useRef(null);
   const frontFileInputRef = useRef(null);
   const imageInputRef = useRef(null);
@@ -70,8 +68,6 @@ const MoreDetails = () => {
     (state) => state.updateProfile
   );
 
-  console.log(directors);
-
   const [col1, setCol1] = useState("");
   const [col2, setCol2] = useState("");
 
@@ -90,8 +86,6 @@ const MoreDetails = () => {
       setCol2(val);
     }
   };
-
-  console.log(col2);
 
   const toggleEdit = () => {
     setShowEdit(!showEdit);
@@ -135,8 +129,7 @@ const MoreDetails = () => {
       firstName,
       lastName,
     });
-    console.log("tesssssssssst");
-    console.log(firstName, lastName);
+    // console.log(firstName, lastName);
   };
 
   const [editFormData, setEditFormData] = useState({
@@ -169,8 +162,6 @@ const MoreDetails = () => {
   const handleFileChange = (e, name) => {
     const { files } = e.target;
 
-    console.log(files[0]);
-
     const encodedFileBase64 = (file) => {
       let reader = new FileReader();
       if (file) {
@@ -182,7 +173,7 @@ const MoreDetails = () => {
           });
         };
         reader.onerror = (error) => {
-          console.log("error", error);
+          console.log({error});
         };
       }
     };
@@ -269,7 +260,6 @@ const MoreDetails = () => {
           encodedUpload: base64File[`photoEncodedString${col2}`],
         },
       };
-      console.log(data);
       dispatch(updateDirectorDetails(data, reset, dispatch));
     }
 
@@ -281,7 +271,6 @@ const MoreDetails = () => {
         const { id, no, ...others } = item;
         return { ...others };
       });
-      console.log(dirArr);
       dispatch(updateDirectorDetails(dirArr, reset, dispatch));
     } else {
       setErrors(validateform(formData));
@@ -365,7 +354,6 @@ const MoreDetails = () => {
         phoneNumber: editFormData[`phone${dirId}`] || director?.phone,
       };
 
-      console.log(objData);
       dispatch(verifyBvn(objData, id));
       return;
     }
@@ -380,7 +368,6 @@ const MoreDetails = () => {
       phoneNumber: phone,
     };
 
-    console.log(objData);
     dispatch(verifyBvn(objData, id));
   };
 
@@ -443,7 +430,6 @@ const MoreDetails = () => {
     setDirectorField(rem);
   };
 
-  console.log(formData);
 
   useEffect(() => {
     dispatch(getAllIdTypes());

@@ -173,8 +173,7 @@ const PersonalKYC = () => {
     dispatch(getStates(formData.countryId));
   }, [formData.countryId]);
 
-  // console.log(bvnError);
-  // console.log(moment(maximumDate).format("YYYY-MM-DD"));
+  
 
   return (
     <div>

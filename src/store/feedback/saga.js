@@ -45,7 +45,6 @@ import {
 function* postFeedback({ payload: { formData, setShow } }) {
 	try {
 		const response = yield call(postFeedbackService, formData);
-		console.log(response.data);
 		yield put(postFeedbackSuccess(response.data));
 		if (response) {
 			setShow(true);
@@ -71,7 +70,6 @@ function* postFeedback({ payload: { formData, setShow } }) {
 function* getTickets() {
 	try {
 		const response = yield call(getTicketsService);
-		console.log(response.data);
 		yield put(getTicketsSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -82,7 +80,6 @@ function* getTickets() {
 function* getOpenTickets() {
 	try {
 		const response = yield call(getOpenTicketsService);
-		console.log(response.data);
 		yield put(getOpenTicketsSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -93,7 +90,6 @@ function* getOpenTickets() {
 function* getClosedTickets() {
 	try {
 		const response = yield call(getClosedTicketsService);
-		console.log(response.data);
 		yield put(getClosedTicketsSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -104,7 +100,6 @@ function* getClosedTickets() {
 function* getSingleTicket({ payload: { id } }) {
 	try {
 		const response = yield call(getSingleTicketService, id);
-		console.log(response.data);
 		yield put(getSingleTicketSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -115,7 +110,6 @@ function* getSingleTicket({ payload: { id } }) {
 function* postReply({ payload: { formData } }) {
 	try {
 		const response = yield call(postReplyService, formData);
-		console.log(response.data);
 		yield put(postReplySuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -138,7 +132,6 @@ function* postReply({ payload: { formData } }) {
 function* getReplies({ payload: { id } }) {
 	try {
 		const response = yield call(getRepliesService, id);
-		console.log(response.data);
 		yield put(getRepliesSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -149,7 +142,6 @@ function* getReplies({ payload: { id } }) {
 function* getTicketCategories() {
 	try {
 		const response = yield call(getTicketCategoriesService);
-		console.log(response.data);
 		yield put(getTicketCategoriesSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);

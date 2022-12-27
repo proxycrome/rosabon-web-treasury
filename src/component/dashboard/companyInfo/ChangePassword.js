@@ -57,9 +57,6 @@ const ChangePassword = () => {
     (state) => state.updateProfile
   );
 
-  console.log(passChangeMsg);
-  console.log(passChangeError);
-
   const createOtp = (otp) => {
     setToken(otp);
   };
@@ -114,7 +111,7 @@ const ChangePassword = () => {
         newPassword,
         otp: token,
       };
-      console.log(data);
+  
       dispatch(changeUserPassword(data));
       setformData({
         ...formData,

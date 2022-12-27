@@ -28,7 +28,6 @@ import {
 function* getProducts() {
 	try {
 		const response = yield call(getProductsService);
-		console.log(response.data);
 		yield put(getProductsSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -39,7 +38,6 @@ function* getProducts() {
 function* getSingleProduct({ payload: { id } }) {
 	try {
 		const response = yield call(getSingleProductService, id);
-		console.log(response.data);
 		yield put(getSingleProductSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -50,7 +48,6 @@ function* getSingleProduct({ payload: { id } }) {
 function* getCatWithProducts() {
 	try {
 		const response = yield call(getCatWithProductsService);
-		console.log(response.data);
 		yield put(getCatWithProductsSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);
@@ -61,7 +58,6 @@ function* getCatWithProducts() {
 function* getProductCategories() {
 	try {
 		const response = yield call(getCategoriesService);
-		console.log(response.data);
 		yield put(getProductCategoriesSuccess(response.data));
 	} catch (error) {
 		console.log(error?.response?.data);

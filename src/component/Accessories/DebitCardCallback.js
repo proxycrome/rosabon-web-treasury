@@ -9,7 +9,7 @@ const DebitCardCallback = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const parameter = searchParams.get('ref');
-  // console.log("param here", parameter)
+
   const timedOut = () => {
     setLoading(false);
   };

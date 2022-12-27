@@ -24,10 +24,9 @@ import {
 function* getNotification() {
   try {
     const response = yield call(getNotificationService);
-    // console.log(response.data);
     yield put(getNotificationSuccess(response.data));
   } catch (error) {
-    // console.log(error?.response?.data);
+    console.log(error?.response?.data);
     yield put(getNotificationError(error?.response?.data));
   }
 }
@@ -35,10 +34,9 @@ function* getNotification() {
 function* readNotification({ payload: { id } }) {
   try {
     const response = yield call(readNotificationService, id);
-    // console.log(response.data);
     yield put(readNotificationSuccess(response.data));
   } catch (error) {
-    // console.log(error?.response?.data);
+    console.log(error?.response?.data);
     yield put(readNotificationError(error?.response?.data));
   }
 }
@@ -46,10 +44,9 @@ function* readNotification({ payload: { id } }) {
 function* readAllNotifications() {
   try {
     const response = yield call(readAllNotificationsService);
-    // console.log(response.data);
     yield put(readAllNotificationsSuccess(response.data));
   } catch (error) {
-    // console.log(error?.response?.data);
+    console.log(error?.response?.data);
     yield put(readAllNotificationsError(error?.response?.data));
   }
 }

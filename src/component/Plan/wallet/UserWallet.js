@@ -144,7 +144,6 @@ const UserWallet = () => {
         withdrawalReasonOthers:
           withdrawalReasonId === "others" ? withdrawalReasonOthers : null,
       };
-      console.log(data);
       dispatch(requestWithdrawal(data));
     }
 
@@ -162,7 +161,6 @@ const UserWallet = () => {
         withdrawalReasonOthers:
           withdrawalReasonId === "others" ? withdrawalReasonOthers : "",
       };
-      console.log(data);
       dispatch(requestWithdrawal(data));
     }
   }, [errors]);
