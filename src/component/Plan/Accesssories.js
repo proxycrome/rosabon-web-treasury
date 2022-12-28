@@ -1081,8 +1081,7 @@ export const WithdrawalSummary = ({
         const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
         if (
           currentNumberOfDays >= minDays &&
-          currentNumberOfDays <= maxDays &&
-          penalDays > 0
+          currentNumberOfDays <= maxDays 
         ) {
           penalRate = item.penalRate;
         }
@@ -1092,7 +1091,7 @@ export const WithdrawalSummary = ({
         switch (intRecOption) {
           case "MATURITY":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
+              penalCharge = (currentNumberOfDays * (penalRate / 100) * amount) / 365;
             } else if (
               plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
             ) {
@@ -1101,17 +1100,17 @@ export const WithdrawalSummary = ({
                   plan?.interestRate *
                   (currentNumberOfDays / 365)) /
                 100;
-              penalCharge = totalEarnedInt * penalRate;
+              penalCharge = totalEarnedInt * (penalRate / 100);
             }
             break;
 
           case "UPFRONT":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
               const excessIntPaid =
-                amount * plan?.interestRate * (maxNumberDays / 365) -
-                amount * plan?.interestRate * (currentNumberOfDays / 365);
+                amount * (plan?.interestRate / 100) * (maxNumberDays / 365) -
+                amount * (plan?.interestRate / 100) * (currentNumberOfDays / 365);
               penalCharge =
-                (currentNumberOfDays / 365) * penalRate * amount +
+                (currentNumberOfDays / 365) * (penalRate / 100) * amount +
                 excessIntPaid;
             }
             break;
@@ -1120,7 +1119,7 @@ export const WithdrawalSummary = ({
           case "QUARTERLY":
           case "BI_ANNUAL":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
+              penalCharge = (currentNumberOfDays / 365) * (penalRate / 100) * amount;
             }
             break;
 
