@@ -154,9 +154,6 @@ const Withdrawal = () => {
     );
   }, [amount, penalAmount, plan]);
 
-  console.log({penalAmount});
-  console.log({balance});
-
   const handleNext = (e) => {
     e.preventDefault();
     if (
