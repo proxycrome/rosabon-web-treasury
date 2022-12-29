@@ -310,7 +310,7 @@ const PersonalInfo = () => {
                     <input
                       className="form-control"
                       type="text"
-                      value={users?.individualUser?.middleName}
+                      defaultValue={users?.individualUser?.middleName}
                       disabled
                     />
                   </div>

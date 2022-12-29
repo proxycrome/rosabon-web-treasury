@@ -100,6 +100,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
                   base64File={base64File}
                   setBase64File={setBase64File}
                   balance={parseFloat(amount)}
+                  type="withdraw"
                 />
               </div>
             </div>
