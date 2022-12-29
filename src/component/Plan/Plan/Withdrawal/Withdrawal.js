@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styled from "styled-components";
 import { FormGroup, Input } from "reactstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,23 +7,39 @@ import moment from "moment";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import FullWithdrawal from "./FullWithdrawal";
 import PartWithdrawal from "./PartWithdrawal";
-import { getSinglePlan, getWithdrawReason } from "../../../../store/actions";
+import {
+  getPenalCharge,
+  getSinglePlan,
+  getWithdrawReason,
+} from "../../../../store/actions";
 import { getCurrIcon } from "../../Accesssories";
+import toast, { Toaster } from "react-hot-toast";
 
 const Withdrawal = () => {
   const [withdrawType, setWithdrawType] = useState("");
   const [amount, setAmount] = useState("");
   const [isClicked, setIsClicked] = useState(false);
+  const [penalAmount, setPenalAmount] = useState(0);
   const [reason, setReason] = useState("");
   const [otherReasons, setOtherReasons] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const { singlePlan } = useSelector((state) => state.plan);
+  const { singlePlan, penal_charge } = useSelector((state) => state.plan);
   const { withdrawReasons } = useSelector((state) => state.user_profile);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+  const plan = useMemo(
+    () => (singlePlan?.data?.body ? singlePlan?.data.body : {}),
+    [singlePlan]
+  );
   const planStatus = singlePlan?.data?.statusCode;
+
+  const penalCharges = useMemo(
+    () => (penal_charge?.data?.body ? penal_charge?.data?.body : []),
+    [penal_charge]
+  );
+
+  const [balance, setBalance] = useState(plan?.planSummary?.principal);
 
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -32,7 +48,93 @@ const Withdrawal = () => {
   useEffect(() => {
     dispatch(getSinglePlan(parseInt(id)));
     dispatch(getWithdrawReason());
+    dispatch(getPenalCharge());
   }, []);
+
+  let date = new Date();
+  const recentDate = moment(date).format("YYYY-MM-DD");
+
+  const planProductCharges = penalCharges?.filter(
+    (data) => data.product.id === plan?.product?.id
+  );
+
+  const computePenalCharge = useCallback(
+    (intRecOption) => {
+      let penalRate = 0;
+      let penalCharge = 0;
+      const maxNumberDays = moment(plan?.actualMaturityDate).diff(
+        plan?.planSummary?.startDate,
+        "days"
+      );
+
+      const currentNumberOfDays =
+        moment(recentDate).diff(plan?.planSummary?.startDate, "days") || 1;
+
+      const penalDays = moment(plan?.planSummary?.endDate).diff(
+        recentDate,
+        "days"
+      );
+
+      planProductCharges.forEach((item) => {
+        const maxDays = (item.maxDaysElapsed * maxNumberDays) / 100;
+        const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
+        if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
+          penalRate = item.penalRate / 100;
+        }
+      });
+
+      if (penalDays > 0) {
+        switch (intRecOption) {
+          case "MATURITY":
+            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+              penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
+            } else if (
+              plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
+            ) {
+              const totalEarnedInt =
+                (plan?.planSummary?.principal *
+                  plan?.interestRate *
+                  (currentNumberOfDays / 365)) /
+                100;
+              penalCharge = totalEarnedInt * penalRate;
+            }
+            break;
+
+          case "UPFRONT":
+            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+              const excessIntPaid =
+                amount * (plan?.interestRate / 100) * (maxNumberDays / 365) -
+                amount *
+                  (plan?.interestRate / 100) *
+                  (currentNumberOfDays / 365);
+              penalCharge =
+                (currentNumberOfDays / 365) * penalRate * amount +
+                excessIntPaid;
+            }
+            break;
+
+          case "MONTHLY":
+          case "QUARTERLY":
+          case "BI_ANNUAL":
+            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
+              penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
+            }
+            break;
+
+          default:
+            penalCharge = 0;
+            break;
+        }
+      }
+
+      return penalCharge.toFixed(2);
+    },
+    [plan, amount, recentDate, planProductCharges]
+  );
+
+  useEffect(() => {
+    setPenalAmount(computePenalCharge(plan?.interestReceiptOption));
+  }, [computePenalCharge, plan]);
 
   const handleClick = (e) => {
     const { name, value } = e.target;
@@ -44,8 +146,30 @@ const Withdrawal = () => {
     }
   };
 
+  useEffect(() => {
+    setBalance(
+      plan?.planSummary?.principal -
+        (amount ? parseFloat(amount) : 0) -
+        penalAmount
+    );
+  }, [amount]);
+
   const handleNext = (e) => {
     e.preventDefault();
+    if (
+      (balance < plan?.product?.minTransactionLimit &&
+        plan?.planStatus === "ACTIVE") ||
+      balance < 0
+    ) {
+      toast.error(
+        `Balance cannot be less than ${
+          document.querySelectorAll("span")[
+            document.querySelectorAll("span").length - 1
+          ].innerText
+        } ${plan?.product?.minTransactionLimit}`
+      );
+      return;
+    }
     setIsClicked(true);
   };
 
@@ -88,6 +212,7 @@ const Withdrawal = () => {
               <span className="fw-bold">Plan</span>
             </NavTitle>
           </ProfileNavBar>
+          <Toaster />
           <form autoCorrect="off" autoComplete="off" onSubmit={handleNext}>
             <Wrapper>
               <LeftView>
@@ -207,6 +332,14 @@ const Withdrawal = () => {
                           ).toFixed(2)}
                         </span>
                       </label>
+                      {plan?.planStatus === "MATURED" &&
+                        plan?.planSummary?.principal -
+                          (amount ? parseFloat(amount) : 0) >
+                          0 && (
+                          <label className="text-danger">
+                            Your balance will be rolled over for another cycle
+                          </label>
+                        )}
                     </div>
                   </div>
                   <div className="row my-4">
@@ -231,7 +364,7 @@ const Withdrawal = () => {
                                 {item.reason}
                               </option>
                             ))}
-                          <option value="Others" >Others</option>
+                          <option value="Others">Others</option>
                         </select>
                       </div>
                     </div>
@@ -244,7 +377,7 @@ const Withdrawal = () => {
                             name="otherReasons"
                             type="textarea"
                             rows={5}
-                            required={reason==="Others"}
+                            required={reason === "Others"}
                             value={otherReasons}
                             className="form-control"
                             onChange={(e) => setOtherReasons(e.target.value)}

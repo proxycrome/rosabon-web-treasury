@@ -896,6 +896,7 @@ export const RolloverWithdrawMethod = ({
   setBase64File,
   // savingFreq,
   balance,
+  type
 }) => {
   const dispatch = useDispatch();
   const [withdraw, setWithdraw] = useState("");
@@ -927,8 +928,13 @@ export const RolloverWithdrawMethod = ({
     <div>
       <RolloverSummaryWrapper>
         <h4 className="pt-5">
-          Kindly select beneficiary account to receive the portion of your funds
-          not rolled over ({getCurrIcon(plan?.currency?.name)} {balance})
+          {type === "withdraw" ? (
+            <>Kindly select beneficiary account to receive the withdrawal</>
+          ) : (
+            <>Kindly select beneficiary account to receive the portion of your funds
+          not rolled over ({getCurrIcon(plan?.currency?.name)} {balance})</>
+          )}
+          
         </h4>
         <div className="plan-content">
           <div className="rollover">
