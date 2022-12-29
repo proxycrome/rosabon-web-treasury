@@ -152,7 +152,10 @@ const Withdrawal = () => {
         (amount ? parseFloat(amount) : 0) -
         penalAmount
     );
-  }, [amount]);
+  }, [amount, penalAmount, plan]);
+
+  console.log({penalAmount});
+  console.log({balance});
 
   const handleNext = (e) => {
     e.preventDefault();
