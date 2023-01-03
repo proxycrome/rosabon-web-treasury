@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,8 +7,9 @@ import { Link } from "react-router-dom";
 import { MDBDataTable } from "mdbreact";
 import ModalComponent from "../../../ModalComponent";
 import { TransactionPreview } from "../../../Accessories/BVNConfirm";
-import { getSinglePlanHistory } from "../../../../store/actions";
+import { getSinglePlan, getSinglePlanHistory } from "../../../../store/actions";
 import moment from "moment";
+import { getCurrIcon } from "../../Accesssories";
 
 const TransactionDetails = () => {
   const date = {
@@ -31,10 +32,17 @@ const TransactionDetails = () => {
 
   useEffect(() => {
     dispatch(getSinglePlanHistory(parseInt(id)));
+    dispatch(getSinglePlan(parseInt(id)));
   }, []);
 
-  const { single_plan_history } = useSelector((state) => state.plan);
+  const { single_plan_history, singlePlan } = useSelector(
+    (state) => state.plan
+  );
   const history = single_plan_history ? single_plan_history?.content : [];
+  const plan = useMemo(
+    () => (singlePlan?.data?.body ? singlePlan?.data.body : {}),
+    [singlePlan]
+  );
 
   useEffect(() => {
     const filteredPlanHistory = history?.filter((item) => {
@@ -68,10 +76,8 @@ const TransactionDetails = () => {
   ];
 
   const history_list =
-    (
-      filteredHistory.length > 0 || 
-      (formData.startDate !== "" && formData.endDate !== "") 
-    )
+    filteredHistory.length > 0 ||
+    (formData.startDate !== "" && formData.endDate !== "")
       ? filteredHistory.map((item) => ({
           id: `${item?.transactionId}`,
           date: `${moment(item.dateOfTransaction, "YYYY-MM-DD").format(
@@ -79,8 +85,8 @@ const TransactionDetails = () => {
           )}`,
           description: `${item?.description}`,
           type: `${item?.type}`,
-          amount: `₦ ${item?.amount}`,
-          balance: `₦ ${item?.balance}`,
+          amount: `${item?.amount}`,
+          balance: `${item?.balance}`,
         }))
       : history?.map((item) => ({
           id: `${item?.transactionId}`,
@@ -89,8 +95,16 @@ const TransactionDetails = () => {
           )}`,
           description: `${item?.description}`,
           type: `${item?.type}`,
-          amount: `₦ ${item?.amount}`,
-          balance: `₦ ${item?.balance}`,
+          amount: (
+            <>
+              {getCurrIcon(plan?.currency?.name)} {item.amount?.toFixed(2)}
+            </>
+          ),
+          balance: (
+            <>
+              {getCurrIcon(plan?.currency?.name)} {item.balance?.toFixed(2)}
+            </>
+          ),
         }));
 
   const data = {
@@ -116,12 +130,12 @@ const TransactionDetails = () => {
         width: 100,
       },
       {
-        label: "Amount",
+        label: `Amount`,
         field: "amount",
         width: 100,
       },
       {
-        label: "Balance",
+        label: `Balance`,
         field: "balance",
         width: 100,
       },

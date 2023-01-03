@@ -16,11 +16,11 @@ import halfEllipse from "../../../asset/halfEllipse.png";
 import Telephone from "../../../asset/telephone.png";
 import HistoryImag from "../../../asset/history.png";
 import TransferImg from "../../../asset/transfer.png";
-import { AvailableBalance, TransferCard } from "../Accesssories";
+import { AvailableBalance, getCurrIcon, TransferCard } from "../Accesssories";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
-import toast,{ Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const UserWallet = () => {
   const [show, setShow] = useState(false);
@@ -40,11 +40,8 @@ const UserWallet = () => {
   const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
     (state) => state.user_profile
   );
-  const { walletBalance, loading } = useSelector(
-    (state) => state.wallet
-  );
+  const { walletBalance, loading } = useSelector((state) => state.wallet);
   // const { login } = useSelector((state) => state.auth);
-
 
   const handleClick = (value) => {
     if (value === "transfer") {
@@ -166,13 +163,13 @@ const UserWallet = () => {
   }, [errors]);
 
   const handleTransferSubmit = () => {
-    const {amount, planId} = transferFormData;
-    if ((!amount || !planId) || (amount===0 || planId==="")) {
+    const { amount, planId } = transferFormData;
+    if (!amount || !planId || amount === 0 || planId === "") {
       setTransferError({
         ...transferError,
-        amount: (amount===0 || !amount) ? true : false,
-        planId: (planId==="" || !planId) ? true : false
-      })
+        amount: amount === 0 || !amount ? true : false,
+        planId: planId === "" || !planId ? true : false,
+      });
       toast.error("Provide an amount and beneficiary account");
     } else {
       dispatch(postTransferToPlan(transferFormData));
@@ -196,7 +193,7 @@ const UserWallet = () => {
   //   }
   // }, [withdrawMsg]);
 
-  
+  const formatNumber = new Intl.NumberFormat(undefined, {});
 
   return (
     <div>
@@ -234,62 +231,68 @@ const UserWallet = () => {
                   </div>
                   <div className="caption">Providus Bank</div>
                   <h3 className="pt-1 pb-3 accountDet">
-                    {users?.virtualAccountNo} ({users?.virtualAccountName}
-                    )
+                    {users?.virtualAccountNo} ({users?.virtualAccountName})
                   </h3>
                   <div className="down-button">
                     <p className="p-0 m-0">Balance</p>
                     <h5>
                       ₦{" "}
                       {walletBalance?.amount
-                        ? walletBalance?.amount.toLocaleString()
+                        ? formatNumber
+                            .format(walletBalance?.amount?.toFixed(2))
+                            .split(".")[1]?.length === 2
+                          ? formatNumber.format(
+                              walletBalance?.amount?.toFixed(2)
+                            )
+                          : formatNumber.format(
+                              walletBalance?.amount?.toFixed(2)
+                            ) + "0"
                         : 0}
                     </h5>
                   </div>
                   <div className="grey-background"></div>
                   <div className="yellow-background"></div>
                 </div>
-                
               </div>
               {/* </div> */}
               <div className="row py-5">
                 <div className="d-flex justify-content-between align-items-center wallet-options">
-                  <a href="#withdraw" style={{textDecoration: "none"}}>
-                  <div className="text-center">
-                    <div
-                      onClick={() => {
-                        handleClick("withdraw");
-                      }}
-                      className="d-flex box-image justify-content-center align-items-center"
-                    >
-                      <img
-                        // onClick={() => handleClick("withdraw")}
-                        className=" image-fluid"
-                        src={Telephone}
-                        alt="Telephone"
-                      />
+                  <a href="#withdraw" style={{ textDecoration: "none" }}>
+                    <div className="text-center">
+                      <div
+                        onClick={() => {
+                          handleClick("withdraw");
+                        }}
+                        className="d-flex box-image justify-content-center align-items-center"
+                      >
+                        <img
+                          // onClick={() => handleClick("withdraw")}
+                          className=" image-fluid"
+                          src={Telephone}
+                          alt="Telephone"
+                        />
+                      </div>
+                      <p className="pt-3">Withdraw</p>
                     </div>
-                    <p className="pt-3">Withdraw</p>
-                  </div>
                   </a>
-                  <a href="#transfer" style={{textDecoration: "none"}}>    
-                  <div>
-                    <div
-                      onClick={() => {
-                        handleClick("transfer");
-                        setClosefooter(true);
-                      }}
-                      className="d-flex box-image justify-content-center align-items-center"
-                    >
-                      <img
-                        value="transfer"
-                        className=" image-fluid"
-                        src={TransferImg}
-                        alt="TransferImg"
-                      />
+                  <a href="#transfer" style={{ textDecoration: "none" }}>
+                    <div>
+                      <div
+                        onClick={() => {
+                          handleClick("transfer");
+                          setClosefooter(true);
+                        }}
+                        className="d-flex box-image justify-content-center align-items-center"
+                      >
+                        <img
+                          value="transfer"
+                          className=" image-fluid"
+                          src={TransferImg}
+                          alt="TransferImg"
+                        />
+                      </div>
+                      <p className="pt-3">Transfer</p>
                     </div>
-                    <p className="pt-3">Transfer</p>
-                  </div>
                   </a>
                   <div>
                     <NavLink to="/wallet-history">
@@ -557,7 +560,6 @@ const LeftView = styled.div`
     .choose-plan {
       width: 90% !important;
     }
-    
   }
   .choose-plan {
     width: 448px;
@@ -681,7 +683,7 @@ const LeftView = styled.div`
       width: 100% !important;
       margin: 0 auto;
     }
-    .wallet-options{
+    .wallet-options {
       flex-direction: column;
     }
   }

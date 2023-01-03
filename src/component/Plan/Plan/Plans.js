@@ -115,6 +115,8 @@ export const Plans = () => {
     setDeleteModal(true);
   };
 
+
+
   return (
     <Wrapper>
       <Toaster />
@@ -243,7 +245,7 @@ export const Plans = () => {
                         )}
                       </div>
                     </div>
-                    <div className="d-flex align-items-center justify-content-between pt-4">
+                    <div className="d-flex align-items-center justify-content-between py-4">
                       <div>
                         <h4>Start date</h4>
                         <p className="p-0 m-0">
@@ -367,7 +369,7 @@ const Wrapper = styled.div`
   }
   .plan {
     width: 100%;
-    height: 263px;
+    height: auto;
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.47);
     border-radius: 8px;
@@ -460,6 +462,7 @@ export const DropDown = ({
     // dispatch(getSinglePlan(id));
   };
 
+  
   useEffect(() => {
     const selectedPlan = currentPlans?.find((item) => item.id === id);
     if (menu) {
@@ -467,9 +470,6 @@ export const DropDown = ({
     }
   }, [checkRollover]);
 
-  // useEffect(() => {
-  //   dispatch(getSinglePlan(id));
-  // }, [])
 
   const toggle = () => {
     setMenu((prevState) => !prevState);
@@ -580,12 +580,12 @@ export const DropDown = ({
             <DropdownItem
               tag={Link}
               to={`/withdrawal/${id}`}
-              disabled={
-                !(
-                  userPlan?.allowsLiquidation &&
-                  product?.properties?.allowsLiquidation
-                )
-              }
+              // disabled={
+              //   !(
+              //     userPlan?.allowsLiquidation &&
+              //     product?.properties?.allowsLiquidation
+              //   )
+              // }
             >
               Withdraw
             </DropdownItem>

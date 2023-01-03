@@ -896,7 +896,7 @@ export const RolloverWithdrawMethod = ({
   setBase64File,
   // savingFreq,
   balance,
-  type
+  type,
 }) => {
   const dispatch = useDispatch();
   const [withdraw, setWithdraw] = useState("");
@@ -931,10 +931,12 @@ export const RolloverWithdrawMethod = ({
           {type === "withdraw" ? (
             <>Kindly select beneficiary account to receive the withdrawal</>
           ) : (
-            <>Kindly select beneficiary account to receive the portion of your funds
-          not rolled over ({getCurrIcon(plan?.currency?.name)} {balance})</>
+            <>
+              Kindly select beneficiary account to receive the portion of your
+              funds not rolled over ({getCurrIcon(plan?.currency?.name)}{" "}
+              {balance})
+            </>
           )}
-          
         </h4>
         <div className="plan-content">
           <div className="rollover">
@@ -1085,11 +1087,8 @@ export const WithdrawalSummary = ({
       planProductCharges.forEach((item) => {
         const maxDays = (item.maxDaysElapsed * maxNumberDays) / 100;
         const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
-        if (
-          currentNumberOfDays >= minDays &&
-          currentNumberOfDays <= maxDays 
-        ) {
-          penalRate = item.penalRate;
+        if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
+          penalRate = item.penalRate / 100;
         }
       });
 
@@ -1097,7 +1096,8 @@ export const WithdrawalSummary = ({
         switch (intRecOption) {
           case "MATURITY":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays * (penalRate / 100) * amount) / 365;
+              penalCharge =
+                (currentNumberOfDays * penalRate * amount) / 365;
             } else if (
               plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
             ) {
@@ -1106,7 +1106,7 @@ export const WithdrawalSummary = ({
                   plan?.interestRate *
                   (currentNumberOfDays / 365)) /
                 100;
-              penalCharge = totalEarnedInt * (penalRate / 100);
+              penalCharge = totalEarnedInt * penalRate;
             }
             break;
 
@@ -1114,9 +1114,11 @@ export const WithdrawalSummary = ({
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
               const excessIntPaid =
                 amount * (plan?.interestRate / 100) * (maxNumberDays / 365) -
-                amount * (plan?.interestRate / 100) * (currentNumberOfDays / 365);
+                amount *
+                  (plan?.interestRate / 100) *
+                  (currentNumberOfDays / 365);
               penalCharge =
-                (currentNumberOfDays / 365) * (penalRate / 100) * amount +
+                (currentNumberOfDays / 365) * penalRate * amount +
                 excessIntPaid;
             }
             break;
@@ -1125,7 +1127,8 @@ export const WithdrawalSummary = ({
           case "QUARTERLY":
           case "BI_ANNUAL":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays / 365) * (penalRate / 100) * amount;
+              penalCharge =
+                (currentNumberOfDays / 365) * penalRate * amount;
             }
             break;
 
@@ -1669,7 +1672,10 @@ export const AvailableBalance = ({
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦ {walletBalance?.amount ? walletBalance?.amount.toLocaleString() : 0}
+          ₦{" "}
+          {walletBalance?.amount
+            ? parseFloat(walletBalance?.amount?.toFixed(2))?.toLocaleString()
+            : 0}
         </h4>
       </div>
       {role !== "COMPANY" &&
@@ -1874,7 +1880,10 @@ export const TransferCard = ({
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦ {walletBalance?.amount ? walletBalance?.amount.toLocaleString() : 0}
+          ₦{" "}
+          {walletBalance?.amount
+            ? parseFloat(walletBalance?.amount?.toFixed(2))?.toLocaleString()
+            : 0}
         </h4>
       </div>
       <div className="pt-3">
@@ -2133,10 +2142,10 @@ export const HistoryTable = () => {
             type: `${data?.transactionType}`,
             amount: `${
               data?.transactionType === "CREDIT"
-                ? "+ " + data?.debit?.toLocaleString()
-                : "- " + data?.debit?.toLocaleString()
+                ? "+ " + data?.debit?.toFixed(2)
+                : "- " + data?.debit?.toFixed(2)
             }`,
-            balance: `${data?.balanceAfterTransaction?.toLocaleString()}`,
+            balance: `${data?.balanceAfterTransaction?.toFixed(2)}`,
           })),
   };
 

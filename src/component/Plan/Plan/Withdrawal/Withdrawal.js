@@ -17,7 +17,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 const Withdrawal = () => {
   const [withdrawType, setWithdrawType] = useState("");
-  const [amount, setAmount] = useState("");
+
   const [isClicked, setIsClicked] = useState(false);
   const [penalAmount, setPenalAmount] = useState(0);
   const [reason, setReason] = useState("");
@@ -33,6 +33,8 @@ const Withdrawal = () => {
     [singlePlan]
   );
   const planStatus = singlePlan?.data?.statusCode;
+
+  const [amount, setAmount] = useState("");
 
   const penalCharges = useMemo(
     () => (penal_charge?.data?.body ? penal_charge?.data?.body : []),
@@ -147,11 +149,15 @@ const Withdrawal = () => {
   };
 
   useEffect(() => {
-    setBalance(
-      plan?.planSummary?.principal -
-        (amount ? parseFloat(amount) : 0) -
-        penalAmount
-    );
+    if (plan.planStatus === "MATURED") {
+      setBalance(0);
+    } else {
+      setBalance(
+        (plan?.planSummary?.principal -
+          (amount ? parseFloat(amount) : 0) -
+          penalAmount)?.toFixed(2)
+      );
+    }
   }, [amount, penalAmount, plan]);
 
   const handleNext = (e) => {
@@ -284,6 +290,7 @@ const Withdrawal = () => {
                         value="part"
                         onClick={handleClick}
                         required
+                        disabled={plan?.planStatus === "MATURED"}
                       />
                     </div>
                   </div>
@@ -299,6 +306,7 @@ const Withdrawal = () => {
                         value="full"
                         onClick={handleClick}
                         disabled={plan?.planStatus === "ACTIVE"}
+                        // checked={plan?.planStatus === "MATURED"}
                         required
                       />
                     </div>
@@ -315,31 +323,27 @@ const Withdrawal = () => {
                           placeholder={plan?.planSummary?.principal?.toFixed(2)}
                           type="number"
                           name="amount"
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
+                          defaultValue={amount}
+                          onChange={(e) => setAmount(parseFloat(e.target.value).toFixed(2))}
                           max={plan?.planSummary?.principal}
+                          step="0.001"
+                          lang="nb"
                           required
-                          disabled={withdrawType === "full"}
+                          disabled={withdrawType === "full" || plan?.planStatus === "MATURED"}
                         />
                       </div>
                       <label className="d-flex gap-1">
                         Balance is{" "}
                         <span className="d-flex">
                           {getCurrIcon(plan?.currency?.name)}
-                          {(
-                            plan?.planSummary?.principal -
-                            (amount ? parseFloat(amount) : 0)
-                          ).toFixed(2)}
+                          {balance}
                         </span>
                       </label>
-                      {plan?.planStatus === "MATURED" &&
-                        plan?.planSummary?.principal -
-                          (amount ? parseFloat(amount) : 0) >
-                          0 && (
-                          <label className="text-danger">
-                            Your balance will be rolled over for another cycle
-                          </label>
-                        )}
+                      {plan?.planStatus === "MATURED" && balance > 0 && (
+                        <label className="text-danger">
+                          Your balance will be rolled over for another cycle
+                        </label>
+                      )}
                     </div>
                   </div>
                   <div className="row my-4">
