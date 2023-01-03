@@ -81,10 +81,9 @@ export const logoutError = (error) => {
   };
 };
 
-export const refreshUser = (login) => {
+export const refreshUser = () => {
   return {
     type: REFRESH_USER,
-    payload: { login },
   };
 };
 

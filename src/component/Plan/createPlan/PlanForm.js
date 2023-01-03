@@ -575,6 +575,7 @@ const PlanForm = () => {
       const currency = ex_rates?.find(
         (item) => item.name === formData.currency
       );
+      console.log(currency);
       setFormData({
         ...formData,
         exchangeRate:
@@ -582,7 +583,7 @@ const PlanForm = () => {
             ? 1
             : formData.currency === ""
             ? ""
-            : Number(parseFloat(currency?.sellingPrice).toFixed(2)),
+            : Number(parseFloat(currency?.buyingPrice).toFixed(2)),
         interestRate: fetchIntRate(formData.interestReceiptOption),
       });
     }
@@ -596,6 +597,8 @@ const PlanForm = () => {
     formData.tenor,
     formData.actualMaturityDate,
   ]);
+
+  console.log(formData.exchangeRate);
 
   // Update number of tickets based on target amount or amount to be placed value
   const updateNumOfTickets = (value) => {

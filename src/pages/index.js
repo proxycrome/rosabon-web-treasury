@@ -1,15 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import PersonalProfile from "./PersonalProfile";
 import CompanyProfile from "./CompanyProfile";
 import { ProfileSideBarList } from "../component/dashboard/ProfileSideBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { login } = useSelector((state) => state.auth);
+  // const { login } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.user_profile);
+  const {state} = useLocation();
+  const {isAssisted} = state || {};
+
+  
+
 
   return (
     <WrapperBody>
@@ -19,11 +24,11 @@ const Profile = () => {
 
       {users?.role === "INDIVIDUAL_USER" ? (
         <div className="main-body">
-          <PersonalProfile />
+          <PersonalProfile isAssisted={isAssisted} />
         </div>
       ) : users?.role === "COMPANY" ? (
         <div className="main-body">
-          <CompanyProfile />
+          <CompanyProfile isAssisted={isAssisted} />
         </div>
       ) : null}
     </WrapperBody>

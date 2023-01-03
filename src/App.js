@@ -8,14 +8,12 @@ import Spinner from "./component/common/loading";
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { login, isAuth, isLoggedIn } = useSelector(
-    (state) => state.auth
-  );
+  const { login, isAuth, isLoading } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.user_profile);
 
   useEffect(() => {
     dispatch(refreshUser());
-    dispatch(getAuthUsers());  
+    dispatch(getAuthUsers());
   }, []);
 
   // useEffect(() => {
@@ -26,7 +24,7 @@ function App() {
   //     navigate("/create-plan")
   //   }
   // },[])
- 
+
   return (
     <div className="App">
       {isAuth !== null ? (

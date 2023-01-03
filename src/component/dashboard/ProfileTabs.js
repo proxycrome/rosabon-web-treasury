@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-export function ProfileTabs({ personal, handleChange }) {
+export function ProfileTabs({ personal, handleChange, isAssisted }) {
   const [activeBtn, setActiveBtn] = useState("profile");
+
+  useEffect(() => {
+    if(isAssisted){
+      setActiveBtn("password");
+    }
+  }, [])
 
   return (
     <WrappeSideBar>

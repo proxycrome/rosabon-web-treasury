@@ -38,22 +38,31 @@ import { getAuthUsers, clearBvn, clearMessages } from "../actions";
 function* loginUser({ payload: { formData, navigate, dispatch } }) {
   try {
     const response = yield call(loginService, formData);
-
+    console.log(response.data);
     yield put(loginUserSuccess(response.data));
     if (response) {
       if (response.data.kyc === true) {
-        navigate("/");
-        toast.success("Login was successful", {position: "top-right"});
-        dispatch(getAuthUsers());
+        if (
+          response.data.creationSource === "BACKEND" &&
+          !response.data.resetPassword
+        ) {
+          navigate("/profile", {state: {isAssisted: true}});
+          toast.success("Login was successful", { position: "top-right" });
+          dispatch(getAuthUsers());
+        } else {
+          navigate("/");
+          toast.success("Login was successful", { position: "top-right" });
+          dispatch(getAuthUsers());
+        }
       } else {
         navigate("/kyc");
-        toast.success("Login was successful", {position: "top-right"});
+        toast.success("Login was successful", { position: "top-right" });
         dispatch(getAuthUsers());
       }
     }
   } catch (error) {
     yield put(loginUserError("User not authorized or wrong details"));
-    console.log(error?.response?.data);
+    console.log(error);
     const message = error.response
       ? error.response.data.message
         ? error.response.data.message
@@ -70,16 +79,16 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
 }
 
 function* logoutUser({ payload: { navigate, dispatch } }) {
-  try {  
-    const response = yield call(logoutService)
+  try {
+    const response = yield call(logoutService);
     yield put(logoutSuccess(response.data));
-    if (response){
+    if (response) {
       localStorage.clear();
       navigate("/login");
-      toast.success(response.data.message, {position: "top-right"})
+      toast.success(response.data.message, { position: "top-right" });
       dispatch(clearBvn());
       dispatch(clearMessages());
-    } 
+    }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(logoutError(error?.response?.data?.message));
@@ -107,9 +116,9 @@ function* registerUser({ payload: { formData, navigate } }) {
       });
     }
   }
-};
+}
 
-function* refreshUser({payload: {login}}) {
+function* refreshUser() {
   try {
     const data = localStorage.getItem("token");
     if (data) {
@@ -131,7 +140,7 @@ function* resetPassword({ payload: { formData, navigate } }) {
       toast.success(response?.data?.message, {
         position: "top-right",
       });
-	  navigate("/login");
+      navigate("/login");
     }
   } catch (error) {
     const message = error.response

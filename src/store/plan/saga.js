@@ -366,6 +366,9 @@ function* updatePlan({ payload: { formData, id, dispatch } }) {
     yield put(updatePlanSuccess(response.data));
     if (response) {
       dispatch(getPlans());
+      setTimeout(() => {
+        window.location.reload(true);
+      }, 1000)
     }
   } catch (error) {
     console.log(error?.response?.data);

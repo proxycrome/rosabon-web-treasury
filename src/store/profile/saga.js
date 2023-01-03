@@ -90,6 +90,7 @@ import {
 function* getAuthentUsers() {
   try {
     const response = yield call(getAuthUsersService);
+    // console.log(response.data);
     yield put(getAuthUsersSuccess(response.data));
   } catch (error) {
     console.log(error?.response?.data);

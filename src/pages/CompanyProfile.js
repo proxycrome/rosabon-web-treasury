@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChangePassword from "../component/dashboard/companyInfo/ChangePassword";
 import CompanyDetails from "../component/dashboard/companyInfo/CompanyDetails";
@@ -10,9 +10,15 @@ import { ProfileNavBar } from "../component/dashboard/ProfileNavbar";
 // import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
-const CompanyProfile = () => {
+const CompanyProfile = ({isAssisted}) => {
   // const navigate = useNavigate();
   const [tabs, setTabs] = useState("company");
+
+  useEffect(() => {
+    if (isAssisted) {
+      setTabs("password");
+    }
+  }, []);
 
   return (
     <WrapperBody>
@@ -24,7 +30,7 @@ const CompanyProfile = () => {
       <div className="container-fluid">
         <div className="row pt-5">
           <div className="col-md-3 shadow-sm style-log">
-            <ProfileTabs handleChange={(tabName) => setTabs(tabName)} />
+            <ProfileTabs handleChange={(tabName) => setTabs(tabName)} isAssisted={isAssisted} />
           </div>
           {/* <div className="horiz-line col-md-1"></div> */}
           <div className="col-md-9">
