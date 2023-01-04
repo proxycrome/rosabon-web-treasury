@@ -276,7 +276,7 @@ const PlanPayment = () => {
             handleClose={() => setDebitPopup(false)}
           >
             <ProceedPayCard
-              amount={parseFloat(amount)*plan?.exchangeRate}
+              amount={parseFloat((amount * plan?.exchangeRate).toFixed(2) * 100)}
               payType="withdraw-paystack"
               onSuccess={onSuccess}
               onClose={onClose}
