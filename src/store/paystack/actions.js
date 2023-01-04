@@ -31,10 +31,10 @@ export const initPaymentError = (error) => {
   };
 };
 
-export const regTransaction = (formData) => {
+export const regTransaction = (formData, setDebitPopup, isTopup) => {
   return {
     type: REGISTER_TRANSACTION,
-    payload: { formData },
+    payload: { formData, setDebitPopup, isTopup },
   };
 };
 

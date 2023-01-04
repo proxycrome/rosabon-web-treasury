@@ -22,8 +22,6 @@ import { getCurrIcon } from "../Accesssories";
 import { Toaster } from "react-hot-toast";
 
 const PlanPayment = () => {
-  const [card, setCard] = useState("");
-  const [bank, setBank] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [amount, setAmount] = useState("");
   const [debitPopup, setDebitPopup] = useState(false);
@@ -33,7 +31,7 @@ const PlanPayment = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const { reg_transaction, loading } = useSelector((state) => state.paystack);
+  const { reg_transaction } = useSelector((state) => state.paystack);
   const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const planStatus = singlePlan?.data.statusCode;
@@ -51,12 +49,11 @@ const PlanPayment = () => {
 
   useEffect(() => {
     const formData = {
-      amount: parseFloat(amount*plan?.exchangeRate),
+      amount: parseFloat((amount*plan?.exchangeRate).toFixed(2)),
       purposeOfPayment: "PLAN_CREATION",
     };
     if (paymentType === "card" && isClicked) {
-      dispatch(regTransaction(formData));
-      setDebitPopup(true);
+      dispatch(regTransaction(formData , setDebitPopup, true));
     }
   }, [isClicked, paymentType, amount]);
 
@@ -281,7 +278,6 @@ const PlanPayment = () => {
               onSuccess={onSuccess}
               onClose={onClose}
               text="Proceed to pay with paystack"
-              setIsClicked={setIsClicked}
             />
           </ModalComponent>
           <ModalComponent
