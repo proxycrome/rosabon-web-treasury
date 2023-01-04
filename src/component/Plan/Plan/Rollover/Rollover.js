@@ -12,7 +12,7 @@ import {
   getSingleProduct,
   getWithholdingTax,
 } from "../../../../store/actions";
-import { getCurrIcon } from "../../Accesssories";
+import { formatCurrValue, getCurrIcon } from "../../Accesssories";
 import { useMemo } from "react";
 
 const Rollover = () => {
@@ -247,7 +247,7 @@ const Rollover = () => {
                           <h4>Balance</h4>
                           <p className="p-0 m-0 d-flex gap-1">
                             {getCurrIcon(plan?.currency?.name)}
-                            {plan?.planSummary?.principal?.toLocaleString()}
+                            {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                           </p>
                         </div>
                         {/* <i className"fa-solid fa-ellipsis"></i> */}

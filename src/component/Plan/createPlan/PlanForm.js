@@ -222,7 +222,7 @@ const PlanForm = () => {
           formData.allowsLiquidation === true
             ? true
             : false,
-        interestRate: fetchIntRate(formData.interestReceiptOption),
+        // interestRate: fetchIntRate(formData.interestReceiptOption),
         savingFrequency:
           formData.savingFrequency !== "" ? formData.savingFrequency : null,
       });
@@ -305,7 +305,10 @@ const PlanForm = () => {
             ...formData,
             contributionValue: Number(computedValue),
           });
-        } else if (conValue === "contributionValue" && formData.contributionValue) {
+        } else if (
+          conValue === "contributionValue" &&
+          formData.contributionValue
+        ) {
           if (product?.properties?.hasTargetAmount) {
             let computedValue = null;
             switch (formData.savingFrequency) {
@@ -575,7 +578,7 @@ const PlanForm = () => {
       const currency = ex_rates?.find(
         (item) => item.name === formData.currency
       );
-      console.log(currency);
+      // console.log(currency);
       setFormData({
         ...formData,
         exchangeRate:
@@ -597,8 +600,6 @@ const PlanForm = () => {
     formData.tenor,
     formData.actualMaturityDate,
   ]);
-
-  console.log(formData.exchangeRate);
 
   // Update number of tickets based on target amount or amount to be placed value
   const updateNumOfTickets = (value) => {
@@ -667,7 +668,15 @@ const PlanForm = () => {
   if (isClicked && formData.planSummary !== null) {
     return (
       <PlanContext.Provider value={{ form: formData, setForm: setFormData }}>
-        <PlanPay goBack={() => setIsClicked(false)} />
+        <PlanPay
+          goBack={() => {
+            setIsClicked(false);
+            setFormData({
+              ...formData,
+              tenor: checkAtMaturity ? 0 : formData.tenor,
+            });
+          }}
+        />
       </PlanContext.Provider>
     );
   }
@@ -730,27 +739,21 @@ const PlanForm = () => {
         setFormData({
           ...formData,
           [e.target.name]:
-            e.target.value === ""
-              ? ""
-              : Number(parseFloat(e.target.value)),
+            e.target.value === "" ? "" : Number(parseFloat(e.target.value)),
         });
         setConValue(e.target.name);
       } else if (e.target.name === "targetAmount") {
         setFormData({
           ...formData,
           [e.target.name]:
-            e.target.value === ""
-              ? ""
-              : Number(parseFloat(e.target.value)),
+            e.target.value === "" ? "" : Number(parseFloat(e.target.value)),
         });
         setConValue(e.target.name);
       } else {
         setFormData({
           ...formData,
           [e.target.name]:
-            e.target.value === ""
-              ? ""
-              : Number(parseFloat(e.target.value)),
+            e.target.value === "" ? "" : Number(parseFloat(e.target.value)),
         });
       }
     } else {
@@ -1067,7 +1070,7 @@ const PlanForm = () => {
                       name="tenor"
                       required
                       onChange={handleChange}
-                      defaultValue={formData.tenor}
+                      value={formData.tenor}
                     >
                       <option value="" disabled hidden>
                         Select tenor

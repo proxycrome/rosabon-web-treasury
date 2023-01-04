@@ -9,6 +9,7 @@ import { getCurrIcon, WithdrawalSummary } from "../../Accesssories";
 import WithdrawalChannel from "./WithdrawalChannel";
 import { Toaster } from "react-hot-toast";
 import { getBankDetails, getPenalCharge } from "../../../../store/actions";
+import { formatCurrValue } from "../../Accesssories";
 
 const PartWithdrawal = ({ goBack, amount, reason }) => {
   const dispatch = useDispatch();
@@ -95,7 +96,7 @@ const PartWithdrawal = ({ goBack, amount, reason }) => {
                       <h4>Balance</h4>
                       <p className="p-0 m-0 d-flex gap-1">
                         {getCurrIcon(plan?.currency?.name)}
-                        {plan?.planSummary?.principal?.toLocaleString()}
+                        {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                       </p>
                     </div>
                     {/* <i className="fa-solid fa-ellipsis"></i> */}

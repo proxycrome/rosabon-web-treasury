@@ -14,6 +14,7 @@ import {
 } from "../../../../store/actions";
 import { getCurrIcon } from "../../Accesssories";
 import toast, { Toaster } from "react-hot-toast";
+import { formatCurrValue } from "../../Accesssories";
 
 const Withdrawal = () => {
   const [withdrawType, setWithdrawType] = useState("");
@@ -277,7 +278,7 @@ const Withdrawal = () => {
                           <h4>Balance</h4>
                           <p className="p-0 m-0 d-flex gap-1">
                             {getCurrIcon(plan?.currency?.name)}
-                            {plan?.planSummary?.principal?.toLocaleString()}
+                            {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                           </p>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}

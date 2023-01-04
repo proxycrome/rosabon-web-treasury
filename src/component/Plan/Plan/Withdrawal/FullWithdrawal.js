@@ -5,7 +5,7 @@ import moment from "moment";
 // import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 // import ModalComponent from "../../../ModalComponent";
-import { WithdrawalSummary } from "../../Accesssories";
+import { formatCurrValue, WithdrawalSummary } from "../../Accesssories";
 import { getBankDetails } from "../../../../store/actions";
 import { Toaster } from "react-hot-toast";
 import WithdrawalChannel from "./WithdrawalChannel";
@@ -109,7 +109,7 @@ const FullWithdrawal = ({ goBack, amount, reason }) => {
                     <div>
                       <h4>Balance</h4>
                       <p className="p-0 m-0">
-                        ₦{plan?.planSummary?.principal?.toLocaleString()}
+                        ₦{formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                       </p>
                     </div>
                     {/* <i className="fa-solid fa-ellipsis"></i> */}

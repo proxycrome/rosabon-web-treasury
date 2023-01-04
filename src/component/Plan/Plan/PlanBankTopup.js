@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
-import { getCurrIcon, UserBankDetails } from "../Accesssories";
+import { formatCurrValue, getCurrIcon, UserBankDetails } from "../Accesssories";
 import { createDynamicAcc, planAction } from "../../../store/actions";
 import Spinner from "../../common/loading";
 import toast, { Toaster } from "react-hot-toast";
@@ -92,7 +92,7 @@ const PlanBankTopup = ({ goBack, amount }) => {
                           <h4>Balance</h4>
                           <div className="p-0 m-0 d-flex gap-1">
                             {getCurrIcon(plan?.currency?.name)}
-                            {plan?.planSummary?.principal.toLocaleString()}
+                            {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                           </div>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}

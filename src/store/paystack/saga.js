@@ -12,90 +12,102 @@ import {
   regTransactionSuccess,
   regTransactionError,
   verifyPaystackSuccess,
-  verifyPaystackError
+  verifyPaystackError,
 } from "./actions";
 
-import { createPlan } from "../actions";  
+import { createPlan } from "../actions";
 
-import { planAction } from "../plan/actions"
+import { planAction } from "../plan/actions";
 
-import { 
-  initializePaymentService, 
+import {
+  initializePaymentService,
   registerTransService,
-  verifyPaymentService 
+  verifyPaymentService,
 } from "../../services/paystackPayServices";
 
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 function* initPayment({ payload: { formData } }) {
-	try {
-		const response = yield call(initializePaymentService, formData);
-		yield put(initPaymentSuccess(response.data));
-    window.open(response.data);
-	} catch (error) {
-		console.log(error?.response?.data);
-		yield put(initPaymentError(error?.response?.data));
-	};
-};
-
-function* verifyPaystack({ payload: { 
-  paymentGateway, 
-  transactionRef, 
-  dispatch, 
-  form, 
-  setShow, 
-  setDebitPopup, 
-  action,
-} }) {
   try {
-    const response = yield call(verifyPaymentService, paymentGateway, transactionRef);
+    const response = yield call(initializePaymentService, formData);
+    yield put(initPaymentSuccess(response.data));
+    window.open(response.data);
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(initPaymentError(error?.response?.data));
+  }
+}
+
+function* verifyPaystack({
+  payload: {
+    paymentGateway,
+    transactionRef,
+    dispatch,
+    form,
+    setShow,
+    setDebitPopup,
+    action,
+  },
+}) {
+  try {
+    const response = yield call(
+      verifyPaymentService,
+      paymentGateway,
+      transactionRef
+    );
     yield put(verifyPaystackSuccess(response.data));
-    if(response){
-      if(action === "TOP_UP"){
-        dispatch(planAction(form, setShow, null, dispatch, setDebitPopup))
-      }else{
+    if (response) {
+      if (action === "TOP_UP") {
+        dispatch(planAction(form, setShow, null, dispatch, setDebitPopup));
+      } else {
         dispatch(createPlan(form, setShow));
       }
     }
   } catch (error) {
-    yield put(verifyPaystackError(error?.response?.data))
-    toast.error("Payment not verified", {
-      position: "top-right",
-    })
-  };
-};
-
-function* regTransaction({ payload: { formData } }) {
-	try {
-		const response = yield call(registerTransService, formData);
-		yield put(regTransactionSuccess(response.data));
-	} catch (error) {
-		console.log(error?.response?.data);
-		yield put(regTransactionError(error?.response?.data));
-    if(error?.response?.data?.message){
-      toast.error(error?.response?.data?.message, {position: "top-right"})
+    console.log(error);
+    yield put(verifyPaystackError(error?.response?.data));
+    if (error?.response?.data?.message) {
+      toast.error("Payment not verified", {
+        position: "top-right",
+      });
     }
-	};
-};
+  }
+}
+
+function* regTransaction({ payload: { formData, setDebitPopup, isTopup } }) {
+  try {
+    const response = yield call(registerTransService, formData);
+    yield put(regTransactionSuccess(response.data));
+    if (response && isTopup) {
+      setDebitPopup(true);
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(regTransactionError(error?.response?.data));
+    if (error?.response?.data?.message) {
+      toast.error(error?.response?.data?.message, { position: "top-right" });
+    }
+  }
+}
 
 export function* watchInitPayment() {
-	yield takeEvery(INITIALIZE_PAYMENT, initPayment);
-};
+  yield takeEvery(INITIALIZE_PAYMENT, initPayment);
+}
 
 export function* watchVerifyPaystack() {
   yield takeEvery(VERIFY_PAYSTACK, verifyPaystack);
-};
+}
 
 export function* watchRegTransaction() {
   yield takeEvery(REGISTER_TRANSACTION, regTransaction);
-};
+}
 
 function* PaystackSaga() {
-	yield all([
-		fork(watchInitPayment),
+  yield all([
+    fork(watchInitPayment),
     fork(watchVerifyPaystack),
     fork(watchRegTransaction),
-	]);
-};
+  ]);
+}
 
 export default PaystackSaga;

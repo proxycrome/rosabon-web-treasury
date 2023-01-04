@@ -5,11 +5,11 @@ import Switch from "react-switch";
 import {
   getProducts,
   getCurrencies,
-  getSinglePlan,
   updatePlan,
 } from "../../../store/actions";
 import Spinner from "../../../component/common/loading";
 import { getCurrIcon } from "../Accesssories";
+import { formatCurrValue } from "../Accesssories";
 
 const PlanModal = ({ handleClose }) => {
   const dispatch = useDispatch();
@@ -104,8 +104,8 @@ const PlanModal = ({ handleClose }) => {
                   <p className="p-dark flex">
                     {getCurrIcon(current_currency)}
                     {planProduct?.properties?.hasTargetAmount
-                      ? plan.targetAmount
-                      : plan.amountToBePlaced}
+                      ? formatCurrValue(parseFloat(plan.targetAmount))
+                      : formatCurrValue(parseFloat(plan.amountToBePlaced))}
                   </p>
                 </div>
                 <div className="right">
@@ -128,7 +128,7 @@ const PlanModal = ({ handleClose }) => {
                 <p className="p-light">Principal</p>
                 <p className="p-dark flex">
                   {getCurrIcon(current_currency)}
-                  {plan.planSummary.principal}
+                  {formatCurrValue(parseFloat(plan.planSummary.principal))}
                 </p>
               </div>
               <div className="right">
@@ -162,14 +162,14 @@ const PlanModal = ({ handleClose }) => {
               <div>
                 <p className="p-light">Interest rate</p>
                 <p className="p-dark">
-                  {plan.interestRate ? plan.interestRate : 0} %
+                  {plan.interestRate ? formatCurrValue(parseFloat(plan.interestRate)) : 0} %
                 </p>
               </div>
               <div className="right">
                 <p className="p-light">Interest earned</p>
                 <p className="p-dark flex justify-content-end">
                   {getCurrIcon(current_currency)}
-                  {plan.planSummary.calculatedInterest}
+                  {formatCurrValue(parseFloat(plan.planSummary.calculatedInterest))}
                 </p>
               </div>
             </div>
@@ -184,7 +184,7 @@ const PlanModal = ({ handleClose }) => {
                 <p className="p-light">Current balance</p>
                 <p className="p-dark flex justify-content-end">
                   {getCurrIcon(current_currency)}
-                  {plan.planSummary.principal}
+                  {formatCurrValue(parseFloat(plan.planSummary.principal))}
                 </p>
               </div>
             </div>
