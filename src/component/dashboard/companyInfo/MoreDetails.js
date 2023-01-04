@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { UncontrolledTooltip, Alert } from "reactstrap";
-import toast, { Toaster } from "react-hot-toast";
+import { UncontrolledTooltip } from "reactstrap";
+import { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import { Collapse } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import User from "../../../asset/user.png";
 import FileDoc from "../../../asset/file.png";
 import Check from "../../../asset/checked.png";
@@ -32,11 +32,10 @@ import "react-phone-input-2/lib/style.css";
 
 const MoreDetails = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [showOne, setShowOne] = useState(true);
   const [showEdit, setShowEdit] = useState(true);
-  const [token, setToken] = useState("");
+  const [ , setToken] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addDirectors, setAddDirectors] = useState(false);
@@ -49,7 +48,7 @@ const MoreDetails = () => {
   const photoFileInputRef = useRef(null);
   const frontFileInputRef = useRef(null);
   const imageInputRef = useRef(null);
-  const idCardInputRef = useRef(null);
+  // const idCardInputRef = useRef(null);
   const currIdCardInputRef = useRef(null);
 
   const {
@@ -58,7 +57,6 @@ const MoreDetails = () => {
     bvnMessage,
     showEmailOtpModal,
     otp,
-    otpError,
     validateEmailOtp,
     id,
     idTypes,

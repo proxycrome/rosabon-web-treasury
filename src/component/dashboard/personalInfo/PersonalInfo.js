@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { UncontrolledTooltip, Alert } from "reactstrap";
-import { Link, useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   getAuthUsers,
   getCountries,
   getStates,
-  getLgas,
   sendOtp,
   updateContactDetails,
   verifyPhone,
@@ -25,9 +24,8 @@ import "react-phone-input-2/lib/style.css";
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [token, setToken] = useState("");
-  const [showEditProf, setShowEditProf] = useState(true);
+  const [ , setToken] = useState("");
+  // const [showEditProf, setShowEditProf] = useState(true);
   const [showEditCont, setShowEditCont] = useState(true);
   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
   const [showEditNOK, setShowEditNOK] = useState(true);
@@ -38,29 +36,23 @@ const PersonalInfo = () => {
     validateEmailOtp,
     countries,
     states,
-    lgas,
     showEmailOtpModal,
     otp,
-    otpError,
   } = useSelector((state) => state.user_profile);
 
   const {
     loading,
     phoneMsg,
-    phoneMsgError,
     showPhoneOtpModal,
     contactMsg,
-    contactMsgError,
     personalInfoMsg,
-    personalInfoMsgError,
     infoSuccess,
-    validatePhone,
   } = useSelector((state) => state.updateProfile);
 
-  const toggleProf = (e) => {
-    e.preventDefault();
-    setShowEditProf(!showEditProf);
-  };
+  // const toggleProf = (e) => {
+  //   e.preventDefault();
+  //   setShowEditProf(!showEditProf);
+  // };
   const toggleCont = (e) => {
     setShowEditCont(!showEditCont);
   };
@@ -123,15 +115,15 @@ const PersonalInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const selectState = () => {
-      return states?.find(
-        (state) => state.name === users?.individualUser?.state
-      ).id;
-    };
+    // const selectState = () => {
+    //   return states?.find(
+    //     (state) => state.name === users?.individualUser?.state
+    //   ).id;
+    // };
 
-    const selectLga = () => {
-      return lgas?.find((lga) => lga.name === users?.individualUser?.lga).id;
-    };
+    // const selectLga = () => {
+    //   return lgas?.find((lga) => lga.name === users?.individualUser?.lga).id;
+    // };
 
     const {
       houseNoAddress,
@@ -213,7 +205,7 @@ const PersonalInfo = () => {
       setShowEditEmpoy(true);
       setShowEditNOK(true);
     }
-  }, [contactMsg, personalInfoMsg]);
+  }, [dispatch, contactMsg, personalInfoMsg]);
 
   // useEffect(() => {
   //   dispatch(successMessage(false));

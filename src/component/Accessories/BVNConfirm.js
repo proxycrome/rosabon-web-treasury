@@ -1032,7 +1032,10 @@ export function ProceedPayCard({
     reference: reg_transaction?.transactionReference,
     email: users?.email,
     amount: amount,
-    publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
+    publicKey:
+      process.env.NODE_ENV === "development"
+        ? process.env.REACT_APP_PAYSTACK_PK_DEV
+        : process.env.REACT_APP_PAYSTACK_PK_PROD,
   };
 
   // useEffect(() => {

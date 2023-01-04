@@ -980,6 +980,8 @@ const PlanForm = () => {
                           defaultValue={formData.amount}
                           min={product?.minTransactionLimit}
                           max={product?.maxTransactionLimit}
+                          step="0.001"
+                          lang="nb"
                           onChange={handleChange}
                           onWheel={numberInputOnWheelPreventChange}
                           onKeyDown={arrowBtnPreventChange}
@@ -1027,6 +1029,8 @@ const PlanForm = () => {
                           value={formData.targetAmount}
                           min={product?.minTransactionLimit}
                           max={product?.maxTransactionLimit}
+                          step="0.001"
+                          lang="nb"
                           onChange={handleChange}
                           onWheel={numberInputOnWheelPreventChange}
                           onKeyDown={arrowBtnPreventChange}
@@ -1250,6 +1254,8 @@ const PlanForm = () => {
                           type="number"
                           value={formData.contributionValue}
                           onChange={handleChange}
+                          step="0.001"
+                          lang="nb"
                           disabled={!product?.properties?.hasSavingFrequency}
                           required={product?.properties?.hasTargetAmount}
                           onWheel={numberInputOnWheelPreventChange}

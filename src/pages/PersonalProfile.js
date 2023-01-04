@@ -6,30 +6,17 @@ import BankDetails from "../component/dashboard/personalInfo/BankDetails";
 import { ProfileTabs } from "../component/dashboard/ProfileTabs";
 import { ProfileNavBar } from "../component/dashboard/ProfileNavbar";
 import ChangePassword from "../component/dashboard/personalInfo/ChangePassword";
-// import { Link, useNavigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 const PersonalProfile = ({ isAssisted }) => {
-  // const navigate = useNavigate();
   const [tabs, setTabs] = useState("profile");
 
   useEffect(() => {
     if (isAssisted) {
       setTabs("password");
     }
-  }, []);
+  }, [isAssisted]);
 
-  // useEffect(() => {
-  //   const tokenString = JSON.parse(localStorage.getItem("token"));
-  //   if (!tokenString) {
-  //     navigate("/login");
-  //   }
-  //   if (!isLoggedIn) {
-  //     navigate("/login");
-  //   }
-  // }, [isLoggedIn]);
 
   return (
     <>

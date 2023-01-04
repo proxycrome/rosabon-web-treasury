@@ -2,22 +2,20 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-// import { updateCompanyDetails } from "../../../redux/actions/updateProfile/updateProfile.actions";
-// import { getAuthUsers } from "../../../redux/actions/personalInfo/userProfile.actions";
+// import { useNavigate } from "react-router-dom";
 import { getAuthUsers, updateCompanyDetails } from "../../../store/actions";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showEditDetail, setShowEditDetail] = useState(true);
   const [showEditCont, setShowEditCont] = useState(true);
-  const [showEditEmpoy, setShowEditEmpoy] = useState(true);
-  const [showEditNOK, setShowEditNOK] = useState(true);
+  // const [showEditEmpoy, setShowEditEmpoy] = useState(true);
+  // const [showEditNOK, setShowEditNOK] = useState(true);
 
   const { users } = useSelector((state) => state.user_profile);
   const { loading, companyInfoMsg } = useSelector((state) => state.updateProfile);
@@ -28,12 +26,12 @@ const CompanyDetails = () => {
   const toggleCont = () => {
     setShowEditCont(!showEditCont);
   };
-  const toggleEmploy = () => {
-    setShowEditEmpoy(!showEditEmpoy);
-  };
-  const toggleNOK = () => {
-    setShowEditNOK(!showEditNOK);
-  };
+  // const toggleEmploy = () => {
+  //   setShowEditEmpoy(!showEditEmpoy);
+  // };
+  // const toggleNOK = () => {
+  //   setShowEditNOK(!showEditNOK);
+  // };
 
   const data = {
     companyType: "",
@@ -115,7 +113,6 @@ const CompanyDetails = () => {
       const {
         contactFirstName,
         contactLastName,
-        email,
         phone,
         companyType,
         natureOfBusiness,
@@ -144,7 +141,7 @@ const CompanyDetails = () => {
 
   useEffect(() => {
     dispatch(getAuthUsers());
-  }, [companyInfoMsg]);
+  }, [companyInfoMsg, dispatch]);
 
   return (
     <div>

@@ -4,9 +4,8 @@ import {
   CLEAR_MESSAGES,
 } from "../../../store/profile/actionTypes";
 import styled from "styled-components";
-import toast, { Toaster } from "react-hot-toast";
+import  { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import ModalComponent from "../../ModalComponent";
 import { OTPVerify } from "../../Accessories/BVNConfirm";
 import FileDoc from "../../../asset/file.png";
@@ -22,8 +21,7 @@ import {
 
 const MyDocu = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [token, setToken] = useState("");
+  const [ , setToken] = useState("");
   const [showEdit, setShowEdit] = useState(true);
   const [base64File, setBase64File] = useState({
     frontEncodedString: "",
@@ -37,17 +35,15 @@ const MyDocu = () => {
   const utilityFileInputRef = useRef();
 
   const {
-    users,
     showEmailOtpModal,
     otp,
-    otpError,
     idTypes,
     validateEmailOtp,
     documents,
     loading,
   } = useSelector((state) => state.user_profile);
 
-  const { docMsg, loading:updateLoading } = useSelector((state) => state.updateProfile);
+  const { loading:updateLoading } = useSelector((state) => state.updateProfile);
 
   const toggleEdit = (e) => {
     setShowEdit(!showEdit);
@@ -60,7 +56,7 @@ const MyDocu = () => {
 
   useEffect(()=> {
     dispatch(getAllIdTypes())
-  },[])
+  },[dispatch])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,16 +107,6 @@ const MyDocu = () => {
 
     const { idTypeId, idNumber } = formData;
 
-    // if (!frontEncodedString && !idType) {
-    //   toast.error("Please Select and Upload your ID");
-    //   return;
-    // } else if (!frontEncodedString) {
-    //   toast.error("Please Upload ID");
-    //   return;
-    // } else if (!idType) {
-    //   toast.error("Please Select ID Type");
-    //   return;
-    // }
 
     let data = {
       idDocumentImage: {
@@ -171,28 +157,11 @@ const MyDocu = () => {
     }
   }, [validateEmailOtp]);
 
-  // useEffect(() => {
-  //   if (docMsg) {
-  //     setShowEdit(true);
-  //     setformData({
-  //       ...formData,
-  //       idNumber: "",
-  //       idTypeId: "",
-  //     });
-  //     setBase64File({
-  //       ...base64File,
-  //       frontEncodedString: "",
-  //       utilityEncodedString: "",
-  //       photoEncodedString: "",
-  //     });
-  //   }
-  // }, [docMsg]);
-
   useEffect(() => {
     if (!documents) {
       dispatch(getUserDocs());
     }
-  }, [documents]);
+  }, [documents, dispatch]);
 
   return (
     <div>

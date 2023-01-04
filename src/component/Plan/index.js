@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { ProfileSideBarList } from "../dashboard/ProfileSideBar";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const PlanHome = ({ product, list, topup, payment, details, children }) => {
-  const [tabs, setTabs] = useState("profile");
+  // const [tabs, setTabs] = useState("profile");
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
+  const { isLoggedIn } = auth;
   const { users } = useSelector((state) => state.user_profile);
 
   useEffect(() => {
     const tokenString = localStorage.getItem("token");
-    if (!tokenString) {
+    if (!tokenString || !isLoggedIn) {
       navigate("/login");
     }
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [users]);
+  }, [users, isLoggedIn, navigate]);
 
   return (
     <Wrapper>

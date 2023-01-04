@@ -17,7 +17,7 @@ const Index = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   if (users?.role === 'INDIVIDUAL_USER') {
     return <Personale />

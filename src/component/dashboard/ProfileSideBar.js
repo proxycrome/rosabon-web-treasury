@@ -13,7 +13,7 @@ export const ProfileSideBarList = ({ profile, handleChange }) => {
   const [openFeedback, setOpenFeedback] = useState(false);
   const [openPlan, setOpenPlan] = useState(false);
   const [isTicket, setTicket] = useState(false);
-  const [isArchive, setArchive] = useState(false);
+  // const [isArchive, setArchive] = useState(false);
   const [isOpenTicket, setIsOpenTicket] = useState(false);
   const [isCloseTicket, setIsCloseTicket] = useState(false);
   const dispatch = useDispatch();

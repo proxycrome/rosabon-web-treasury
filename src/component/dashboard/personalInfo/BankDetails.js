@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   CLOSE_MODAL,
   CLEAR_MESSAGES,
 } from "../../../store/profile/actionTypes";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ModalComponent from "../../ModalComponent";
 import { Toaster } from "react-hot-toast";
 import {
-  BVNConfirm,
   OTPVerify,
   Unsuccessful,
 } from "../../Accessories/BVNConfirm";
-// import { personalBankDetails } from '../../../redux/actions/updateProfile/bankDetails.action';
-// import { getBanks } from '../../../redux/actions/personalInfo/userProfile.actions';
 import {
   sendOtp,
   getBanks,
@@ -22,16 +18,13 @@ import {
   updateBankDetails,
   getAuthUsers,
   verifyBvn,
-  resetPassword,
   getBankDetails,
 } from "../../../store/actions";
-import { useCallback } from "react";
 import moment from "moment";
 
 const BankDetails = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [token, setToken] = useState("");
+  const [ , setToken] = useState("");
   const [accountName, setAccountName] = useState("");
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(true);
@@ -44,13 +37,12 @@ const BankDetails = () => {
     showEmailOtpModal,
     otp,
     banks,
-    otpError,
     bvnMessage,
     validateEmailOtp,
     bankDetails,
   } = useSelector((state) => state.user_profile);
 
-  const { loading, accountDetail, accountDetailError, bankUpdateMsg } =
+  const { loading, accountDetail, accountDetailError } =
     useSelector((state) => state.updateProfile);
 
   useEffect(() => {
@@ -185,7 +177,7 @@ const BankDetails = () => {
     if (!bankDetails) {
       dispatch(getBankDetails());
     }
-  }, [bankDetails]);
+  }, [bankDetails, dispatch]);
 
   return (
     <div>

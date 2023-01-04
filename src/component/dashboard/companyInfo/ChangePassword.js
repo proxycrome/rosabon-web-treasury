@@ -1,29 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { CLEAR_MESSAGES, CLOSE_MODAL } from '../../../store/profile/actionTypes';
-import { Toaster } from 'react-hot-toast';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import {
+  CLEAR_MESSAGES,
+  CLOSE_MODAL,
+} from "../../../store/profile/actionTypes";
+import { Toaster } from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+// import { useNavigate } from 'react-router-dom';
 import {
   Form,
   FormGroup,
   Input,
   Label,
-  FormFeedback,
   InputGroup,
   InputGroupText,
-} from 'reactstrap';
-import styled from 'styled-components';
-// import { changePersonalPassword } from '../../../redux/actions/updateProfile/changePassword.action';
-// import { successMessage } from '../../../redux/actions/auth/SignupAction';
-// import { sendCompanyOtp } from '../../../redux/actions/personalInfo/userProfile.actions';
-import { sendCompanyOtp, changeUserPassword } from '../../../store/actions';
-import ModalComponent from '../../ModalComponent';
-import { OTPVerify } from '../../Accessories/BVNConfirm';
+} from "reactstrap";
+import styled from "styled-components";
+import { sendCompanyOtp, changeUserPassword } from "../../../store/actions";
+import ModalComponent from "../../ModalComponent";
+import { OTPVerify } from "../../Accessories/BVNConfirm";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [token, setToken] = useState('');
+  // const navigate = useNavigate();
+  const [token, setToken] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [passwordShown1, setPasswordShown1] = useState(false);
@@ -49,22 +48,18 @@ const ChangePassword = () => {
     setPasswordShown3(!passwordShown3);
   };
 
-  const { users, showEmailOtpModal, otp, otpError, validateEmailOtp } = useSelector(
-    (state) => state.user_profile
-  );
+  const { showEmailOtpModal, otp } = useSelector((state) => state.user_profile);
 
-  const { loading, passChangeMsg, passChangeError } = useSelector(
-    (state) => state.updateProfile
-  );
+  const { loading } = useSelector((state) => state.updateProfile);
 
   const createOtp = (otp) => {
     setToken(otp);
   };
 
   const data = {
-    newPassword: '',
-    oldPassword: '',
-    cNewPassword: '',
+    newPassword: "",
+    oldPassword: "",
+    cNewPassword: "",
   };
   const [formData, setformData] = useState(data);
   const [touched, setTouched] = useState(false);
@@ -80,19 +75,20 @@ const ChangePassword = () => {
 
   function validatePassword(values) {
     let errors = {};
-    var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
+    var re =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,32}$/;
 
     if (!values.oldPassword) {
-      errors.oldPassword = 'Current Password is required';
+      errors.oldPassword = "Current Password is required";
     }
     if (!values.newPassword) {
-      errors.newPassword = 'New Password is required';
+      errors.newPassword = "New Password is required";
     } else if (!re.test(values.newPassword)) {
       errors.newPassword =
-        'Your password must contain at least one uppercase, one lowercase, a special character, and must be at least 8 characters';
+        "Your password must contain at least one uppercase, one lowercase, a special character, and must be at least 8 characters";
     }
     if (values.cNewPassword !== values.newPassword) {
-      errors.cNewPassword = 'Password does not match';
+      errors.cNewPassword = "Password does not match";
     }
 
     return errors;
@@ -106,36 +102,36 @@ const ChangePassword = () => {
 
   const handleSubmit = async (e) => {
     const { newPassword, oldPassword } = formData;
-      const data = {
-        oldPassword,
-        newPassword,
-        otp: token,
-      };
-  
-      dispatch(changeUserPassword(data));
-      setformData({
-        ...formData,
-        oldPassword: "",
-        newPassword: "",
-        cNewPassword: "",
-      })
+    const data = {
+      oldPassword,
+      newPassword,
+      otp: token,
+    };
+
+    dispatch(changeUserPassword(data));
+    setformData({
+      ...formData,
+      oldPassword: "",
+      newPassword: "",
+      cNewPassword: "",
+    });
   };
 
   useEffect(() => {
-    if(token){
+    if (token) {
       handleSubmit();
     }
-  }, [token])
+  }, [token]);
 
-  useEffect(()=>{
-    setErrors(validatePassword(formData))
-  },[formData]);
+  useEffect(() => {
+    setErrors(validatePassword(formData));
+  }, [formData]);
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
       dispatch(sendCompanyOtp());
     }
-  }, [errors]);
+  }, [errors, isSubmitted, dispatch]);
 
   const handleOTPModalClose = () => {
     dispatch({ type: CLOSE_MODAL });
@@ -155,7 +151,12 @@ const ChangePassword = () => {
   return (
     <div>
       <Toaster />
-      <Form autoComplete="off" autoCorrect="off" autoSave="off" onSubmit={handleSendOtp}>
+      <Form
+        autoComplete="off"
+        autoCorrect="off"
+        autoSave="off"
+        onSubmit={handleSendOtp}
+      >
         <WrapperBody>
           <div className="container-fluid">
             <div className="row">
@@ -193,7 +194,7 @@ const ChangePassword = () => {
                   </Label>
                   <InputGroup>
                     <Input
-                      type={passwordShown1 ? 'text' : 'password'}
+                      type={passwordShown1 ? "text" : "password"}
                       bsSize="lg"
                       id="oldPassword"
                       name="oldPassword"
@@ -204,14 +205,14 @@ const ChangePassword = () => {
                     <InputGroupText>
                       <i
                         onClick={togglePassword1}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                         className={
-                          passwordShown1 ? 'far fa-eye' : 'far fa-eye-slash'
+                          passwordShown1 ? "far fa-eye" : "far fa-eye-slash"
                         }
                       ></i>
                     </InputGroupText>
                   </InputGroup>
-                  {(errors.oldPassword && touched) && (
+                  {errors.oldPassword && touched && (
                     <span className="text-danger">{errors.oldPassword}</span>
                   )}
                 </FormGroup>
@@ -225,7 +226,7 @@ const ChangePassword = () => {
                   </Label>
                   <InputGroup>
                     <Input
-                      type={passwordShown2 ? 'text' : 'password'}
+                      type={passwordShown2 ? "text" : "password"}
                       bsSize="lg"
                       id="newPassword"
                       onChange={handleChange}
@@ -236,14 +237,14 @@ const ChangePassword = () => {
                     <InputGroupText>
                       <i
                         onClick={togglePassword2}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                         className={
-                          passwordShown2 ? 'far fa-eye' : 'far fa-eye-slash'
+                          passwordShown2 ? "far fa-eye" : "far fa-eye-slash"
                         }
                       ></i>
                     </InputGroupText>
                   </InputGroup>
-                  {(errors.newPassword && touched) && (
+                  {errors.newPassword && touched && (
                     <span className="text-danger">{errors.newPassword}</span>
                   )}
                 </FormGroup>
@@ -257,7 +258,7 @@ const ChangePassword = () => {
                   </Label>
                   <InputGroup>
                     <Input
-                      type={passwordShown3 ? 'text' : 'password'}
+                      type={passwordShown3 ? "text" : "password"}
                       bsSize="lg"
                       id="cNewPassword"
                       name="cNewPassword"
@@ -268,9 +269,9 @@ const ChangePassword = () => {
                     <InputGroupText>
                       <i
                         onClick={togglePassword3}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                         className={
-                          passwordShown3 ? 'far fa-eye' : 'far fa-eye-slash'
+                          passwordShown3 ? "far fa-eye" : "far fa-eye-slash"
                         }
                       ></i>
                     </InputGroupText>
@@ -297,7 +298,7 @@ const ChangePassword = () => {
       </Form>
       <ModalComponent
         show={showEmailOtpModal}
-        size={'md'}
+        size={"md"}
         handleClose={handleOTPModalClose}
       >
         <OTPVerify

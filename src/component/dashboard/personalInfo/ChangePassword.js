@@ -5,13 +5,11 @@ import {
 } from "../../../store/profile/actionTypes";
 import { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
   FormGroup,
   Input,
   Label,
-  FormFeedback,
   InputGroup,
   InputGroupText,
 } from "reactstrap";
@@ -25,7 +23,6 @@ import { OTPVerify } from "../../Accessories/BVNConfirm";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [token, setToken] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -51,13 +48,13 @@ const ChangePassword = () => {
     setPasswordShown3(!passwordShown3);
   };
 
-  const { users, showEmailOtpModal, otp, otpError, loading } = useSelector(
+  const { showEmailOtpModal, otp, loading } = useSelector(
     (state) => state.user_profile
   );
 
-  const { passChangeMsg, passChangeError } = useSelector(
-    (state) => state.updateProfile
-  );
+  // const { passChangeMsg, passChangeError } = useSelector(
+  //   (state) => state.updateProfile
+  // );
 
   const createOtp = (otp) => {
     setToken(otp);

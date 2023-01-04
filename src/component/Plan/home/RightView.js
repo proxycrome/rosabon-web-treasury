@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import halfEllipse from "../../../asset/halfEllipse.png";
-import YelloBackgroud from "../../../asset/yello-backgroud.png";
+// import YelloBackgroud from "../../../asset/yello-backgroud.png";
 import ChoosePlanHolder from "../../../asset/chooseplaneHolder.png";
-import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
+// import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { Collapse } from "reactstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,9 +15,6 @@ import {
 
 export const RightView = () => {
   const dispatch = useDispatch();
-  const [openFixSavings, setFixSavingsOpen] = useState(false);
-  const [openTargetSavings, setTargetSavingsOpen] = useState(false);
-  const [openTargetIncome, setTargetIncomeOpen] = useState(false);
   const [categoryDropdown, setCategoryDropdown] = useState(0);
 
   const { catWithProducts } = useSelector((state) => state.product);
@@ -37,7 +34,7 @@ export const RightView = () => {
   useEffect(() => {
     dispatch(getCatWithProducts());
     dispatch(getPlans());
-  }, []);
+  }, [dispatch]);
 
   const handleProduct = (id) => {
     dispatch(getSingleProduct(id));

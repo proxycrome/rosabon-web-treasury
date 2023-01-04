@@ -41,10 +41,10 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
     console.log(response.data);
     yield put(loginUserSuccess(response.data));
     if (response) {
-      if (response.data.kyc === true) {
+      if (response?.data?.kyc === true) {
         if (
-          response.data.creationSource === "BACKEND" &&
-          !response.data.resetPassword
+          response?.data?.creationSource === "BACKEND" &&
+          !response?.data?.resetPassword
         ) {
           navigate("/profile", {state: {isAssisted: true}});
           toast.success("Login was successful", { position: "top-right" });

@@ -18,7 +18,7 @@ const CompanyProfile = ({isAssisted}) => {
     if (isAssisted) {
       setTabs("password");
     }
-  }, []);
+  }, [isAssisted]);
 
   return (
     <WrapperBody>
