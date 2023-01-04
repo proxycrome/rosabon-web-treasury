@@ -18,7 +18,7 @@ import {
 } from "../../../store/actions";
 import { ProceedPayCard, SuccessConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
-import { getCurrIcon } from "../Accesssories";
+import { formatCurrValue, getCurrIcon } from "../Accesssories";
 import { Toaster } from "react-hot-toast";
 
 const PlanPayment = () => {
@@ -165,7 +165,7 @@ const PlanPayment = () => {
                         <h4>Balance</h4>
                         <div className="p-0 m-0 d-flex gap-1 align-items-start">
                           {getCurrIcon(plan?.currency?.name)}
-                          {plan?.planSummary?.principal?.toLocaleString()}
+                          {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                         </div>
                       </div>
                       {/* <i className="fa-solid fa-ellipsis"></i> */}

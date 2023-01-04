@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Notice, SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
-import { getCurrIcon, RolloverSummary } from "../../Accesssories";
+import { formatCurrValue, getCurrIcon, RolloverSummary } from "../../Accesssories";
 import moment from "moment";
 import { getBankDetails } from "../../../../store/actions";
 import { Toaster } from "react-hot-toast";
@@ -107,7 +107,7 @@ const FullRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
                       <h4>Balance</h4>
                       <p className="p-0 m-0 d-flex gap-1">
                         {getCurrIcon(plan?.currency?.name)}
-                        {plan?.planSummary?.principal?.toLocaleString()}
+                        {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                       </p>
                     </div>
                     {/* <i className="fa-solid fa-ellipsis"></i> */}

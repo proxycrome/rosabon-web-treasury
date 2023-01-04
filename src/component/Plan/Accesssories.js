@@ -60,7 +60,8 @@ export const formatCurrValue = (value) => {
   return value
     ? formatNumber.format(value.toFixed(2)).split(".")[1]?.length >= 2
       ? formatNumber.format(value.toFixed(2))
-      : formatNumber.format(value.toFixed(2)).split(".")[1]?.length === undefined
+      : formatNumber.format(value.toFixed(2)).split(".")[1]?.length ===
+        undefined
       ? formatNumber.format(value.toFixed(2)) + ".00"
       : formatNumber.format(value.toFixed(2)) + "0"
     : 0;
@@ -1354,7 +1355,9 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4> ₦2,500,000</h4> */}
                   <h4 className="flex">
                     {getCurrIcon(current_currency)}{" "}
-                    {planData.planSummary.principal}
+                    {formatCurrValue(
+                      parseFloat(planData.planSummary.principal)
+                    )}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1362,7 +1365,9 @@ export const PlanSummary = ({ planPay }) => {
                   {/* <h4>20.00 %</h4> */}
                   <h4 className="d-flex justify-content-end">
                     {planData.planSummary.interestRate
-                      ? planData.planSummary.interestRate
+                      ? formatCurrValue(
+                          parseFloat(planData.planSummary.interestRate)
+                        )
                       : 0}{" "}
                     %
                   </h4>
@@ -1383,7 +1388,9 @@ export const PlanSummary = ({ planPay }) => {
                     {getCurrIcon(current_currency)}{" "}
                     {isNaN(planData.planSummary.calculatedInterest)
                       ? 0
-                      : planData.planSummary.calculatedInterest.toFixed(2)}
+                      : formatCurrValue(
+                          parseFloat(planData.planSummary.calculatedInterest)
+                        )}
                   </h4>
                 </div>
               </div>
@@ -1395,7 +1402,9 @@ export const PlanSummary = ({ planPay }) => {
                     {getCurrIcon(current_currency)}{" "}
                     {isNaN(planData?.planSummary?.withholdingTax)
                       ? 0
-                      : planData?.planSummary?.withholdingTax?.toFixed(2)}
+                      : formatCurrValue(
+                          parseFloat(planData?.planSummary?.withholdingTax)
+                        )}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1404,8 +1413,12 @@ export const PlanSummary = ({ planPay }) => {
                   <h4 className="flex justify-content-end">
                     {getCurrIcon(current_currency)}{" "}
                     {isNaN(planData?.planSummary?.paymentMaturity)
-                      ? planData.planSummary.principal
-                      : planData?.planSummary?.paymentMaturity?.toFixed(2)}
+                      ? formatCurrValue(
+                          parseFloat(planData.planSummary.principal)
+                        )
+                      : formatCurrValue(
+                          parseFloat(planData?.planSummary?.paymentMaturity)
+                        )}
                   </h4>
                 </div>
               </div>
