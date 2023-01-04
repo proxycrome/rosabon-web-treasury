@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styled from "styled-components";
-import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Label, Input } from "reactstrap";
 import { MDBDataTable } from "mdbreact";
 import {
@@ -23,7 +22,7 @@ const Statement = () => {
   };
   const [category, setCategory] = useState("");
   const [planId, setPlanId] = useState();
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
   const [formData, setFormData] = useState(date);
   const [filteredWalletTransactions, setFilteredWalletTransactions] = useState(
     []
@@ -36,11 +35,17 @@ const Statement = () => {
   );
   const { walletTransactions } = useSelector((state) => state.wallet);
   const userPlans = plans?.data.body ? plans?.data.body : [];
-  const planHistory = single_plan_history ? single_plan_history?.content : [];
-  const walletHistory = walletTransactions ? walletTransactions?.entities : [];
+  const planHistory = useMemo(
+    () => (single_plan_history ? single_plan_history?.content : []),
+    [single_plan_history]
+  );
+  const walletHistory = useMemo(
+    () => (walletTransactions ? walletTransactions?.entities : []),
+    [walletTransactions]
+  );
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
-  const checkHistoryDisplay = () => {
+  const checkHistoryDisplay = useCallback(() => {
     let history = [];
     if (category === "WALLET") {
       history = walletHistory;
@@ -48,7 +53,7 @@ const Statement = () => {
       history = planHistory;
     }
     return history;
-  };
+  }, [category, planHistory, planId, walletHistory]);
 
   const viewableUserPlans = userPlans.filter(
     (data) => data.planStatus !== "PENDING"
@@ -64,14 +69,14 @@ const Statement = () => {
 
   useEffect(() => {
     if (category === "WALLET") dispatch(getWalletTransactions());
-  }, [category]);
+  }, [dispatch, category]);
 
   useEffect(() => {
     if (planId) {
       dispatch(getSinglePlanHistory(parseInt(planId)));
       dispatch(getSinglePlan(planId));
     }
-  }, [planId]);
+  }, [dispatch, planId]);
 
   useEffect(() => {
     dispatch(getWalletTransactions());
@@ -109,11 +114,11 @@ const Statement = () => {
       });
       setFilteredWalletTransactions(filteredWalletTrans);
     }
-  }, [formData]);
+  }, [formData, category, checkHistoryDisplay]);
 
   useEffect(() => {
     dispatch(getPlans());
-  }, []);
+  }, [dispatch]);
 
   const month = [
     "January",
@@ -131,10 +136,8 @@ const Statement = () => {
   ];
 
   const history_list =
-    (
-      filteredPlanTransactions.length > 0 || 
-      (formData.startDate !== "" && formData.endDate !== "") 
-    )
+    filteredPlanTransactions.length > 0 ||
+    (formData.startDate !== "" && formData.endDate !== "")
       ? filteredPlanTransactions.map((item) => ({
           id: `${item?.transactionId}`,
           date: `${moment(item.dateOfTransaction, "YYYY-MM-DD").format(
@@ -226,10 +229,8 @@ const Statement = () => {
       },
     ],
     rows:
-      (
-        filteredWalletTransactions?.length > 0 || 
-        (formData.startDate !== "" && formData.endDate !== "") 
-      )
+      filteredWalletTransactions?.length > 0 ||
+      (formData.startDate !== "" && formData.endDate !== "")
         ? filteredWalletTransactions?.map((data) => ({
             id: `${data?.transactionId}`,
             date: `${moment(
@@ -391,7 +392,6 @@ const Statement = () => {
               month[endDate.getMonth()]
             } ${endDate.getDate()}`}
         </h3>
-        
 
         {category === "WALLET" ? (
           <div>

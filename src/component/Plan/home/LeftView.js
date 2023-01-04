@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { Collapse, Input } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
@@ -39,9 +39,9 @@ export const LeftView = ({ view }) => {
   const withhold_tax = withholding_tax?.data.body
     ? withholding_tax?.data.body
     : [];
-  const inv_rates = investment_rates?.data.body
+  const inv_rates = useMemo(() => investment_rates?.data.body
     ? investment_rates?.data.body
-    : [];
+    : [], [investment_rates]);
   // const auth = useSelector((state) => state.auth);
   // const { login, isLoggedIn } = auth;
   const activeProductList = productList?.filter(
@@ -67,7 +67,7 @@ export const LeftView = ({ view }) => {
     } else {
       return 1;
     }
-  }, [data.product, data.amount]);
+  }, [data.product, data.amount, inv_rates]);
 
   useEffect(() => {
     view(isView);

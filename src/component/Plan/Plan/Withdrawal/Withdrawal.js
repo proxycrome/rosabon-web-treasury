@@ -53,6 +53,15 @@ const Withdrawal = () => {
     dispatch(getPenalCharge());
   }, []);
 
+  useEffect(() => {
+    if(plan?.planStatus === "MATURED"){
+      setWithdrawType("full");
+      setAmount(plan?.planSummary?.principal);
+    } else {
+      setWithdrawType("part");
+    }
+  }, [plan])
+
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
 
@@ -185,7 +194,7 @@ const Withdrawal = () => {
         amount={parseFloat(amount)?.toFixed(2)}
         reason={reason}
         goBack={() => {
-          setWithdrawType("");
+          setWithdrawType("full");
           setIsClicked(false);
         }}
       />
@@ -198,7 +207,7 @@ const Withdrawal = () => {
         amount={parseFloat(amount)?.toFixed(2)}
         reason={reason}
         goBack={() => {
-          setWithdrawType("");
+          setWithdrawType("part");
           setIsClicked(false);
         }}
       />
@@ -290,6 +299,7 @@ const Withdrawal = () => {
                         value="part"
                         onClick={handleClick}
                         required
+                        checked={plan?.planStatus === "ACTIVE"}
                         disabled={plan?.planStatus === "MATURED"}
                       />
                     </div>
@@ -306,7 +316,7 @@ const Withdrawal = () => {
                         value="full"
                         onClick={handleClick}
                         disabled={plan?.planStatus === "ACTIVE"}
-                        // checked={plan?.planStatus === "MATURED"}
+                        checked={plan?.planStatus === "MATURED"}
                         required
                       />
                     </div>
@@ -323,8 +333,8 @@ const Withdrawal = () => {
                           placeholder={plan?.planSummary?.principal?.toFixed(2)}
                           type="number"
                           name="amount"
-                          defaultValue={amount}
-                          onChange={(e) => setAmount(parseFloat(e.target.value).toFixed(2))}
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
                           max={plan?.planSummary?.principal}
                           step="0.001"
                           lang="nb"
@@ -500,7 +510,7 @@ const LeftView = styled.div`
     z-index: 10;
   }
   .curr-input {
-    padding-left: 24px;
+    padding-left: 28px;
   }
 `;
 

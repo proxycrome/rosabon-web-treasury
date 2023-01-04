@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import RFSLogoFullColour from "../../asset/RFSLogoFullColour.png";
 
 const Footer = ({ position, active, single, double, source, referralCode }) => {

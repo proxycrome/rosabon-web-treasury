@@ -23,7 +23,7 @@ import moment from "moment";
 
 export function ProfileNavBar({ children, view, feedback }) {
   const [menu, setMenu] = useState(false);
-  const [sidebar, setSidebar] = useState(false);
+  // const [sidebar, setSidebar] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

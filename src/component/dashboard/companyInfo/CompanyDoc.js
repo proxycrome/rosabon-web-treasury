@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import toast, { Toaster } from "react-hot-toast";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 import ModalComponent from "../../ModalComponent";
 import { OTPVerify } from "../../Accessories/BVNConfirm";
 import FileDoc from "../../../asset/file.png";
@@ -21,13 +21,13 @@ import {
   getAllIdTypes,
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
-import PhoneInput from "react-phone-input-2";
+// import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 const CompanyDoc = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [token, setToken] = useState("");
+  // const navigate = useNavigate();
+  const [ , setToken] = useState("");
   const [showEdit, setShowEdit] = useState(true);
   const [base64File, setBase64File] = useState({
     frontEncodedString: "",
@@ -47,11 +47,9 @@ const CompanyDoc = () => {
   const {
     users,
     companyDocs,
-    companyDocsError,
     showEmailOtpModal,
     idTypes,
     otp,
-    otpError,
     validateEmailOtp,
     loading,
   } = useSelector((state) => state.user_profile);
@@ -64,7 +62,7 @@ const CompanyDoc = () => {
 
   useEffect(() => {
     dispatch(getAllIdTypes());
-  }, []);
+  }, [dispatch]);
 
   const data = {
     idNumber: "",
@@ -200,7 +198,7 @@ const CompanyDoc = () => {
     if (!users) {
       dispatch(getAuthUsers());
     }
-  }, [users]);
+  }, [users, dispatch]);
 
   useEffect(() => {
     dispatch(getCompanyDocs());

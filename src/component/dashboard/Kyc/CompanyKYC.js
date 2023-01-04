@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getAuthUsers, updateUserKyc } from "../../../store/actions";
 import moment from "moment";
 import Spinner from "../../common/loading";
@@ -93,7 +93,7 @@ const CompanyKYC = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   return (
     <div>

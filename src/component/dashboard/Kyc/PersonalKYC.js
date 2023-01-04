@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { CLOSE_MODAL } from "../../../store/profile/actionTypes";
 import styled from "styled-components";
-import { UncontrolledTooltip, Alert } from "reactstrap";
+import { UncontrolledTooltip } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { BVNConfirm } from "../../Accessories/BVNConfirm";
 import ModalComponent from "../../ModalComponent";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Spinner from "../../common/loading";
 import {
@@ -23,8 +23,8 @@ const PersonalKYC = () => {
   const navigate = useNavigate();
   const user_details = useSelector((state) => state.user_profile.users);
 
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
+  // const auth = useSelector((state) => state.auth);
+  // const { login, isLoggedIn } = auth;
 
   const user_profile = useSelector((state) => state.user_profile);
   const {
@@ -44,7 +44,7 @@ const PersonalKYC = () => {
   const maximumDate = moment(recentDate).subtract(365 * 18, "days")?._d;
 
   // const success = useSelector((state) => state.auth.success);
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
 
   const data = {
     dateOfBirth: "",
@@ -166,12 +166,12 @@ const PersonalKYC = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     dispatch(getCountries());
     dispatch(getStates(formData.countryId));
-  }, [formData.countryId]);
+  }, [formData.countryId, dispatch]);
 
   
 

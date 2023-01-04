@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import styled from "styled-components";
-import { Input, Collapse } from "reactstrap";
+import { Collapse } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getFaq } from "../../../store/actions";
 import Spinner from "../../common/loading";
@@ -20,11 +20,12 @@ const Help = () => {
   const dispatch = useDispatch();
   const { faqs, loading } = useSelector((state) => state.help);
   const faqMessages = faqs?.data?.body ? faqs?.data?.body : [];
-  const activeFaqs = faqMessages.filter((data) => data.status === "ACTIVE");
+  // const activeFaqs = faqMessages.filter((data) => data.status === "ACTIVE");
 
   useEffect(() => {
     dispatch(getFaq());
   }, [dispatch]);
+  
   return (
     <div>
       <WrapperBody>

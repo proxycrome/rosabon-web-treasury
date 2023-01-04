@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { UncontrolledTooltip, Alert } from "reactstrap";
+import { UncontrolledTooltip } from "reactstrap";
 import styled from "styled-components";
 import { Collapse } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import User from "../../../asset/user.png";
 import FileDoc from "../../../asset/file.png";
 import Check from "../../../asset/checked.png";
-import plus from "../../../asset/plus.svg";
+// import plus from "../../../asset/plus.svg";
 import { sendCompanyOtp } from "../../../store/actions";
 import { verifyBvn } from "../../../store/actions";
 import ModalComponent from "../../ModalComponent";
@@ -29,10 +29,10 @@ const AddDirectors = ({
   idTypes,
 }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [showOne, setShowOne] = useState(true);
   const [showEdit, setShowEdit] = useState(true);
-  const [token, setToken] = useState("");
+  const [ , setToken] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [base64File, setBase64File] = useState({
@@ -49,7 +49,6 @@ const AddDirectors = ({
     bvnMessage,
     showEmailOtpModal,
     otp,
-    otpError,
     validateEmailOtp,
     id,
   } = useSelector((state) => state.user_profile);
@@ -236,7 +235,7 @@ const AddDirectors = ({
       dispatch({ type: CLEAR_BVN });
       removeForm(false);
     }
-  }, [errors]);
+  }, [errors, isSubmitted]);
 
   const handleFileSelect = (e, reference) => {
     e.preventDefault();

@@ -1,33 +1,21 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { RightView } from "./RightView";
 import { LeftView } from "./LeftView";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+// import { NavLink, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 
 function HomeView() {
   const [sendView, setSendView] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const profile = useSelector((state) => state.user_profile);
   const { users } = profile;
-  const auth = useSelector((state) => state.auth);
-  const { login, isLoggedIn } = auth;
-  
 
-  
   const handleView = (data) => {
     setSendView(data);
   }
-
-  // useEffect(() => {
-  //   if (users && !users.kyc) {
-  //     navigate("/kyc");
-  //   }
-  // }, [login]);
 
   return (
     <div>

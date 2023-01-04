@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import PersonalProfile from "./PersonalProfile";
 import CompanyProfile from "./CompanyProfile";
 import { ProfileSideBarList } from "../component/dashboard/ProfileSideBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Profile = () => {
-  const navigate = useNavigate();
   // const { login } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.user_profile);
   const {state} = useLocation();

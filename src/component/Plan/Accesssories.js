@@ -54,6 +54,18 @@ import FileUpload from "../common/fileUpload";
 import toast, { Toaster } from "react-hot-toast";
 import ClipLoader from "react-spinners/ClipLoader";
 
+const formatNumber = new Intl.NumberFormat(undefined, {});
+
+export const formatCurrValue = (value) => {
+  return value
+    ? formatNumber.format(value.toFixed(2)).split(".")[1]?.length >= 2
+      ? formatNumber.format(value.toFixed(2))
+      : formatNumber.format(value.toFixed(2)).split(".")[1]?.length === undefined
+      ? formatNumber.format(value.toFixed(2)) + ".00"
+      : formatNumber.format(value.toFixed(2)) + "0"
+    : 0;
+};
+
 export const NairaCard = () => {
   return (
     <RightWrapper>
@@ -746,23 +758,23 @@ export const RolloverSummary = ({
                     <p className="p-0 m-0">Principal </p>
                     <h4 className="d-flex gap-1">
                       {getCurrIcon(plan?.currency?.name)}
-                      {parseFloat(amount)}
+                      {formatCurrValue(parseFloat(amount))}
                     </h4>
                   </div>
                   <div className="rollover-text-left">
                     <p className="p-0 m-0">Amount for Withdrawal </p>
                     <h4 className="d-flex gap-1 justify-content-end">
                       {getCurrIcon(plan?.currency?.name)}
-                      {(
-                        plan?.planSummary?.principal - parseFloat(amount)
-                      )?.toFixed(2)}
+                      {formatCurrValue(
+                        parseFloat(plan?.planSummary?.principal - amount)
+                      )}
                     </h4>
                   </div>
                 </div>
                 <div className="d-flex align-items-end justify-content-between pt-4">
                   <div>
-                    <p className="p-0 m-0">Interst Rate </p>
-                    <h4>{interestRate.toFixed(2)} %</h4>
+                    <p className="p-0 m-0">Interest Rate </p>
+                    <h4>{formatCurrValue(parseFloat(interestRate))} %</h4>
                   </div>
                   <div className="rollover-text-left">
                     <p className="p-0 m-0">
@@ -776,14 +788,14 @@ export const RolloverSummary = ({
                     <p className="p-0 m-0">Calculated Interest </p>
                     <h4 className="d-flex gap-1">
                       {getCurrIcon(plan?.currency?.name)}
-                      {calculatedInterest}
+                      {formatCurrValue(parseFloat(calculatedInterest))}
                     </h4>
                   </div>
                   <div className="rollover-text-left">
                     <p className="p-0 m-0">Withholding Tax</p>
                     <h4 className="d-flex gap-1 justify-content-end">
                       {getCurrIcon(plan?.currency?.name)}
-                      {calc_withholding_tax}
+                      {formatCurrValue(parseFloat(calc_withholding_tax))}
                     </h4>
                   </div>
                 </div>
@@ -792,7 +804,7 @@ export const RolloverSummary = ({
                     <p className="p-0 m-0">Payment at Maturity</p>
                     <h4 className="d-flex gap-1">
                       {getCurrIcon(plan?.currency?.name)}
-                      {maturityPayment.toFixed(2)}
+                      {formatCurrValue(parseFloat(maturityPayment))}
                     </h4>
                   </div>
                   <div className="rollover-text-left"></div>
@@ -934,7 +946,7 @@ export const RolloverWithdrawMethod = ({
             <>
               Kindly select beneficiary account to receive the portion of your
               funds not rolled over ({getCurrIcon(plan?.currency?.name)}{" "}
-              {balance})
+              {formatCurrValue(parseFloat(balance))})
             </>
           )}
         </h4>
@@ -945,7 +957,8 @@ export const RolloverWithdrawMethod = ({
                 <div className="col d-flex justify-content-between">
                   <div>Amount for withdrawal:</div>
                   <div>
-                    {getCurrIcon(plan?.currency?.name)} {balance}
+                    {getCurrIcon(plan?.currency?.name)}{" "}
+                    {formatCurrValue(parseFloat(balance))}
                   </div>
                 </div>
               </div>
@@ -1096,8 +1109,7 @@ export const WithdrawalSummary = ({
         switch (intRecOption) {
           case "MATURITY":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge =
-                (currentNumberOfDays * penalRate * amount) / 365;
+              penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
             } else if (
               plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
             ) {
@@ -1127,8 +1139,7 @@ export const WithdrawalSummary = ({
           case "QUARTERLY":
           case "BI_ANNUAL":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge =
-                (currentNumberOfDays / 365) * penalRate * amount;
+              penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
             }
             break;
 
@@ -1178,14 +1189,16 @@ export const WithdrawalSummary = ({
                   </p>
                   <h4 className="d-flex gap-1">
                     {getCurrIcon(plan?.currency?.name)}
-                    {plan?.planSummary?.principal?.toLocaleString()}
+                    {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
+                    {/* {plan?.planSummary?.principal?.toLocaleString()} */}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
                   <p className="p-0 m-0">Withdrawal Amount</p>
                   <h4 className="d-flex gap-1 justify-content-end">
                     {getCurrIcon(plan?.currency?.name)}
-                    {parseFloat(amount).toLocaleString()}
+                    {formatCurrValue(parseFloat(amount))}
+                    {/* {parseFloat(amount).toLocaleString()} */}
                   </h4>
                 </div>
               </div>
@@ -1194,9 +1207,14 @@ export const WithdrawalSummary = ({
                   <p className="p-0 m-0">Penal Charges </p>
                   <h4 className="d-flex gap-1">
                     {getCurrIcon(plan?.currency?.name)}
-                    {computePenalCharge(
+                    {formatCurrValue(
+                      parseFloat(
+                        computePenalCharge(plan?.interestReceiptOption)
+                      )
+                    )}
+                    {/* {computePenalCharge(
                       plan?.interestReceiptOption
-                    ).toLocaleString()}
+                    ).toLocaleString()} */}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1206,13 +1224,20 @@ export const WithdrawalSummary = ({
                   </p>
                   <h4 className="d-flex gap-1 justify-content-end">
                     {getCurrIcon(plan?.currency?.name)}
-                    {parseFloat(
+                    {formatCurrValue(
+                      parseFloat(
+                        plan?.planSummary?.principal -
+                          amount -
+                          computePenalCharge(plan?.interestReceiptOption)
+                      )
+                    )}
+                    {/* {parseFloat(
                       (
                         plan?.planSummary?.principal -
                         amount -
                         computePenalCharge(plan?.interestReceiptOption)
                       ).toFixed(2)
-                    ).toLocaleString()}
+                    ).toLocaleString()} */}
                   </h4>
                 </div>
               </div>
@@ -1660,6 +1685,8 @@ export const AvailableBalance = ({
     }
   };
 
+  const formatNumber = new Intl.NumberFormat(undefined, {});
+
   return (
     <AvailableBalanceWapper id={id}>
       {role === "COMPANY" && (
@@ -1672,10 +1699,7 @@ export const AvailableBalance = ({
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦{" "}
-          {walletBalance?.amount
-            ? parseFloat(walletBalance?.amount?.toFixed(2))?.toLocaleString()
-            : 0}
+          ₦ {formatCurrValue(parseFloat(walletBalance?.amount))}
         </h4>
       </div>
       {role !== "COMPANY" &&
@@ -1874,16 +1898,15 @@ export const TransferCard = ({
     dispatch(getEligiblePlans());
   }, [dispatch]);
 
+  const formatNumber = new Intl.NumberFormat(undefined, {});
+
   return (
     <AvailableBalanceWapper id={id}>
       <h3>Transfer</h3>
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦{" "}
-          {walletBalance?.amount
-            ? parseFloat(walletBalance?.amount?.toFixed(2))?.toLocaleString()
-            : 0}
+          ₦ {formatCurrValue(parseFloat(walletBalance?.amount))}
         </h4>
       </div>
       <div className="pt-3">
@@ -3522,7 +3545,10 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
     reference: transactionRef,
     email: email,
     amount: amount,
-    publicKey: "pk_test_7e6134abc3ba34cad1566cc35a02fd4cc427b067",
+    publicKey:
+      process.env.NODE_ENV === "development"
+        ? process.env.REACT_APP_PAYSTACK_PK_DEV
+        : process.env.REACT_APP_PAYSTACK_PK_PROD,
   };
   const dispatch = useDispatch();
   const { form } = useContext(PlanContext);

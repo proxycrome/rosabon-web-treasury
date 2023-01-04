@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 // import { getWalletBalance } from "../../../redux/actions/wallet/walletAction";
 import {
@@ -16,11 +16,12 @@ import halfEllipse from "../../../asset/halfEllipse.png";
 import Telephone from "../../../asset/telephone.png";
 import HistoryImag from "../../../asset/history.png";
 import TransferImg from "../../../asset/transfer.png";
-import { AvailableBalance, getCurrIcon, TransferCard } from "../Accesssories";
+import { AvailableBalance, TransferCard } from "../Accesssories";
 import ModalComponent from "../../ModalComponent";
 import Checked from "../../../asset/checked.png";
 import Spinner from "../../common/loading";
 import toast, { Toaster } from "react-hot-toast";
+import { formatCurrValue } from "../Accesssories";
 
 const UserWallet = () => {
   const [show, setShow] = useState(false);
@@ -32,7 +33,7 @@ const UserWallet = () => {
   const [transferError, setTransferError] = useState({});
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [IsWithDraw, setIsWithDraw] = useState(false);
@@ -160,7 +161,7 @@ const UserWallet = () => {
       };
       dispatch(requestWithdrawal(data));
     }
-  }, [errors]);
+  }, [errors, isSubmitted]);
 
   const handleTransferSubmit = () => {
     const { amount, planId } = transferFormData;
@@ -185,15 +186,14 @@ const UserWallet = () => {
     if (users?.role !== "COMPANY") {
       dispatch(getBankDetails());
     }
-  }, [dispatch]);
+  }, [dispatch, users?.role]);
 
   // useEffect(() => {
   //   if (withdrawMsg) {
   //     dispatch(getWalletBalance());
   //   }
   // }, [withdrawMsg]);
-
-  const formatNumber = new Intl.NumberFormat(undefined, {});
+  console.log(walletBalance?.amount);
 
   return (
     <div>
@@ -237,17 +237,7 @@ const UserWallet = () => {
                     <p className="p-0 m-0">Balance</p>
                     <h5>
                       ₦{" "}
-                      {walletBalance?.amount
-                        ? formatNumber
-                            .format(walletBalance?.amount?.toFixed(2))
-                            .split(".")[1]?.length === 2
-                          ? formatNumber.format(
-                              walletBalance?.amount?.toFixed(2)
-                            )
-                          : formatNumber.format(
-                              walletBalance?.amount?.toFixed(2)
-                            ) + "0"
-                        : 0}
+                      {formatCurrValue(parseFloat(walletBalance?.amount))}
                     </h5>
                   </div>
                   <div className="grey-background"></div>
@@ -815,43 +805,43 @@ const Wrapper = styled.div`
   }
 `;
 
-const WrappCongrate = styled.div`
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: left;
-  input {
-    border: 1px solid #e0e0e0;
-    padding: 1rem 2rem;
-    border-radius: 3px;
-    margin-right: 10px;
-    outline: "none";
-    border: "none";
-  }
+// const WrappCongrate = styled.div`
+//   border-radius: 20px;
+//   padding: 2rem;
+//   text-align: left;
+//   input {
+//     border: 1px solid #e0e0e0;
+//     padding: 1rem 2rem;
+//     border-radius: 3px;
+//     margin-right: 10px;
+//     outline: "none";
+//     border: "none";
+//   }
 
-  h4 {
-    font-style: normal;
-    font-weight: 700;
-    font-size: 27px;
-    line-height: 150%;
-    letter-spacing: -0.15px;
-    text-transform: capitalize;
-    color: #242424;
-    padding-top: 9px;
-  }
-  p {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 150%;
-    letter-spacing: -0.15px;
-    color: #4f4f4f;
-    padding-top: 9px;
-    padding-bottom: 20px;
-  }
-  .verify_congrates_btn {
-    background: #111e6c;
-    color: #f2f2f2;
-    border-radius: 10px;
-    padding: 8px 80px;
-  }
-`;
+//   h4 {
+//     font-style: normal;
+//     font-weight: 700;
+//     font-size: 27px;
+//     line-height: 150%;
+//     letter-spacing: -0.15px;
+//     text-transform: capitalize;
+//     color: #242424;
+//     padding-top: 9px;
+//   }
+//   p {
+//     font-style: normal;
+//     font-weight: 500;
+//     font-size: 16px;
+//     line-height: 150%;
+//     letter-spacing: -0.15px;
+//     color: #4f4f4f;
+//     padding-top: 9px;
+//     padding-bottom: 20px;
+//   }
+//   .verify_congrates_btn {
+//     background: #111e6c;
+//     color: #f2f2f2;
+//     border-radius: 10px;
+//     padding: 8px 80px;
+//   }
+// `;

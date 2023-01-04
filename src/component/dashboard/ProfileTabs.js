@@ -8,7 +8,7 @@ export function ProfileTabs({ personal, handleChange, isAssisted }) {
     if(isAssisted){
       setActiveBtn("password");
     }
-  }, [])
+  }, [isAssisted])
 
   return (
     <WrappeSideBar>
