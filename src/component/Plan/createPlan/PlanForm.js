@@ -16,6 +16,7 @@ import {
   getSingleProduct,
   getTenor,
   getWithholdingTax,
+  testDebitCard,
 } from "../../../store/actions";
 import { useMemo } from "react";
 import Spinner from "../../common/loading";
@@ -81,7 +82,7 @@ const PlanForm = () => {
     weeklyContributionDay: "",
     monthlyContributionDay: 0,
     interestReceiptOption: "",
-    planStatus: "ACTIVE",
+    planStatus: "PENDING",
     contributionValue: "",
     directDebit: false,
     interestRate: 0.0,
@@ -94,6 +95,7 @@ const PlanForm = () => {
     allowsLiquidation: false,
     planSummary: null,
     paymentMethod: "DEBIT_CARD",
+    nameOfDirectDebitCard: null,
   });
 
   useEffect(() => {
@@ -183,14 +185,15 @@ const PlanForm = () => {
       )?._d;
       setFormData({
         ...formData,
-        // amount: product.hasTargetAmount !== null ? null : formData.amount,
         product: product.id,
         productCategory: product.productCategory?.id,
         exchangeRate: formData.currency === "NGN" ? 1 : formData.exchangeRate,
         actualMaturityDate: checkAtMaturity
           ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
           : moment(endDate).format("YYYY-MM-DD"),
-        contributionValue: formData.contributionValue,
+        contributionValue: formData.contributionValue === "" ? 0 : formData.contributionValue,
+        amount: formData.amount === "" ? 0 : formData.amount,
+        targetAmount: formData.targetAmount === "" ? 0 : formData.targetAmount,
         currency: currencies_list.find(
           (item) => item.name === formData.currency
         )?.id,
@@ -665,6 +668,24 @@ const PlanForm = () => {
     return label;
   }, []);
 
+  useEffect(() => {
+    if(formData.directDebit === "true" && product?.properties?.hasSavingFrequency){
+      const cardName = new Date().getTime().toString();
+      setFormData({
+        ...formData,
+        nameOfDirectDebitCard: cardName,
+      })
+
+      const data = {
+        cardName: cardName, 
+      }
+      dispatch(testDebitCard(data));      
+    }
+  }, [formData.directDebit]);
+
+  console.log(formData.directDebit);
+
+
   if (isClicked && formData.planSummary !== null) {
     return (
       <PlanContext.Provider value={{ form: formData, setForm: setFormData }}>
@@ -831,6 +852,7 @@ const PlanForm = () => {
       e.target.focus();
     }, 0);
   };
+
 
   return (
     <form onSubmit={handleSubmit}>
@@ -1315,7 +1337,7 @@ const PlanForm = () => {
                           name="directDebit"
                           disabled={!product?.properties?.hasDirectDebit}
                           id="directDebit"
-                          defaultValue={formData.directDebit}
+                          value={formData.directDebit}
                         >
                           <option value={true}>Yes</option>
                           <option value={false}>No</option>
@@ -1372,7 +1394,7 @@ const PlanForm = () => {
                           name="autoRenew"
                           onChange={handleChange}
                           id="autoRenew"
-                          defaultValue={formData.autoRenew}
+                          value={formData.autoRenew}
                         >
                           <option value="" disabled hidden>
                             Setup an option

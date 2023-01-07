@@ -128,10 +128,10 @@ export const getClosedTicketsError = (error) => {
     }
 }
 
-export const postReply = (formData) => {
+export const postReply = (formData, dispatch) => {
 	return {
 		type: POST_REPLY,
-		payload: { formData },
+		payload: { formData, dispatch },
 	};
 };
 

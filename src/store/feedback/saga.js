@@ -29,6 +29,7 @@ import {
 	postFeedbackSuccess,
 	postReplyError,
 	postReplySuccess,
+	getReplies,
 } from "./actions";
 
 import {
@@ -107,10 +108,13 @@ function* getSingleTicket({ payload: { id } }) {
 	}
 }
 
-function* postReply({ payload: { formData } }) {
+function* postReply({ payload: { formData, dispatch } }) {
 	try {
 		const response = yield call(postReplyService, formData);
 		yield put(postReplySuccess(response.data));
+		if (response) {
+			dispatch(getReplies(formData.ticketId))
+		}
 	} catch (error) {
 		console.log(error?.response?.data);
 		yield put(postReplyError(error?.response?.data));
@@ -129,7 +133,7 @@ function* postReply({ payload: { formData } }) {
 	}
 }
 
-function* getReplies({ payload: { id } }) {
+function* getFeedReplies({ payload: { id } }) {
 	try {
 		const response = yield call(getRepliesService, id);
 		yield put(getRepliesSuccess(response.data));
@@ -174,7 +178,7 @@ export function* watchPostReply() {
 };
 
 export function* watchGetReplies() {
-	yield takeEvery(GET_REPLIES, getReplies);
+	yield takeEvery(GET_REPLIES, getFeedReplies);
 };
 
 export function* watchGetTicketCategories()  {

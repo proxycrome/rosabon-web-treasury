@@ -148,7 +148,7 @@ const PlanBankPayment = ({ goBack }) => {
                     handleClose={() => setShow(false)}
                   >
                     <SuccessConfirm
-                      createPlan="paid"
+                      savePlan="paid"
                       handleClose={() => setShow(false)}
                     />
                   </ModalComponent>

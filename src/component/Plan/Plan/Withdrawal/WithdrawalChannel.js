@@ -47,8 +47,9 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
             penalCharge: parseFloat(penalCharge),
             planAction: "WITHDRAW",
             withdrawTo: withdrawTo,
-            withdrawType:type,
+            withdrawType: type,
           };
+          console.log(formData);
           await dispatch(planAction(formData, setModalState));
         }
       } else {
@@ -57,7 +58,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
           bankAccountDetails:
             user_role === "INDIVIDUAL_USER" && withdrawTo === "TO_BANK"
               ? bankDetails?.id
-              : undefined,
+              : null,
           completed: true,
           plan: plan?.id,
           penalCharge: parseFloat(penalCharge),
@@ -65,7 +66,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
           withdrawTo: withdrawTo,
           withdrawType: type,
         };
-
+        console.log(formData);
         await dispatch(planAction(formData, setModalState))
       }
     }

@@ -49,7 +49,7 @@ export const RightView = () => {
     }
   };
 
-  let totalnetWorth = 0;
+  let totalnetWorth = 0.00;
   newWorthPlanList.forEach((item) =>
     item?.currency?.name === "NGN"
       ? (totalnetWorth += item?.planSummary?.principal)
@@ -76,7 +76,7 @@ export const RightView = () => {
               <p className="p-0 m-0">₦</p>
             </div>
           </div>
-          <h3 className="pt-1 pb-3 rise">₦ {formatCurrValue(parseFloat(totalnetWorth))}</h3>
+          <h3 className="pt-1 pb-3 rise">₦ {totalnetWorth ? formatCurrValue(parseFloat(totalnetWorth)) : "0.00"}</h3>
           <div className="down-button pt-4">
             <div className="d-flex justify-content-between action-det">
               <div className="d-flex align-items-center justify-content-between active-box">

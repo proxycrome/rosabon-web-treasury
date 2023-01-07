@@ -43,11 +43,11 @@ export const getSinglePlanService = (id) => {
 };
 
 export const deletePlanService = (id) => {
-    const http = new HttpService();
-    const url = `auth/trplan-action/${id}`;
+  const http = new HttpService();
+  const url = `auth/trplan-action/${id}`;
 
-    return http.deleteData(url);
-}
+  return http.deleteData(url);
+};
 
 export const getTenorService = () => {
   const http = new HttpService();
@@ -73,7 +73,7 @@ export const planActionService = (formData) => {
   const http = new HttpService();
   const url = `auth/trplan-action`;
 
-  return http.postDataWithToken(formData, url)
+  return http.postDataWithToken(formData, url);
 };
 
 export const getAllPlanHistoryService = () => {
@@ -119,9 +119,20 @@ export const getClosedPlansService = () => {
   return http.getData(url);
 };
 
-export const updatePlanService = (formData, id) => {
+export const updatePlanService = (formData, others) => {
+  const { id, updateStatus } = others;
   const http = new HttpService();
-  const url = `auth/trcreate-plan/${id}`;
-
+  let url;
+  if (updateStatus === true) {
+    url = `/auth/trcreate-plan/update/${id}`;
+  } else {
+    url = `auth/trcreate-plan/${id}`;
+  }
   return http.putData(formData, url);
-}
+};
+
+export const testDebitCardService = (formData) => {
+  const http = new HttpService();
+  const url = `initialize-card-testing`;
+  return http.postDataWithToken(formData, url);
+};

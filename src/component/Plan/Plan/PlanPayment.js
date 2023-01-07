@@ -81,7 +81,7 @@ const PlanPayment = () => {
 
   const onSuccess = () => {
     const formData = {
-      amount: parseInt(amount),
+      amount: parseFloat((amount * plan?.exchangeRate).toFixed(2)),
       completed: true,
       paymentType: "DEBIT_CARD",
       plan: parseInt(id),

@@ -55,7 +55,10 @@ import {
   GET_CLOSED_PLANS_ERROR,
   UPDATE_PLAN,
   UPDATE_PLAN_SUCCESS,
-  UPDATE_PLAN_ERROR
+  UPDATE_PLAN_ERROR,
+  TEST_DEBIT_CARD,
+  TEST_DEBIT_CARD_SUCCESS,
+  TEST_DEBIT_CARD_ERROR
 } from "./actionTypes";
 
 const initialState = {
@@ -97,7 +100,9 @@ const initialState = {
   closed_plans: null,
   closed_plans_error: null,
   plan_update: null,
-  plan_update_err: null
+  plan_update_err: null,
+  card_test_msg: null,
+  card_test_error: null,
 };
 
 const plan = (state = initialState, action) => {
@@ -121,6 +126,7 @@ const plan = (state = initialState, action) => {
     case DELETE_PLAN:
     case GET_CLOSED_PLANS:
     case UPDATE_PLAN:
+    case TEST_DEBIT_CARD:
       state = {
         ...state,
         loading: true,
@@ -468,6 +474,24 @@ const plan = (state = initialState, action) => {
         plan_update_err: action.payload
       };
       break;
+
+    case TEST_DEBIT_CARD_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        card_test_msg: action.payload,
+        card_test_error: null,
+      };
+      break;
+
+      case TEST_DEBIT_CARD_ERROR:
+        state = {
+          ...state,
+          loading: false,
+          card_test_msg: null,
+          card_test_error: action.payload,
+        };
+        break;
 
     default:
       state = { ...state };

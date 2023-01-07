@@ -1,10 +1,13 @@
-import axiosInstance from '../utils/axiosInstance';
-import axios from 'axios';
+import axiosInstance from "../utils/axiosInstance";
+import axios from "axios";
 // import { getAccessToken, verifyToken } from '../utils/utilities';
 
 class HttpService {
   constructor() {
-    this.baseUrl = process.env.REACT_APP_BASE_URL;
+    this.baseUrl =
+      process.env.NODE_ENV === "development"
+        ? process.env.REACT_APP_BASE_URL_DEV
+        : process.env.REACT_APP_BASE_URL_PROD;
   }
 
   postData = async (payload, url) => {

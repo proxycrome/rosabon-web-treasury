@@ -312,7 +312,7 @@ export const MakePayment = ({ setPaymentType, isClicked }) => {
       setForm({
         ...form,
         paymentMethod: "DEBIT_CARD",
-        planStatus: "ACTIVE",
+        // planStatus: "PENDING",
       });
       SetPaymentType(value);
     }
@@ -320,7 +320,7 @@ export const MakePayment = ({ setPaymentType, isClicked }) => {
       setForm({
         ...form,
         paymentMethod: "BANK_TRANSFER",
-        planStatus: "PENDING",
+        // planStatus: "PENDING",
       });
       SetPaymentType(value);
     }
@@ -1712,7 +1712,10 @@ export const AvailableBalance = ({
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦ {formatCurrValue(parseFloat(walletBalance?.amount))}
+          ₦{" "}
+          {walletBalance?.amount
+            ? formatCurrValue(parseFloat(walletBalance?.amount))
+            : "0.00"}
         </h4>
       </div>
       {role !== "COMPANY" &&
@@ -1919,7 +1922,10 @@ export const TransferCard = ({
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="pt-3">Available Balance</h4>
         <h4 className="pt-3">
-          ₦ {formatCurrValue(parseFloat(walletBalance?.amount))}
+          ₦{" "}
+          {walletBalance?.amount
+            ? formatCurrValue(parseFloat(walletBalance?.amount))
+            : "0.00"}
         </h4>
       </div>
       <div className="pt-3">
@@ -2321,8 +2327,10 @@ export const ReferalTable = () => {
   const { myReferrals, loading } = useSelector((state) => state.wallet);
 
   const handleClick = (id) => {
-    dispatch(pokeUser(id));
+    dispatch(pokeUser(id, dispatch));
   };
+
+  console.log(myReferrals);
 
   const copyReferralLink = () => {
     toast.success("Referral Link Copied");
@@ -2369,7 +2377,7 @@ export const ReferalTable = () => {
       action: (
         <button
           className={data.status === "INACTIVE" ? "in-active" : "active"}
-          disabled={data.status === "ACTIVE"}
+          disabled={data.status === "ACTIVE" || data.pokeable === true}
           onClick={() => handleClick(data.id)}
         >
           Poke User
@@ -2565,6 +2573,8 @@ export const ReferralBonus = () => {
     })),
   };
 
+  console.log(users);
+
   return (
     <div>
       <ProfileNavBar>
@@ -2588,7 +2598,9 @@ export const ReferralBonus = () => {
                   <h4 className="py-4">
                     ₦{" "}
                     {users?.referralBonus?.earnedReferralBonus
-                      ? users?.referralBonus?.earnedReferralBonus?.toFixed(2)
+                      ? formatCurrValue(
+                          parseFloat(users?.referralBonus?.earnedReferralBonus)
+                        )
                       : "0.00"}
                   </h4>
                 </div>
@@ -2604,11 +2616,13 @@ export const ReferralBonus = () => {
               <div className="d-flex align-items-content justify-content-center">
                 <p className="m-0 p-0">
                   {users?.referralBonus?.earnedReferralBonus
-                    ? users?.referralBonus?.earnedReferralBonus
+                    ? formatCurrValue(
+                        parseFloat(users?.referralBonus?.earnedReferralBonus)
+                      )
                     : "0"}{" "}
                   out of ₦
                   {referralThreshold?.amount
-                    ? referralThreshold?.amount
+                    ? formatCurrValue(parseFloat(referralThreshold?.amount))
                     : "0.00"}{" "}
                   Earned
                 </p>
@@ -2619,7 +2633,9 @@ export const ReferralBonus = () => {
               <h4 className="total-amount">
                 ₦{" "}
                 {users?.referralBonus?.totalRedeemedBonus
-                  ? users?.referralBonus?.totalRedeemedBonus?.toFixed(2)
+                  ? formatCurrValue(
+                      parseFloat(users?.referralBonus?.totalRedeemedBonus)
+                    )
                   : "0.00"}
               </h4>
             </div>
@@ -2961,14 +2977,19 @@ export const SpecialEarnings = () => {
             <p className="p-0 m-0">Total Redeemed Earnings :</p>
             <h4 className="total-amount">
               ₦{" "}
-              {totalRedeemedEarning ? totalRedeemedEarning.toFixed(2) : "0.00"}
+              {totalRedeemedEarning
+                ? formatCurrValue(parseFloat(totalRedeemedEarning))
+                : "0.00"}
             </h4>
           </div>
           <div className="redeem-card">
             <p className="p-0 m-0">Total Earnings :</p>
             <div className="d-flex total-amount justify-content-between aligin-items-center">
               <h4 className="">
-                ₦ {totalEarning ? totalEarning.toFixed(2) : "0.00"}
+                ₦{" "}
+                {totalEarning
+                  ? formatCurrValue(parseFloat(totalEarning))
+                  : "0.00"}
               </h4>
               <div>
                 <button className="btn btn-primary" onClick={handleClick}>
@@ -3553,11 +3574,22 @@ export const randomNumbers = (max) => {
   return random_num;
 };
 
-export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
+export const PayWithCard = ({
+  email,
+  amount,
+  setShow,
+  transactionRef,
+  userId,
+}) => {
   const config = {
     reference: transactionRef,
     email: email,
     amount: amount,
+    metadata: {
+      userId,
+      cardName: null,
+      refund: false,
+    },
     publicKey:
       process.env.NODE_ENV === "development"
         ? process.env.REACT_APP_PAYSTACK_PK_DEV
@@ -3568,27 +3600,24 @@ export const PayWithCard = ({ email, amount, setShow, transactionRef }) => {
   const { loading } = useSelector((state) => state.plan);
   const { verify_paystack } = useSelector((state) => state.paystack);
 
+  console.log(userId);
+
+  // you can call this function anything
   const success = async () => {
+    console.log(form);
     await dispatch(
       verifyPaystack("PAYSTACK", transactionRef, dispatch, form, setShow)
     );
-    // if(verify_paystack?.message === "Payment validated") {
-    //   dispatch(createPlan(form, setShow));
-    // } else {
-    //   toast.error("Payment not verified", {
-    //     position: "top-right",
-    //   })
-    // }
   };
 
-  // you can call this function anything
+  
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
     // console.log(reference);
     success();
   };
 
-  // you can call this function anything
+
   const onClose = () => {
     // implementation for  whatever you want to do when the Paystack dialog closed.
     console.log("closed");
