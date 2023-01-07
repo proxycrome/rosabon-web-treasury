@@ -63,11 +63,11 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
   } catch (error) {
     yield put(loginUserError("User not authorized or wrong details"));
     console.log(error);
-    const message = error.response
-      ? error.response.data.message
-        ? error.response.data.message
-        : error.response.data.response_message
-        ? error.response.data.response_message
+    const message = error?.response
+      ? error?.response?.data?.message
+        ? error?.response?.data?.message
+        : error?.response?.data?.response_message
+        ? error?.response?.data?.response_message
         : "Invalid Credentials"
       : "Network Error";
     if (message) {

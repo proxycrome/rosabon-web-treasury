@@ -4,7 +4,15 @@ import { ProfileSideBarList } from "../dashboard/ProfileSideBar";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const PlanHome = ({ product, list, topup, payment, details, children }) => {
+const PlanHome = ({
+  product,
+  list,
+  topup,
+  payment,
+  details,
+  children,
+  cardPage,
+}) => {
   // const [tabs, setTabs] = useState("profile");
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
@@ -19,12 +27,18 @@ const PlanHome = ({ product, list, topup, payment, details, children }) => {
   }, [users, isLoggedIn, navigate]);
 
   return (
-    <Wrapper>
-      <div className="side-bar shadow-sm style-log">
-        <ProfileSideBarList profile="profile" />
-      </div>
-      <div className="main-body">{children}</div>
-    </Wrapper>
+    <>
+      {cardPage === true ? (
+        <div>{children}</div>
+      ) : (
+        <Wrapper>
+          <div className="side-bar shadow-sm style-log">
+            <ProfileSideBarList profile="profile" />
+          </div>
+          <div className="main-body">{children}</div>
+        </Wrapper>
+      )}
+    </>
   );
 };
 

@@ -5,32 +5,42 @@ import Verve from "../../../asset/master-card-logo.png";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { PlanSummary, PayWithCard } from "../Accesssories";
 import ModalComponent from "../../ModalComponent";
-import { SuccessConfirm } from "../../Accessories/BVNConfirm";
+import { ProceedPayCard, SuccessConfirm } from "../../Accessories/BVNConfirm";
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { PlanContext } from "./PlanForm";
-import { regTransaction } from "../../../store/actions";
+import {
+  createPlan,
+  regTransaction,
+  verifyPaystack,
+} from "../../../store/actions";
 import Spinner from "../../common/loading";
 
 const PlanCardPayment = ({ goBack }) => {
   const [show, setShow] = useState(false);
+  const [debitPopup, setDebitPopup] = useState(false);
   const [modalCount, setModalCount] = useState(0);
-  const { form } = useContext(PlanContext);
+  const { form, setForm } = useContext(PlanContext);
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user_profile);
   const { reg_transaction } = useSelector((state) => state.paystack);
   const { products } = useSelector((state) => state.product);
+  const { loading, newPlan } = useSelector((state) => state.plan);
   const navigate = useNavigate();
 
   const product = products?.data?.body
     ? products?.data?.body.find((item) => item.id === form?.product)
     : {};
 
+  const createdPlan = newPlan?.data?.body ? newPlan?.data?.body : {};
+
+  console.log(newPlan);
   // register transaction and fetch transaction reference
   useEffect(() => {
     const formData = {
       amount: parseFloat(
-        product.properties.hasTargetAmount && product?.properties?.hasSavingFrequency
+        product.properties.hasTargetAmount &&
+          product?.properties?.hasSavingFrequency
           ? (form?.contributionValue * form?.exchangeRate).toFixed(2)
           : (form?.planSummary.principal * form?.exchangeRate).toFixed(2)
       ),
@@ -46,20 +56,55 @@ const PlanCardPayment = ({ goBack }) => {
     }
   }, [show]);
 
-  // const handleSubmit = async () => {
-  //   const formData = {
-  //     amount: JSON.stringify(form?.targetAmount),
-  //     email: users?.email,
-  //   }
-  //   await dispatch(initPayment(formData));
-  //   await dispatch(createPlan(form, setShow));
-  // }
+  const handleSubmit = async () => {
+    // const formData = {
+    //   amount: JSON.stringify(form?.targetAmount),
+    //   email: users?.email,
+    // }
+    // await dispatch(initPayment(formData));
+    await dispatch(createPlan(form, setDebitPopup));
+  };
+
+  useEffect(() => {
+    if (Object.keys(createdPlan).length > 0) {
+      setForm({
+        ...form,
+        currency: parseInt(createdPlan?.currency?.id),
+        product: parseInt(createdPlan?.product?.id),
+        tenor: parseInt(createdPlan?.tenor?.id),
+        planStatus: "ACTIVE",
+        planId: parseInt(createdPlan?.id),
+        updateStatus: true,
+      });
+    }
+  }, [createdPlan]);
+
+  const onSuccess = (reference) => {
+    dispatch(
+      verifyPaystack(
+        "PAYSTACK",
+        reg_transaction?.transactionReference,
+        dispatch,
+        form,
+        setShow,
+        setDebitPopup,
+        "PLAN_CREATION"
+      )
+    );
+  };
+
+  const onClose = () => {
+    console.log("Paystack closed");
+  };
 
   let amount = parseInt(
-    product.properties.hasTargetAmount && product?.properties?.hasSavingFrequency
-      ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100 
+    product.properties.hasTargetAmount &&
+      product?.properties?.hasSavingFrequency
+      ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100
       : (form?.planSummary.principal * form?.exchangeRate).toFixed(2) * 100
   );
+
+  console.log(form);
 
   return (
     <>
@@ -98,23 +143,36 @@ const PlanCardPayment = ({ goBack }) => {
                   </button>
                 </div>
                 <div>
-                  {/* <button
-                      style={{
-                        backgroundColor: '#111E6C',
-                        color: '#FFFFFF',
-                        width: '300px',
-                      }}
-                      // onClick={() => setShow(true)}
-                      onClick={handleSubmit}
-                    >
-                      {loading ? 'LOADING...' : 'Pay'}
-                    </button> */}
-                  <PayWithCard
+                  <button
+                    style={{
+                      backgroundColor: "#111E6C",
+                      color: "#FFFFFF",
+                      width: "300px",
+                    }}
+                    onClick={handleSubmit}
+                  >
+                    {loading ? "LOADING..." : "Submit"}
+                  </button>
+                  {/* <PayWithCard
                     amount={amount}
                     email={users?.email}
                     setShow={setShow}
                     transactionRef={reg_transaction?.transactionReference}
-                  />
+                    userId={users?.id}
+                  /> */}
+                  <ModalComponent
+                    show={debitPopup}
+                    size={"md"}
+                    handleClose={() => setDebitPopup(false)}
+                  >
+                    <ProceedPayCard
+                      amount={amount}
+                      payType="withdraw-paystack"
+                      onSuccess={onSuccess}
+                      onClose={onClose}
+                      text="Proceed to pay with paystack"
+                    />
+                  </ModalComponent>
                   <ModalComponent
                     show={show}
                     size={"md"}

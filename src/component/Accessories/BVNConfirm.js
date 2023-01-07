@@ -193,6 +193,7 @@ export function SuccessConfirm({
   createPlan,
   confirmNotice,
   transferNotice,
+  savePlan,
 }) {
   // const dispatch = useDispatch();
   // const logout = (e) => {
@@ -323,6 +324,28 @@ export function SuccessConfirm({
                       </div>
                     </>
                   ) : createPlan === "paid" ? (
+                    <>
+                      <p className="py-5">Plan Successfully Activated</p>
+                      <div className="d-flex justify-content-between">
+                        <NavLink state={{ myState: false }} to="/plan-list">
+                          <button
+                            onClick={handleClose}
+                            type="button"
+                            className="grey_btn"
+                          >
+                            Check my investments
+                          </button>
+                        </NavLink>
+                        <button
+                          onClick={handleClose}
+                          type="button"
+                          className="blue_btn"
+                        >
+                          Invest more
+                        </button>
+                      </div>
+                    </>
+                  ) : savePlan === "paid" ? (
                     <>
                       <p className="py-5">Plan Successfully Saved</p>
                       <div className="d-flex justify-content-between">

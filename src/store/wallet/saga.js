@@ -25,6 +25,7 @@ import {
   getMyDepositActivitiesSuccess,
   getMyReferralActivitiesError,
   getMyReferralActivitiesSuccess,
+  getMyReferrals,
   getMyReferralsError,
   getMyReferralsSuccess,
   getReferralRedeemThresholdError,
@@ -123,7 +124,7 @@ function* getEachWalletTransaction({ payload: { transId } }) {
   }
 }
 
-function* getMyReferrals() {
+function* getUserReferrals() {
   try {
     const response = yield call(getMyReferralsService);
     yield put(getMyReferralsSuccess(response.data));
@@ -154,11 +155,12 @@ function* postTransferToPlan({ payload: { formData } }) {
   }
 }
 
-function* pokeUser({ payload: { id } }) {
+function* pokeUser({ payload: { id, dispatch } }) {
   try {
     const response = yield call(pokeUserService, id);
     yield put(pokeUserSuccess(response.data));
     if (response) {
+      dispatch(getMyReferrals())
       setTimeout(() => {
         toast.success(response.data.message);
       }, 1000);
@@ -189,9 +191,10 @@ function* redeemReferralBonus() {
     const response = yield call(redeemReferralBonusService);
     yield put(redeemReferralBonusSuccess(response.data));
     if (response) {
+      toast.success(response.data.message);
       setTimeout(() => {
-        toast.success(response.data.message);
-      }, 1000);
+        window.location.reload();
+      }, 2000);
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -229,9 +232,10 @@ function* redeemSpecialEarning() {
     const response = yield call(redeemSpecialEarningService);
     yield put(redeemSpecialEarningSuccess(response.data));
     if (response) {
+      toast.success(response.data.message);
       setTimeout(() => {
-        toast.success(response.data.message);
-      }, 1000);
+        window.location.reload();
+      }, 2000);
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -291,7 +295,7 @@ export function* watchGetEachWalletTransaction() {
 }
 
 export function* watchGetMyReferrals() {
-  yield takeEvery(GET_MY_REFERRALS, getMyReferrals);
+  yield takeEvery(GET_MY_REFERRALS, getUserReferrals);
 }
 
 export function* watchPostTransferToPlan() {

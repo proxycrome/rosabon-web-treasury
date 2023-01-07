@@ -40,6 +40,8 @@ const PersonalInfo = () => {
     otp,
   } = useSelector((state) => state.user_profile);
 
+  console.log(states);
+
   const {
     loading,
     phoneMsg,
@@ -255,8 +257,12 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     dispatch(getCountries());
-    dispatch(getStates(formData.countryId));
+    if(formData.countryId){
+      dispatch(getStates(formData.countryId));
+    }  
   }, [dispatch, formData.countryId]);
+
+  console.log(users);
 
   return (
     <div>

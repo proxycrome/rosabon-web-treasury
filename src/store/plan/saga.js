@@ -21,6 +21,7 @@ import {
   COMPLETE_TRANSFER,
   GET_CLOSED_PLANS,
   UPDATE_PLAN,
+  TEST_DEBIT_CARD,
 } from "./actionTypes";
 
 import {
@@ -65,6 +66,8 @@ import {
   updatePlanError,
   // getSinglePlan,
   getPlans,
+  testDebitCardSuccess,
+  testDebitCardError,
 } from "./actions";
 
 import {
@@ -85,6 +88,7 @@ import {
   penalChargeService,
   planActionService,
   singlePlanHistoryService,
+  testDebitCardService,
   updatePlanService,
   viewBankDetailService,
 } from "../../services/planService";
@@ -360,15 +364,44 @@ function* getClosedPlans() {
   }
 }
 
-function* updatePlan({ payload: { formData, id, dispatch } }) {
+function* testDebitCard({ payload: { formData } }) {
   try {
-    const response = yield call(updatePlanService, formData, id);
+    const response = yield call(testDebitCardService, formData);
+    yield put(testDebitCardSuccess(response.data));
+    if(response){
+      window.open(response.data, "_blank");
+    }
+  } catch (error) {
+    console.log(error?.response?.data);
+    yield put(testDebitCardError(error?.response?.data));
+  }
+}
+
+function* updatePlan({
+  payload: { formData, id, dispatch, action, setShow, setDebitPopup },
+}) {
+  if (action === "createPlan") {
+    var { planId, updateStatus, ...dataObj } = formData;
+    console.log({ dataObj });
+  }
+  try {
+    const response = yield call(updatePlanService, dataObj, {
+      id,
+      updateStatus,
+    });
     yield put(updatePlanSuccess(response.data));
     if (response) {
-      dispatch(getPlans());
-      setTimeout(() => {
-        window.location.reload(true);
-      }, 1000)
+      if (action === "createPlan") {
+        setDebitPopup(false);
+        setShow(true);
+        console.log(response.data);
+        toast.success(response.data.message, { position: "top-right" });
+      } else {
+        dispatch(getPlans());
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1000);
+      }
     }
   } catch (error) {
     console.log(error?.response?.data);
@@ -451,6 +484,10 @@ export function* watchUpdatePlan() {
   yield takeEvery(UPDATE_PLAN, updatePlan);
 }
 
+export function* watchTestDebitCard() {
+  yield takeEvery(TEST_DEBIT_CARD, testDebitCard);
+}
+
 function* PlanSaga() {
   yield all([
     fork(watchGetContribVal),
@@ -472,6 +509,7 @@ function* PlanSaga() {
     fork(watchCompleteTransfer),
     fork(watchGetClosedPlans),
     fork(watchUpdatePlan),
+    fork(watchTestDebitCard),
   ]);
 }
 

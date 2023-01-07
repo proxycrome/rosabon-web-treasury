@@ -193,7 +193,6 @@ const UserWallet = () => {
   //     dispatch(getWalletBalance());
   //   }
   // }, [withdrawMsg]);
-  console.log(walletBalance?.amount);
 
   return (
     <div>
@@ -237,7 +236,9 @@ const UserWallet = () => {
                     <p className="p-0 m-0">Balance</p>
                     <h5>
                       ₦{" "}
-                      {formatCurrValue(parseFloat(walletBalance?.amount))}
+                      {walletBalance?.amount
+                        ? formatCurrValue(parseFloat(walletBalance?.amount))
+                        : "0.00"}
                     </h5>
                   </div>
                   <div className="grey-background"></div>

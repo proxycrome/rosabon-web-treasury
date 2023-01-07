@@ -35,8 +35,8 @@ const AdminMessage = () => {
       title: moment(),
       platform: "TREASURY",
     };
-    await dispatch(postReply(form));
-    await dispatch(getReplies(parseInt(id)));
+    await dispatch(postReply(form, dispatch));
+    // await dispatch(getReplies(parseInt(id)));
     await setReply("");
   };
 
@@ -62,13 +62,13 @@ const AdminMessage = () => {
                 <div key={item.id}>
                   {item.replyType === "USER_REPLY" ? (
                     <div className="user-box mt-4">
-                      <h4 className="">Your Message</h4>
+                      <h4 className="text-info">Your Message</h4>
                       <p className="p-0 m-0">{item.content} </p>
                       <small className="my-2">{item.createdAt}</small>
                     </div>
                   ) : (
                     <div className="message mt-4">
-                      <h4>Admin</h4>
+                      <h4 className="text-primary">Admin</h4>
                       <p className="p-0 m-0">{item.content} </p>
                       <small className="my-2">{item.createdAt}</small>
                     </div>

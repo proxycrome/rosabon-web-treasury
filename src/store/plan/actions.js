@@ -55,7 +55,10 @@ import {
   GET_CLOSED_PLANS_ERROR,
   UPDATE_PLAN,
   UPDATE_PLAN_SUCCESS,
-  UPDATE_PLAN_ERROR
+  UPDATE_PLAN_ERROR,
+  TEST_DEBIT_CARD,
+  TEST_DEBIT_CARD_SUCCESS,
+  TEST_DEBIT_CARD_ERROR
 } from "./actionTypes";
 
 export const getContribVal = () => {
@@ -441,10 +444,10 @@ export const getClosedPlansError = (error) => {
   }
 }
 
-export const updatePlan = (formData, id, dispatch) => {
+export const updatePlan = (formData, id, dispatch, action, setShow, setDebitPopup) => {
   return {
     type: UPDATE_PLAN,
-    payload: { formData, id, dispatch }
+    payload: { formData, id, dispatch, action, setShow, setDebitPopup }
   }
 }
 
@@ -459,5 +462,26 @@ export const updatePlanError = (error) => {
   return {
     type: UPDATE_PLAN_ERROR,
     payload: error
+  }
+}
+
+export const testDebitCard = (formData) => {
+  return {
+    type: TEST_DEBIT_CARD,
+    payload: { formData },
+  }
+}
+
+export const testDebitCardSuccess = (data) => {
+  return {
+    type: TEST_DEBIT_CARD_SUCCESS,
+    payload: data,
+  }
+}
+
+export const testDebitCardError = (error) => {
+  return {
+    type: TEST_DEBIT_CARD_ERROR,
+    payload: error,
   }
 }

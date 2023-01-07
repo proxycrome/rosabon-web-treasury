@@ -169,10 +169,10 @@ export const postTransferToPlanError = (error) => {
   };
 };
 
-export const pokeUser = (id) => {
+export const pokeUser = (id, dispatch) => {
   return {
     type: POKE_USER,
-    payload: { id },
+    payload: { id, dispatch },
   };
 };
 
