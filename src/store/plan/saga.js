@@ -382,7 +382,6 @@ function* updatePlan({
 }) {
   if (action === "createPlan") {
     var { planId, updateStatus, ...dataObj } = formData;
-    console.log({ dataObj });
   }
   try {
     const response = yield call(updatePlanService, dataObj, {
@@ -394,7 +393,6 @@ function* updatePlan({
       if (action === "createPlan") {
         setDebitPopup(false);
         setShow(true);
-        console.log(response.data);
         toast.success(response.data.message, { position: "top-right" });
       } else {
         dispatch(getPlans());

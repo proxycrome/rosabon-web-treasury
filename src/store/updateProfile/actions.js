@@ -61,10 +61,10 @@ export const verifyAccountNoError = (error) => {
   };
 };
 
-export const changeUserPassword = (formData) => {
+export const changeUserPassword = (formData, dispatch, resetPassword, navigate) => {
   return {
     type: CHANGE_PASSWORD,
-    payload: { formData },
+    payload: { formData, dispatch, resetPassword, navigate },
   };
 };
 

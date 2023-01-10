@@ -61,7 +61,7 @@ import {
   verifyAccountNoService,
   verifyPhoneService,
 } from "../../services/updateProfileService";
-import { getCompanyDocs } from "../actions";
+import { getCompanyDocs, logout } from "../actions";
 
 function* verifyAccountNo({ payload: { formData } }) {
   try {
@@ -73,14 +73,27 @@ function* verifyAccountNo({ payload: { formData } }) {
   }
 }
 
-function* changeUserPassword({ payload: { formData } }) {
+function* changeUserPassword({
+  payload: { formData, dispatch, resetPassword, navigate },
+}) {
   try {
     const response = yield call(changeUserPasswordService, formData);
     yield put(changeUserPasswordSuccess(response.data));
     if (response) {
-      setTimeout(() => {
+      if (
+        response?.data?.data?.resetPassword &&
+        response?.data?.data?.creationSource === "BACKEND" &&
+        !resetPassword
+      ) {
         toast.success(response.data.message);
-      }, 1000);
+        setTimeout(() => {
+          dispatch(logout(navigate, dispatch));
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          toast.success(response.data.message);
+        }, 1000);
+      }
     }
   } catch (error) {
     console.log(error?.response?.data);

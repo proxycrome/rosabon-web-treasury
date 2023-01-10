@@ -216,8 +216,8 @@ const PlanForm = () => {
           formData.directDebit === "true" || formData.directDebit === true
             ? true
             : false,
-        autoRenew:
-          formData.autoRenew === "true" || formData.autoRenew === true
+        autoRollOver:
+          formData.autoRollOver === "true" || formData.autoRollOver === true
             ? true
             : false,
         allowsLiquidation:
@@ -683,8 +683,6 @@ const PlanForm = () => {
     }
   }, [formData.directDebit]);
 
-  console.log(formData.directDebit);
-
 
   if (isClicked && formData.planSummary !== null) {
     return (
@@ -884,7 +882,7 @@ const PlanForm = () => {
               )}
               {/*Auto renew UncontrolledTooltip */}
               {product?.properties?.acceptsRollover && (
-                <UncontrolledTooltip placement="top" target="autoRenew">
+                <UncontrolledTooltip placement="top" target="autoRollOver">
                   Allows for fund to be automatically rolled over at maturity
                 </UncontrolledTooltip>
               )}
@@ -1391,10 +1389,10 @@ const PlanForm = () => {
                           type="select"
                           placeholder=""
                           disabled={!product?.properties?.acceptsRollover}
-                          name="autoRenew"
+                          name="autoRollOver"
                           onChange={handleChange}
-                          id="autoRenew"
-                          value={formData.autoRenew}
+                          id="autoRollOver"
+                          value={formData.autoRollOver}
                         >
                           <option value="" disabled hidden>
                             Setup an option

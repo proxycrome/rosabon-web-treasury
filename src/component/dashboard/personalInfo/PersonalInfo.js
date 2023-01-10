@@ -24,23 +24,15 @@ import "react-phone-input-2/lib/style.css";
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
-  const [ , setToken] = useState("");
+  const [, setToken] = useState("");
   // const [showEditProf, setShowEditProf] = useState(true);
   const [showEditCont, setShowEditCont] = useState(true);
   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
   const [showEditNOK, setShowEditNOK] = useState(true);
   const [validateInfo, setValldateInfo] = useState(null);
 
-  const {
-    users,
-    validateEmailOtp,
-    countries,
-    states,
-    showEmailOtpModal,
-    otp,
-  } = useSelector((state) => state.user_profile);
-
-  console.log(states);
+  const { users, validateEmailOtp, countries, states, showEmailOtpModal, otp } =
+    useSelector((state) => state.user_profile);
 
   const {
     loading,
@@ -142,7 +134,11 @@ const PersonalInfo = () => {
           ? houseNoAddress
           : users?.individualUser?.address?.houseNoAddress,
         state: state ? state : users?.individualUser?.address?.state,
-        country: country ? country : users?.individualUser?.address?.country,
+        country: country
+          ? country
+          : users?.creationSource === "BACKEND"
+          ? users?.individualUser?.coutryOfResidence?.name
+          : users?.individualUser?.address?.country,
         city: city ? city : users?.individualUser?.address?.city,
       },
       secondaryPhoneNumber: secondaryPhoneNumber
@@ -225,7 +221,7 @@ const PersonalInfo = () => {
       verifyPhone(
         secondaryPhoneNumber.startsWith("0")
           ? secondaryPhoneNumber.trim()
-          : secondaryPhoneNumber.startsWith("234")
+          : secondaryPhoneNumber.startsWith("2-34")
           ? secondaryPhoneNumber.replace(/234/, "0")
           : secondaryPhoneNumber.startsWith("+234")
           ? secondaryPhoneNumber.replace(/\+234/, "0")
@@ -235,7 +231,6 @@ const PersonalInfo = () => {
           : users?.individualUser?.secondaryPhoneNumber || users?.phone
       )
     );
-
   };
 
   const handlePhoneData = (data) => {
@@ -257,12 +252,10 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     dispatch(getCountries());
-    if(formData.countryId){
+    if (formData.countryId) {
       dispatch(getStates(formData.countryId));
-    }  
+    }
   }, [dispatch, formData.countryId]);
-
-  console.log(users);
 
   return (
     <div>
@@ -595,7 +588,9 @@ const PersonalInfo = () => {
                         name="country"
                         value={
                           formData?.country ||
-                          users?.individualUser?.address?.country
+                          users?.creationSource === "BACKEND"
+                            ? users?.individualUser?.coutryOfResidence?.name
+                            : users?.individualUser?.address?.country
                         }
                         onChange={handleChange}
                         disabled={showEditCont}
