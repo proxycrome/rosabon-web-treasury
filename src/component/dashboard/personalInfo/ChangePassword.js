@@ -20,6 +20,7 @@ import styled from "styled-components";
 import { sendOtp, changeUserPassword } from "../../../store/actions";
 import ModalComponent from "../../ModalComponent";
 import { OTPVerify } from "../../Accessories/BVNConfirm";
+import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const ChangePassword = () => {
   const [passwordShown1, setPasswordShown1] = useState(false);
   const [passwordShown2, setPasswordShown2] = useState(false);
   const [passwordShown3, setPasswordShown3] = useState(false);
-  // const [show, setShow] = useState(false);
+  const navigate = useNavigate();
   const [showEdit, setShowEdit] = useState(true);
   const toggleEdit = (e) => {
     e.preventDefault();
@@ -48,7 +49,7 @@ const ChangePassword = () => {
     setPasswordShown3(!passwordShown3);
   };
 
-  const { showEmailOtpModal, otp, loading } = useSelector(
+  const { showEmailOtpModal, otp, loading, users } = useSelector(
     (state) => state.user_profile
   );
 
@@ -111,7 +112,7 @@ const ChangePassword = () => {
       otp: token,
     };
   
-    dispatch(changeUserPassword(data));
+    dispatch(changeUserPassword(data, dispatch, users?.resetPassword, navigate));
     setformData({
       ...formData,
       oldPassword: "",

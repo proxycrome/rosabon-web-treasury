@@ -38,7 +38,6 @@ import { getAuthUsers, clearBvn, clearMessages } from "../actions";
 function* loginUser({ payload: { formData, navigate, dispatch } }) {
   try {
     const response = yield call(loginService, formData);
-    console.log(response.data);
     yield put(loginUserSuccess(response.data));
     if (response) {
       if (response?.data?.kyc === true) {

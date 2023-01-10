@@ -34,7 +34,6 @@ const PlanCardPayment = ({ goBack }) => {
 
   const createdPlan = newPlan?.data?.body ? newPlan?.data?.body : {};
 
-  console.log(newPlan);
   // register transaction and fetch transaction reference
   useEffect(() => {
     const formData = {
@@ -103,8 +102,6 @@ const PlanCardPayment = ({ goBack }) => {
       ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100
       : (form?.planSummary.principal * form?.exchangeRate).toFixed(2) * 100
   );
-
-  console.log(form);
 
   return (
     <>

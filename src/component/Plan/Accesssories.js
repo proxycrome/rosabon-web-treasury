@@ -2330,8 +2330,6 @@ export const ReferalTable = () => {
     dispatch(pokeUser(id, dispatch));
   };
 
-  console.log(myReferrals);
-
   const copyReferralLink = () => {
     toast.success("Referral Link Copied");
   };
@@ -2376,8 +2374,8 @@ export const ReferalTable = () => {
       status: `${data.status}`,
       action: (
         <button
-          className={data.status === "INACTIVE" ? "in-active" : "active"}
-          disabled={data.status === "ACTIVE" || data.pokeable === true}
+          className={data.status === "INACTIVE" && data.pokeable ? "in-active" : "active"}
+          disabled={data.status === "ACTIVE" || !data.pokeable}
           onClick={() => handleClick(data.id)}
         >
           Poke User
@@ -2572,8 +2570,6 @@ export const ReferralBonus = () => {
       amount: `₦ ${data.amount}`,
     })),
   };
-
-  console.log(users);
 
   return (
     <div>
@@ -3600,11 +3596,8 @@ export const PayWithCard = ({
   const { loading } = useSelector((state) => state.plan);
   const { verify_paystack } = useSelector((state) => state.paystack);
 
-  console.log(userId);
-
   // you can call this function anything
   const success = async () => {
-    console.log(form);
     await dispatch(
       verifyPaystack("PAYSTACK", transactionRef, dispatch, form, setShow)
     );

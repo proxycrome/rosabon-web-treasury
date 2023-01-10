@@ -49,7 +49,6 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
             withdrawTo: withdrawTo,
             withdrawType: type,
           };
-          console.log(formData);
           await dispatch(planAction(formData, setModalState));
         }
       } else {
@@ -66,7 +65,6 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
           withdrawTo: withdrawTo,
           withdrawType: type,
         };
-        console.log(formData);
         await dispatch(planAction(formData, setModalState))
       }
     }
