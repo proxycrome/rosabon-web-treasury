@@ -221,7 +221,7 @@ const PersonalInfo = () => {
       verifyPhone(
         secondaryPhoneNumber.startsWith("0")
           ? secondaryPhoneNumber.trim()
-          : secondaryPhoneNumber.startsWith("2-34")
+          : secondaryPhoneNumber.startsWith("234")
           ? secondaryPhoneNumber.replace(/234/, "0")
           : secondaryPhoneNumber.startsWith("+234")
           ? secondaryPhoneNumber.replace(/\+234/, "0")
