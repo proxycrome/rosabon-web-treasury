@@ -669,6 +669,7 @@ export const RolloverSummary = ({
   setEndDate,
   setFormData,
   formData,
+  rollStage,
 }) => {
   // const [isTerms, setIsTerms] = useState(false);
 
@@ -810,20 +811,22 @@ export const RolloverSummary = ({
                   </div>
                   <div className="rollover-text-left"></div>
                 </div>
-                <div className="py-5 check-box-bank">
-                  <input
-                    type="checkbox"
-                    id="scales"
-                    name="term"
-                    value={isTerms}
-                    checked={isTerms}
-                    onChange={() => checkTerms(!isTerms)}
-                    required
-                  />
-                  <label htmlFor="scales">
-                    I agree to the Terms and Condition
-                  </label>
-                </div>
+                {rollStage !== "FINAL" ? (
+                  <div className="py-5 check-box-bank">
+                    <input
+                      type="checkbox"
+                      id="scales"
+                      name="term"
+                      value={isTerms}
+                      checked={isTerms}
+                      onChange={() => checkTerms(!isTerms)}
+                      required
+                    />
+                    <label htmlFor="scales">
+                      I agree to the Terms and Condition
+                    </label>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
@@ -1090,8 +1093,10 @@ export const WithdrawalSummary = ({
         "days"
       );
 
-      const currentNumberOfDays =
-        moment(recentDate).diff(plan?.planSummary?.startDate, "days");
+      const currentNumberOfDays = moment(recentDate).diff(
+        plan?.planSummary?.startDate,
+        "days"
+      );
 
       const penalDays = moment(plan?.planSummary?.endDate).diff(
         recentDate,
@@ -2374,7 +2379,9 @@ export const ReferalTable = () => {
       status: `${data.status}`,
       action: (
         <button
-          className={data.status === "INACTIVE" && data.pokeable ? "in-active" : "active"}
+          className={
+            data.status === "INACTIVE" && data.pokeable ? "in-active" : "active"
+          }
           disabled={data.status === "ACTIVE" || !data.pokeable}
           onClick={() => handleClick(data.id)}
         >
@@ -3603,13 +3610,11 @@ export const PayWithCard = ({
     );
   };
 
-  
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
     // console.log(reference);
     success();
   };
-
 
   const onClose = () => {
     // implementation for  whatever you want to do when the Paystack dialog closed.

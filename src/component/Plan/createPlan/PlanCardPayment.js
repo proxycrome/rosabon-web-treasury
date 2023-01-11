@@ -36,17 +36,19 @@ const PlanCardPayment = ({ goBack }) => {
 
   // register transaction and fetch transaction reference
   useEffect(() => {
-    const formData = {
-      amount: parseFloat(
-        product.properties.hasTargetAmount &&
-          product?.properties?.hasSavingFrequency
-          ? (form?.contributionValue * form?.exchangeRate).toFixed(2)
-          : (form?.planSummary.principal * form?.exchangeRate).toFixed(2)
-      ),
-      purposeOfPayment: "PLAN_CREATION",
-    };
-    dispatch(regTransaction(formData));
-  }, []);
+    if (debitPopup) {
+      const formData = {
+        amount: parseFloat(
+          product.properties.hasTargetAmount &&
+            product?.properties?.hasSavingFrequency
+            ? (form?.contributionValue * form?.exchangeRate).toFixed(2)
+            : (form?.planSummary.principal * form?.exchangeRate).toFixed(2)
+        ),
+        purposeOfPayment: "PLAN_CREATION",
+      };
+      dispatch(regTransaction(formData));
+    }
+  }, [debitPopup]);
 
   useEffect(() => {
     setModalCount(modalCount + 1);
@@ -105,91 +107,83 @@ const PlanCardPayment = ({ goBack }) => {
 
   return (
     <>
-      {reg_transaction !== null ? (
-        <>
-          <ProfileNavBar>
-            <NavTitle>
-              <span className="fw-bold">Choose Plan</span>
-            </NavTitle>
-          </ProfileNavBar>
-          <Wrapper>
-            <Toaster />
-            <LeftView>
-              <h6>Kindly confirm your transaction details below</h6>
-              <div className="choose-plan mt-5">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>Payment Type:</div>
-                  <div className="d-flex align-items-center">
-                    <img className="verve-card" src={Verve} alt="Verve" />
-                    <p className="p-0 m-0">Debit Card</p>
-                  </div>
-                </div>
+      <ProfileNavBar>
+        <NavTitle>
+          <span className="fw-bold">Choose Plan</span>
+        </NavTitle>
+      </ProfileNavBar>
+      <Wrapper>
+        <Toaster />
+        <LeftView>
+          <h6>Kindly confirm your transaction details below</h6>
+          <div className="choose-plan mt-5">
+            <div className="d-flex align-items-center justify-content-between">
+              <div>Payment Type:</div>
+              <div className="d-flex align-items-center">
+                <img className="verve-card" src={Verve} alt="Verve" />
+                <p className="p-0 m-0">Debit Card</p>
               </div>
-              <PlanSummary />
-            </LeftView>
-          </Wrapper>
-          <WrapperFooter>
-            <div className="footer-body">
-              <div className="d-flex align-items-center justify-content-between footer-content">
-                <div>
-                  <button
-                    style={{ color: "#111E6C", width: "300px" }}
-                    onClick={goBack}
-                  >
-                    Back
-                  </button>
-                </div>
-                <div>
-                  <button
-                    style={{
-                      backgroundColor: "#111E6C",
-                      color: "#FFFFFF",
-                      width: "300px",
-                    }}
-                    onClick={handleSubmit}
-                  >
-                    {loading ? "LOADING..." : "Submit"}
-                  </button>
-                  {/* <PayWithCard
+            </div>
+          </div>
+          <PlanSummary />
+        </LeftView>
+      </Wrapper>
+      <WrapperFooter>
+        <div className="footer-body">
+          <div className="d-flex align-items-center justify-content-between footer-content">
+            <div>
+              <button
+                style={{ color: "#111E6C", width: "300px" }}
+                onClick={goBack}
+              >
+                Back
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  backgroundColor: "#111E6C",
+                  color: "#FFFFFF",
+                  width: "300px",
+                }}
+                onClick={handleSubmit}
+              >
+                {loading ? "LOADING..." : "Submit"}
+              </button>
+              {/* <PayWithCard
                     amount={amount}
                     email={users?.email}
                     setShow={setShow}
                     transactionRef={reg_transaction?.transactionReference}
                     userId={users?.id}
                   /> */}
-                  <ModalComponent
-                    show={debitPopup}
-                    size={"md"}
-                    handleClose={() => setDebitPopup(false)}
-                  >
-                    <ProceedPayCard
-                      amount={amount}
-                      payType="withdraw-paystack"
-                      onSuccess={onSuccess}
-                      onClose={onClose}
-                      text="Proceed to pay with paystack"
-                    />
-                  </ModalComponent>
-                  <ModalComponent
-                    show={show}
-                    size={"md"}
-                    handleClose={() => setShow(false)}
-                  >
-                    <SuccessConfirm
-                      createPlan="paid"
-                      handleClose={() => setShow(false)}
-                    />
-                  </ModalComponent>
-                </div>
-              </div>
+              <ModalComponent
+                show={debitPopup}
+                size={"md"}
+                handleClose={() => setDebitPopup(false)}
+              >
+                <ProceedPayCard
+                  amount={amount}
+                  payType="withdraw-paystack"
+                  onSuccess={onSuccess}
+                  onClose={onClose}
+                  text="Proceed to pay with paystack"
+                />
+              </ModalComponent>
+              <ModalComponent
+                show={show}
+                size={"md"}
+                handleClose={() => setShow(false)}
+              >
+                <SuccessConfirm
+                  createPlan="paid"
+                  handleClose={() => setShow(false)}
+                />
+              </ModalComponent>
             </div>
-          </WrapperFooter>
-        </>
-      ) : (
-        <div className="vh-100 w-100">
-          <Spinner />
+          </div>
         </div>
-      )}
+      </WrapperFooter>
     </>
   );
 };
