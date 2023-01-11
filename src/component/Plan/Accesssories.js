@@ -1091,7 +1091,7 @@ export const WithdrawalSummary = ({
       );
 
       const currentNumberOfDays =
-        moment(recentDate).diff(plan?.planSummary?.startDate, "days") || 1;
+        moment(recentDate).diff(plan?.planSummary?.startDate, "days");
 
       const penalDays = moment(plan?.planSummary?.endDate).diff(
         recentDate,
