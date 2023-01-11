@@ -80,7 +80,7 @@ const Withdrawal = () => {
       );
 
       const currentNumberOfDays =
-        moment(recentDate).diff(plan?.planSummary?.startDate, "days") || 1;
+        moment(recentDate).diff(plan?.planSummary?.startDate, "days");
 
       const penalDays = moment(plan?.planSummary?.endDate).diff(
         recentDate,
@@ -219,6 +219,25 @@ const Withdrawal = () => {
     navigate("/plan-list");
   };
 
+  const arrowBtnPreventChange = (e) => {
+    if (e.which === 38 || e.which === 40) {
+      e.preventDefault();
+    }
+  };
+
+  const numberInputOnWheelPreventChange = (e) => {
+    // Prevent the input value change
+    e.target.blur();
+
+    // Prevent the page/container scrolling
+    e.stopPropagation();
+
+    // Refocus immediately, on the next tick (after the current function is done)
+    setTimeout(() => {
+      e.target.focus();
+    }, 0);
+  };
+
   return (
     <>
       {planStatus === "OK" && (
@@ -302,6 +321,7 @@ const Withdrawal = () => {
                         required
                         checked={plan?.planStatus === "ACTIVE"}
                         disabled={plan?.planStatus === "MATURED"}
+                        readOnly={plan?.planStatus === "ACTIVE"}
                       />
                     </div>
                   </div>
@@ -341,6 +361,8 @@ const Withdrawal = () => {
                           lang="nb"
                           required
                           disabled={withdrawType === "full" || plan?.planStatus === "MATURED"}
+                          onWheel={numberInputOnWheelPreventChange}
+                          onKeyDown={arrowBtnPreventChange}
                         />
                       </div>
                       <label className="d-flex gap-1">
@@ -512,6 +534,16 @@ const LeftView = styled.div`
   }
   .curr-input {
     padding-left: 28px;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
 `;
 

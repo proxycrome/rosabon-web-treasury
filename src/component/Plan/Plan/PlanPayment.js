@@ -114,6 +114,25 @@ const PlanPayment = () => {
     navigate("/plan-list");
   };
 
+  const arrowBtnPreventChange = (e) => {
+    if (e.which === 38 || e.which === 40) {
+      e.preventDefault();
+    }
+  };
+
+  const numberInputOnWheelPreventChange = (e) => {
+    // Prevent the input value change
+    e.target.blur();
+
+    // Prevent the page/container scrolling
+    e.stopPropagation();
+
+    // Refocus immediately, on the next tick (after the current function is done)
+    setTimeout(() => {
+      e.target.focus();
+    }, 0);
+  };
+
   return (
     <>
       {planStatus === "OK" && (
@@ -188,8 +207,12 @@ const PlanPayment = () => {
                         type="number"
                         name="amount"
                         value={amount}
+                        step="0.001"
+                        lang="nb"
                         required
                         onChange={(e) => setAmount(e.target.value)}
+                        onWheel={numberInputOnWheelPreventChange}
+                        onKeyDown={arrowBtnPreventChange}
                       />
                     </div>
                   </div>
@@ -347,6 +370,17 @@ const LeftView = styled.div`
   .curr-input {
     padding-left: 24px;
   }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  
 `;
 
 const RightView = styled.div`
