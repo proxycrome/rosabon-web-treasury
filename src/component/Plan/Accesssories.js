@@ -740,7 +740,7 @@ export const RolloverSummary = ({
     <div>
       {planStatus === "OK" && (
         <RolloverSummaryWrapper>
-          <h4 className="pt-4">Rollover Summary</h4>
+          <h4 className="pt-4 withdraw">Rollover Summary</h4>
           <div className="plan-content">
             <div className="rollover">
               <div className="plan-top h-50 p-4">
@@ -840,6 +840,9 @@ const RolloverSummaryWrapper = styled.div`
   box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
   padding: 40px;
   background: #ffffff;
+  .withdraw{
+    padding-left: 20px;
+  }
   p {
     font-weight: 400;
     font-size: 14px;
@@ -1169,7 +1172,7 @@ export const WithdrawalSummary = ({
   return (
     <div>
       <RolloverSummaryWrapper>
-        <h4 className="pt-5">Withdrawal Summary</h4>
+        <h4 className="pt-5 withdraw">Withdrawal Summary</h4>
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">

@@ -7,7 +7,8 @@ import {
   REGISTER_TRANSACTION_ERROR,
   VERIFY_PAYSTACK,
   VERIFY_PAYSTACK_SUCCESS,
-  VERIFY_PAYSTACK_ERROR
+  VERIFY_PAYSTACK_ERROR,
+  CLEAR_TRANS_REF
 } from "./actionTypes";
 
 const initialState = {
@@ -83,6 +84,14 @@ const paystack = ( state=initialState, action ) => {
         reg_transaction: null,
         reg_transactionError: action.payload
       };
+      break;
+
+    case CLEAR_TRANS_REF:
+      state = {
+        ...state,
+        reg_transaction: null,
+        reg_transactionError: null,
+      }
       break;
 
     default:

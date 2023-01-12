@@ -45,6 +45,7 @@ export const Plans = () => {
   const navigate = useNavigate();
   const { plans, loading, singlePlan } = useSelector((state) => state.plan);
   const { products, categories } = useSelector((state) => state.product);
+  const [ width, setWidth] = useState(window.innerWidth);
   const userPlans = plans?.data.body
     ? plans?.data.body?.filter((item) => item.planStatus !== "CLOSED")
     : [];
@@ -115,14 +116,23 @@ export const Plans = () => {
     setDeleteModal(true);
   };
 
+  const setWindowDimensions = () => {
+    setWidth(window.innerWidth)
+  }
 
+  useEffect(() => {
+    window.addEventListener('resize', setWindowDimensions)
+    return () => {
+      window.removeEventListener('resize', setWindowDimensions)
+    }
+  }, [])
 
   return (
     <Wrapper>
       <Toaster />
       <ModalComponent
         show={show}
-        size={"md"}
+        size={width >= 576 ? "md" : "sm"}
         handleClose={() => setShow(false)}
       >
         <PlanModal handleClose={() => setShow(false)} />

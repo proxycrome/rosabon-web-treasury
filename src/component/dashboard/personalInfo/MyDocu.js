@@ -158,10 +158,8 @@ const MyDocu = () => {
   }, [validateEmailOtp]);
 
   useEffect(() => {
-    if (!documents) {
-      dispatch(getUserDocs());
-    }
-  }, [documents, dispatch]);
+    dispatch(getUserDocs());
+  }, [dispatch]);
 
   return (
     <div>

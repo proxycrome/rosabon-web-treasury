@@ -11,7 +11,6 @@ import { Toaster } from "react-hot-toast";
 import { PlanContext } from "./PlanForm";
 import {
   createPlan,
-  regTransaction,
   verifyPaystack,
 } from "../../../store/actions";
 import Spinner from "../../common/loading";
@@ -22,7 +21,7 @@ const PlanCardPayment = ({ goBack }) => {
   const [modalCount, setModalCount] = useState(0);
   const { form, setForm } = useContext(PlanContext);
   const dispatch = useDispatch();
-  const { users } = useSelector((state) => state.user_profile);
+  // const { users } = useSelector((state) => state.user_profile);
   const { reg_transaction } = useSelector((state) => state.paystack);
   const { products } = useSelector((state) => state.product);
   const { loading, newPlan } = useSelector((state) => state.plan);
@@ -34,22 +33,6 @@ const PlanCardPayment = ({ goBack }) => {
 
   const createdPlan = newPlan?.data?.body ? newPlan?.data?.body : {};
 
-  // register transaction and fetch transaction reference
-  useEffect(() => {
-    if (debitPopup) {
-      const formData = {
-        amount: parseFloat(
-          product.properties.hasTargetAmount &&
-            product?.properties?.hasSavingFrequency
-            ? (form?.contributionValue * form?.exchangeRate).toFixed(2)
-            : (form?.planSummary.principal * form?.exchangeRate).toFixed(2)
-        ),
-        purposeOfPayment: "PLAN_CREATION",
-      };
-      dispatch(regTransaction(formData));
-    }
-  }, [debitPopup]);
-
   useEffect(() => {
     setModalCount(modalCount + 1);
     if (modalCount >= 2) {
@@ -58,11 +41,6 @@ const PlanCardPayment = ({ goBack }) => {
   }, [show]);
 
   const handleSubmit = async () => {
-    // const formData = {
-    //   amount: JSON.stringify(form?.targetAmount),
-    //   email: users?.email,
-    // }
-    // await dispatch(initPayment(formData));
     await dispatch(createPlan(form, setDebitPopup));
   };
 

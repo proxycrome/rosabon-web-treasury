@@ -17,7 +17,7 @@ const Transfer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
-
+  const [ width, setWidth] = useState(window.innerWidth);
   const { singlePlan, plans } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const userPlans = plans?.data.body ? plans?.data.body : [];
@@ -63,6 +63,17 @@ const Transfer = () => {
       e.target.focus();
     }, 0);
   };
+
+  const setWindowDimensions = () => {
+    setWidth(window.innerWidth)
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', setWindowDimensions)
+    return () => {
+      window.removeEventListener('resize', setWindowDimensions)
+    }
+  }, [])
 
   return (
     <>
@@ -238,7 +249,7 @@ const Transfer = () => {
                     </button>
                     <ModalComponent
                       show={modalState === "modal-one"}
-                      size={"md"}
+                      size={width >= 576 ? "md" : "sm"}
                       handleClose={() => setModalState("close")}
                     >
                       <Notice
@@ -284,6 +295,10 @@ const LeftView = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    .plan-content,
+    .plan-payment {
+      width: 100% !important;
+    }
   }
 
   p {

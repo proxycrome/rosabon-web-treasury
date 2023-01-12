@@ -460,6 +460,10 @@ const LeftView = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    .plan-content,
+    .plan-payment {
+      width: 100% !important;
+    }
   }
 
   p {

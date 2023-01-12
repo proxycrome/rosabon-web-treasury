@@ -7,10 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import ModalComponent from "../../ModalComponent";
 import { Toaster } from "react-hot-toast";
-import {
-  OTPVerify,
-  Unsuccessful,
-} from "../../Accessories/BVNConfirm";
+import { OTPVerify, Unsuccessful } from "../../Accessories/BVNConfirm";
 import {
   sendOtp,
   getBanks,
@@ -24,7 +21,7 @@ import moment from "moment";
 
 const BankDetails = () => {
   const dispatch = useDispatch();
-  const [ , setToken] = useState("");
+  const [, setToken] = useState("");
   const [accountName, setAccountName] = useState("");
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(true);
@@ -42,8 +39,9 @@ const BankDetails = () => {
     bankDetails,
   } = useSelector((state) => state.user_profile);
 
-  const { loading, accountDetail, accountDetailError } =
-    useSelector((state) => state.updateProfile);
+  const { loading, accountDetail, accountDetailError } = useSelector(
+    (state) => state.updateProfile
+  );
 
   useEffect(() => {
     if (accountDetailError) {
@@ -174,10 +172,8 @@ const BankDetails = () => {
   };
 
   useEffect(() => {
-    if (!bankDetails) {
-      dispatch(getBankDetails());
-    }
-  }, [bankDetails, dispatch]);
+    dispatch(getBankDetails());
+  }, [dispatch]);
 
   return (
     <div>

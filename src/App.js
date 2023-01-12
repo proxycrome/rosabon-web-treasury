@@ -3,16 +3,23 @@ import PageRoutes from "./PageRoutes";
 import { useSelector, useDispatch } from "react-redux";
 import { getAuthUsers, refreshUser } from "./store/actions";
 import Spinner from "./component/common/loading";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { login, isAuth } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.user_profile);
 
   useEffect(() => {
-    dispatch(refreshUser());
-    dispatch(getAuthUsers());
-  }, [dispatch]);
+    const tokenString = localStorage.getItem("token");
+    if (tokenString) {
+      dispatch(refreshUser());
+      dispatch(getAuthUsers());
+    } else {
+      dispatch(refreshUser());
+    }  
+  }, [dispatch, navigate]);
 
   // useEffect(() => {
   //   let current_url = window.location.href;

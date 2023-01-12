@@ -12,6 +12,7 @@ import {
   planAction,
   regTransaction,
   payWithCard,
+  verifyPaystack,
 } from "../../../../store/actions";
 import {
   ProceedPayCard,
@@ -21,15 +22,12 @@ import ModalComponent from "../../../ModalComponent";
 import { getCurrIcon } from "../../Accesssories";
 
 const PlanPayment = () => {
-  const [card, setCard] = useState("card");
   const [amount, setAmount] = useState();
-  const [debitPopup, setDebitPopup] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
-
+  const { reg_transaction } = useSelector((state) => state.paystack);
   const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
   const planStatus = singlePlan?.data.statusCode;
@@ -49,26 +47,32 @@ const PlanPayment = () => {
     }
   }, [plan]);
 
-  useEffect(() => {
-    if (amount) {
-      const formData = {
-        amount: parseFloat((amount * plan?.exchangeRate).toFixed(2)),
-        purposeOfPayment: "PLAN_CREATION",
-      };
-      dispatch(regTransaction(formData));
-    }
-    // setDebitPopup(true);
-  }, [amount]);
+  // useEffect(() => {
+  //   if (amount) {
+  //     const formData = {
+  //       amount: parseFloat((amount * plan?.exchangeRate).toFixed(2)),
+  //       purposeOfPayment: "PLAN_CREATION",
+  //     };
+  //     dispatch(regTransaction(formData));
+  //   }
+  //   // setDebitPopup(true);
+  // }, [amount]);
 
-  const handleClick = (e) => {
-    if (e.target.value === "card") {
-      setCard("card");
-    }
-  };
+  
 
 
   const onSuccess = (reference) => {
-    dispatch(payWithCard(parseInt(id), setSuccess));
+    dispatch(
+      verifyPaystack(
+        "PAYSTACK",
+        reg_transaction?.transactionReference,
+        dispatch,
+        parseInt(id),
+        setSuccess,
+        null,
+        "PAY_WITH_CARD"
+      )
+    );
   };
 
   const onClose = () => {
@@ -170,7 +174,7 @@ const PlanPayment = () => {
                       name="paymentType"
                       value="card"
                       defaultChecked
-                      onClick={handleClick}
+                      readOnly
                     />
                   </div>
                 </div>
