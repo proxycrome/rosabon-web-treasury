@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from '../auth/actionTypes';
 import {
     GET_PRODUCTS,
     GET_PRODUCTS_SUCCESS,
@@ -107,6 +108,10 @@ import {
           categories: null,
           categoriesError: action.payload
         };
+        break;
+
+      case LOGOUT_USER_SUCCESS:
+        state = initialState;
         break;
   
       default:

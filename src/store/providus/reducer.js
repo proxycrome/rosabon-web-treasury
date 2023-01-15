@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from '../auth/actionTypes';
 import {
   CREATE_DYNAMIC_ACC,
   CREATE_DYNAMIC_ACC_ERROR,
@@ -35,6 +36,10 @@ const providus = (state = initialState, action) => {
         dynamic_account: null,
         dynamic_acc_error: action.payload
       };
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:

@@ -250,7 +250,7 @@ const BankDetails = () => {
             <div>
               <div className="row">
                 <div className="col-md-6">
-                  <div className="row">
+                  <div className="row d-flex align-items-end">
                     <div className="col-7 ">
                       <label>Account Number</label>
                       <div className="input-group mb-4">
@@ -265,7 +265,7 @@ const BankDetails = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-5 ">
+                    <div className="col-5 mb-4">
                       <button
                         type="button"
                         onClick={handleVerifyAccountNo}

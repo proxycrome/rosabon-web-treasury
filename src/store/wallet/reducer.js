@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   CLEAR_TRANSACTIONS,
   CLEAR_WALLET_BALANCE,
@@ -493,6 +494,10 @@ const wallet = (state = initialState, action) => {
         totalRedeemedEarning: null,
         totalRedeemedEarningError: action.payload,
       };
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:

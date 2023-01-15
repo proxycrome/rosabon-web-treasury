@@ -43,7 +43,7 @@ const CreatePlan = () => {
                   (product) => product?.status === "ACTIVE"
                 ) &&
                 item?.products.length > 0 && (
-                  <div className=" pb-5" key={item.productCategoryId}>
+                  <div className="smaller pb-5" key={item.productCategoryId}>
                     <div className="">
                       <div className="d-flex align-items-center justify-content-between savins-drop">
                         <h5>{item.productCategoryName} </h5>
@@ -124,17 +124,22 @@ const Wrapper = styled.div`
   justify-content: center;
   padding-top: 60px;
   width: 100%;
-  padding-left: 60px;
+  // padding-left: 60px;
   margin: 0 auto;
   .image-holder {
     width: 95px;
     height: 93px;
   }
-  @media (max-width: 1200px) {
-    padding-left: 60px;
+  @media (min-width: 971px) {
+    // padding-left: 60px;
     padding-top: 60px;
+    .smaller {
+      margin: 0 auto;
+    }
   }
-  @media (max-width: 970px) and (min-width: 800px) {
+  @media (min-width: 800px) and (max-width: 970px) {
+    display: flex;
+    justify-content: center;
     .image-holder {
       display: none;
     }
@@ -150,11 +155,18 @@ const Wrapper = styled.div`
         margin-left: 30px !important;
       }
     }
+    .smaller {
+      border: 3px solid red;
+      margin: 0 auto;
+    }
   }
   @media (max-width: 800px) {
-    padding: 60px 5rem;
+    margin: 60px auto;
     .image-holder {
       display: none;
+    }
+    .smaller{
+      margin: 0 auto;
     }
     .choose-plan {
       width: 448px !important;
@@ -174,10 +186,15 @@ const Wrapper = styled.div`
   }
   @media (max-width: 600px) {
     padding: 60px 1rem;
+    margin: 0 auto;
     .choose-plan {
       width: 90% !important;
-      height: autopx;
+      height: auto;
       padding: 10px 5px;
+      margin-left: 1rem;
+    }
+    .smaller{
+      margin: 0 auto;
     }
   }
   .choose-plan {

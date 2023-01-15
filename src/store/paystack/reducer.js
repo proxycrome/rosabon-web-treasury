@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   INITIALIZE_PAYMENT,
   INITIALIZE_PAYMENT_SUCCESS,
@@ -92,6 +93,10 @@ const paystack = ( state=initialState, action ) => {
         reg_transaction: null,
         reg_transactionError: null,
       }
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:

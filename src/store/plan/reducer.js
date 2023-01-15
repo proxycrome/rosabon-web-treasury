@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   CREATE_PLAN,
   CREATE_PLAN_SUCCESS,
@@ -58,7 +59,7 @@ import {
   UPDATE_PLAN_ERROR,
   TEST_DEBIT_CARD,
   TEST_DEBIT_CARD_SUCCESS,
-  TEST_DEBIT_CARD_ERROR
+  TEST_DEBIT_CARD_ERROR,
 } from "./actionTypes";
 
 const initialState = {
@@ -462,16 +463,16 @@ const plan = (state = initialState, action) => {
         ...state,
         loading: false,
         plan_update: action.payload,
-        plan_update_err: null
+        plan_update_err: null,
       };
       break;
-    
+
     case UPDATE_PLAN_ERROR:
       state = {
         ...state,
         loading: false,
         plan_update: null,
-        plan_update_err: action.payload
+        plan_update_err: action.payload,
       };
       break;
 
@@ -484,15 +485,19 @@ const plan = (state = initialState, action) => {
       };
       break;
 
-      case TEST_DEBIT_CARD_ERROR:
-        state = {
-          ...state,
-          loading: false,
-          card_test_msg: null,
-          card_test_error: action.payload,
-        };
-        break;
+    case TEST_DEBIT_CARD_ERROR:
+      state = {
+        ...state,
+        loading: false,
+        card_test_msg: null,
+        card_test_error: action.payload,
+      };
+      break;
 
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
+      break;
+      
     default:
       state = { ...state };
       break;
