@@ -125,7 +125,10 @@ const ChangePassword = () => {
   }, [token]);
 
   useEffect(() => {
-    setErrors(validatePassword(formData));
+    const { oldPassword, newPassword, cNewPassword } = formData;
+    if (oldPassword && newPassword && cNewPassword) {
+      setErrors(validatePassword(formData));
+    }
   }, [formData]);
 
   useEffect(() => {
@@ -289,7 +292,7 @@ const ChangePassword = () => {
           <div className="footer-body">
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
-                <button type="submit" className="blue-btn">
+                <button type="submit" className="blue-btn" disabled={Object.keys(errors).length !== 0}>
                   {loading ? "Saving..." : "Save"}
                 </button>
               </div>

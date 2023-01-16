@@ -296,7 +296,7 @@ const ChangePassword = () => {
           <div className="footer-body">
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
-                <button type="submit" className="blue-btn">
+                <button type="submit" className="blue-btn" disabled={Object.keys(errors).length !== 0}>
                   {loading ? "Sending..." : "Save"}
                 </button>
               </div>
