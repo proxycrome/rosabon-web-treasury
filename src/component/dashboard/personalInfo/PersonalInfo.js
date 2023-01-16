@@ -20,10 +20,12 @@ import {
   CLEAR_MESSAGES,
 } from "../../../store/profile/actionTypes";
 import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
+import Spinner from "../../common/loading";
+import { useNavigate } from "react-router-dom";
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [, setToken] = useState("");
   // const [showEditProf, setShowEditProf] = useState(true);
   const [showEditCont, setShowEditCont] = useState(true);
@@ -31,8 +33,15 @@ const PersonalInfo = () => {
   const [showEditNOK, setShowEditNOK] = useState(true);
   const [validateInfo, setValldateInfo] = useState(null);
 
-  const { users, validateEmailOtp, countries, states, showEmailOtpModal, otp } =
-    useSelector((state) => state.user_profile);
+  const {
+    users,
+    validateEmailOtp,
+    countries,
+    states,
+    showEmailOtpModal,
+    otp,
+    loading: profileLoading,
+  } = useSelector((state) => state.user_profile);
 
   const {
     loading,
@@ -63,9 +72,12 @@ const PersonalInfo = () => {
     setToken(otp);
   };
 
-  const data = {
+  const [formData, setformData] = useState({
     houseNoAddress: "",
-    state: "",
+    state: users?.creationSource === "BACKEND"
+    ? users?.individualUser?.address?.state ||
+      users?.individualUser?.state
+    : users?.individualUser?.address?.state,
     city: "",
     country: "",
     stateId: "",
@@ -79,9 +91,7 @@ const PersonalInfo = () => {
     name: "",
     nokAddress: "",
     phone: "",
-  };
-
-  const [formData, setformData] = useState(data);
+  });
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -133,11 +143,16 @@ const PersonalInfo = () => {
         houseNoAddress: houseNoAddress
           ? houseNoAddress
           : users?.individualUser?.address?.houseNoAddress,
-        state: state ? state : users?.individualUser?.address?.state,
+        state: state
+          ? state
+          : users?.creationSource === "BACKEND"
+          ? users?.individualUser?.state
+          : users?.individualUser?.address?.state,
         country: country
           ? country
           : users?.creationSource === "BACKEND"
-          ? users?.individualUser?.coutryOfResidence?.name
+          ? users?.individualUser?.address?.country ||
+            users?.individualUser?.coutryOfResidence?.name
           : users?.individualUser?.address?.country,
         city: city ? city : users?.individualUser?.address?.city,
       },
@@ -259,563 +274,573 @@ const PersonalInfo = () => {
 
   return (
     <div>
-      <form
-        autoComplete="off"
-        onSubmit={(e) => {
-          handleSubmit(e);
-          handleInfoSubmit(e);
-        }}
-      >
-        <WrapperBody>
-          <div className="container-fluid">
-            <div>
-              <div className="row">
-                <div className="d-flex justify-content-between mt-2">
-                  <h4>Personal Details</h4>
-                  <div>
-                    {/* {showEditProf ? (
+      {users && !profileLoading ? (
+        <form
+          autoComplete="off"
+          onSubmit={(e) => {
+            handleSubmit(e);
+            handleInfoSubmit(e);
+          }}
+        >
+          <WrapperBody>
+            <div className="container-fluid">
+              <div>
+                <div className="row">
+                  <div className="d-flex justify-content-between mt-2">
+                    <h4>Personal Details</h4>
+                    <div>
+                      {/* {showEditProf ? (
                       <button onClick={toggleProf} disabled>Edit</button>
                     ) : (
                       <button className="grey-button" onClick={toggleProf}>
                         Save
                       </button>
                     )} */}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-md-6 col-lg-4">
-                  <label>First Name</label>
-                  <div className="input-group mb-4">
-                    <input
-                      className="form-control"
-                      type="text"
-                      value={users?.individualUser?.firstName}
-                      disabled
-                    />
+                <div className="row">
+                  <div className="col-md-6 col-lg-4">
+                    <label>First Name</label>
+                    <div className="input-group mb-4">
+                      <input
+                        className="form-control"
+                        type="text"
+                        value={users?.individualUser?.firstName}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6 col-lg-4">
+                    <label>Middle Name</label>
+                    <div className="input-group mb-4">
+                      <input
+                        className="form-control"
+                        type="text"
+                        defaultValue={users?.individualUser?.middleName}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-8 col-lg-4 pb-md-4">
+                    <label>Last Name</label>
+                    <div className="input-group mb-4">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={users?.individualUser?.lastName}
+                        disabled
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="col-md-6 col-lg-4">
-                  <label>Middle Name</label>
-                  <div className="input-group mb-4">
-                    <input
-                      className="form-control"
-                      type="text"
-                      defaultValue={users?.individualUser?.middleName}
-                      disabled
-                    />
+                <div className="row">
+                  <div className="col-md-6 col-lg-4">
+                    <label>Gender</label>
+                    <div className="input-group mb-4">
+                      <input
+                        type="text"
+                        className="form-control text-capitalize"
+                        value={users?.individualUser?.gender?.gender}
+                        disabled
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="col-md-8 col-lg-4 pb-md-4">
-                  <label>Last Name</label>
-                  <div className="input-group mb-4">
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={users?.individualUser?.lastName}
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-6 col-lg-4">
-                  <label>Gender</label>
-                  <div className="input-group mb-4">
-                    <input
-                      type="text"
-                      className="form-control text-capitalize"
-                      value={users?.individualUser?.gender?.gender}
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-4">
-                  <label>Date of Birth</label>
-                  <div className="input-group mb-4">
-                    <input
-                      className="form-control"
-                      placeholder="dd-mm-yyyy"
-                      type="text"
-                      value={users?.individualUser?.dateOfBirth}
-                      disabled
-                    />
-                    {/* {showEditProf && (
+                  <div className="col-md-6 col-lg-4">
+                    <label>Date of Birth</label>
+                    <div className="input-group mb-4">
+                      <input
+                        className="form-control"
+                        placeholder="dd-mm-yyyy"
+                        type="text"
+                        value={users?.individualUser?.dateOfBirth}
+                        disabled
+                      />
+                      {/* {showEditProf && (
                       <span className="input-font-awe">
                         <i className="fa-solid fa-calendar"></i>
                       </span>
                     )} */}
+                    </div>
+                  </div>
+                  <div className="col-md-8 col-lg-4 pb-md-4 mb-4">
+                    <label>Primary phone number</label>
+                    <div className="input-group">
+                      <input
+                        type="tel"
+                        className="form-control"
+                        value={users?.phone}
+                        disabled
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="col-md-8 col-lg-4 pb-md-4 mb-4">
-                  <label>Primary phone number</label>
-                  <div className="input-group">
-                    <input
-                      type="tel"
-                      className="form-control"
-                      value={users?.phone}
-                      disabled
-                    />
+                <div className="row">
+                  <div className="col-md-8 ">
+                    <label>Contact Person Email Address</label>
+                    <div className="input-group mb-4">
+                      <input
+                        className="form-control"
+                        type="text"
+                        value={users?.email}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-4 ps-2 mb-4">
+                    <label>BVN</label>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={users?.individualUser?.bvn}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-lg-4 ">
+                    <label>Customer ID Number</label>
+                    <div className="input-group mb-4">
+                      <input
+                        className="form-control"
+                        placeholder="Customer ID Number"
+                        type="text"
+                        value={users?.id}
+                        disabled
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-md-8 ">
-                  <label>Contact Person Email Address</label>
-                  <div className="input-group mb-4">
-                    <input
-                      className="form-control"
-                      type="text"
-                      value={users?.email}
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div className="col-md-4 ps-2 mb-4">
-                  <label>BVN</label>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={users?.individualUser?.bvn}
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-lg-4 ">
-                  <label>Customer ID Number</label>
-                  <div className="input-group mb-4">
-                    <input
-                      className="form-control"
-                      placeholder="Customer ID Number"
-                      type="text"
-                      value={users?.id}
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="row">
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="pt-5">Contact Details</h4>
-                  {showEditCont ? (
-                    <button type="button" onClick={handleSendOtp}>
-                      Edit
-                    </button>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        className="grey-button"
-                        onClick={(e) => {
-                          toggleCont();
-                          handleSubmit(e);
-                        }}
-                      >
-                        Save
-                      </button>
-                    </>
-                  )}
-                  <ModalComponent
-                    show={showEmailOtpModal}
-                    size={"md"}
-                    handleClose={handleOTPModalClose}
-                  >
-                    <OTPVerify
-                      show={showEmailOtpModal}
-                      handleClose={handleOTPModalClose}
-                      emailOtp={true}
-                      updateOtp={(otp) => createOtp(otp)}
-                      toggleCont={toggleCont}
-                      otpData={otp?.data}
-                    />
-                  </ModalComponent>
-                </div>
-              </div>
-              {contactMsg && (
-                <Alert color="success" className="text-center">
-                  Contact Details Updated Successfully
-                </Alert>
-              )}
               <div>
                 <div className="row">
-                  <div className="col-md-8">
-                    <div className="col-12 mb-5">
-                      <label>Secondary Phone Number</label>
-                      <div className="d-md-flex align-items-end">
-                        <div className="input-group" id="phone">
-                          <PhoneInput
-                            country={"ng"}
-                            inputClass={`form-control phone-input ${
-                              showEditCont ? "disable" : ""
-                            }`}
-                            buttonClass={`phone-select-field ${
-                              showEditCont ? "disable" : ""
-                            }`}
-                            name="secondaryPhoneNumber"
-                            value={formData.secondaryPhoneNumber}
-                            // countryCodeEditable={false}
-                            disabled={
-                              showEditCont ||
-                              validateInfo?.data?.secondaryPhoneVerified
-                            }
-                            onChange={(value) => handlePhoneValueChange(value)}
-                            disableCountryCode={true}
-                            placeholder={`${
-                              users?.individualUser?.secondaryPhoneNumber?.startsWith(
-                                "+234"
-                              )
-                                ? users?.individualUser?.secondaryPhoneNumber.replace(
-                                    /\+234/,
-                                    "0"
-                                  )
-                                : users?.individualUser?.secondaryPhoneNumber ??
-                                  users?.phone ??
-                                  "Secondary phone number"
-                            }`}
-                            disableDropdown
-                            masks={{ ng: ".... ... ...." }}
-                          />
-                        </div>
-                        <div className="m-2">
-                          <button
-                            className={
-                              validateInfo?.data?.secondaryPhoneVerified
-                                ? "grey-button"
-                                : "profile_vify_btn"
-                            }
-                            disabled={
-                              showEditCont ||
-                              validateInfo?.data?.secondaryPhoneVerified
-                            }
-                            onClick={handleVerify}
-                          >
-                            Verify
-                          </button>
-                        </div>
-                      </div>
-
-                      <UncontrolledTooltip placement="bottom" target="phone">
-                        Please provide your most active phone number here in
-                        case this is different from your primary phone number
-                      </UncontrolledTooltip>
-                    </div>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h4 className="pt-5">Contact Details</h4>
+                    {showEditCont ? (
+                      <button type="button" onClick={handleSendOtp}>
+                        Edit
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="grey-button"
+                          onClick={(e) => {
+                            toggleCont();
+                            handleSubmit(e);
+                          }}
+                        >
+                          Save
+                        </button>
+                      </>
+                    )}
                     <ModalComponent
-                      show={showPhoneOtpModal}
+                      show={showEmailOtpModal}
                       size={"md"}
                       handleClose={handleOTPModalClose}
                     >
                       <OTPVerify
-                        show={showPhoneOtpModal}
+                        show={showEmailOtpModal}
                         handleClose={handleOTPModalClose}
-                        otpData={phoneMsg?.data?.otp}
-                        secondPhone={formData.secondaryPhoneNumber}
-                        phoneData={(data) => handlePhoneData(data)}
+                        emailOtp={true}
+                        updateOtp={(otp) => createOtp(otp)}
+                        toggleCont={toggleCont}
+                        otpData={otp?.data}
                       />
                     </ModalComponent>
                   </div>
-                  <div className="col-md-4">
-                    <label>Country of Residence</label>
-                    <div className="input-group mb-4">
-                      <select
-                        className="form-select form-select-md mb-3"
-                        aria-label=".form-select-md"
-                        disabled={showEditCont}
-                        onChange={handleChange}
-                        name="countryId"
-                        value={
-                          formData?.countryId ||
-                          users?.individualUser?.coutryOfResidence?.id
-                        }
-                      >
-                        <option value={0}></option>
-                        {countries?.map((country) => (
-                          <option key={country.id} value={country.id}>
-                            {country.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
                 </div>
-                <div className="row">
-                  <div className="col-md-6 col-lg-4">
-                    <label>State</label>
-                    <select
-                      className="form-select form-select-md mb-4"
-                      aria-label=".form-select-md"
-                      disabled={showEditCont}
-                      onChange={handleChange}
-                      value={
-                        formData?.state || users?.individualUser?.address?.state
-                      }
-                      name="state"
-                    >
-                      <option value="">Select State...</option>
-                      {states?.map((state) => (
-                        <option key={state.id} value={state.name}>
-                          {state.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="col-md-6 col-lg-4">
-                    <label>City</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.address?.city || "City"
-                        }
-                        type="text"
-                        name="city"
-                        value={formData?.city}
-                        onChange={handleChange}
-                        disabled={showEditCont}
-                      />
+                {contactMsg && (
+                  <Alert color="success" className="text-center">
+                    Contact Details Updated Successfully
+                  </Alert>
+                )}
+                <div>
+                  <div className="row">
+                    <div className="col-md-8">
+                      <div className="col-12 mb-5">
+                        <label>Secondary Phone Number</label>
+                        <div className="d-md-flex align-items-end">
+                          <div className="input-group" id="phone">
+                            <PhoneInput
+                              country={"ng"}
+                              inputClass={`form-control phone-input ${
+                                showEditCont ? "disable" : ""
+                              }`}
+                              buttonClass={`phone-select-field ${
+                                showEditCont ? "disable" : ""
+                              }`}
+                              name="secondaryPhoneNumber"
+                              value={formData.secondaryPhoneNumber}
+                              // countryCodeEditable={false}
+                              disabled={
+                                showEditCont ||
+                                validateInfo?.data?.secondaryPhoneVerified
+                              }
+                              onChange={(value) =>
+                                handlePhoneValueChange(value)
+                              }
+                              disableCountryCode={true}
+                              placeholder={`${
+                                users?.individualUser?.secondaryPhoneNumber?.startsWith(
+                                  "+234"
+                                )
+                                  ? users?.individualUser?.secondaryPhoneNumber.replace(
+                                      /\+234/,
+                                      "0"
+                                    )
+                                  : users?.individualUser
+                                      ?.secondaryPhoneNumber ??
+                                    users?.phone ??
+                                    "Secondary phone number"
+                              }`}
+                              disableDropdown
+                              masks={{ ng: ".... ... ...." }}
+                            />
+                          </div>
+                          <div className="m-2">
+                            <button
+                              className={
+                                validateInfo?.data?.secondaryPhoneVerified
+                                  ? "grey-button"
+                                  : "profile_vify_btn"
+                              }
+                              disabled={
+                                showEditCont ||
+                                validateInfo?.data?.secondaryPhoneVerified
+                              }
+                              onClick={handleVerify}
+                            >
+                              Verify
+                            </button>
+                          </div>
+                        </div>
+
+                        <UncontrolledTooltip placement="bottom" target="phone">
+                          Please provide your most active phone number here in
+                          case this is different from your primary phone number
+                        </UncontrolledTooltip>
+                      </div>
+                      <ModalComponent
+                        show={showPhoneOtpModal}
+                        size={"md"}
+                        handleClose={handleOTPModalClose}
+                      >
+                        <OTPVerify
+                          show={showPhoneOtpModal}
+                          handleClose={handleOTPModalClose}
+                          otpData={phoneMsg?.data?.otp}
+                          secondPhone={formData.secondaryPhoneNumber}
+                          phoneData={(data) => handlePhoneData(data)}
+                        />
+                      </ModalComponent>
+                    </div>
+                    <div className="col-md-4">
+                      <label>Country of Residence</label>
+                      <div className="input-group mb-4">
+                        <select
+                          className="form-select form-select-md mb-3"
+                          aria-label=".form-select-md"
+                          disabled={showEditCont}
+                          onChange={handleChange}
+                          name="countryId"
+                          value={
+                            formData?.countryId ||
+                            users?.individualUser?.coutryOfResidence?.id
+                          }
+                        >
+                          <option value={0}></option>
+                          {countries?.map((country) => (
+                            <option key={country.id} value={country.id}>
+                              {country.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
-                  <div className="col-md-6 col-lg-4 pb-md-4">
-                    <label>Nationality</label>
-                    <div className="input-group">
+                  <div className="row">
+                    <div className="col-md-6 col-lg-4">
+                      <label>State</label>
                       <select
                         className="form-select form-select-md mb-4"
                         aria-label=".form-select-md"
-                        name="country"
-                        value={
-                          formData?.country ||
-                          users?.creationSource === "BACKEND"
-                            ? users?.individualUser?.coutryOfResidence?.name
-                            : users?.individualUser?.address?.country
-                        }
-                        onChange={handleChange}
                         disabled={showEditCont}
+                        onChange={handleChange}
+                        value={
+                          formData?.state
+                        }
+                        name="state"
                       >
-                        <option value=""></option>
-                        {countries?.map((country) => (
-                          <option key={country.id} value={country.name}>
-                            {country.name}
+                        <option value="">Select State...</option>
+                        {states?.map((state) => (
+                          <option key={state.id} value={state.name}>
+                            {state.name}
                           </option>
                         ))}
                       </select>
                     </div>
+                    <div className="col-md-6 col-lg-4">
+                      <label>City</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.address?.city || "City"
+                          }
+                          type="text"
+                          name="city"
+                          value={formData?.city}
+                          onChange={handleChange}
+                          disabled={showEditCont}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6 col-lg-4 pb-md-4">
+                      <label>Nationality</label>
+                      <div className="input-group">
+                        <select
+                          className="form-select form-select-md mb-4"
+                          aria-label=".form-select-md"
+                          name="country"
+                          value={
+                            formData?.country ||
+                            users?.creationSource === "BACKEND"
+                              ? users?.individualUser?.address?.country ||
+                                users?.individualUser?.coutryOfResidence?.name
+                              : users?.individualUser?.address?.country
+                          }
+                          onChange={handleChange}
+                          disabled={showEditCont}
+                        >
+                          <option value=""></option>
+                          {countries?.map((country) => (
+                            <option key={country.id} value={country.name}>
+                              {country.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className=" ">
-                    <label>Address</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.address?.houseNoAddress ||
-                          "Contact Address"
-                        }
-                        type="text"
-                        name="houseNoAddress"
-                        value={formData?.houseNoAddress}
-                        onChange={handleChange}
-                        disabled={showEditCont}
-                      />
+                  <div className="row">
+                    <div className=" ">
+                      <label>Address</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.address?.houseNoAddress ||
+                            "Contact Address"
+                          }
+                          type="text"
+                          name="houseNoAddress"
+                          value={formData?.houseNoAddress}
+                          onChange={handleChange}
+                          disabled={showEditCont}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <div className="row">
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h4 className="pt-5">Employment Details</h4>
-                    {showEditEmpoy ? (
-                      <button onClick={toggleEmploy}>Edit</button>
-                    ) : (
-                      <button className="grey-button" onClick={toggleEmploy}>
-                        Save
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {infoSuccess && (
-                  <Alert color="success" className="text-center">
-                    Employment Details Updated Successfully
-                  </Alert>
-                )}
-                <div className="row">
-                  <div className="col-md-4 ">
-                    <label>Occupation</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.employmentDetail?.occupation ||
-                          "Occupation"
-                        }
-                        type="text"
-                        name="occupation"
-                        value={formData?.occupation}
-                        onChange={handleChange}
-                        disabled={showEditEmpoy}
-                      />
+                <div>
+                  <div className="row">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <h4 className="pt-5">Employment Details</h4>
+                      {showEditEmpoy ? (
+                        <button onClick={toggleEmploy}>Edit</button>
+                      ) : (
+                        <button className="grey-button" onClick={toggleEmploy}>
+                          Save
+                        </button>
+                      )}
                     </div>
                   </div>
-                  <div className="col-md-4 ">
-                    <label>Employer's name</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.employmentDetail
-                            ?.employerName || "Employer's name"
-                        }
-                        type="text"
-                        name="employerName"
-                        value={formData?.employerName}
-                        onChange={handleChange}
-                        disabled={showEditEmpoy}
-                      />
+                  {infoSuccess && (
+                    <Alert color="success" className="text-center">
+                      Employment Details Updated Successfully
+                    </Alert>
+                  )}
+                  <div className="row">
+                    <div className="col-md-4 ">
+                      <label>Occupation</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.employmentDetail
+                              ?.occupation || "Occupation"
+                          }
+                          type="text"
+                          name="occupation"
+                          value={formData?.occupation}
+                          onChange={handleChange}
+                          disabled={showEditEmpoy}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-4 ">
+                      <label>Employer's name</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.employmentDetail
+                              ?.employerName || "Employer's name"
+                          }
+                          type="text"
+                          name="employerName"
+                          value={formData?.employerName}
+                          onChange={handleChange}
+                          disabled={showEditEmpoy}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className=" ">
-                    <label>Employers Address</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.employmentDetail
-                            ?.employerAddress || "Employers Address"
-                        }
-                        type="text"
-                        name="employerAddress"
-                        value={formData?.employerAddress}
-                        onChange={handleChange}
-                        disabled={showEditEmpoy}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="row">
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h4 className="pt-5">Next Of kin details</h4>
-                    {showEditNOK ? (
-                      <button onClick={toggleNOK}>Edit</button>
-                    ) : (
-                      <button className="grey-button" onClick={toggleNOK}>
-                        Save
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {infoSuccess && (
-                  <Alert color="success" className="text-center">
-                    Next of Kin Details Updated Successfully
-                  </Alert>
-                )}
-                <div className="row">
-                  <div className="col-md-4 ">
-                    <label>Next of Kin Name</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.nokDetail?.name ||
-                          "Next of Kin Name"
-                        }
-                        type="text"
-                        name="name"
-                        value={formData?.name}
-                        onChange={handleChange}
-                        disabled={showEditNOK}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-8 ">
-                    <label>Next of Kin Email</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.nokDetail?.email ||
-                          "Next of Kin Email"
-                        }
-                        type="text"
-                        name="email"
-                        value={formData?.email}
-                        onChange={handleChange}
-                        disabled={showEditNOK}
-                      />
+                  <div className="row">
+                    <div className=" ">
+                      <label>Employers Address</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.employmentDetail
+                              ?.employerAddress || "Employers Address"
+                          }
+                          type="text"
+                          name="employerAddress"
+                          value={formData?.employerAddress}
+                          onChange={handleChange}
+                          disabled={showEditEmpoy}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="row">
-                  <div className=" ">
-                    <label>Next of Kin Address</label>
-                    <div className="input-group mb-4">
-                      <input
-                        className="form-control"
-                        placeholder={
-                          users?.individualUser?.nokDetail?.address ||
-                          "Next of Kin Address"
-                        }
-                        type="text"
-                        name="nokAddress"
-                        value={formData?.nokAddress}
-                        onChange={handleChange}
-                        disabled={showEditNOK}
-                      />
+                <div>
+                  <div className="row">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <h4 className="pt-5">Next Of kin details</h4>
+                      {showEditNOK ? (
+                        <button onClick={toggleNOK}>Edit</button>
+                      ) : (
+                        <button className="grey-button" onClick={toggleNOK}>
+                          Save
+                        </button>
+                      )}
                     </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-8 ">
-                    <label>Next of kin phone number</label>
-                    <div className="input-group">
-                      <PhoneInput
-                        country={"ng"}
-                        inputClass={`form-control phone-input ${
-                          showEditNOK ? "disable" : ""
-                        }`}
-                        buttonClass={`phone-select-field ${
-                          showEditNOK ? "disable" : ""
-                        }`}
-                        name="phone"
-                        value={formData.phone}
-                        // countryCodeEditable={false}
-                        disabled={showEditNOK}
-                        onChange={(value) => handleNokPhoneValueChange(value)}
-                        disableCountryCode={true}
-                        placeholder={
-                          users?.individualUser?.nokDetail?.phone ||
-                          "Next of kin phone number"
-                        }
-                        disableDropdown
-                        masks={{ ng: ".... ... ...." }}
-                      />
+                  {infoSuccess && (
+                    <Alert color="success" className="text-center">
+                      Next of Kin Details Updated Successfully
+                    </Alert>
+                  )}
+                  <div className="row">
+                    <div className="col-md-4 ">
+                      <label>Next of Kin Name</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.nokDetail?.name ||
+                            "Next of Kin Name"
+                          }
+                          type="text"
+                          name="name"
+                          value={formData?.name}
+                          onChange={handleChange}
+                          disabled={showEditNOK}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-8 ">
+                      <label>Next of Kin Email</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.nokDetail?.email ||
+                            "Next of Kin Email"
+                          }
+                          type="text"
+                          name="email"
+                          value={formData?.email}
+                          onChange={handleChange}
+                          disabled={showEditNOK}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className=" ">
+                      <label>Next of Kin Address</label>
+                      <div className="input-group mb-4">
+                        <input
+                          className="form-control"
+                          placeholder={
+                            users?.individualUser?.nokDetail?.address ||
+                            "Next of Kin Address"
+                          }
+                          type="text"
+                          name="nokAddress"
+                          value={formData?.nokAddress}
+                          onChange={handleChange}
+                          disabled={showEditNOK}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-8 ">
+                      <label>Next of kin phone number</label>
+                      <div className="input-group">
+                        <PhoneInput
+                          country={"ng"}
+                          inputClass={`form-control phone-input ${
+                            showEditNOK ? "disable" : ""
+                          }`}
+                          buttonClass={`phone-select-field ${
+                            showEditNOK ? "disable" : ""
+                          }`}
+                          name="phone"
+                          value={formData.phone}
+                          // countryCodeEditable={false}
+                          disabled={showEditNOK}
+                          onChange={(value) => handleNokPhoneValueChange(value)}
+                          disableCountryCode={true}
+                          placeholder={
+                            users?.individualUser?.nokDetail?.phone ||
+                            "Next of kin phone number"
+                          }
+                          disableDropdown
+                          masks={{ ng: ".... ... ...." }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </WrapperBody>
-        <WrapperFooter>
-          <div className="footer-body">
-            <div className="d-flex align-items-center justify-content-end footer-content">
-              <div>
-                <button type="submit" className="blue-btn">
-                  {loading ? "Loading..." : "Save"}
-                </button>
+          </WrapperBody>
+          <WrapperFooter>
+            <div className="footer-body">
+              <div className="d-flex align-items-center justify-content-end footer-content">
+                <div>
+                  <button type="submit" className="blue-btn">
+                    {loading ? "Loading..." : "Save"}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </WrapperFooter>
-      </form>
+          </WrapperFooter>
+        </form>
+      ) : (
+        <div className="vh-100 w-100">
+          <Spinner />
+        </div>
+      )}
     </div>
   );
 };

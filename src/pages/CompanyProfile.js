@@ -10,7 +10,7 @@ import { ProfileNavBar } from "../component/dashboard/ProfileNavbar";
 // import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
-const CompanyProfile = ({isAssisted}) => {
+const CompanyProfile = ({ isAssisted }) => {
   // const navigate = useNavigate();
   const [tabs, setTabs] = useState("company");
 
@@ -30,7 +30,10 @@ const CompanyProfile = ({isAssisted}) => {
       <div className="container-fluid">
         <div className="row pt-5">
           <div className="col-md-3 shadow-sm style-log">
-            <ProfileTabs handleChange={(tabName) => setTabs(tabName)} isAssisted={isAssisted} />
+            <ProfileTabs
+              handleChange={(tabName) => setTabs(tabName)}
+              isAssisted={isAssisted}
+            />
           </div>
           {/* <div className="horiz-line col-md-1"></div> */}
           <div className="col-md-9">
@@ -56,7 +59,7 @@ export default CompanyProfile;
 
 const WrapperBody = styled.div`
   width: 100%;
-  
+
   .horiz-line {
     border-right: 0.7px solid #e0e0e0;
   }

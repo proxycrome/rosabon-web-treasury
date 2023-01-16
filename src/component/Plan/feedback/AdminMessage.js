@@ -59,7 +59,7 @@ const AdminMessage = () => {
               <h4 className="title">Title </h4>
               <p className="p-0 m-0">{ticket?.title} </p>
               {messages.map((item) => (
-                <div key={item.id}>
+                <div className="msg-box" key={item.id}>
                   {item.replyType === "USER_REPLY" ? (
                     <div className="user-box mt-4">
                       <h4 className="text-info">Your Message</h4>
@@ -79,10 +79,10 @@ const AdminMessage = () => {
             <WrapperFooter className="">
               <form
                 onSubmit={handleSubmit}
-                className="d-flex align-items-center justify-content-between msg"
+                className="d-sm-flex align-items-center justify-content-between msg"
               >
                 <div className="input-group">
-                  <Input
+                  <input
                     type="text"
                     className="form-control"
                     name="reply"
@@ -92,9 +92,9 @@ const AdminMessage = () => {
                     onChange={(e) => setReply(e.target.value)}
                   />
                 </div>
-                <div className="ml-2">
+                <div className="small-btn ml-2">
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary blue-btn"
                     type="submit"
                     disabled={reply === ""}
                   >
@@ -139,47 +139,7 @@ const Wrapper = styled.div`
   padding-top: 50px;
   padding-bottom: 50px;
   overflow-y: auto;
-  @media (max-width: 900px) {
-    padding-right: 20%;
-    input {
-      width: 100%;
-    }
-  }
-  @media (max-width: 650px) {
-    width: 100%;
-    padding-right: 50px;
-    padding-left: 50px;
-  }
-  .select-field {
-    font-family: "Montserrat";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 15px;
-    letter-spacing: -0.01em;
-    color: #242424;
-    padding: 15px;
-  }
-  h4 {
-    font-family: "Montserrat";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 17px;
-    line-height: 150%;
-    letter-spacing: -0.15px;
-    color: #242424;
-    /* padding-top: 50px; */
-    /* padding-bottom: 20px; */
-  }
-  p {
-    font-family: "Montserrat";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 161.9%;
-    letter-spacing: -0.01em;
-    color: #242424;
-  }
+
   .message {
     margin-left: 250px;
     width: 300px;
@@ -220,13 +180,96 @@ const Wrapper = styled.div`
       justify-content: end;
     }
   }
+
+  @media (max-width: 900px) {
+    padding-right: 20%;
+    input {
+      width: 100%;
+    }
+  }
+  @media (max-width: 650px) {
+    width: 100%;
+    padding-right: 50px;
+    padding-left: 20px;
+    .message {
+      margin-left: 1.5rem;
+      width: 80vw;
+      padding: 20px 20px 5px 20px;
+      background: #87CEEB;
+      border-radius: 10px 10px 0px 10px;
+      p {
+        color: #ffffff;
+        font-weight: 600;
+      }
+      h4 {
+        color: #ffffff;
+      }
+      small {
+        color: #ffffff;
+        font-size: 10px;
+        display: flex;
+        justify-content: end;
+      }
+    }
+    .user-box {
+      background: #111e6c;
+      padding: 20px 20px 5px 20px;
+      border-radius: 10px 10px 10px 0px;
+      width: 80vw;
+      p {
+        color: #ffffff;
+        font-weight: 600;
+      }
+      h4 {
+        color: #ffffff;
+      }
+      small {
+        color: #ffffff;
+        font-size: 10px;
+        display: flex;
+        justify-content: end;
+      }
+    }
+  }
+
+  .select-field {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #242424;
+    padding: 15px;
+  }
+  h4 {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 150%;
+    letter-spacing: -0.15px;
+    color: #242424;
+    /* padding-top: 50px; */
+    /* padding-bottom: 20px; */
+  }
+  p {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 161.9%;
+    letter-spacing: -0.01em;
+    color: #242424;
+  }
+  
 `;
 
 const WrapperFooter = styled.div`
   padding-right: 40%;
   padding-left: 50px;
   padding-top: 20px;
-  width: 95%;
+  width: 100%;
   .grey_btn {
     font-size: 14px;
     width: 120px;
@@ -235,6 +278,18 @@ const WrapperFooter = styled.div`
     border-radius: 15px;
     color: #111e6c;
     margin-right: 2rem;
+  }
+
+  @media (max-width: 650px) {
+    height: 150px;
+    padding-left: 20px;
+    padding-right: 30px;
+    .small-btn {
+      margin: 20px 0;
+    }
+    .blue-btn {
+      width: 100%;
+    }
   }
   input {
     width: 100%;
@@ -246,5 +301,9 @@ const WrapperFooter = styled.div`
   }
   .msg {
     gap: 19px;
+  }
+
+  form {
+    width: 100%;
   }
 `;

@@ -13,11 +13,12 @@ import {
   regTransactionError,
   verifyPaystackSuccess,
   verifyPaystackError,
+  clearTransRef,
 } from "./actions";
 
 import { createPlan } from "../actions";
 
-import { planAction, updatePlan } from "../plan/actions";
+import { payWithCard, planAction, updatePlan } from "../plan/actions";
 
 import {
   initializePaymentService,
@@ -56,11 +57,14 @@ function* verifyPaystack({
       transactionRef
     );
     yield put(verifyPaystackSuccess(response.data));
+    dispatch(clearTransRef());
     if (response) {
       if (action === "TOP_UP") {
         dispatch(planAction(form, setShow, null, dispatch, setDebitPopup));
       } else if (action === "PLAN_CREATION") {
-        dispatch(updatePlan(form, form?.planId, null, "createPlan", setShow, setDebitPopup))
+        dispatch(updatePlan(form, form?.planId, null, "createPlan", setShow, setDebitPopup));
+      } else if (action === "PAY_WITH_CARD") {
+        dispatch(payWithCard(form, setShow));
       } else {
         dispatch(createPlan(form, setShow));
       }
@@ -80,9 +84,9 @@ function* regTransaction({ payload: { formData, setDebitPopup, isTopup } }) {
   try {
     const response = yield call(registerTransService, formData);
     yield put(regTransactionSuccess(response.data));
-    if (response && isTopup) {
-      setDebitPopup(true);
-    }
+    // if (response && isTopup) {
+    //   setDebitPopup(true);
+    // }
   } catch (error) {
     console.log(error?.response?.data);
     yield put(regTransactionError(error?.response?.data));

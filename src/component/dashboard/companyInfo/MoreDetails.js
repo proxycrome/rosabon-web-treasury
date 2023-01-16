@@ -548,7 +548,7 @@ const MoreDetails = () => {
                                             <br />
                                             director's details
                                           </p>
-                                          <div className="pt-5 ">
+                                          <div className="pt-5 d-flex">
                                             <button
                                               type="button"
                                               className="btn grey_btn"

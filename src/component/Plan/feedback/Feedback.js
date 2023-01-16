@@ -38,22 +38,11 @@ const Feedback = () => {
 
 
   useEffect(() => {
-    
     dispatch(getTicketCategories());
   }, [])
 
   const [show, setShow] = useState(false);
 
-  // const handleClick = (value) => {
-  //   if (value === "transter") {
-  //     setIsWithDraw(true);
-  //     setIsTransfer(false);
-  //   }
-  //   if (value === "withdraw") {
-  //     setIsWithDraw(false);
-  //     setIsTransfer(true);
-  //   }
-  // };
 
   const handleChange = (e) => {
     if(e.target.name === "categoryId") {

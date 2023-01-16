@@ -8,6 +8,7 @@ import {
   VERIFY_PAYSTACK,
   VERIFY_PAYSTACK_SUCCESS,
   VERIFY_PAYSTACK_ERROR,
+  CLEAR_TRANS_REF,
 } from "./actionTypes";
 
 export const initPayment = (formData) => {
@@ -51,6 +52,12 @@ export const regTransactionError = (error) => {
     payload: error,
   };
 };
+
+export const clearTransRef = () => {
+  return {
+    type: CLEAR_TRANS_REF,
+  }
+}
 
 export const verifyPaystack = (
   paymentGateway,

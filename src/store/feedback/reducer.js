@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
     POST_FEEDBACK,
     POST_FEEDBACK_SUCCESS,
@@ -203,6 +204,10 @@ import {
           categories: null,
           categories_err: action.payload
         };
+        break;
+
+      case LOGOUT_USER_SUCCESS:
+        state = initialState;
         break;
   
       default:

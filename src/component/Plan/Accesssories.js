@@ -669,6 +669,7 @@ export const RolloverSummary = ({
   setEndDate,
   setFormData,
   formData,
+  rollStage,
 }) => {
   // const [isTerms, setIsTerms] = useState(false);
 
@@ -739,7 +740,7 @@ export const RolloverSummary = ({
     <div>
       {planStatus === "OK" && (
         <RolloverSummaryWrapper>
-          <h4 className="pt-4">Rollover Summary</h4>
+          <h4 className="pt-4 withdraw">Rollover Summary</h4>
           <div className="plan-content">
             <div className="rollover">
               <div className="plan-top h-50 p-4">
@@ -810,20 +811,22 @@ export const RolloverSummary = ({
                   </div>
                   <div className="rollover-text-left"></div>
                 </div>
-                <div className="py-5 check-box-bank">
-                  <input
-                    type="checkbox"
-                    id="scales"
-                    name="term"
-                    value={isTerms}
-                    checked={isTerms}
-                    onChange={() => checkTerms(!isTerms)}
-                    required
-                  />
-                  <label htmlFor="scales">
-                    I agree to the Terms and Condition
-                  </label>
-                </div>
+                {rollStage !== "FINAL" ? (
+                  <div className="py-5 check-box-bank">
+                    <input
+                      type="checkbox"
+                      id="scales"
+                      name="term"
+                      value={isTerms}
+                      checked={isTerms}
+                      onChange={() => checkTerms(!isTerms)}
+                      required
+                    />
+                    <label htmlFor="scales">
+                      I agree to the Terms and Condition
+                    </label>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
@@ -837,6 +840,9 @@ const RolloverSummaryWrapper = styled.div`
   box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
   padding: 40px;
   background: #ffffff;
+  .withdraw{
+    padding-left: 20px;
+  }
   p {
     font-weight: 400;
     font-size: 14px;
@@ -1090,8 +1096,10 @@ export const WithdrawalSummary = ({
         "days"
       );
 
-      const currentNumberOfDays =
-        moment(recentDate).diff(plan?.planSummary?.startDate, "days");
+      const currentNumberOfDays = moment(recentDate).diff(
+        plan?.planSummary?.startDate,
+        "days"
+      );
 
       const penalDays = moment(plan?.planSummary?.endDate).diff(
         recentDate,
@@ -1164,7 +1172,7 @@ export const WithdrawalSummary = ({
   return (
     <div>
       <RolloverSummaryWrapper>
-        <h4 className="pt-5">Withdrawal Summary</h4>
+        <h4 className="pt-5 withdraw">Withdrawal Summary</h4>
         <div className="plan-content">
           <div className="rollover">
             <div className="plan-top h-50 p-4">
@@ -2374,7 +2382,9 @@ export const ReferalTable = () => {
       status: `${data.status}`,
       action: (
         <button
-          className={data.status === "INACTIVE" && data.pokeable ? "in-active" : "active"}
+          className={
+            data.status === "INACTIVE" && data.pokeable ? "in-active" : "active"
+          }
           disabled={data.status === "ACTIVE" || !data.pokeable}
           onClick={() => handleClick(data.id)}
         >
@@ -2399,7 +2409,7 @@ export const ReferalTable = () => {
       ) : (
         <ReferalTableWarapper>
           <h3>My Referrals</h3>
-          <div className="d-flex justify-content-start align-items-center">
+          <div className="d-sm-flex justify-content-start align-items-center">
             <div className="padd-referal">
               <label>Referral Link</label>
               <div className="input-group mb-3">
@@ -2419,7 +2429,7 @@ export const ReferalTable = () => {
                 </div>
               </div>
             </div>
-            <div className="">
+            <div className="ref-count">
               <p className="p-0 m-0">Total Referrals</p>
               <div className="box-image">
                 <h3>{myReferrals?.entities?.length}</h3>
@@ -2439,6 +2449,17 @@ export const ReferalTable = () => {
 const ReferalTableWarapper = styled.div`
   padding: 30px;
   padding-right: 30%;
+
+  @media (max-width: 650px){
+    padding-right: 20px;
+    .padd-referal {
+      width: 100vw;
+      padding-right: 0px;
+    }
+    .ref-count {
+      margin: 20px 0;
+    }
+  }
 
   .box-image {
     width: 94px;
@@ -2586,7 +2607,7 @@ export const ReferralBonus = () => {
       ) : (
         <ReferalTableBonusWarapper>
           <h3>My Referral Bonus</h3>
-          <div className="bonus-card d-flex justify-content-between aligin-items-center">
+          <div className="bonus-card d-md-flex justify-content-between aligin-items-center">
             <div className="earn-bonus">
               <div className="d-flex justify-content-between aligin-items-center">
                 <div>
@@ -2649,6 +2670,7 @@ export const ReferralBonus = () => {
 const ReferalTableBonusWarapper = styled.div`
   padding: 30px;
   padding-right: 30%;
+  
   button {
     background: #111e6c;
     border-radius: 10px;
@@ -2661,32 +2683,73 @@ const ReferalTableBonusWarapper = styled.div`
     color: #ffffff;
     padding: 7px 20px;
   }
+
+  @media (min-width: 0px) and (max-width: 500px){
+    padding-right: 20px;
+    .earn-bonus {
+      background: #f2f2f2;
+      box-shadow: 0px 4px 33px rgba(196, 204, 221, 0.28);
+      border-radius: 8px;
+      width: 100%;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 17px;
+      letter-spacing: -0.01em;
+      color: #242424;
+    }
+  }
+
+  @media (min-width: 501px) {
+    .earn-bonus {
+      background: #f2f2f2;
+      box-shadow: 0px 4px 33px rgba(196, 204, 221, 0.28);
+      border-radius: 8px;
+      width: 70%;
+      padding: 20px;
+    }
+    p {
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 17px;
+      text-align: right;
+      letter-spacing: -0.01em;
+      color: #242424;
+    }
+  }
+
   .bonus-card {
     width: 100%;
     padding: 50px 0;
   }
+
   .box-image {
     padding: 20px;
     background: #ffffff;
     box-shadow: 0px 4px 10px rgba(148, 148, 148, 0.25);
     border-radius: 10px;
   }
-  .earn-bonus {
-    background: #f2f2f2;
-    box-shadow: 0px 4px 33px rgba(196, 204, 221, 0.28);
-    border-radius: 8px;
-    width: 70%;
-    padding: 20px;
-  }
+
+  
+
   .total-bonus {
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;
     padding: 20px;
   }
+
   .total-amount {
     padding-top: 50px;
   }
+
   tr {
     font-family: "Montserrat";
     font-style: normal;
@@ -2696,6 +2759,7 @@ const ReferalTableBonusWarapper = styled.div`
     letter-spacing: -0.01em;
     color: #242424;
   }
+
   th {
     font-family: "Montserrat";
     font-style: normal;
@@ -2705,10 +2769,12 @@ const ReferalTableBonusWarapper = styled.div`
     letter-spacing: -0.03em;
     color: #000000;
   }
+
   th,
   td {
     padding: 20px;
   }
+
   h3 {
     font-family: "Montserrat";
     font-style: normal;
@@ -2718,6 +2784,7 @@ const ReferalTableBonusWarapper = styled.div`
     letter-spacing: -0.03em;
     color: #242424;
   }
+
   h4 {
     font-family: "Montserrat";
     font-style: normal;
@@ -2727,16 +2794,7 @@ const ReferalTableBonusWarapper = styled.div`
     letter-spacing: -0.04em;
     color: #242424;
   }
-  p {
-    font-family: "Montserrat";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 17px;
-    text-align: right;
-    letter-spacing: -0.01em;
-    color: #242424;
-  }
+
 `;
 
 export const TransferDeposit = () => {
@@ -2968,7 +3026,7 @@ export const SpecialEarnings = () => {
       <Toaster />
       <SpecialEarningsWarapper>
         <h3>Rosabon Special Earnings</h3>
-        <div className="bonus-card d-flex justify-content-start aligin-items-center">
+        <div className="bonus-card d-md-flex justify-content-start aligin-items-center">
           <div className="total-bonus">
             <p className="p-0 m-0">Total Redeemed Earnings :</p>
             <h4 className="total-amount">
@@ -3011,30 +3069,59 @@ const SpecialEarningsWarapper = styled.div`
     border-radius: 15px;
     /* padding: 10px 15px; */
   }
+
+  @media (min-width: 0px) and (max-width: 500px){
+    padding-right: 20px;
+    .redeem-card {
+      margin: 20px 0 0 0;
+      background: #ffffff;
+      box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+      border-radius: 8px;
+      padding: 20px;
+      button {
+        background: #111e6c;
+        border-radius: 10px;
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 16px;
+        text-align: right;
+        color: #ffffff;
+        padding: 7px 20px;
+      }
+    }
+  }
+
+  @media (min-width: 501px){
+    .redeem-card {
+      background: #ffffff;
+      box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
+      border-radius: 8px;
+      padding: 20px;
+      margin-left: 50px;
+      width: 337px;
+      button {
+        background: #111e6c;
+        border-radius: 10px;
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 16px;
+        text-align: right;
+        color: #ffffff;
+        padding: 7px 20px;
+      }
+    }
+
+  }
+
   .bonus-card {
     width: 100%;
     padding: 50px 0;
   }
-  .redeem-card {
-    background: #ffffff;
-    box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
-    border-radius: 8px;
-    padding: 20px;
-    margin-left: 50px;
-    width: 337px;
-    button {
-      background: #111e6c;
-      border-radius: 10px;
-      font-family: "Montserrat";
-      font-style: normal;
-      font-weight: 500;
-      font-size: 13px;
-      line-height: 16px;
-      text-align: right;
-      color: #ffffff;
-      padding: 7px 20px;
-    }
-  }
+
   .earn-bonus {
     background: #f2f2f2;
     box-shadow: 0px 4px 33px rgba(196, 204, 221, 0.28);
@@ -3043,8 +3130,8 @@ const SpecialEarningsWarapper = styled.div`
     padding: 20px;
   }
   .total-bonus {
-    /* width: 337px;
-    height: 157px; */
+    // /* width: 337px;
+    // height: 157px; */
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
     border-radius: 8px;
@@ -3603,13 +3690,11 @@ export const PayWithCard = ({
     );
   };
 
-  
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
     // console.log(reference);
     success();
   };
-
 
   const onClose = () => {
     // implementation for  whatever you want to do when the Paystack dialog closed.

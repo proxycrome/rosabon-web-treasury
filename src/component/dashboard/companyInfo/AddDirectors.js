@@ -556,7 +556,7 @@ const AddDirectors = ({
                 </div>
                 <div className="row">
                   <div className="col-lg-9">
-                    <div className="row d-flex">
+                    <div className="row d-flex align-items-end">
                       <div className="col-8 mb-4">
                         <label>Bank verification number (BVN)</label>
                         <div className="input-group">
@@ -587,7 +587,7 @@ const AddDirectors = ({
                       formData.bvn &&
                       !bvnMessage?.isNameMatched &&
                       !showEdit ? (
-                        <div className="col-4 mt-3">
+                        <div className="col-4 mt-3 mb-4">
                           <button
                             type="button"
                             onClick={(e) => handleVerifyBVN(e, directorNo())}
@@ -597,7 +597,7 @@ const AddDirectors = ({
                           </button>
                         </div>
                       ) : (
-                        <div className="col-4 mt-3">
+                        <div className="col-4 mt-3 mb-4">
                           <button
                             type="button"
                             disabled={showEdit}

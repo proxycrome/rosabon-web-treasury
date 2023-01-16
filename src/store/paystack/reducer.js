@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   INITIALIZE_PAYMENT,
   INITIALIZE_PAYMENT_SUCCESS,
@@ -7,7 +8,8 @@ import {
   REGISTER_TRANSACTION_ERROR,
   VERIFY_PAYSTACK,
   VERIFY_PAYSTACK_SUCCESS,
-  VERIFY_PAYSTACK_ERROR
+  VERIFY_PAYSTACK_ERROR,
+  CLEAR_TRANS_REF
 } from "./actionTypes";
 
 const initialState = {
@@ -83,6 +85,18 @@ const paystack = ( state=initialState, action ) => {
         reg_transaction: null,
         reg_transactionError: action.payload
       };
+      break;
+
+    case CLEAR_TRANS_REF:
+      state = {
+        ...state,
+        reg_transaction: null,
+        reg_transactionError: null,
+      }
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:

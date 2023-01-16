@@ -32,10 +32,7 @@ export const RightView = () => {
     (data) => data.planStatus === "ACTIVE" || data.planStatus === "MATURED"
   );
 
-  useEffect(() => {
-    dispatch(getCatWithProducts());
-    dispatch(getPlans());
-  }, [dispatch]);
+  
 
   const handleProduct = (id) => {
     dispatch(getSingleProduct(id));

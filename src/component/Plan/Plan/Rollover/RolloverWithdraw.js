@@ -15,8 +15,9 @@ const RolloverWithdraw = ({
   tenor,
   interestRate,
   withholdTax,
+  isTerms,
 }) => {
-  const [isTerms, setIsTerms] = useState(false);
+  const [ , setIsTerms] = useState(false);
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
   const [base64File, setBase64File] = useState({
@@ -158,6 +159,7 @@ const RolloverWithdraw = ({
               setEndDate={setEndDate}
               setFormData={setFormData}
               formData={formData}
+              rollStage="FINAL"
             />
           </LeftView>
           <RightView>

@@ -7,11 +7,12 @@ const ProtectedRoute = ({ isAuth, children, user }) => {
     if(user){
       if(user?.kyc === false){
         <Navigate to="/kyc" replace />;
+      } else if (user?.creationSource === "BACKEND" && !user?.resetPassword){
+        <Navigate to="/change-password" replace />
       } else {
         return children
       }
     }
-    
   }
 };
 
@@ -23,6 +24,21 @@ export const KYCRoute = ({ isAuth, children, user }) => {
   } else {
     if (user) {
       if (!user?.kyc) {
+        return children;
+      } else {
+        <Navigate to="" replace />
+      }
+    }
+  }
+};
+
+export const ProfileRoute = ({ isAuth, children, user }) => {
+  if (!isAuth) {
+    return 
+  } else {
+    if (user) {
+      if (user?.creationSource === "BACKEND" && !user?.resetPassword) {
+        <Navigate to="/change-password" replace/>
         return children;
       } else {
         <Navigate to="" replace />

@@ -45,7 +45,7 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
           response?.data?.creationSource === "BACKEND" &&
           !response?.data?.resetPassword
         ) {
-          navigate("/profile", {state: {isAssisted: true}});
+          navigate("/change-password", {state: {isAssisted: true}});
           toast.success("Login was successful", { position: "top-right" });
           dispatch(getAuthUsers());
         } else {

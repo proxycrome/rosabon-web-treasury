@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Switch from "react-switch";
-import {
-  getProducts,
-  getCurrencies,
-  updatePlan,
-} from "../../../store/actions";
+import { getProducts, getCurrencies, updatePlan } from "../../../store/actions";
 import Spinner from "../../../component/common/loading";
 import { getCurrIcon } from "../Accesssories";
 import { formatCurrValue } from "../Accesssories";
@@ -64,7 +60,6 @@ const PlanModal = ({ handleClose }) => {
                     style={{ cursor: "pointer" }}
                     className="fa-solid fa-xmark"
                   ></i>{" "}
-                  {" "}
                   Close
                 </button>
               </div>
@@ -162,14 +157,19 @@ const PlanModal = ({ handleClose }) => {
               <div>
                 <p className="p-light">Interest rate</p>
                 <p className="p-dark">
-                  {plan.interestRate ? formatCurrValue(parseFloat(plan.interestRate)) : 0} %
+                  {plan.interestRate
+                    ? formatCurrValue(parseFloat(plan.interestRate))
+                    : 0}{" "}
+                  %
                 </p>
               </div>
               <div className="right">
                 <p className="p-light">Interest earned</p>
                 <p className="p-dark flex justify-content-end">
                   {getCurrIcon(current_currency)}
-                  {formatCurrValue(parseFloat(plan.planSummary.calculatedInterest))}
+                  {formatCurrValue(
+                    parseFloat(plan.planSummary.calculatedInterest)
+                  )}
                 </p>
               </div>
             </div>
@@ -251,6 +251,7 @@ export default PlanModal;
 const Wrapper = styled.div`
   padding: 22px 35px;
   position: relative;
+  width: 480px;
   .plan-row {
     display: flex;
     width: 100%;

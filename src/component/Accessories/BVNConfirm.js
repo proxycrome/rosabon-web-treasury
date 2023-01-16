@@ -17,6 +17,8 @@ import {
   planAction,
   verifyBvn,
   updateUserName,
+  regTransaction,
+  clearTransRef,
 } from "../../store/actions";
 
 import { Link, useNavigate, NavLink } from "react-router-dom";
@@ -668,7 +670,7 @@ const Wrapper = styled.div``;
 
 const WrappCongrate = styled.div`
   border-radius: 20px;
-  padding: 2rem;
+  width: 100%;
   text-align: left;
   input {
     border: 1px solid #e0e0e0;
@@ -877,7 +879,7 @@ export function Notice({
                     <button
                       onClick={handleClose}
                       type="button"
-                      className="grey_btn"
+                      className="btn grey_btn"
                     >
                       Cancel
                     </button>
@@ -885,7 +887,7 @@ export function Notice({
                       <button
                         onClick={handleFullRoll}
                         type="button"
-                        className="blue_btn"
+                        className="btn blue_btn"
                       >
                         Proceed
                       </button>
@@ -893,7 +895,7 @@ export function Notice({
                       <button
                         onClick={submit}
                         type="button"
-                        className="blue_btn"
+                        className="btn blue_btn"
                       >
                         Proceed
                       </button>
@@ -1048,24 +1050,50 @@ export function ProceedPayCard({
   text,
   // setIsClicked,
 }) {
+  const dispatch = useDispatch();
+  const [config, setConfig] = useState({});
+  const [isConfigSet, SetIsConfigSet] = useState(false);
   const { reg_transaction, loading } = useSelector((state) => state.paystack);
   const { users } = useSelector((state) => state.user_profile);
 
-  const config = {
-    reference: reg_transaction?.transactionReference,
-    email: users?.email,
-    amount: amount,
-    publicKey:
-      process.env.NODE_ENV === "development"
-        ? process.env.REACT_APP_PAYSTACK_PK_DEV
-        : process.env.REACT_APP_PAYSTACK_PK_PROD,
+  const handleClick = () => {
+    const formData = {
+      amount: amount / 100,
+      purposeOfPayment: "PLAN_CREATION",
+    };
+    dispatch(regTransaction(formData));
   };
 
-  // useEffect(() => {
-  //   setIsClicked(false);
-  // }, []);
+  useEffect(() => {
+    if (reg_transaction) {
+      setConfig({
+        reference: reg_transaction?.transactionReference,
+        email: users?.email,
+        amount: amount,
+        publicKey:
+          process.env.NODE_ENV === "development"
+            ? process.env.REACT_APP_PAYSTACK_PK_DEV
+            : process.env.REACT_APP_PAYSTACK_PK_PROD,
+      });
 
-  const initializePayment = usePaystackPayment(config);
+      SetIsConfigSet(true);
+    }
+  }, [reg_transaction, amount, users?.email]);
+
+  
+  const initializePayment = usePaystackPayment(config)
+
+  useEffect(() => {
+    if(isConfigSet){
+      initializePayment(onSuccess, onClose)
+      SetIsConfigSet(false);
+    }
+  }, [isConfigSet, initializePayment])
+    
+  
+
+  
+  
 
   return (
     <>
@@ -1085,12 +1113,10 @@ export function ProceedPayCard({
                           height: "41px",
                           borderRadius: "10px",
                         }}
-                        onClick={() => {
-                          initializePayment(onSuccess, onClose);
-                        }}
-                        disabled={loading || !reg_transaction}
+                        onClick={handleClick}
+                        disabled={loading}
                       >
-                        {loading || !reg_transaction ? "Loading" : text}
+                        {loading ? "Loading" : text}
                       </button>
                     </div>
                   </div>

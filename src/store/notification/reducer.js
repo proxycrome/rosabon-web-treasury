@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   GET_NOTIFICATION,
   GET_NOTIFICATION_ERROR,
@@ -83,6 +84,10 @@ const notification = (state = initialState, action) => {
         readAllNotifications: null,
         readAllNotificationsError: action.payload,
       };
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:
