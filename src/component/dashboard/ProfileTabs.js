@@ -5,10 +5,10 @@ export function ProfileTabs({ personal, handleChange, isAssisted }) {
   const [activeBtn, setActiveBtn] = useState("profile");
 
   useEffect(() => {
-    if(isAssisted){
+    if (isAssisted) {
       setActiveBtn("password");
     }
-  }, [isAssisted])
+  }, [isAssisted]);
 
   return (
     <WrappeSideBar>
@@ -18,47 +18,59 @@ export function ProfileTabs({ personal, handleChange, isAssisted }) {
             <h3>Profile</h3>
             <div className="mt-5">
               <ul>
-                <a
-                  className="link_style"
-                  href="#/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChange("profile");
-                    setActiveBtn("profile");
-                  }}
-                >
-                  <li className={activeBtn === "profile" ? "style-active" : ""}>
-                    Personal information
-                  </li>
-                </a>
-                <a
-                  className="link_style"
-                  href="#/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChange("documents");
-                    setActiveBtn("documents");
-                  }}
-                >
-                  <li
-                    className={activeBtn === "documents" ? "style-active" : ""}
-                  >
-                    My Documents
-                  </li>
-                </a>
-                <a
-                  className="link_style"
-                  href="#/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChange("bank");
-                    setActiveBtn("bank");
-                  }}
-                >
-                  <li className={activeBtn === "bank" ? "style-active" : ""}>
-                    My Bank Details
-                  </li>
-                </a>
+                {!isAssisted ? (
+                  <>
+                    <a
+                      className="link_style"
+                      href="#/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleChange("profile");
+                        setActiveBtn("profile");
+                      }}
+                    >
+                      <li
+                        className={
+                          activeBtn === "profile" ? "style-active" : ""
+                        }
+                      >
+                        Personal information
+                      </li>
+                    </a>
+                    <a
+                      className="link_style"
+                      href="#/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleChange("documents");
+                        setActiveBtn("documents");
+                      }}
+                    >
+                      <li
+                        className={
+                          activeBtn === "documents" ? "style-active" : ""
+                        }
+                      >
+                        My Documents
+                      </li>
+                    </a>
+                    <a
+                      className="link_style"
+                      href="#/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleChange("bank");
+                        setActiveBtn("bank");
+                      }}
+                    >
+                      <li
+                        className={activeBtn === "bank" ? "style-active" : ""}
+                      >
+                        My Bank Details
+                      </li>
+                    </a>
+                  </>
+                ) : null}
                 <a
                   className="link_style"
                   href="#/"
@@ -68,7 +80,9 @@ export function ProfileTabs({ personal, handleChange, isAssisted }) {
                     setActiveBtn("password");
                   }}
                 >
-                  <li className={activeBtn === "password" ? "style-active" : ""}>
+                  <li
+                    className={activeBtn === "password" ? "style-active" : ""}
+                  >
                     Change Password
                   </li>
                 </a>
@@ -82,47 +96,61 @@ export function ProfileTabs({ personal, handleChange, isAssisted }) {
             <h3>Profile</h3>
             <div className="mt-5">
               <ul>
-                <a
-                  className="link_style"
-                  href="#/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChange("company");
-                    setActiveBtn("company");
-                  }}
-                >
-                  <li className={activeBtn === "company" ? "style-active" : ""}>
-                    Company information
-                  </li>
-                </a>
-                <a
-                  className="link_style"
-                  href="#/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChange("details");
-                    setActiveBtn("details");
-                  }}
-                >
-                  <li className={activeBtn === "details" ? "style-active" : ""}>
-                    More Details
-                  </li>
-                </a>
-                <a
-                  className="link_style"
-                  href="#/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChange("documents");
-                    setActiveBtn("documents");
-                  }}
-                >
-                  <li
-                    className={activeBtn === "documents" ? "style-active" : ""}
-                  >
-                    Company Documents
-                  </li>
-                </a>
+                {!isAssisted ? (
+                  <>
+                    <a
+                      className="link_style"
+                      href="#/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleChange("company");
+                        setActiveBtn("company");
+                      }}
+                    >
+                      <li
+                        className={
+                          activeBtn === "company" ? "style-active" : ""
+                        }
+                      >
+                        Company information
+                      </li>
+                    </a>
+                    <a
+                      className="link_style"
+                      href="#/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleChange("details");
+                        setActiveBtn("details");
+                      }}
+                    >
+                      <li
+                        className={
+                          activeBtn === "details" ? "style-active" : ""
+                        }
+                      >
+                        More Details
+                      </li>
+                    </a>
+                    <a
+                      className="link_style"
+                      href="#/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleChange("documents");
+                        setActiveBtn("documents");
+                      }}
+                    >
+                      <li
+                        className={
+                          activeBtn === "documents" ? "style-active" : ""
+                        }
+                      >
+                        Company Documents
+                      </li>
+                    </a>
+                  </>
+                ) : null}
                 <a
                   className="link_style"
                   href="#/"
@@ -132,7 +160,9 @@ export function ProfileTabs({ personal, handleChange, isAssisted }) {
                     setActiveBtn("password");
                   }}
                 >
-                  <li className={activeBtn === "password" ? "style-active" : ""}>
+                  <li
+                    className={activeBtn === "password" ? "style-active" : ""}
+                  >
                     Change Password
                   </li>
                 </a>

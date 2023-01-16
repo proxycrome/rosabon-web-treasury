@@ -149,14 +149,14 @@ const TransactionDetails = () => {
   return (
     <>
       <Wrapper>
-        <div className="row top d-flex justify-content-between">
+        <div className="row top d-flex justify-content-between mb-4">
           <div className="col-md-6 col-sm-12">
             <h3>Filter By Transaction Date</h3>
           </div>
           <div className="col-md-6 col-sm-12">
             <div className="row">
               <div className="col-md-6 col-sm-12">
-                <div className="d-flex flex-column">
+                <div className="d-flex flex-column mb-3">
                   <Label htmlFor="startDate">Start Date</Label>
                   <Input
                     className="form-control"
@@ -186,8 +186,8 @@ const TransactionDetails = () => {
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="mb-3">
+        <div className="space">
+          <div>
             <h4>
               {formData.startDate &&
                 formData.endDate &&
@@ -197,7 +197,7 @@ const TransactionDetails = () => {
             </h4>
           </div>
         </div>
-        <div>
+        <div className="">
           <MDBDataTable responsive striped data={data} searching={false} />
         </div>
         <ModalComponent
@@ -239,6 +239,9 @@ const Wrapper = styled.div`
   @media (max-width: 500px) {
     .plan-content {
       padding: 20px;
+    }
+    .space{
+      padding: 50px 0;
     }
   }
 

@@ -75,7 +75,7 @@ const Archives = () => {
                       onClick={() => handlePlanModal(item.id)}
                     >
                       <div className="d-flex align-items-center justify-content-between">
-                        <div>
+                        <div className="cardName">
                           <h4>{item.planName} </h4>
                           <p className="p-0 m-0">
                             {
@@ -116,7 +116,7 @@ const Archives = () => {
 
                     <div className=" h-50 py-1 px-4">
                       <div className="d-flex align-items-center justify-content-between">
-                        <div>
+                        <div className="cardName">
                           <h4>{item.planName} </h4>
                           <p className="p-0 m-0">
                             {
@@ -172,7 +172,12 @@ const Wrapper = styled.div`
   }
   @media (max-width: 500px) {
     .plan-content {
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .cardName {
+      margin-right: 20px;
     }
   }
   .dotted {
@@ -199,7 +204,7 @@ const Wrapper = styled.div`
   }
   .plan {
     width: 100%;
-    height: 263px;
+    height: auto;
     background: #ffffff;
     box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.47);
     border-radius: 8px;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, HashRouter } from "react-router-dom";
 // import ProfileUpdate from "./component/dashboard/ProfileUpdate";
-import ProtectedRoute, { KYCRoute, NotProtectedRoute } from "./ProtectecRoute";
+import ProtectedRoute, { KYCRoute, NotProtectedRoute, ProfileRoute } from "./ProtectecRoute";
 import ForgotPassword from "./component/Auth/ForgotPassword";
 import Congratulatios from "./component/Auth/Congratulatios";
 import ResetPassword from "./component/Auth/ResetPassword";
@@ -329,6 +329,15 @@ function PageRoutes({ login, isAuth, user }) {
       >
         <Route path="" element={<GeneralKYC />} />
       </Route>
+
+      <Route
+        path="/change-password"
+        element={
+          <ProfileRoute isAuth={isAuth} user={user}>
+            <Profile />
+          </ProfileRoute>
+        }
+      />
 
       <Route
         path="/profile"

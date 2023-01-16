@@ -33,7 +33,7 @@ export function ProfileNavBar({ children, view, feedback }) {
   const today = moment();
   const { notifications } = useSelector((state) => state.notification);
   const currentNotifications = notifications?.filter(
-    (item) => today.diff(moment(new Date(item?.dateSent)), 'days') <= 7
+    (item) => today.diff(moment(new Date(item?.dateSent)), "days") <= 7
   );
   const unreadNotifications = notifications?.filter(
     (item) => item.readStatus === "UNREAD"
@@ -66,7 +66,11 @@ export function ProfileNavBar({ children, view, feedback }) {
       <div className="shadow-sm pe-4">
         <div className="profile_nav py-2">
           <div className="page-title mx-3">{children}</div>
-          <div className="hamburger mx-5" onClick={handleClick} style={{ cursor: "pointer" }}>
+          <div
+            className="hamburger mx-5"
+            onClick={handleClick}
+            style={{ cursor: "pointer" }}
+          >
             <i className="fa fa-bars"></i>
           </div>
           <ul className="d-flex justify-content-end">
@@ -106,7 +110,12 @@ export function ProfileNavBar({ children, view, feedback }) {
                   <i className="fa-solid fa-chevron-down mx-2"></i>
                 </DropdownToggle>
                 <DropdownMenu end>
-                  <DropdownItem>
+                  <DropdownItem
+                    disabled={
+                      users?.creationSource === "BACKEND" &&
+                      !users?.resetPassword
+                    }
+                  >
                     <NavLink className="nav_link" to="/profile">
                       <div>
                         <i className="ri-user-line align-middle mr-1"></i>{" "}
@@ -205,13 +214,12 @@ export const DropDown = ({ status, notifications, viewNote, dispatch }) => {
   const [col1, setCol1] = useState("");
 
   const t_col1 = (val) => {
-  
     if (col1 === val) {
       setCol1("");
       // setGetStatus(getStatus.filter(item => item !== val));
     } else {
       setCol1(val);
-      setGetStatus(getStatus => getStatus.concat(val));
+      setGetStatus((getStatus) => getStatus.concat(val));
       dispatch(readNotification(val));
       // dispatch(getNotification());
     }
@@ -276,20 +284,19 @@ export const DropDown = ({ status, notifications, viewNote, dispatch }) => {
                         getStatus.includes(data.id) &&
                         col1 === data.id)
                         ? "text-success"
-                        // : data.readStatus === "UNREAD" &&
+                        : // : data.readStatus === "UNREAD" &&
                         //   getStatus.includes(data.id) &&
                         //   col1 === data.id
-                        : data.readStatus === "UNREAD" &&
+                        data.readStatus === "UNREAD" &&
                           getStatus.includes(data.id)
                         ? "text-success"
                         : "text-danger"
                     }
                   >
                     {
-                    // getStatus.includes(data.id) && col1 === data.id
-                    getStatus.includes(data.id)
-                      ? "READ"
-                      : data.readStatus}
+                      // getStatus.includes(data.id) && col1 === data.id
+                      getStatus.includes(data.id) ? "READ" : data.readStatus
+                    }
                     :
                   </small>
                   {data?.message?.split(" ")?.slice(0, 7)?.join(" ")}...

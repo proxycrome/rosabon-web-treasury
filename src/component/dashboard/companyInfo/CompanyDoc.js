@@ -289,7 +289,7 @@ const CompanyDoc = () => {
             </div>
             <div className="image-holder">
               <div className="row">
-                <div className="d-flex justify-content-between">
+                <div className="d-sm-flex justify-content-between">
                   <div className="fileText pl-5">
                     <h4 className="">Company Documents</h4>
                     <small className="">

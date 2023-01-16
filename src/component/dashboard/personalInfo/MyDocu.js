@@ -158,10 +158,8 @@ const MyDocu = () => {
   }, [validateEmailOtp]);
 
   useEffect(() => {
-    if (!documents) {
-      dispatch(getUserDocs());
-    }
-  }, [documents, dispatch]);
+    dispatch(getUserDocs());
+  }, [dispatch]);
 
   return (
     <div>
@@ -249,7 +247,7 @@ const MyDocu = () => {
             </div>
             <div className="image-holder">
               <div className="row">
-                <div className="d-flex justify-content-between">
+                <div className="d-sm-flex justify-content-between">
                   <div className="fileText pl-5">
                     <h4 className="">Profile</h4>
                     <small className="">

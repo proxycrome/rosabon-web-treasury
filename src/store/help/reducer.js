@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import { GET_FAQ, GET_FAQ_ERROR, GET_FAQ_SUCCESS } from "./actionTypes";
 
 const initialState = {
@@ -33,6 +34,10 @@ const help = (state = initialState, action) => {
         faqs: null,
         faqError: action.payload,
       };
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:

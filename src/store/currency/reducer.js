@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   GET_CURRENCIES,
   GET_CURRENCIES_SUCCESS,
@@ -33,6 +34,10 @@ const currencies = (state = initialState, action) => {
         currencies: null,
         currenciesError: action.payload
       };
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:

@@ -59,6 +59,7 @@ const PersonalProfile = ({ isAssisted }) => {
 export default PersonalProfile;
 
 const WrapperBody = styled.div`
+  width: 100%;
   .horiz-line {
     border-right: 0.7px solid #e0e0e0;
   }

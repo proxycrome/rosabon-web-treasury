@@ -30,7 +30,6 @@ const PlanPayment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
-
   const { reg_transaction } = useSelector((state) => state.paystack);
   const { singlePlan } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
@@ -47,15 +46,15 @@ const PlanPayment = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const formData = {
-      amount: parseFloat((amount*plan?.exchangeRate).toFixed(2)),
-      purposeOfPayment: "PLAN_CREATION",
-    };
-    if (paymentType === "card" && isClicked) {
-      dispatch(regTransaction(formData , setDebitPopup, true));
-    }
-  }, [isClicked, paymentType, amount]);
+  // useEffect(() => {
+  //   const formData = {
+  //     amount: parseFloat((amount*plan?.exchangeRate).toFixed(2)),
+  //     purposeOfPayment: "PLAN_CREATION",
+  //   };
+  //   if (paymentType === "card" && isClicked) {
+  //     dispatch(regTransaction(formData , setDebitPopup, true));
+  //   }
+  // }, [isClicked, paymentType, amount]);
 
   const handleClick = (e) => {
     const { value } = e.target;
@@ -69,14 +68,18 @@ const PlanPayment = () => {
           setPaymentType("");
           setIsClicked(false);
         }}
-        amount={parseInt(amount)}
+        amount={parseFloat(amount.toFixed(2))}
       />
     );
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsClicked(true);
+    if(paymentType === "card"){
+      setDebitPopup(true);
+    }else if(paymentType === "bank"){
+      setIsClicked(true);
+    }  
   }
 
   const onSuccess = () => {
@@ -333,6 +336,10 @@ const LeftView = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    .plan-content,
+    .plan-payment {
+      width: 100% !important;
+    }
   }
 
   p {
@@ -380,7 +387,7 @@ const LeftView = styled.div`
   input[type="number"] {
     -moz-appearance: textfield;
   }
-  
+
 `;
 
 const RightView = styled.div`

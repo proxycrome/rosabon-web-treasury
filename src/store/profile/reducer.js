@@ -543,10 +543,7 @@ const userProfileReducer = (state = initialState, action) => {
       break;
 
     case LOGOUT_USER_SUCCESS:
-      state = {
-        ...state,
-        users: null,
-      };
+      state = initialState;
       break;
 
     default:

@@ -43,6 +43,7 @@ const PartRollover = ({ goBack, amount, tenor, interestRate, withholdTax }) => {
         tenor={tenor}
         interestRate={interestRate}
         withholdTax={withholdTax}
+        isTerms={isTerms}
       />
     );
   }

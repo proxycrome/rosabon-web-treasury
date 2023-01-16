@@ -199,6 +199,7 @@ function* sendOtp() {
   try {
     const response = yield call(sendOtpService);
     yield put(sendOtpSuccess(response.data));
+    // console.log(response.data);
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
@@ -225,6 +226,7 @@ function* sendCompanyOtp() {
   try {
     const response = yield call(sendCompanyOtpService);
     yield put(sendCompanyOtpSuccess(response.data));
+    console.log(response.data);
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
@@ -259,7 +261,6 @@ function* getBankDetails() {
     const response = yield call(getBankDetailsService);
     yield put(getBankDetailsSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getBankDetailsError(error?.response?.data));
   }
 }
@@ -279,7 +280,6 @@ function* getUserDocs() {
     const response = yield call(getUserDocsService);
     yield put(getUserDocsSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getUserDocsError(error?.response?.data));
   }
 }

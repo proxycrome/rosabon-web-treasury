@@ -1,21 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ProfileNavBar } from "../../dashboard/ProfileNavbar";
 import { RightView } from "./RightView";
 import { LeftView } from "./LeftView";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // import { NavLink, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
+import Spinner from "../../common/loading";
+import { getCatWithProducts, getPlans } from "../../../store/actions";
 
 function HomeView() {
   const [sendView, setSendView] = useState(false);
+  const dispatch = useDispatch();
   const profile = useSelector((state) => state.user_profile);
+  const { catWithProducts } = useSelector((state) => state.product);
+  const { plans } = useSelector((state) => state.plan);
   const { users } = profile;
+
+  useEffect(() => {
+    dispatch(getCatWithProducts());
+    dispatch(getPlans());
+  }, [dispatch]);
 
   const handleView = (data) => {
     setSendView(data);
-  }
+  };
 
   return (
     <div>
@@ -28,21 +37,26 @@ function HomeView() {
                 ? users?.company.name
                 : users?.role === "INDIVIDUAL_USER"
                 ? users?.individualUser.firstName
-                : ""
-              }
+                : ""}
             </span>
           </span>
         </NavTitle>
       </ProfileNavBar>
-      <Toaster/>
-      <Wrapper>
-        <div className="right-content">
-          <RightView />
+      <Toaster />
+      {plans && catWithProducts ? (
+        <Wrapper>
+          <div className="right-content">
+            <RightView />
+          </div>
+          <div className="left-content">
+            <LeftView view={(data) => handleView(data)} />
+          </div>
+        </Wrapper>
+      ) : (
+        <div className="vh-100 w-100">
+          <Spinner />
         </div>
-        <div className="left-content">
-          <LeftView view={(data) => handleView(data)}/>
-        </div>
-      </Wrapper>
+      )}
     </div>
   );
 }

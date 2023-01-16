@@ -1,3 +1,4 @@
+import { LOGOUT_USER_SUCCESS } from "../auth/actionTypes";
 import {
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_ERROR,
@@ -448,6 +449,10 @@ const updateProfile = (state = initialState, action) => {
         bankUpdateMsg: null,
         bankUpdateError: action.payload,
       };
+      break;
+
+    case LOGOUT_USER_SUCCESS:
+      state = initialState;
       break;
 
     default:
