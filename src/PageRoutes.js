@@ -43,6 +43,7 @@ import {
 } from "./component/Plan/Accesssories";
 import DebitCardCallback from "./component/Accessories/DebitCardCallback";
 import CardTestSuccess from "./component/Auth/CardTestSuccess";
+import VerifyEmailSuccess from "./component/Auth/VerifyEmailSuccess";
 
 function PageRoutes({ login, isAuth, user }) {
   return (
@@ -401,6 +402,14 @@ function PageRoutes({ login, isAuth, user }) {
         element={
           <NotProtectedRoute isAuth={isAuth}>
             <ResetPassword />
+          </NotProtectedRoute>
+        }
+      />
+      <Route
+        path="/email-verification/success"
+        element={
+          <NotProtectedRoute isAuth={isAuth} user={user}>
+            <VerifyEmailSuccess />
           </NotProtectedRoute>
         }
       />
