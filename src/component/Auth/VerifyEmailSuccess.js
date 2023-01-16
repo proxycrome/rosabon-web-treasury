@@ -18,7 +18,7 @@ const VerifyEmailSuccess = () => {
             </div>
           </div>
           <div className="btnContain">
-            <Link to="/login" style={{ width: "100%" }}>
+            <Link to="/" style={{ width: "100%" }}>
               <button className="verifyBtn">OK</button>
             </Link>
           </div>
@@ -89,6 +89,7 @@ const Wrapper = styled.div`
     color: #ffffff;
     font-weight: 700;
     font-size: 18px;
+    cursor: pointer;
   }
 
   @media (max-width: 700px) {
