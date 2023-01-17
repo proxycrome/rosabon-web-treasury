@@ -380,7 +380,8 @@ const MoreDetails = () => {
   };
 
   const handleSendOtp = () => {
-    dispatch(sendCompanyOtp());
+    const type = "director";
+    dispatch(sendCompanyOtp(type));
   };
 
   useEffect(() => {
@@ -488,6 +489,7 @@ const MoreDetails = () => {
                       updateOtp={(otp) => createOtp(otp)}
                       otpData={otp?.data}
                       company="company"
+                      otpType="director"
                     />
                   </ModalComponent>
                 </div>
@@ -1598,6 +1600,7 @@ const MoreDetails = () => {
                       updateOtp={(otp) => createOtp(otp)}
                       otpData={otp?.data}
                       company="company"
+                      otpType="director"
                     />
                   </ModalComponent>
                 </div>

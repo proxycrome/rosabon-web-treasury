@@ -96,7 +96,8 @@ const BankDetails = () => {
 
   const handleSendOtp = (e) => {
     e.preventDefault();
-    dispatch(sendOtp());
+    const otpType = "bank";
+    dispatch(sendOtp(otpType));
   };
 
   const handleOTPModalClose = () => {
@@ -219,6 +220,7 @@ const BankDetails = () => {
                         emailOtp={true}
                         updateOtp={(otp) => createOtp(otp)}
                         otpData={otp?.data}
+                        otpType="bank"
                       />
                     </ModalComponent>
                   </div>

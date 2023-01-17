@@ -133,7 +133,12 @@ const ChangePassword = () => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      dispatch(sendCompanyOtp());
+      const dataObj = {
+        subject: "Change Password",
+        message: "Use the following OTP"
+      };
+      const otpType = "password";
+      dispatch(sendCompanyOtp(otpType, dataObj));
     }
   }, [errors, isSubmitted, dispatch]);
 
@@ -312,6 +317,7 @@ const ChangePassword = () => {
           updateOtp={(otp) => createOtp(otp)}
           otpData={otp?.data}
           company="company"
+          otpType="password"
         />
       </ModalComponent>
     </div>

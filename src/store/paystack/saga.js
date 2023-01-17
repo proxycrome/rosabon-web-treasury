@@ -18,7 +18,7 @@ import {
 
 import { createPlan } from "../actions";
 
-import { payWithCard, planAction, updatePlan } from "../plan/actions";
+import { clearNewPlan, payWithCard, planAction, updatePlan } from "../plan/actions";
 
 import {
   initializePaymentService,
@@ -63,6 +63,7 @@ function* verifyPaystack({
         dispatch(planAction(form, setShow, null, dispatch, setDebitPopup));
       } else if (action === "PLAN_CREATION") {
         dispatch(updatePlan(form, form?.planId, null, "createPlan", setShow, setDebitPopup));
+        dispatch(clearNewPlan());
       } else if (action === "PAY_WITH_CARD") {
         dispatch(payWithCard(form, setShow));
       } else {

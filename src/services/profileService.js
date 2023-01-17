@@ -56,10 +56,21 @@ export const getLgasService = (stateId) => {
   return http.getData(url);
 };
 
-export const sendOtpService = () => {
+export const sendOtpService = (otpType, dataObj) => {
   const http = new HttpService();
-  const url = `auth/individual-user/send-otp`;
-  return http.getData(url);
+  if (otpType === "document") {
+    const url = `auth/individual-user/my-document/send-otp`;
+    return http.getData(url);
+  } else if (otpType === "bank") {
+    const url = `auth/individual-user/bank-account/send-otp`;
+    return http.getData(url);
+  } else if (otpType === "password") {
+    const url = `auth/users/send-otp`;
+    return http.postDataWithToken(dataObj, url);
+  } else {
+    const url = `auth/individual-user/send-otp`;
+    return http.getData(url);
+  }
 };
 
 export const validateOtpService = (otp) => {
@@ -68,10 +79,19 @@ export const validateOtpService = (otp) => {
   return http.postDataWithToken(null, url);
 };
 
-export const sendCompanyOtpService = () => {
+export const sendCompanyOtpService = (otpType, dataObj) => {
   const http = new HttpService();
-  const url = `auth/company/company-document/send-otp`;
-  return http.getData(url);
+  let url;
+  if (otpType === "director") {
+    url = `auth/company/director-details/send-otp`;
+    return http.postDataWithToken(null, url);
+  } else if (otpType === "document") {
+    url = `auth/company/company-document/send-otp`;
+    return http.getData(url);
+  } else if (otpType === "password") {
+    url = `auth/users/send-otp`;
+    return http.postDataWithToken(dataObj, url);
+  }
 };
 
 export const getBanksService = () => {
