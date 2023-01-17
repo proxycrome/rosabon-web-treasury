@@ -195,9 +195,9 @@ function* getLgas({ payload: { stateId } }) {
   }
 }
 
-function* sendOtp() {
+function* sendOtp({payload: {otpType, dataObj}}) {
   try {
-    const response = yield call(sendOtpService);
+    const response = yield call(sendOtpService, otpType, dataObj);
     yield put(sendOtpSuccess(response.data));
     // console.log(response.data);
     if (response?.data?.message) {
@@ -222,9 +222,9 @@ function* validateOtp({ payload: { otp } }) {
   }
 }
 
-function* sendCompanyOtp() {
+function* sendCompanyOtp({payload: {otpType, dataObj}}) {
   try {
-    const response = yield call(sendCompanyOtpService);
+    const response = yield call(sendCompanyOtpService, otpType, dataObj);
     yield put(sendCompanyOtpSuccess(response.data));
     console.log(response.data);
     if (response?.data?.message) {

@@ -99,14 +99,14 @@ const Withdrawal = () => {
         switch (intRecOption) {
           case "MATURITY":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
+              penalCharge = (currentNumberOfDays || 1 * penalRate * amount) / 365;
             } else if (
               plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
             ) {
               const totalEarnedInt =
                 (plan?.planSummary?.principal *
                   plan?.interestRate *
-                  (currentNumberOfDays / 365)) /
+                  (currentNumberOfDays || 1 / 365)) /
                 100;
               penalCharge = totalEarnedInt * penalRate;
             }
@@ -118,9 +118,9 @@ const Withdrawal = () => {
                 amount * (plan?.interestRate / 100) * (maxNumberDays / 365) -
                 amount *
                   (plan?.interestRate / 100) *
-                  (currentNumberOfDays / 365);
+                  (currentNumberOfDays || 1 / 365);
               penalCharge =
-                (currentNumberOfDays / 365) * penalRate * amount +
+                (currentNumberOfDays || 1 / 365) * penalRate * amount +
                 excessIntPaid;
             }
             break;
@@ -129,7 +129,7 @@ const Withdrawal = () => {
           case "QUARTERLY":
           case "BI_ANNUAL":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
+              penalCharge = (currentNumberOfDays || 1 / 365) * penalRate * amount;
             }
             break;
 

@@ -142,7 +142,8 @@ const MyDocu = () => {
 
   const handleSendOtp = (e) => {
     e.preventDefault();
-    dispatch(sendOtp());
+    const otpType = "document";
+    dispatch(sendOtp(otpType));
   };
 
   const handleOTPModalClose = () => {
@@ -281,6 +282,7 @@ const MyDocu = () => {
                     emailOtp={true}
                     updateOtp={(otp) => createOtp(otp)}
                     otpData={otp?.data}
+                    otpType="document"
                   />
                 </ModalComponent>
               </div>

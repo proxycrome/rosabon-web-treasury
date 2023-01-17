@@ -268,7 +268,8 @@ const AddDirectors = ({
   };
 
   const handleSendOtp = () => {
-    dispatch(sendCompanyOtp());
+    const type = "director";
+    dispatch(sendCompanyOtp(type));
   };
 
   useEffect(() => {
@@ -360,6 +361,7 @@ const AddDirectors = ({
                   updateOtp={(otp) => createOtp(otp)}
                   otpData={otp?.data}
                   company="company"
+                  otpType="director"
                 />
               </ModalComponent>
             </div>

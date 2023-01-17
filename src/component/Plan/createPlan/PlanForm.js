@@ -851,6 +851,7 @@ const PlanForm = () => {
     }, 0);
   };
 
+  console.log(product?.tenors);
 
   return (
     <form onSubmit={handleSubmit}>

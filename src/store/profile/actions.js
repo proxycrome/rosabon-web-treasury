@@ -228,9 +228,10 @@ export const getLgasError = (error) => {
   };
 };
 
-export const sendOtp = () => {
+export const sendOtp = (otpType, dataObj) => {
   return {
     type: SEND_OTP,
+    payload: { otpType, dataObj }
   };
 };
 
@@ -269,9 +270,10 @@ export const validateOtpError = (error) => {
   };
 };
 
-export const sendCompanyOtp = () => {
+export const sendCompanyOtp = (otpType, dataObj) => {
   return {
     type: SEND_COMPANY_OTP,
+    payload: { otpType, dataObj },
   };
 };
 

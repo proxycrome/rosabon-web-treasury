@@ -58,7 +58,8 @@ import {
   UPDATE_PLAN_ERROR,
   TEST_DEBIT_CARD,
   TEST_DEBIT_CARD_SUCCESS,
-  TEST_DEBIT_CARD_ERROR
+  TEST_DEBIT_CARD_ERROR,
+  CLEAR_NEW_PLAN
 } from "./actionTypes";
 
 export const getContribVal = () => {
@@ -483,5 +484,11 @@ export const testDebitCardError = (error) => {
   return {
     type: TEST_DEBIT_CARD_ERROR,
     payload: error,
+  }
+}
+
+export const clearNewPlan = () => {
+  return {
+    type: CLEAR_NEW_PLAN,
   }
 }

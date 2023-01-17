@@ -403,6 +403,7 @@ export function OTPVerify({
   secondPhone,
   company,
   phoneData,
+  otpType,
 }) {
   const [token, setToken] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -447,9 +448,27 @@ export function OTPVerify({
 
   const handleResendEmailOtp = () => {
     if (company === "company") {
-      dispatch(sendCompanyOtp());
+      if (otpType === "password") {
+        const dataObj = {
+          subject: "Change Password",
+          message: "Use the following OTP",
+        };
+        dispatch(sendCompanyOtp(otpType, dataObj));
+        return
+      } else {
+        dispatch(sendCompanyOtp(otpType));
+      }
     } else {
-      dispatch(sendOtp());
+      if (otpType === "password") {
+        const dataObj = {
+          subject: "Change Password",
+          message: "Use the following OTP",
+        };
+        dispatch(sendOtp(otpType, dataObj));
+        return
+      } else {
+        dispatch(sendOtp(otpType));
+      }
     }
   };
 
@@ -1080,20 +1099,19 @@ export function ProceedPayCard({
     }
   }, [reg_transaction, amount, users?.email]);
 
-  
-  const initializePayment = usePaystackPayment(config)
+  // const onClose = () => {
+  //   SetIsConfigSet(false);
+  //   console.log("Paystack Closed");
+  // }
+
+  const initializePayment = usePaystackPayment(config);
 
   useEffect(() => {
-    if(isConfigSet){
-      initializePayment(onSuccess, onClose)
+    if (isConfigSet) {
+      initializePayment(onSuccess, onClose);
       SetIsConfigSet(false);
     }
-  }, [isConfigSet, initializePayment])
-    
-  
-
-  
-  
+  }, [isConfigSet, initializePayment]);
 
   return (
     <>

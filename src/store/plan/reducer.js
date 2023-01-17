@@ -60,6 +60,7 @@ import {
   TEST_DEBIT_CARD,
   TEST_DEBIT_CARD_SUCCESS,
   TEST_DEBIT_CARD_ERROR,
+  CLEAR_NEW_PLAN,
 } from "./actionTypes";
 
 const initialState = {
@@ -149,6 +150,14 @@ const plan = (state = initialState, action) => {
         loading: false,
         newPlan: null,
         newPlanError: action.payload,
+      };
+      break;
+
+    case CLEAR_NEW_PLAN:
+      state = {
+        ...state,
+        newPlan: null,
+        newPlanError: null,
       };
       break;
 
@@ -497,7 +506,7 @@ const plan = (state = initialState, action) => {
     case LOGOUT_USER_SUCCESS:
       state = initialState;
       break;
-      
+
     default:
       state = { ...state };
       break;
