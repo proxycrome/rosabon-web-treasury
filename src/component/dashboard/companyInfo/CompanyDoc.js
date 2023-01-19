@@ -161,7 +161,8 @@ const CompanyDoc = () => {
   };
 
   const handleSendOtp = () => {
-    dispatch(sendCompanyOtp());
+    const type = "document"
+    dispatch(sendCompanyOtp(type));
   };
 
   const handleOTPModalClose = () => {
@@ -327,6 +328,7 @@ const CompanyDoc = () => {
                     updateOtp={(otp) => createOtp(otp)}
                     otpData={otp?.data}
                     company="company"
+                    otpType="document"
                   />
                 </ModalComponent>
               </div>

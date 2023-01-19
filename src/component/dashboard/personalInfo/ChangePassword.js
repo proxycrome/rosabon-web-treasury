@@ -111,8 +111,10 @@ const ChangePassword = () => {
       newPassword,
       otp: token,
     };
-  
-    dispatch(changeUserPassword(data, dispatch, users?.resetPassword, navigate));
+
+    dispatch(
+      changeUserPassword(data, dispatch, users?.resetPassword, navigate)
+    );
     setformData({
       ...formData,
       oldPassword: "",
@@ -136,7 +138,12 @@ const ChangePassword = () => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      dispatch(sendOtp());
+      const dataObj = {
+        subject: "Change Password",
+        message: "Use the following OTP"
+      };
+      const otpType = "password";
+      dispatch(sendOtp(otpType, dataObj));
     }
   }, [errors]);
 
@@ -296,7 +303,11 @@ const ChangePassword = () => {
           <div className="footer-body">
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
-                <button type="submit" className="blue-btn">
+                <button
+                  type="submit"
+                  className="blue-btn"
+                  disabled={Object.keys(errors).length !== 0}
+                >
                   {loading ? "Sending..." : "Save"}
                 </button>
               </div>
@@ -315,6 +326,7 @@ const ChangePassword = () => {
           emailOtp={true}
           updateOtp={(otp) => createOtp(otp)}
           otpData={otp?.data}
+          otpType="password"
         />
       </ModalComponent>
     </div>
