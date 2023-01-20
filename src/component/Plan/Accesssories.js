@@ -2449,7 +2449,7 @@ export const ReferalTable = () => {
 
 const ReferalTableWarapper = styled.div`
   padding: 30px;
-  padding-right: 30%;
+  padding-right: 20%;
 
   @media (max-width: 650px){
     padding-right: 20px;
@@ -2582,14 +2582,14 @@ export const ReferralBonus = () => {
       {
         label: "Amount",
         field: "amount",
-        width: 100,
+        width: 200,
       },
     ],
     rows: refActivities?.entities?.map((data) => ({
       id: data.id,
       date: `${data.createdAt}`,
       description: `${data.description}`,
-      amount: `₦ ${data.amount}`,
+      amount: `₦ ${formatCurrValue(parseFloat(data.amount))}`,
     })),
   };
 
@@ -2670,7 +2670,7 @@ export const ReferralBonus = () => {
 
 const ReferalTableBonusWarapper = styled.div`
   padding: 30px;
-  padding-right: 30%;
+  padding-right: 20%;
   
   button {
     background: #111e6c;
@@ -2884,8 +2884,8 @@ export const TransferDeposit = () => {
       date: `${data.transactionDate}`,
       description: `${data.description}`,
       type: `${data.transactionType}`,
-      amount: ` + ${data.amount}`,
-      balance: `₦ ${data.balance}`,
+      amount: `+ ₦ ${formatCurrValue(parseFloat(data.amount))}`,
+      balance: `₦ ${formatCurrValue(parseFloat(data.balance))}`,
     })),
   };
 
@@ -3013,7 +3013,7 @@ export const SpecialEarnings = () => {
       id: `${data.transactionId}`,
       date: `${data.dateOfTransaction}`,
       description: `${data.description}`,
-      amount: `₦${data.amount}`,
+      amount: `₦${formatCurrValue(parseFloat(data.amount))}`,
     })),
   };
 
@@ -3065,7 +3065,7 @@ export const SpecialEarnings = () => {
 
 const SpecialEarningsWarapper = styled.div`
   padding: 30px;
-  padding-right: 30%;
+  padding-right: 20%;
   button {
     border-radius: 15px;
     /* padding: 10px 15px; */
