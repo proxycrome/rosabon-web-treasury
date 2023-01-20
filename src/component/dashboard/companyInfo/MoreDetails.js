@@ -127,7 +127,6 @@ const MoreDetails = () => {
       firstName,
       lastName,
     });
-    // console.log(firstName, lastName);
   };
 
   const [editFormData, setEditFormData] = useState({
@@ -580,7 +579,7 @@ const MoreDetails = () => {
                           </ModalComponent>
                           <div className="image-holder">
                             <div className="row">
-                              <div className="d-flex align-items-center justify-content-between">
+                              <div className="d-md-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center justify-content-center">
                                   {base64File[`photoEncodedString${col2}`] &&
                                   !showEdit ? (
@@ -618,7 +617,7 @@ const MoreDetails = () => {
                                       alt="User"
                                       width="125"
                                       height="125"
-                                    />
+                                    /> 
                                   )}
 
                                   {base64File[`photoEncodedString${col2}`] ? (
@@ -653,7 +652,7 @@ const MoreDetails = () => {
                                   {!showEdit ? (
                                     <button
                                       type="button"
-                                      className="btn_bg_blue"
+                                      className="btn_bg_blue mt-4"
                                       onClick={(e) =>
                                         handleFileSelect(e, imageInputRef)
                                       }
@@ -663,7 +662,7 @@ const MoreDetails = () => {
                                   ) : (
                                     <button
                                       type="button"
-                                      className="normal-btn grey-button"
+                                      className="normal-btn grey-button mt-4"
                                       disabled={showEdit}
                                     >
                                       Choose file
@@ -802,7 +801,7 @@ const MoreDetails = () => {
                           </div>
                           <div className="row">
                             <div className="col-lg-9 mb-4">
-                              <div className="row d-flex">
+                              <div className="row d-flex align-items-end">
                                 <div className="col-8">
                                   <label>Bank verification number (BVN)</label>
                                   <div className="input-group">
@@ -1145,7 +1144,7 @@ const MoreDetails = () => {
                       <Collapse isOpen={col1 === data.id}>
                         <div className="image-holder">
                           <div className="row">
-                            <div className="d-flex align-items-center justify-content-between">
+                            <div className="d-md-flex align-items-center justify-content-between">
                               <div className="d-flex align-items-center justify-content-center">
                                 <img
                                   className="image-frame"
@@ -1191,7 +1190,7 @@ const MoreDetails = () => {
                                 {showEdit ? (
                                   <button
                                     type="button"
-                                    className="grey-button"
+                                    className="grey-button mt-4"
                                     disabled={showEdit}
                                   >
                                     Choose File
@@ -1610,7 +1609,7 @@ const MoreDetails = () => {
                   <Collapse isOpen={showOne}>
                     <div className="image-holder">
                       <div className="row">
-                        <div className="d-flex align-items-center justify-content-between">
+                        <div className="d-md-flex align-items-center justify-content-between">
                           <div className="d-flex align-items-center justify-content-center">
                             <img
                               className="image-frame"
@@ -1654,7 +1653,7 @@ const MoreDetails = () => {
                             {showEdit ? (
                               <button
                                 type="button"
-                                className="grey-button"
+                                className="grey-button mt-4"
                                 disabled={showEdit}
                               >
                                 Choose File
@@ -1662,7 +1661,7 @@ const MoreDetails = () => {
                             ) : (
                               <button
                                 type="button"
-                                className="btn_bg_blue"
+                                className="btn_bg_blue mt-4"
                                 onClick={(e) =>
                                   handleFileSelect(e, photoFileInputRef)
                                 }
@@ -2126,7 +2125,7 @@ const MoreDetails = () => {
                         <Collapse isOpen={col1 === data.id}>
                           <div className="image-holder">
                             <div className="row">
-                              <div className="d-flex align-items-center justify-content-between">
+                              <div className="d-md-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center justify-content-center">
                                   <img
                                     className="image-frame"
@@ -2172,7 +2171,7 @@ const MoreDetails = () => {
                                   {showEdit ? (
                                     <button
                                       type="button"
-                                      className="grey-button"
+                                      className="grey-button mt-4"
                                       disabled={showEdit}
                                     >
                                       Choose File

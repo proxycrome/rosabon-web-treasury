@@ -11,7 +11,6 @@ function* getCurrencies() {
     const response = yield call(getCurrenciesService);
 		yield put(getCurrenciesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getCurrenciesError(error?.response?.data))
   };
 };

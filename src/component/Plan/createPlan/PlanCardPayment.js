@@ -33,7 +33,6 @@ const PlanCardPayment = ({ goBack }) => {
 
   const createdPlan = newPlan?.data?.body ? newPlan?.data?.body : {};
 
-  console.log(createdPlan);
 
   useEffect(() => {
     setModalCount(modalCount + 1);

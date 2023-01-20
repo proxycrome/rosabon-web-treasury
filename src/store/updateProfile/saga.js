@@ -68,7 +68,6 @@ function* verifyAccountNo({ payload: { formData } }) {
     const response = yield call(verifyAccountNoService, formData);
     yield put(verifyAccountNoSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(verifyAccountNoError(error?.response?.data));
   }
 }
@@ -96,7 +95,6 @@ function* changeUserPassword({
       }
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(changeUserPasswordError(error?.response?.data));
     if (error?.response) {
       setTimeout(() => {
@@ -114,7 +112,6 @@ function* updateCompanyDetails({ payload: { formData } }) {
       toast.success("Company Details Updated Successfully");
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updateCompanyDetailsError(error?.response?.data));
     if (error?.response) {
       toast.error(error?.response?.data?.message);
@@ -127,7 +124,6 @@ function* updateContactDetails({ payload: { formData } }) {
     const response = yield call(updateContactDetailsService, formData);
     yield put(updateContactDetailsSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updateContactDetailsError(error?.response?.data));
   }
 }
@@ -142,7 +138,6 @@ function* updateDirectorDetails({ payload: { formData, reset, dispatch } }) {
       dispatch(getDirectorDetails());
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updateDirectorDetailsError(error?.response?.data));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message);
@@ -158,7 +153,6 @@ function* verifyPhone({ payload: { recipient } }) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(verifyPhoneError(error?.response?.data));
   }
 }
@@ -171,7 +165,6 @@ function* validatePhoneOtp({ payload: { otp } }) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(validatePhoneOtpError(error?.response?.data));
   }
 }
@@ -181,7 +174,6 @@ function* updatePersonalInfo({ payload: { formData } }) {
     const response = yield call(updatePersonalInfoService, formData);
     yield put(updatePersonalInfoSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updatePersonalInfoError(error?.response?.data));
   }
 }
@@ -211,7 +203,6 @@ function* updateCompanyDocument({ payload: { formData, reset } }) {
       });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(uploadCompanyDocumentError(error?.response?.data));
     if (error?.response?.data?.message) {
       setTimeout(() => {
@@ -234,7 +225,6 @@ function* updatePersonalDocument({ payload: { formData, reset } }) {
       yield put(getUserDocs());
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(uploadPersonalDocumentError(error?.response?.data));
     if (error?.response?.data?.message) {
       setTimeout(() => {
@@ -249,7 +239,6 @@ function* getDirectorDetail() {
     const response = yield call(getDirectorDetailsService);
     yield put(getDirectorDetailsSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getDirectorDetailsError(error?.response?.data));
   }
 }
@@ -263,7 +252,6 @@ function* deleteDirector({ payload: { id, setShowModal } }) {
       setShowModal(false);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(deleteDirectorError(error?.response?.data));
     if (error?.response) {
       setTimeout(() => {
@@ -286,7 +274,6 @@ function* updateBankDetails({ payload: { formData, reset } }) {
       dispatch(getBankDetails());
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updateBankDetailsError(error?.response?.data));
     if (error?.response?.data?.message) {
       setTimeout(() => {

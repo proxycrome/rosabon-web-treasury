@@ -12,7 +12,6 @@ export const Paystack = ({email, amount}) => {
   // you can call this function anything
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
-    // console.log(reference);
   };
 
   // you can call this function anything
