@@ -1106,21 +1106,13 @@ export const WithdrawalSummary = ({
         "days"
       );
 
-      console.log("a",maxNumberDays)
-      console.log("b",currentNumberOfDays)
-      console.log("c", intRecOption)
-      console.log("d", penalDays)
-
       planProductCharges.forEach((item) => {
         const maxDays = (item.maxDaysElapsed * maxNumberDays) / 100;
         const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
-        console.log("e",maxDays);
-        console.log("f",minDays)
         if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
           penalRate = item.penalRate / 100;
         }
       });
-      console.log("g",penalRate)
 
       if (penalDays > 0) {
         switch (intRecOption) {
@@ -1149,8 +1141,6 @@ export const WithdrawalSummary = ({
               penalCharge =
                 (currentNumberOfDays || 1 / 365) * penalRate * amount +
                 excessIntPaid;
-              console.log("h",excessIntPaid)
-              console.log("i", penalCharge)
             }
             break;
 
