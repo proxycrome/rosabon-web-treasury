@@ -288,7 +288,7 @@ const MyDocu = () => {
               </div>
             </div>
             <div className="row pt-5">
-              <div className="col-md-12 col-lg-6">
+              <div className="col-xs-12 col-lg-6 mr-5">
                 <label>ID Type</label>
                 <select
                   className="form-select form-select-md mb-3"
@@ -306,7 +306,7 @@ const MyDocu = () => {
                   }
                 </select>
               </div>
-              <div className="col-md-12 col-lg-6">
+              <div className="col-xs-12 col-lg-6">
                 <label>ID Number</label>
                 <div className="input-group mb-4">
                   <input
@@ -624,6 +624,23 @@ const WrapperBody = styled.div`
     }
   }
 
+  input,
+  select {
+    width: 350px;
+    height: 54px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  select {
+    &:disabled {
+      background: rgba(28, 68, 141, 0.09);
+      cursor: not-allowed;
+    }
+  }
+
   @media (max-width: 900px) {
     padding: 0 2rem 7rem 1rem;
     .style-attachment {
@@ -635,7 +652,11 @@ const WrapperBody = styled.div`
         font-size: 20px;
       }
     }
+    select {
+      width: 80vw;
+    }
   }
+
 
   .file {
     display: none;
@@ -758,22 +779,7 @@ const WrapperBody = styled.div`
     color: #333333;
     padding-bottom: 65px;
   }
-  input,
-  select {
-    width: 350px !important;
-    height: 54px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 8px;
-    padding-left: 20px;
-    position: relative;
-  }
-
-  select {
-    &:disabled {
-      background: rgba(28, 68, 141, 0.09);
-      cursor: not-allowed;
-    }
-  }
+  
 
   label {
     font-style: normal;

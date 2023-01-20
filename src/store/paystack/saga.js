@@ -18,7 +18,12 @@ import {
 
 import { createPlan } from "../actions";
 
-import { clearNewPlan, payWithCard, planAction, updatePlan } from "../plan/actions";
+import {
+  clearNewPlan,
+  payWithCard,
+  planAction,
+  updatePlan,
+} from "../plan/actions";
 
 import {
   initializePaymentService,
@@ -34,7 +39,6 @@ function* initPayment({ payload: { formData } }) {
     yield put(initPaymentSuccess(response.data));
     window.open(response.data);
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(initPaymentError(error?.response?.data));
   }
 }
@@ -62,7 +66,16 @@ function* verifyPaystack({
       if (action === "TOP_UP") {
         dispatch(planAction(form, setShow, null, dispatch, setDebitPopup));
       } else if (action === "PLAN_CREATION") {
-        dispatch(updatePlan(form, form?.planId, null, "createPlan", setShow, setDebitPopup));
+        dispatch(
+          updatePlan(
+            form,
+            form?.planId,
+            null,
+            "createPlan",
+            setShow,
+            setDebitPopup
+          )
+        );
         dispatch(clearNewPlan());
       } else if (action === "PAY_WITH_CARD") {
         dispatch(payWithCard(form, setShow));
@@ -71,7 +84,6 @@ function* verifyPaystack({
       }
     }
   } catch (error) {
-    console.log(error);
     yield put(verifyPaystackError(error?.response?.data));
     if (error?.response?.data?.message) {
       toast.error("Payment not verified", {
@@ -89,7 +101,6 @@ function* regTransaction({ payload: { formData, setDebitPopup, isTopup } }) {
     //   setDebitPopup(true);
     // }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(regTransactionError(error?.response?.data));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message, { position: "top-right" });

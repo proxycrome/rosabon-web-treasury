@@ -11,7 +11,6 @@ function* getFaq() {
     const response = yield call(getFaqService);
     yield put(getFaqSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getFaqError(error?.response?.data));
   }
 }

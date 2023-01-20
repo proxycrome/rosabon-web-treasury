@@ -98,7 +98,6 @@ function* getContribVal() {
     const response = yield call(getContribValService);
     yield put(getContribValSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getContribValError(error?.response?.data));
   }
 }
@@ -112,7 +111,6 @@ function* completeTransfers({ payload: { data } }) {
       handleShowModalTwo("modal-two");
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(completeTransferError(error?.response?.data));
   }
 }
@@ -122,7 +120,6 @@ function* getExRates() {
     const response = yield call(getExRatesService);
     yield put(getExRatesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getExRatesError(error?.response?.data));
   }
 }
@@ -138,7 +135,6 @@ function* createPlan({ payload: { formData, setShow } }) {
       });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     const message = error?.response?.data
       ? error?.response?.data?.message
       : "Unable to create plan";
@@ -157,7 +153,6 @@ function* getInvPlans() {
     const response = yield call(getPlansService);
     yield put(getPlansSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getPlansError(error?.response?.data));
   }
 }
@@ -170,7 +165,6 @@ function* getSingleInvPlan({ payload: { id, setShow, source } }) {
       setShow(true);
     }
   } catch (error) {
-    console.log(error);
     yield put(getSinglePlanError(error?.response?.data));
   }
 }
@@ -180,7 +174,6 @@ function* getTenor({ payload: { formData } }) {
     const response = yield call(getTenorService, formData);
     yield put(getTenorSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getTenorError(error?.response?.data));
   }
 }
@@ -190,7 +183,6 @@ function* getWithholdingTax() {
     const response = yield call(getWithholdingTaxService);
     yield put(getWithholdingTaxSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getWithholdingTaxError(error?.response?.data));
   }
 }
@@ -200,7 +192,6 @@ function* getInvestmentRates() {
     const response = yield call(getInvestmentRatesService);
     yield put(getInvestmentRatesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getInvestmentRatesError(error?.response?.data));
   }
 }
@@ -210,7 +201,6 @@ function* getEligiblePlans() {
     const response = yield call(getEligiblePlansService);
     yield put(getEligiblePlansSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getEligiblePlansError(error?.response?.data));
   }
 }
@@ -228,7 +218,6 @@ function* deletePlan({ payload: { id } }) {
       );
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(deletePlanError(error?.response?.data));
     const message = error?.response?.data?.message
       ? error?.response?.data?.message
@@ -262,9 +251,8 @@ function* planAction({
       } else if (planAction === "TOP_UP" && paymentType === "BANK_TRANSFER") {
         toast.success("Top-up saved", { position: "top-right" });
         setTimeout(() => {
-          console.log("saved");
+          window.location.replace("/plan-list");
         }, 2000);
-        window.location.replace("/plan-list");
       } else if (planAction === "TOP_UP" && paymentType === "DEBIT_CARD") {
         setDebitPopup(false);
         onSuccess(true);
@@ -285,7 +273,6 @@ function* planAction({
       }
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(planActionError(error?.response?.data));
     const message = error?.response?.data?.message;
     if (message) {
@@ -306,7 +293,6 @@ function* getPlanHistory() {
     const response = yield call(getAllPlanHistoryService);
     yield put(getPlanHistorySuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getPlanHistoryError(error?.response?.data));
   }
 }
@@ -316,7 +302,6 @@ function* getSinglePlanHistory({ payload: { id } }) {
     const response = yield call(singlePlanHistoryService, id);
     yield put(getSinglePlanHistorySuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getSinglePlanHistoryError(error?.response?.data));
   }
 }
@@ -326,7 +311,6 @@ function* viewBankDetail({ payload: { id } }) {
     const response = yield call(viewBankDetailService, id);
     yield put(viewBankDetailSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(viewBankDetailError(error?.response?.data));
   }
 }
@@ -336,7 +320,6 @@ function* getPenalCharge() {
     const response = yield call(penalChargeService);
     yield put(getPenalChargeSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getPenalChargeError(error?.response?.data));
   }
 }
@@ -349,7 +332,6 @@ function* payWithCard({ payload: { id, setSuccess } }) {
       setSuccess(true);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(payWithCardError(error?.response?.data));
   }
 }
@@ -359,7 +341,6 @@ function* getClosedPlans() {
     const response = yield call(getClosedPlansService);
     yield put(getClosedPlansSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getClosedPlansError(error?.response?.data));
   }
 }
@@ -368,11 +349,10 @@ function* testDebitCard({ payload: { formData } }) {
   try {
     const response = yield call(testDebitCardService, formData);
     yield put(testDebitCardSuccess(response.data));
-    if(response){
+    if (response) {
       window.open(response.data, "_blank");
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(testDebitCardError(error?.response?.data));
   }
 }
@@ -402,7 +382,6 @@ function* updatePlan({
       }
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updatePlanError(error?.response?.data));
   }
 }
