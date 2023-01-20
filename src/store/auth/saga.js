@@ -61,7 +61,6 @@ function* loginUser({ payload: { formData, navigate, dispatch } }) {
     }
   } catch (error) {
     yield put(loginUserError("User not authorized or wrong details"));
-    console.log(error);
     const message = error?.response
       ? error?.response?.data?.message
         ? error?.response?.data?.message
@@ -89,7 +88,6 @@ function* logoutUser({ payload: { navigate, dispatch } }) {
       dispatch(clearMessages());
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(logoutError(error?.response?.data?.message));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message, {
@@ -107,7 +105,6 @@ function* registerUser({ payload: { formData, navigate } }) {
       navigate("/congrates", { state: "success_signup" });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(registerUserError(error?.response?.data?.message));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message, {

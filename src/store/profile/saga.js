@@ -90,10 +90,8 @@ import {
 function* getAuthentUsers() {
   try {
     const response = yield call(getAuthUsersService);
-    // console.log(response.data);
     yield put(getAuthUsersSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getAuthUsersError(error?.response?.data));
   }
 }
@@ -103,7 +101,6 @@ function* getAuthUser({ payload: { email } }) {
     const response = yield call(getAuthUserService, email);
     yield put(getAuthUserSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getAuthUserError(error?.response?.data));
   }
 }
@@ -131,7 +128,6 @@ function* updateUserKyc({ payload: { formData, pathCred, dispatch } }) {
       dispatch(getAuthUsers());
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updateUserKycError(error?.response?.data));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message);
@@ -143,11 +139,10 @@ function* updateUserName({ payload: { formData, dispatch } }) {
   try {
     const response = yield call(updateUserNameService, formData);
     yield put(updateUserNameSuccess(response.data));
-    if(response){
+    if (response) {
       dispatch(getAuthUsers());
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updateUserNameError(error?.response?.data));
   }
 }
@@ -160,7 +155,6 @@ function* verifyBvn({ payload: { formData, id, setComplete } }) {
       setComplete(true);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(verifyBvnError(error?.response?.data, id));
   }
 }
@@ -170,7 +164,6 @@ function* getCountries() {
     const response = yield call(getCountriesService);
     yield put(getCountriesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getCountriesError(error?.response?.data));
   }
 }
@@ -180,7 +173,6 @@ function* getStates({ payload: { countryId } }) {
     const response = yield call(getStatesService, countryId);
     yield put(getStatesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getStatesError(error?.response?.data));
   }
 }
@@ -190,21 +182,19 @@ function* getLgas({ payload: { stateId } }) {
     const response = yield call(getLgasService, stateId);
     yield put(getLgasSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getLgasError(error?.response?.data));
   }
 }
 
-function* sendOtp({payload: {otpType, dataObj}}) {
+function* sendOtp({ payload: { otpType, dataObj } }) {
   try {
     const response = yield call(sendOtpService, otpType, dataObj);
     yield put(sendOtpSuccess(response.data));
-    // console.log(response.data);
+  
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(sendOtpError(error?.response?.data));
   }
 }
@@ -217,21 +207,18 @@ function* validateOtp({ payload: { otp } }) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(validateOtpError(error?.response?.data));
   }
 }
 
-function* sendCompanyOtp({payload: {otpType, dataObj}}) {
+function* sendCompanyOtp({ payload: { otpType, dataObj } }) {
   try {
     const response = yield call(sendCompanyOtpService, otpType, dataObj);
     yield put(sendCompanyOtpSuccess(response.data));
-    console.log(response.data);
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(sendCompanyOtpError(error?.response?.data));
   }
 }
@@ -241,7 +228,6 @@ function* getBanks() {
     const response = yield call(getBanksService);
     yield put(getBanksSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getBanksError(error?.response?.data));
   }
 }
@@ -251,7 +237,6 @@ function* getCompanyDocument() {
     const response = yield call(getCompanyDocsService);
     yield put(getCompanyDocsSuccess(response?.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getCompanyDocsError(error?.response?.data));
   }
 }
@@ -270,7 +255,6 @@ function* getWithdrawReason() {
     const response = yield call(getWithdrawReasonService);
     yield put(getWithdrawReasonSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getWithdrawReasonError(error?.response?.data));
   }
 }
@@ -289,7 +273,6 @@ function* getAllGender() {
     const response = yield call(getAllGenderService);
     yield put(getAllGenderSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getAllGenderError(error?.response?.data));
   }
 }
@@ -299,7 +282,6 @@ function* getAllSources() {
     const response = yield call(getAllSourcesService);
     yield put(getAllSourcesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getAllSourcesError(error?.response?.data));
   }
 }
@@ -309,7 +291,6 @@ function* getAllIdTypes() {
     const response = yield call(getAllIdTypesService);
     yield put(getAllIdTypesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getAllIdTypesError(error?.response?.data));
   }
 }

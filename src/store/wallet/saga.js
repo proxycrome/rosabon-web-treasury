@@ -78,7 +78,6 @@ function* getWalletBalancer() {
     const response = yield call(getWalletBalanceService);
     yield put(getWalletBalanceSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getWalletBalanceError(error?.response?.data));
   }
 }
@@ -88,7 +87,6 @@ function* getWalletTransactions() {
     const response = yield call(getWalletTransactionsService);
     yield put(getWalletTransactionsSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getWalletTransactionsError(error?.response?.data));
   }
 }
@@ -104,7 +102,6 @@ function* requestWithdrawal({ payload: { formData } }) {
       }, 1000);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(requestWithdrawalError(error?.response?.data));
     if (error?.response) {
       setTimeout(() => {
@@ -119,7 +116,6 @@ function* getEachWalletTransaction({ payload: { transId } }) {
     const response = yield call(getEachWalletTransactionService, transId);
     yield put(getEachWalletTransactionSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getEachWalletTransactionError(error?.response?.data));
   }
 }
@@ -129,7 +125,6 @@ function* getUserReferrals() {
     const response = yield call(getMyReferralsService);
     yield put(getMyReferralsSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getMyReferralsError(error?.response?.data));
   }
 }
@@ -145,7 +140,6 @@ function* postTransferToPlan({ payload: { formData } }) {
       }, 1000);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(postTransferToPlanError(error?.response?.data));
     if (error?.response?.data?.message) {
       setTimeout(() => {
@@ -160,13 +154,12 @@ function* pokeUser({ payload: { id, dispatch } }) {
     const response = yield call(pokeUserService, id);
     yield put(pokeUserSuccess(response.data));
     if (response) {
-      dispatch(getMyReferrals())
+      dispatch(getMyReferrals());
       setTimeout(() => {
         toast.success(response.data.message);
       }, 1000);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(pokeUserError(error?.response?.data));
     if (error?.response?.data?.message) {
       setTimeout(() => {
@@ -181,7 +174,6 @@ function* getMyReferralActivities() {
     const response = yield call(getMyReferralActivitiesService);
     yield put(getMyReferralActivitiesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getMyReferralActivitiesError(error?.response?.data));
   }
 }
@@ -197,7 +189,6 @@ function* redeemReferralBonus() {
       }, 2000);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(redeemReferralBonusError(error?.response?.data));
     if (error?.response?.data?.message) {
       setTimeout(() => {
@@ -212,7 +203,6 @@ function* getMyDepositActivities() {
     const response = yield call(getMyDepositActivitiesService);
     yield put(getMyDepositActivitiesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getMyDepositActivitiesError(error?.response?.data));
   }
 }
@@ -222,7 +212,6 @@ function* getReferralRedeemThreshold() {
     const response = yield call(getReferralRedeemThresholdService);
     yield put(getReferralRedeemThresholdSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getReferralRedeemThresholdError(error?.response?.data));
   }
 }
@@ -238,7 +227,6 @@ function* redeemSpecialEarning() {
       }, 2000);
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(redeemSpecialEarningError(error?.response?.data));
     if (error?.response?.data?.message) {
       setTimeout(() => {
@@ -253,7 +241,6 @@ function* getSpecialEarningActivities() {
     const response = yield call(getSpecialEarningActivitiesService);
     yield put(getSpecialEarningActivitiesSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getSpecialEarningActivitiesError(error?.response?.data));
   }
 }
@@ -263,7 +250,6 @@ function* getTotalEarning() {
     const response = yield call(getTotalEarningService);
     yield put(getTotalEarningSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getTotalEarningError(error?.response?.data));
   }
 }
@@ -273,7 +259,6 @@ function* getTotalRedeemedEarning() {
     const response = yield call(getTotalRedeemedEarningService);
     yield put(getTotalRedeemedEarningSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getTotalRedeemedEarningError(error?.response?.data));
   }
 }

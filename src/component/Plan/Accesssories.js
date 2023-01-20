@@ -984,7 +984,7 @@ export const RolloverWithdrawMethod = ({
                       <option value="" hidden>
                         Select withdrawal destination
                       </option>
-                      <option value="TO_BANK">
+                      <option value="TO_BANK" disabled={!bankDetails}>
                         {user_role === "COMPANY"
                           ? "To Bank"
                           : bankDetails
@@ -2342,6 +2342,7 @@ export const ReferalTable = () => {
     toast.success("Referral Link Copied");
   };
 
+
   useEffect(() => {
     dispatch(getMyReferrals());
     dispatch(getAuthUsers());
@@ -3692,7 +3693,6 @@ export const PayWithCard = ({
 
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
-    // console.log(reference);
     success();
   };
 

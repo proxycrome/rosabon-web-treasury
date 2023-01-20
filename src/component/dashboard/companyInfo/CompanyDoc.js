@@ -1098,6 +1098,23 @@ const WrapperBody = styled.div`
     }
   }
 
+  input,
+  select {
+    width: 350px;
+    height: 54px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  select {
+    &:disabled {
+      background: rgba(28, 68, 141, 0.09);
+      cursor: not-allowed;
+    }
+  }
+
   @media (max-width: 1030px) {
     .block {
       display: block;
@@ -1114,6 +1131,9 @@ const WrapperBody = styled.div`
         display: block;
         font-size: 20px;
       }
+    }
+    select {
+      width: 80vw;
     }
   }
 
@@ -1238,22 +1258,7 @@ const WrapperBody = styled.div`
     color: #333333;
     padding-bottom: 65px;
   }
-  input,
-  select {
-    width: 350px !important;
-    height: 54px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 8px;
-    padding-left: 20px;
-    position: relative;
-  }
-
-  select {
-    &:disabled {
-      background: rgba(28, 68, 141, 0.09);
-      cursor: not-allowed;
-    }
-  }
+  
 
   label {
     font-style: normal;

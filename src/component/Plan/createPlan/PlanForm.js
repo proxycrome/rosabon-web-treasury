@@ -581,7 +581,6 @@ const PlanForm = () => {
       const currency = ex_rates?.find(
         (item) => item.name === formData.currency
       );
-      // console.log(currency);
       setFormData({
         ...formData,
         exchangeRate:
@@ -851,7 +850,6 @@ const PlanForm = () => {
     }, 0);
   };
 
-  console.log(product?.tenors);
 
   return (
     <form onSubmit={handleSubmit}>

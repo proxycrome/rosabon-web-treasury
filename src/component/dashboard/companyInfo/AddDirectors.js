@@ -370,7 +370,7 @@ const AddDirectors = ({
               <Collapse isOpen={showOne}>
                 <div className="image-holder">
                   <div className="row">
-                    <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-md-flex align-items-center justify-content-between">
                       <div className="d-flex align-items-center justify-content-center">
                         <img
                           className="image-frame"
@@ -414,7 +414,7 @@ const AddDirectors = ({
                         {showEdit ? (
                           <button
                             type="button"
-                            className="grey-button"
+                            className="grey-button mt-3"
                             disabled={showEdit}
                           >
                             Choose File
@@ -422,7 +422,7 @@ const AddDirectors = ({
                         ) : (
                           <button
                             type="button"
-                            className="btn_bg_blue"
+                            className="btn_bg_blue mt-3"
                             onClick={(e) =>
                               handleFileSelect(e, photoFileInputRef)
                             }

@@ -143,6 +143,7 @@ const Wrapper = styled.div`
   .message {
     margin-left: 250px;
     width: 300px;
+    height: auto;
     padding: 20px 20px 5px 20px;
     background: #87CEEB;
     border-radius: 10px 10px 0px 10px;
@@ -166,6 +167,7 @@ const Wrapper = styled.div`
     padding: 20px 20px 5px 20px;
     border-radius: 10px 10px 10px 0px;
     width: 300px;
+    height: auto;
     p {
       color: #ffffff;
       font-weight: 600;

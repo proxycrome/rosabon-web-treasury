@@ -21,7 +21,6 @@ const PlanModal = ({ handleClose }) => {
   const planProduct = products
     ? products?.data?.body?.find((item) => item.id === plan?.product?.id)
     : {};
-  // console.log("planProd", planProduct?.properties?.hasTargetAmount);
   const [autoRenew, setAutoRenew] = useState(plan?.autoRollOver);
 
   const toggleAutoRenew = async () => {

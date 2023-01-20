@@ -26,7 +26,6 @@ function* getNotification() {
     const response = yield call(getNotificationService);
     yield put(getNotificationSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(getNotificationError(error?.response?.data));
   }
 }
@@ -36,7 +35,6 @@ function* readNotification({ payload: { id } }) {
     const response = yield call(readNotificationService, id);
     yield put(readNotificationSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(readNotificationError(error?.response?.data));
   }
 }
@@ -46,7 +44,6 @@ function* readAllNotifications() {
     const response = yield call(readAllNotificationsService);
     yield put(readAllNotificationsSuccess(response.data));
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(readAllNotificationsError(error?.response?.data));
   }
 }
