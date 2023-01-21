@@ -2,7 +2,6 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useRef,
   useMemo,
   useCallback,
 } from "react";
@@ -33,7 +32,6 @@ import {
   getClosedTickets,
   getSingleTicket,
   verifyPaystack,
-  createPlan,
   getEachWalletTransaction,
   getEligiblePlans,
   getMyReferrals,
@@ -421,9 +419,9 @@ const PaymentTypeWrapper = styled.div`
 
 export const UserBankDetails = ({ type = null }) => {
   const { users } = useSelector((state) => state.user_profile);
-  const { singlePlan, bank_detail } = useSelector((state) => state.plan);
+  const { bank_detail } = useSelector((state) => state.plan);
   const { dynamic_account, loading } = useSelector((state) => state.providus);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+  // const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
   let date = new Date();
   const time_format = moment(date).format("HH:mm");
@@ -673,7 +671,7 @@ export const RolloverSummary = ({
 }) => {
   // const [isTerms, setIsTerms] = useState(false);
 
-  const { singlePlan, investment_rates } = useSelector((state) => state.plan);
+  const { singlePlan } = useSelector((state) => state.plan);
   const plan = useMemo(
     () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
     [singlePlan]
@@ -695,7 +693,7 @@ export const RolloverSummary = ({
 
   useEffect(() => {
     setEndDate(endDate);
-  }, []);
+  }, [addedDate, setEndDate, endDate]);
 
   const customTenorDays = moment(addedDate).diff(date, "days");
 
@@ -918,9 +916,9 @@ export const RolloverWithdrawMethod = ({
   type,
 }) => {
   const dispatch = useDispatch();
-  const [withdraw, setWithdraw] = useState("");
-  const { login } = useSelector((state) => state.auth);
-  const { singlePlan, investment_rates } = useSelector((state) => state.plan);
+  // const [withdraw, setWithdraw] = useState("");
+  // const { login } = useSelector((state) => state.auth);
+  const { singlePlan} = useSelector((state) => state.plan);
   const plan = useMemo(
     () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
     [singlePlan]
@@ -1649,7 +1647,7 @@ export const AvailableBalance = ({
 }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [withdrawMandateImage, setWithdrawMandateImage] = useState({});
-  const [withdrawInstructionImage, setWithdrawInstructionImage] = useState({});
+  // const [withdrawInstructionImage, setWithdrawInstructionImage] = useState({});
 
   const data = {
     withdrawalAmount: "",
@@ -1679,7 +1677,7 @@ export const AvailableBalance = ({
 
       const data = {
         bankAccountId: Number(bankAccountId),
-        withdrawalAmount: Number(withdrawalAmount),
+        withdrawalAmount: parseFloat(withdrawalAmount),
         withdrawalReasonId,
         withdrawalReasonOthers,
       };
@@ -1690,7 +1688,7 @@ export const AvailableBalance = ({
         formData;
 
       const data = {
-        withdrawalAmount: Number(withdrawalAmount),
+        withdrawalAmount: parseFloat(withdrawalAmount),
         withdrawalReasonId,
         withdrawalReasonOthers,
         // withdrawalInstructionImage: withdrawInstructionImage,
@@ -1705,8 +1703,6 @@ export const AvailableBalance = ({
       setShowTextArea(!showTextArea);
     }
   };
-
-  const formatNumber = new Intl.NumberFormat(undefined, {});
 
   return (
     <AvailableBalanceWapper id={id}>
@@ -1911,7 +1907,7 @@ export const TransferCard = ({
     const { amount, planId } = formData;
 
     const data = {
-      amount: Number(amount),
+      amount: parseFloat(amount),
       description: `Transfer of ${amount ? amount : 0} to ${planName(planId)}`,
       planId: Number(planId),
     };
@@ -1921,8 +1917,6 @@ export const TransferCard = ({
   useEffect(() => {
     dispatch(getEligiblePlans());
   }, [dispatch]);
-
-  const formatNumber = new Intl.NumberFormat(undefined, {});
 
   return (
     <AvailableBalanceWapper id={id}>
@@ -2551,7 +2545,7 @@ const ReferalTableWarapper = styled.div`
 export const ReferralBonus = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user_profile);
-  const { loading, refActivities, refRedeemMsg, referralThreshold } =
+  const { loading, refActivities, referralThreshold } =
     useSelector((state) => state.wallet);
 
   const handleRedeemClick = () => {
@@ -2804,7 +2798,7 @@ export const TransferDeposit = () => {
   const [plan, setPlan] = useState(false);
 
   const dispatch = useDispatch();
-  const { loading, depositActivites } = useSelector((state) => state.wallet);
+  const { depositActivites } = useSelector((state) => state.wallet);
   const activedeposits = depositActivites ? depositActivites?.entities : [];
   const bankDeposits = depositActivites?.entities.filter(
     (item) => item.category === "BANK_ACCOUNT_TO_WALLET_FUNDING"
@@ -3682,7 +3676,7 @@ export const PayWithCard = ({
   const dispatch = useDispatch();
   const { form } = useContext(PlanContext);
   const { loading } = useSelector((state) => state.plan);
-  const { verify_paystack } = useSelector((state) => state.paystack);
+  // const { verify_paystack } = useSelector((state) => state.paystack);
 
   // you can call this function anything
   const success = async () => {

@@ -52,7 +52,7 @@ const Withdrawal = () => {
     dispatch(getSinglePlan(parseInt(id)));
     dispatch(getWithdrawReason());
     dispatch(getPenalCharge());
-  }, []);
+  }, [dispatch, id]);
 
   useEffect(() => {
     if(plan?.planStatus === "MATURED"){
