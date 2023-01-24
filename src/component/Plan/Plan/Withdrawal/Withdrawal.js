@@ -55,13 +55,13 @@ const Withdrawal = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if(plan?.planStatus === "MATURED"){
+    if (plan?.planStatus === "MATURED") {
       setWithdrawType("full");
       setAmount(plan?.planSummary?.principal);
     } else {
       setWithdrawType("part");
     }
-  }, [plan])
+  }, [plan]);
 
   let date = new Date();
   const recentDate = moment(date).format("YYYY-MM-DD");
@@ -80,7 +80,9 @@ const Withdrawal = () => {
       );
 
       const currentNumberOfDays =
-        moment(recentDate).diff(plan?.planSummary?.startDate, "days");
+        moment(recentDate).diff(plan?.planSummary?.startDate, "days") === 0
+          ? 1
+          : moment(recentDate).diff(plan?.planSummary?.startDate, "days");
 
       const penalDays = moment(plan?.planSummary?.endDate).diff(
         recentDate,
@@ -88,8 +90,8 @@ const Withdrawal = () => {
       );
 
       planProductCharges.forEach((item) => {
-        const maxDays = (item.maxDaysElapsed * maxNumberDays) / 100;
-        const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
+        const maxDays = Math.floor((item.maxDaysElapsed * maxNumberDays) / 100);
+        const minDays = Math.floor((item.minDaysElapsed * maxNumberDays) / 100);
         if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
           penalRate = item.penalRate / 100;
         }
@@ -99,14 +101,14 @@ const Withdrawal = () => {
         switch (intRecOption) {
           case "MATURITY":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays || 1 * penalRate * amount) / 365;
+              penalCharge = (currentNumberOfDays * penalRate * amount) / 365;
             } else if (
               plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
             ) {
               const totalEarnedInt =
                 (plan?.planSummary?.principal *
                   plan?.interestRate *
-                  (currentNumberOfDays || 1 / 365)) /
+                  (currentNumberOfDays / 365)) /
                 100;
               penalCharge = totalEarnedInt * penalRate;
             }
@@ -118,9 +120,9 @@ const Withdrawal = () => {
                 amount * (plan?.interestRate / 100) * (maxNumberDays / 365) -
                 amount *
                   (plan?.interestRate / 100) *
-                  (currentNumberOfDays || 1 / 365);
+                  (currentNumberOfDays / 365);
               penalCharge =
-                (currentNumberOfDays || 1 / 365) * penalRate * amount +
+                (currentNumberOfDays / 365) * penalRate * amount +
                 excessIntPaid;
             }
             break;
@@ -129,7 +131,7 @@ const Withdrawal = () => {
           case "QUARTERLY":
           case "BI_ANNUAL":
             if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays || 1 / 365) * penalRate * amount;
+              penalCharge = (currentNumberOfDays / 365) * penalRate * amount;
             }
             break;
 
@@ -139,14 +141,14 @@ const Withdrawal = () => {
         }
       }
 
-      return penalCharge.toFixed(2);
+      return penalCharge;
     },
     [plan, amount, recentDate, planProductCharges]
   );
 
   useEffect(() => {
     setPenalAmount(computePenalCharge(plan?.interestReceiptOption));
-  }, [computePenalCharge, plan]);
+  }, [computePenalCharge, plan, amount]);
 
   const handleClick = (e) => {
     const { name, value } = e.target;
@@ -163,9 +165,11 @@ const Withdrawal = () => {
       setBalance(0);
     } else {
       setBalance(
-        (plan?.planSummary?.principal -
+        (
+          plan?.planSummary?.principal -
           (amount ? parseFloat(amount) : 0) -
-          penalAmount)?.toFixed(2)
+          penalAmount
+        )?.toFixed(2)
       );
     }
   }, [amount, penalAmount, plan]);
@@ -211,6 +215,7 @@ const Withdrawal = () => {
           setWithdrawType("part");
           setIsClicked(false);
         }}
+        penalAmount={penalAmount}
       />
     );
   }
@@ -297,7 +302,9 @@ const Withdrawal = () => {
                           <h4>Balance</h4>
                           <p className="p-0 m-0 d-flex gap-1">
                             {getCurrIcon(plan?.currency?.name)}
-                            {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
+                            {formatCurrValue(
+                              parseFloat(plan?.planSummary?.principal)
+                            )}
                           </p>
                         </div>
                         {/* <i className="fa-solid fa-ellipsis"></i> */}
@@ -360,7 +367,10 @@ const Withdrawal = () => {
                           step="0.001"
                           lang="nb"
                           required
-                          disabled={withdrawType === "full" || plan?.planStatus === "MATURED"}
+                          disabled={
+                            withdrawType === "full" ||
+                            plan?.planStatus === "MATURED"
+                          }
                           onWheel={numberInputOnWheelPreventChange}
                           onKeyDown={arrowBtnPreventChange}
                         />
@@ -545,7 +555,7 @@ const LeftView = styled.div`
     -webkit-appearance: none;
     margin: 0;
   }
-  
+
   input[type="number"] {
     -moz-appearance: textfield;
   }

@@ -7,7 +7,7 @@ import { UncontrolledTooltip, Input } from "reactstrap";
 import PlanPay from "./PlanPay";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import { getCurrIcon, paymentAtMaturity } from "../Accesssories";
+import { formatCurrValue, getCurrIcon, paymentAtMaturity } from "../Accesssories";
 import {
   getCurrencies,
   getExRates,
@@ -191,7 +191,8 @@ const PlanForm = () => {
         actualMaturityDate: checkAtMaturity
           ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
           : moment(endDate).format("YYYY-MM-DD"),
-        contributionValue: formData.contributionValue === "" ? 0 : formData.contributionValue,
+        contributionValue:
+          formData.contributionValue === "" ? 0 : formData.contributionValue,
         amount: formData.amount === "" ? 0 : formData.amount,
         targetAmount: formData.targetAmount === "" ? 0 : formData.targetAmount,
         currency: currencies_list.find(
@@ -306,7 +307,7 @@ const PlanForm = () => {
           }
           setFormData({
             ...formData,
-            contributionValue: Number(computedValue),
+            contributionValue: parseFloat(computedValue),
           });
         } else if (
           conValue === "contributionValue" &&
@@ -365,7 +366,7 @@ const PlanForm = () => {
             }
             setFormData({
               ...formData,
-              targetAmount: Number(computedValue),
+              targetAmount: parseFloat(computedValue),
             });
           }
         }
@@ -530,9 +531,13 @@ const PlanForm = () => {
         ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
         : moment(endDate).format("YYYY-MM-DD"),
       interestRate: formData.interestRate,
-      principal: product?.properties?.hasTargetAmount
-        ? formData.targetAmount
-        : formData.amount,
+      principal:
+        product?.properties?.hasTargetAmount &&
+        product?.properties?.hasSavingFrequency
+          ? formData.contributionValue
+          : product?.properties.hasTargetAmount
+          ? formData.targetAmount
+          : formData.amount,
       withholdingTax: calc_withholding_tax,
       // interestPaymentFrequency: formData.interestReceiptOption,
       interestReceiptOption: formData.interestReceiptOption,
@@ -571,6 +576,7 @@ const PlanForm = () => {
     formData.interestReceiptOption,
     formData.targetAmount,
     formData.amount,
+    formData.contributionValue,
     formData.actualMaturityDate,
     summary.calculatedInterest,
   ]);
@@ -668,20 +674,22 @@ const PlanForm = () => {
   }, []);
 
   useEffect(() => {
-    if(formData.directDebit === "true" && product?.properties?.hasSavingFrequency){
+    if (
+      formData.directDebit === "true" &&
+      product?.properties?.hasSavingFrequency
+    ) {
       const cardName = new Date().getTime().toString();
       setFormData({
         ...formData,
         nameOfDirectDebitCard: cardName,
-      })
+      });
 
       const data = {
-        cardName: cardName, 
-      }
-      dispatch(testDebitCard(data));      
+        cardName: cardName,
+      };
+      dispatch(testDebitCard(data));
     }
   }, [formData.directDebit]);
-
 
   if (isClicked && formData.planSummary !== null) {
     return (
@@ -849,7 +857,6 @@ const PlanForm = () => {
       e.target.focus();
     }, 0);
   };
-
 
   return (
     <form onSubmit={handleSubmit}>

@@ -124,10 +124,10 @@ export const updateContactDetailsError = (error) => {
   };
 };
 
-export const updateDirectorDetails = (formData, reset, dispatch) => {
+export const updateDirectorDetails = (formData, reset, dispatch, handleClose, setShowEdit) => {
   return {
     type: UPDATE_DIRECTOR_DETAILS,
-    payload: { formData, reset, dispatch },
+    payload: { formData, reset, dispatch, handleClose, setShowEdit },
   };
 };
 

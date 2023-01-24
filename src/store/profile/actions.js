@@ -53,6 +53,7 @@ import {
   UPDATE_USER_NAME,
   UPDATE_USER_NAME_ERROR,
   UPDATE_USER_NAME_SUCCESS,
+  VALIDATE_DIR_OTP_SUCCESS,
   VALIDATE_OTP,
   VALIDATE_OTP_ERROR,
   VALIDATE_OTP_SUCCESS,
@@ -249,16 +250,23 @@ export const sendOtpError = (error) => {
   };
 };
 
-export const validateOtp = (otp) => {
+export const validateOtp = (otp, validType) => {
   return {
     type: VALIDATE_OTP,
-    payload: { otp },
+    payload: { otp, validType },
   };
 };
 
 export const validateOtpSuccess = (data) => {
   return {
     type: VALIDATE_OTP_SUCCESS,
+    payload: data,
+  };
+};
+
+export const validateDirOtpSuccess = (data) => {
+  return {
+    type: VALIDATE_DIR_OTP_SUCCESS,
     payload: data,
   };
 };

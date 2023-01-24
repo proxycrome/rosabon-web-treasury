@@ -84,13 +84,13 @@ function* changeUserPassword({
         response?.data?.data?.creationSource === "BACKEND" &&
         !resetPassword
       ) {
-        toast.success(response.data.message);
+        toast.success(response.data.message, {position: "top-right"});
         setTimeout(() => {
           dispatch(logout(navigate, dispatch));
         }, 2000);
       } else {
         setTimeout(() => {
-          toast.success(response.data.message);
+          toast.success(response.data.message, {position: "top-right"});
         }, 1000);
       }
     }
@@ -128,16 +128,22 @@ function* updateContactDetails({ payload: { formData } }) {
   }
 }
 
-function* updateDirectorDetails({ payload: { formData, reset, dispatch } }) {
+function* updateDirectorDetails({ payload: { formData, reset, dispatch, handleClose, setShowEdit } }) {
   try {
     const response = yield call(updateDirectorDetailsService, formData);
     yield put(updateDirectorDetailsSuccess(response.data));
     if (response) {
       toast.success("Director Details Updated Successfully");
-      reset();
       dispatch(getDirectorDetails());
+      reset();
+      handleClose(false);
+      setShowEdit(true);
+     // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000)
     }
   } catch (error) {
+    console.log(error?.response?.data);
     yield put(updateDirectorDetailsError(error?.response?.data));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message);

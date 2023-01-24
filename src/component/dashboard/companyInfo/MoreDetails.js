@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UncontrolledTooltip } from "reactstrap";
-import { Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import { Collapse } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
@@ -26,6 +26,7 @@ import {
   CLEAR_OTP,
   CLOSE_MODAL,
   CLEAR_MESSAGES,
+  CLEAR_BVN,
 } from "../../../store/profile/actionTypes";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -35,7 +36,7 @@ const MoreDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [showOne, setShowOne] = useState(true);
   const [showEdit, setShowEdit] = useState(true);
-  const [ , setToken] = useState("");
+  const [, setToken] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addDirectors, setAddDirectors] = useState(false);
@@ -58,7 +59,7 @@ const MoreDetails = () => {
     showEmailOtpModal,
     otp,
     validateEmailOtp,
-    id,
+    idNo,
     idTypes,
   } = useSelector((state) => state.user_profile);
 
@@ -66,16 +67,16 @@ const MoreDetails = () => {
     (state) => state.updateProfile
   );
 
-  const [col1, setCol1] = useState("");
+  // const [col1, setCol1] = useState("");
   const [col2, setCol2] = useState("");
 
-  const t_col1 = (val) => {
-    if (col1 === val) {
-      setCol1("");
-    } else {
-      setCol1(val);
-    }
-  };
+  // const t_col1 = (val) => {
+  //   if (col1 === val) {
+  //     setCol1("");
+  //   } else {
+  //     setCol1(val);
+  //   }
+  // };
 
   const t_col2 = (val) => {
     if (col2 === val) {
@@ -124,8 +125,10 @@ const MoreDetails = () => {
   const updateNames = (firstName, lastName) => {
     setformData({
       ...formData,
-      firstName,
-      lastName,
+      firstName:
+        firstName?.charAt(0).toUpperCase() + firstName?.slice(1).toLowerCase(),
+      lastName:
+        lastName?.charAt(0).toUpperCase() + lastName?.slice(1).toLowerCase(),
     });
   };
 
@@ -170,7 +173,7 @@ const MoreDetails = () => {
           });
         };
         reader.onerror = (error) => {
-          console.log({error});
+          console.log({ error });
         };
       }
     };
@@ -184,13 +187,13 @@ const MoreDetails = () => {
     e.target.value = null;
   };
 
-  const updateMoreDirector = (values) => {
-    const newDirector = {
-      id: new Date().getTime().toString(),
-      ...values,
-    };
-    setDirectorField([...directorField, newDirector]);
-  };
+  // const updateMoreDirector = (values) => {
+  //   const newDirector = {
+  //     id: new Date().getTime().toString(),
+  //     ...values,
+  //   };
+  //   setDirectorField([...directorField, newDirector]);
+  // };
 
   function validateform(values) {
     let errors = {};
@@ -248,7 +251,8 @@ const MoreDetails = () => {
         address: editFormData[`address${col2}`] || director?.address,
         bvn: editFormData[`bvn${col2}`] || director?.bvn,
         idTypeId:
-          Number(editFormData[`idTypeId${col2}`]) || Number(director?.idType?.id),
+          Number(editFormData[`idTypeId${col2}`]) ||
+          Number(director?.idType?.id),
         idNumber: editFormData[`idNumber${col2}`] || director?.idNumber,
         idDocumentImage: {
           encodedUpload: base64File[`frontEncodedString${col2}`],
@@ -257,31 +261,31 @@ const MoreDetails = () => {
           encodedUpload: base64File[`photoEncodedString${col2}`],
         },
       };
-      dispatch(updateDirectorDetails(data, reset, dispatch));
+      dispatch(updateDirectorDetails(data, reset, dispatch, null));
+      setShowEdit(true);
+      dispatch({type: CLEAR_BVN});
+      return;
     }
 
-    if (directorField?.length > 0) {
-      let formArr = [];
-      formArr.push(...directorField);
-
-      const dirArr = formArr?.map((item) => {
-        const { id, no, ...others } = item;
-        return { ...others };
-      });
-      dispatch(updateDirectorDetails(dirArr, reset, dispatch));
-    } else {
-      setErrors(validateform(formData));
-      setIsSubmitted(true);
+    if (base64File.photoEncodedString === "") {
+      toast.error("Please upload your Passport photo");
+      return;
     }
+    if (base64File.frontEncodedString === "") {
+      toast.error("Please upload a copy of your ID Card");
+      return;
+    }
+    setErrors(validateform(formData));
+    setIsSubmitted(true);
   };
 
   useEffect(() => {
     let formArr = [];
     if (Object.keys(errors).length === 0 && isSubmitted) {
-      // if (!bvnMessage?.isNameMatched) {
-      //   toast.error("Verify Your BVN");
-      //   return;
-      // }
+      if (!bvnMessage?.isNameMatched) {
+        toast.error("Verify Your BVN");
+        return;
+      }
       const {
         firstName,
         middleName,
@@ -317,14 +321,14 @@ const MoreDetails = () => {
 
       formArr.push(data);
 
-      formArr.push(...directorField);
-
       const otherArr = formArr.map((data) => {
-        const { id, no, ...others } = data;
+        const { no, ...others } = data;
         return { ...others };
       });
 
-      dispatch(updateDirectorDetails(otherArr, reset, dispatch));
+      dispatch(updateDirectorDetails(otherArr, reset, dispatch ));
+      setShowEdit(true);
+      dispatch({type: CLEAR_BVN});
     }
   }, [errors]);
 
@@ -423,20 +427,22 @@ const MoreDetails = () => {
     });
   };
 
-  const deleteDirectorDetails = (id) => {
-    const rem = directorField?.filter((item) => item.id !== id);
-    setDirectorField(rem);
-  };
-
+  // const deleteDirectorDetails = (id) => {
+  //   const rem = directorField?.filter((item) => item.id !== id);
+  //   setDirectorField(rem);
+  // };
 
   useEffect(() => {
     dispatch(getAllIdTypes());
+    dispatch({type: CLEAR_BVN});
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(getDirectorDetails());
-    setDirectorField([]);
+    // setDirectorField([]);
   }, [dispatch, deleteDirectorMsg, directorMsg]);
+
+  console.log(bvnMessage);
 
   return (
     <div>
@@ -462,11 +468,11 @@ const MoreDetails = () => {
                   ) : (
                     <button
                       type="button"
-                      className="grey-btn"
+                      className="grey-button"
                       onClick={() => {
                         toggleEdit();
                         if (
-                          directorField?.length <= 0 &&
+                          // directorField?.length <= 0 &&
                           directors?.length <= 0
                         ) {
                           reset();
@@ -517,9 +523,10 @@ const MoreDetails = () => {
                         <div className="d-flex flex-column align-items-end">
                           <button
                             type="button"
-                            className={`${directors?.length < 2 ? "grey-button" : " red-button mb-5"}`}
+                            // className={`${directors?.length < 2 ? "grey-button" : " red-button mb-5"}`}
+                            className="red-button mb-5"
                             onClick={() => setShowModal(true)}
-                            disabled={directors?.length < 2}
+                            // disabled={directors?.length < 2}
                           >
                             Delete Director
                           </button>
@@ -617,7 +624,7 @@ const MoreDetails = () => {
                                       alt="User"
                                       width="125"
                                       height="125"
-                                    /> 
+                                    />
                                   )}
 
                                   {base64File[`photoEncodedString${col2}`] ? (
@@ -822,7 +829,9 @@ const MoreDetails = () => {
                                   </div>
                                   {bvnError && bvnError.message && (
                                     <small className="text-danger">
-                                      {bvnError?.message}
+                                      {bvnError?.message && idNo === col2
+                                        ? bvnError?.message
+                                        : ""}
                                     </small>
                                   )}
                                 </div>
@@ -1110,7 +1119,7 @@ const MoreDetails = () => {
                     {/* <hr /> */}
                   </div>
                 ))}
-                {directorField?.length > 0 &&
+                {/* {directorField?.length > 0 &&
                   directorField?.map((data) => (
                     <div key={data.id}>
                       <hr />
@@ -1140,7 +1149,7 @@ const MoreDetails = () => {
                           </div>
                         </div>
                       </div>
-                      {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
+                      
                       <Collapse isOpen={col1 === data.id}>
                         <div className="image-holder">
                           <div className="row">
@@ -1514,10 +1523,25 @@ const MoreDetails = () => {
                           )}
                         </div>
                       </Collapse>
-                      {/* </form> */}
+                       
                     </div>
-                  ))}
-                <Collapse isOpen={addDirectors}>
+                  ))} */}
+                <ModalComponent
+                  show={addDirectors}
+                  size={"md"}
+                  handleClose={() => setAddDirectors(false)}
+                >
+                  <AddDirectors
+                    countNumbers={countNumbers}
+                    number={
+                      directorField[directorField.length - 1]?.no ||
+                      directors?.length
+                    }
+                    removeForm={setAddDirectors}
+                    idTypes={idTypes}
+                  />
+                </ModalComponent>
+                {/* <Collapse isOpen={addDirectors}>
                   {
                     addDirectors && (
                       <AddDirectors
@@ -1532,7 +1556,7 @@ const MoreDetails = () => {
                       />
                     )
                   }
-                </Collapse>
+                </Collapse> */}
                 <div className="row">
                   <div
                     className="d-flex align-items-center mt-5"
@@ -1708,11 +1732,6 @@ const MoreDetails = () => {
                             disabled={showEdit}
                           />
                         </div>
-                        {errors.middleName && (
-                          <span className="text-danger">
-                            {errors.middleName}
-                          </span>
-                        )}
                       </div>
                       <div className="col-md-4 mb-4">
                         <label>Last Name</label>
@@ -1819,7 +1838,7 @@ const MoreDetails = () => {
                               />
                             </div>
                             <small className="text-danger">
-                              {bvnError?.message && id === 1
+                              {bvnError?.message && idNo === 1
                                 ? bvnError?.message
                                 : ""}
                             </small>
@@ -1833,9 +1852,8 @@ const MoreDetails = () => {
                           formData.phone &&
                           formData.email &&
                           formData.bvn &&
-                          // !showEdit &&
-                          (!(formData.firstName === bvnMessage?.data?.firstName) ||
-                          !(formData.lastName === bvnMessage?.data?.lastName)) ? (
+                          !showEdit &&
+                          !bvnMessage?.isNameMatched ? (
                             <div className="col-4 mt-3">
                               <button
                                 type="button"
@@ -1849,7 +1867,7 @@ const MoreDetails = () => {
                             <div className="col-4 mt-3">
                               <button
                                 type="button"
-                                disabled={showEdit}
+                                disabled={showEdit || bvnMessage?.isNameMatched}
                                 className="grey_vify_btn"
                               >
                                 Verify
@@ -1876,9 +1894,9 @@ const MoreDetails = () => {
                                   firstName={bvnMessage?.data?.firstName}
                                   lastName={bvnMessage?.data?.lastName}
                                   bvn={formData.bvn}
-                                  confirmName={(firstName, lastName) =>
-                                    {updateNames(firstName, lastName)}
-                                  }
+                                  confirmName={(firstName, lastName) => {
+                                    updateNames(firstName, lastName);
+                                  }}
                                   director="director"
                                   nameMatch={bvnMessage?.isNameMatched}
                                 />
@@ -2091,7 +2109,7 @@ const MoreDetails = () => {
                     )}
                   </Collapse>
                   {/* </form> */}
-                  {directorField?.length > 0 &&
+                  {/* {directorField?.length > 0 &&
                     directorField?.map((data) => (
                       <div key={data.id}>
                         <hr />
@@ -2121,7 +2139,7 @@ const MoreDetails = () => {
                             </div>
                           </div>
                         </div>
-                        {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
+                      
                         <Collapse isOpen={col1 === data.id}>
                           <div className="image-holder">
                             <div className="row">
@@ -2420,18 +2438,14 @@ const MoreDetails = () => {
                                   </div>
                                 </div>
                                 <div className=" style-attachment">
-                                  {/* <a
-                                        href={companyDocs?.contactPersonIdImage?.imageUrl}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                      > */}
+                                  
                                   <button
                                     type="button"
                                     className="normal-btn grey-button"
                                   >
                                     View
                                   </button>
-                                  {/* </a> */}
+                                  
                                 </div>
                               </div>
                             </div>
@@ -2551,22 +2565,22 @@ const MoreDetails = () => {
                               )}
                             </div>
                           )}
-                        </Collapse>
-                        {/* </form> */}
+                        </Collapse> 
+                        
                       </div>
-                    ))}
-                  <Collapse isOpen={addDirectors}>
-                    {
-                      addDirectors && (
-                        <AddDirectors
-                          updateDirector={(data) => updateMoreDirector(data)}
-                          countNumbers={countNumbers}
-                          number={directorField[directorField.length - 1]?.no || 1}
-                          removeForm={setAddDirectors}
-                          idTypes={idTypes}
-                        />
-                      )
-                    }
+                    ))}*/}
+                  {/* <Collapse isOpen={addDirectors}>
+                    {addDirectors && (
+                      <AddDirectors
+                        updateDirector={(data) => updateMoreDirector(data)}
+                        countNumbers={countNumbers}
+                        number={
+                          directorField[directorField.length - 1]?.no || 1
+                        }
+                        removeForm={setAddDirectors}
+                        idTypes={idTypes}
+                      />
+                    )}
                   </Collapse>
                   <div className="row">
                     <div
@@ -2580,7 +2594,7 @@ const MoreDetails = () => {
                         Add More Directors
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}
@@ -2590,7 +2604,7 @@ const MoreDetails = () => {
           <div className="footer-body">
             <div className="d-flex align-items-center justify-content-end footer-content">
               <div>
-                {!showEdit || directorField?.length > 0 ? (
+                {!showEdit ? (
                   <button type="submit" className="blue-btn">
                     Save
                   </button>
@@ -2723,7 +2737,6 @@ const WrapperBody = styled.div`
     margin-top: 35px;
     background: #f2f2f2;
     color: #ccc;
-    cursor: not-allowed;
     border-radius: 8px;
     font-style: normal;
     font-weight: 600;

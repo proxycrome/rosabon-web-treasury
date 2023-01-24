@@ -419,7 +419,11 @@ export function OTPVerify({
 
   const handleEmailOtpSubmit = async (e) => {
     e.preventDefault();
-    dispatch(validateOtp(token));
+    if(otpType === "addDirector"){
+      dispatch(validateOtp(token, "addDirector"));
+    }else{
+      dispatch(validateOtp(token));
+    }
   };
 
   useEffect(() => {
