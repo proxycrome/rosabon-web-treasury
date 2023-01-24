@@ -138,12 +138,8 @@ function* updateDirectorDetails({ payload: { formData, reset, dispatch, handleCl
       reset();
       handleClose(false);
       setShowEdit(true);
-     // setTimeout(() => {
-      //   window.location.reload();
-      // }, 2000)
     }
   } catch (error) {
-    console.log(error?.response?.data);
     yield put(updateDirectorDetailsError(error?.response?.data));
     if (error?.response?.data?.message) {
       toast.error(error?.response?.data?.message);

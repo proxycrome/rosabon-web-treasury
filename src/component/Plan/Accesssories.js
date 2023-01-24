@@ -2877,8 +2877,6 @@ export const SpecialEarnings = () => {
     dispatch(getTotalRedeemedEarning());
   }, [dispatch]);
 
-  console.log(earningsActivities);
-
   const data = {
     columns: [
       {

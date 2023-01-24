@@ -442,8 +442,6 @@ const MoreDetails = () => {
     // setDirectorField([]);
   }, [dispatch, deleteDirectorMsg, directorMsg]);
 
-  console.log(bvnMessage);
-
   return (
     <div>
       <Toaster />
