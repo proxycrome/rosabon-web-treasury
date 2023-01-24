@@ -16,7 +16,7 @@ const ModalComponent = ({
       size={size}
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      scrollable={size !== "md"}
+      scrollable={size !== "md" && size !== "lg"}
     >
       {header && (
         <Modal.Header closeButton>

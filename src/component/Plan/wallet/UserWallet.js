@@ -38,12 +38,12 @@ const UserWallet = () => {
 
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
-  const { users, bankDetails, bankDetailsError, withdrawReasons } = useSelector(
+  const { users, bankDetails, bankDetailsError, withdrawReasons, loading: userLoading, } = useSelector(
     (state) => state.user_profile
   );
   const { walletBalance, loading } = useSelector((state) => state.wallet);
-  // const { login } = useSelector((state) => state.auth);
 
+  
   const handleClick = (value) => {
     if (value === "transfer") {
       setIsWithDraw(true);
@@ -203,7 +203,7 @@ const UserWallet = () => {
           </NavTitle>
         </ProfileNavBar>
         <Toaster />
-        {loading ? (
+        {loading && userLoading ? (
           <div className="vh-100 w-100">
             <Spinner />
           </div>

@@ -63,6 +63,7 @@ import {
   getCompanyDocsSuccess,
   updateUserNameSuccess,
   updateUserNameError,
+  validateDirOtpSuccess,
 } from "./actions";
 
 import {
@@ -199,10 +200,14 @@ function* sendOtp({ payload: { otpType, dataObj } }) {
   }
 }
 
-function* validateOtp({ payload: { otp } }) {
+function* validateOtp({ payload: { otp, validType } }) {
   try {
     const response = yield call(validateOtpService, otp);
-    yield put(validateOtpSuccess(response.data));
+    if(validType === "addDirector"){
+      yield put(validateDirOtpSuccess(response.data))
+    }else{
+      yield put(validateOtpSuccess(response.data));
+    } 
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }

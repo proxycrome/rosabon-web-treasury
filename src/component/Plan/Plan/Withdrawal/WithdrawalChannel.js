@@ -4,29 +4,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { SuccessConfirm } from "../../../Accessories/BVNConfirm";
 import { ProfileNavBar } from "../../../dashboard/ProfileNavbar";
 import ModalComponent from "../../../ModalComponent";
-import { RolloverWithdrawMethod, WithdrawalSummary } from "../../Accesssories";
+import { formatCurrValue, RolloverWithdrawMethod, WithdrawalSummary } from "../../Accesssories";
 import { Toaster } from "react-hot-toast";
 import { planAction, getPenalCharge } from "../../../../store/actions";
 
-const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
+const WithdrawalChannel = ({ goBack, amount, type, reason, penalAmount }) => {
   const [modalState, setModalState] = useState(false);
   const [withdrawTo, setWithdrawTo] = useState("");
-  const [gate, setPenalCharge] = useState();
   // const [isTerms, setIsTerms] = useState(false);
   const [base64File, setBase64File] = useState({
     corporateUserWithdrawalMandate: "",
   });
 
   const dispatch = useDispatch();
-  const { bankDetails } = useSelector((state) => state.user_profile);
+  const { bankDetails, users } = useSelector((state) => state.user_profile);
   const { singlePlan, loading } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
-  const { login } = useSelector((state) => state.auth);
-  const user_role = login ? login?.role?.name : "";
+  // const { login } = useSelector((state) => state.auth);
+  const user_role = users ? users?.role : "";
 
   useEffect(() => {
     dispatch(getPenalCharge());
+    // dispatch(getBankDetails());
   }, [dispatch]);
 
   const submit = async (e) => {
@@ -44,7 +44,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
             corporateUserWithdrawalMandate:
               user_role === "COMPANY" ? corporateUserWithdrawalMandate : null,
             plan: plan?.id,
-            penalCharge: parseFloat(penalCharge),
+            penalCharge: parseFloat(formatCurrValue(parseFloat(penalAmount))),
             planAction: "WITHDRAW",
             withdrawTo: withdrawTo,
             withdrawType: type,
@@ -60,12 +60,13 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
               : null,
           completed: true,
           plan: plan?.id,
-          penalCharge: parseFloat(penalCharge),
+          penalCharge: parseFloat(formatCurrValue(parseFloat(penalAmount))),
           planAction: "WITHDRAW",
           withdrawTo: withdrawTo,
           withdrawType: type,
         };
-        await dispatch(planAction(formData, setModalState))
+        
+        await dispatch(planAction(formData, setModalState));
       }
     }
   };
@@ -85,7 +86,7 @@ const WithdrawalChannel = ({ goBack, amount, type, reason, penalCharge }) => {
             <WithdrawalSummary
               amount={amount}
               reason={reason}
-              compPenalCharge={setPenalCharge}
+              penalAmount={penalAmount}
               checkTerms={() => {}}
               termRequired={"nil"}
             />

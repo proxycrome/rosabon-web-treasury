@@ -58,6 +58,7 @@ import {
   UPDATE_USER_NAME,
   UPDATE_USER_NAME_ERROR,
   UPDATE_USER_NAME_SUCCESS,
+  VALIDATE_DIR_OTP_SUCCESS,
   VALIDATE_OTP,
   VALIDATE_OTP_ERROR,
   VALIDATE_OTP_SUCCESS,
@@ -90,10 +91,11 @@ const initialState = {
   banks: null,
   banksError: null,
   validateEmailOtp: null,
+  validateDirOtp: null,
   validateOtpError: null,
   companyDocs: null,
   companyDocsError: null,
-  id: 0,
+  idNo: 0,
   bankDetails: null,
   bankDetailsError: null,
   withdrawReasons: null,
@@ -241,7 +243,7 @@ const userProfileReducer = (state = initialState, action) => {
         bvnMessage: null,
         bvnError: action.payload,
         showBvnModal: false,
-        id: action.id,
+        idNo: action.id,
       };
       break;
 
@@ -324,6 +326,17 @@ const userProfileReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         validateEmailOtp: action.payload,
+        validateDirOtp: null,
+        validateOtpError: null,
+      };
+      break;
+
+    case VALIDATE_DIR_OTP_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        validateEmailOtp: null,
+        validateDirOtp: action.payload,
         validateOtpError: null,
       };
       break;
@@ -333,6 +346,7 @@ const userProfileReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         validateEmailOtp: null,
+        validateDirOtp: null,
         validateOtpError: action.payload,
       };
       break;

@@ -8,7 +8,7 @@ import User from "../../../asset/user.png";
 import FileDoc from "../../../asset/file.png";
 import Check from "../../../asset/checked.png";
 // import plus from "../../../asset/plus.svg";
-import { sendCompanyOtp } from "../../../store/actions";
+import { sendCompanyOtp, updateDirectorDetails } from "../../../store/actions";
 import { verifyBvn } from "../../../store/actions";
 import ModalComponent from "../../ModalComponent";
 import { BVNConfirm, OTPVerify } from "../../Accessories/BVNConfirm";
@@ -20,6 +20,7 @@ import {
 } from "../../../store/profile/actionTypes";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { toast } from "react-hot-toast";
 
 const AddDirectors = ({
   updateDirector,
@@ -31,8 +32,8 @@ const AddDirectors = ({
   const dispatch = useDispatch();
   // const navigate = useNavigate();
   const [showOne, setShowOne] = useState(true);
-  const [showEdit, setShowEdit] = useState(true);
-  const [ , setToken] = useState("");
+  const [showEdit2, setShowEdit2] = useState(true);
+  const [, setToken] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [base64File, setBase64File] = useState({
@@ -49,12 +50,12 @@ const AddDirectors = ({
     bvnMessage,
     showEmailOtpModal,
     otp,
-    validateEmailOtp,
+    validateDirOtp,
     id,
   } = useSelector((state) => state.user_profile);
 
-  const toggleEdit = () => {
-    setShowEdit(!showEdit);
+  const toggleEdit2 = () => {
+    setShowEdit2(!showEdit2);
   };
 
   const createOtp = (otp) => {
@@ -103,7 +104,7 @@ const AddDirectors = ({
           });
         };
         reader.onerror = (error) => {
-          console.log({error});
+          console.log({ error });
         };
       }
     };
@@ -123,9 +124,9 @@ const AddDirectors = ({
     if (!values.firstName) {
       errors.firstName = "first name is required";
     }
-    if (!values.middleName) {
-      errors.middleName = "Middle name is required";
-    }
+    // if (!values.middleName) {
+    //   errors.middleName = "Middle name is required";
+    // }
 
     if (!values.lastName) {
       errors.lastName = "Last name is required";
@@ -160,6 +161,14 @@ const AddDirectors = ({
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if(base64File.photoEncodedString === ""){
+      toast.error("Please upload your Passport photo");
+      return;
+    }
+    if(base64File.frontEncodedString === ""){
+      toast.error("Please upload a copy of your ID Card");
+      return;
+    }
     setErrors(validateform(formData));
     setIsSubmitted(true);
   };
@@ -192,6 +201,7 @@ const AddDirectors = ({
 
       const { frontEncodedString, photoEncodedString } = base64File;
 
+      const dataArr = [];
       const data = {
         no: directorNo(),
         firstName,
@@ -211,29 +221,15 @@ const AddDirectors = ({
         },
       };
 
-      updateDirector(data);
+      const {no, ...other} = data;
+      dataArr.push(other)
 
-      setformData({
-        ...formData,
-        firstName: "",
-        lastName: "",
-        middleName: "",
-        address: "",
-        email: "",
-        phone: "",
-        bvn: "",
-        idTypeId: "",
-        idNumber: "",
-      });
 
-      setBase64File({
-        ...base64File,
-        frontEncodedString: "",
-        photoEncodedString: "",
-      });
+      // updateDirector(data);
 
+      dispatch(updateDirectorDetails(dataArr, reset, dispatch, removeForm))
+      setShowEdit2(true);
       dispatch({ type: CLEAR_BVN });
-      removeForm(false);
     }
   }, [errors, isSubmitted]);
 
@@ -273,19 +269,25 @@ const AddDirectors = ({
   };
 
   useEffect(() => {
-    if (validateEmailOtp) {
-      toggleEdit();
+    if (validateDirOtp) {
+      toggleEdit2();
       handleOTPModalClose();
     }
-  }, [validateEmailOtp]);
+  }, [validateDirOtp]);
 
   const confirmName = () => {
     setformData({
       ...formData,
-      firstName: bvnMessage?.data?.firstName,
-      lastName: bvnMessage?.data?.lastName,
+      firstName:
+        bvnMessage?.data?.firstName?.charAt(0).toUpperCase() +
+        bvnMessage?.data?.firstName?.slice(1).toLowerCase(),
+      lastName:
+        bvnMessage?.data?.lastName?.charAt(0).toUpperCase() +
+        bvnMessage?.data?.lastName?.slice(1).toLowerCase(),
     });
   };
+
+  console.log(bvnMessage);
 
   const reset = () => {
     setformData({
@@ -311,378 +313,412 @@ const AddDirectors = ({
   return (
     <div className="mt-5">
       {/* <form autoComplete="off"> */}
-        <WrapperBody>
-          <hr />
-          <div className="container-fluid">
-            <div className="row mt-4">
-              <div className="d-flex justify-content-between mt-5">
-                <h4>
-                  Director {directorNo()}{" "}
-                  <span className="pl-5" onClick={() => setShowOne(!showOne)}>
-                    {showOne ? (
-                      <i className="fa-solid fa-angle-down arrow"></i>
-                    ) : (
-                      <i className="fa-solid fa-angle-up arrow"></i>
-                    )}
-                  </span>
-                </h4>
-                <div>
-                  {showEdit ? (
-                    <button
-                      type="button"
-                      className="btn_bg_blue"
-                      onClick={handleSendOtp}
-                    >
-                      Edit
-                    </button>
+      <WrapperBody>
+        <hr />
+        <div className="container-fluid">
+          <div className="row mt-4">
+            <div className="d-flex justify-content-between mt-5">
+              <h4>
+                Director {directorNo()}{" "}
+                <span className="pl-5" onClick={() => setShowOne(!showOne)}>
+                  {showOne ? (
+                    <i className="fa-solid fa-angle-down arrow"></i>
                   ) : (
-                    <button
-                      type="button"
-                      className="grey-button"
-                      onClick={() => {
-                        toggleEdit();
-                        reset();
-                      }}
-                    >
-                      Cancel
-                    </button>
+                    <i className="fa-solid fa-angle-up arrow"></i>
+                  )}
+                </span>
+              </h4>
+              <div>
+                {showEdit2 ? (
+                  <button
+                    type="button"
+                    className="btn_bg_blue"
+                    onClick={handleSendOtp}
+                  >
+                    Edit
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="grey-button"
+                    onClick={() => {
+                      toggleEdit2();
+                      reset();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </div>
+            <ModalComponent
+              show={showEmailOtpModal}
+              size={"md"}
+              handleClose={handleOTPModalClose}
+            >
+              <OTPVerify
+                show={showEmailOtpModal}
+                handleClose={handleOTPModalClose}
+                emailOtp={true}
+                updateOtp={(otp) => createOtp(otp)}
+                otpData={otp?.data}
+                company="company"
+                otpType="addDirector"
+              />
+            </ModalComponent>
+          </div>
+
+          <div className="details-content">
+            <Collapse isOpen={showOne}>
+              <div className="image-holder">
+                <div className="row">
+                  <div className="d-md-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center justify-content-center">
+                      <img
+                        className="image-frame"
+                        style={{
+                          borderRadius: "50%",
+                          border: "2px solid #FFFFFF",
+                        }}
+                        src={
+                          base64File.photoEncodedString
+                            ? `data:image/jpeg;base64,${base64File.photoEncodedString}`
+                            : User
+                        }
+                        alt="User"
+                        width="125"
+                        height="125"
+                      />
+                      {base64File.photoEncodedString ? (
+                        <img
+                          className="image-fluid align-self-start"
+                          src={Check}
+                          alt="check"
+                          width="15"
+                        />
+                      ) : null}
+                      <div>
+                        <h5 className="">Upload Your Passport Photo</h5>
+                        <p className="">jpg, 2 MB</p>
+                      </div>
+                    </div>
+                    <div>
+                      <input
+                        type="file"
+                        className="file"
+                        accept="image/jpeg"
+                        ref={photoFileInputRef}
+                        onChange={(e) =>
+                          handleFileChange(e, "photoEncodedString")
+                        }
+                        disabled={showEdit2}
+                      />
+                      {showEdit2 ? (
+                        <button
+                          type="button"
+                          className="grey-button mt-3"
+                          disabled={showEdit2}
+                        >
+                          Choose File
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn_bg_blue mt-3"
+                          onClick={(e) =>
+                            handleFileSelect(e, photoFileInputRef)
+                          }
+                        >
+                          Choose File
+                        </button>
+                      )}
+                    </div>
+                    {/* <button>Choose file</button> */}
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-12  mb-4">
+                  <label>First Name</label>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="First Name"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      disabled={showEdit2}
+                    />
+                  </div>
+                  {errors.firstName && (
+                    <span className="text-danger">{errors.firstName}</span>
+                  )}
+                </div>
+                <div className="col-md-12 mb-4">
+                  <label>Middle Name</label>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Middle Name"
+                      name="middleName"
+                      value={formData.middleName}
+                      onChange={handleChange}
+                      disabled={showEdit2}
+                    />
+                  </div>
+                  {/* {errors.middleName && (
+                      <span className="text-danger">{errors.middleName}</span>
+                    )} */}
+                </div>
+                <div className="col-md-12 mb-4">
+                  <label>Last Name</label>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Last Name"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      disabled={showEdit2}
+                    />
+                  </div>
+                  {errors.lastName && (
+                    <span className="text-danger">{errors.lastName}</span>
                   )}
                 </div>
               </div>
-              <ModalComponent
-                show={showEmailOtpModal}
-                size={"md"}
-                handleClose={handleOTPModalClose}
-              >
-                <OTPVerify
-                  show={showEmailOtpModal}
-                  handleClose={handleOTPModalClose}
-                  emailOtp={true}
-                  updateOtp={(otp) => createOtp(otp)}
-                  otpData={otp?.data}
-                  company="company"
-                  otpType="director"
-                />
-              </ModalComponent>
-            </div>
-
-            <div className="details-content">
-              <Collapse isOpen={showOne}>
-                <div className="image-holder">
-                  <div className="row">
-                    <div className="d-md-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center justify-content-center">
-                        <img
-                          className="image-frame"
-                          style={{
-                            borderRadius: "50%",
-                            border: "2px solid #FFFFFF",
-                          }}
-                          src={
-                            base64File.photoEncodedString
-                              ? `data:image/jpeg;base64,${base64File.photoEncodedString}`
-                              : User
-                          }
-                          alt="User"
-                          width="125"
-                          height="125"
-                        />
-                        {base64File.photoEncodedString ? (
-                          <img
-                            className="image-fluid align-self-start"
-                            src={Check}
-                            alt="check"
-                            width="15"
-                          />
-                        ) : null}
-                        <div>
-                          <h5 className="">Upload Your Passport Photo</h5>
-                          <p className="">jpg, 2 MB</p>
-                        </div>
-                      </div>
-                      <div>
+              <div className="row">
+                <div className="col-md-12 mb-4">
+                  <label>Address</label>
+                  <div className="input-group ">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      disabled={showEdit2}
+                    />
+                  </div>
+                  {errors.address && (
+                    <span className="text-danger">{errors.address}</span>
+                  )}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12 mb-4">
+                  <label>Email Address</label>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Email Address"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      disabled={showEdit2}
+                    />
+                  </div>
+                  {errors.email && (
+                    <span className="text-danger">{errors.email}</span>
+                  )}
+                </div>
+                <div className="col-md-12 mb-4">
+                  <label>Phone Number</label>
+                  <div className="input-group" id="phone">
+                    <PhoneInput
+                      country={"ng"}
+                      inputClass={`form-control phone-input ${
+                        showEdit2 ? "disable" : ""
+                      }`}
+                      buttonClass={`phone-select-field ${
+                        showEdit2 ? "disable" : ""
+                      }`}
+                      name="phone"
+                      value={formData?.phone}
+                      // countryCodeEditable={false}
+                      disabled={showEdit2}
+                      onChange={(value) => handlePhoneValueChange(value)}
+                      disableCountryCode={true}
+                      placeholder="Phone Number"
+                      disableDropdown
+                      masks={{ ng: ".... ... ...." }}
+                    />
+                    <UncontrolledTooltip placement="bottom" target="phone">
+                      Please provide the Phone Number tied to the BVN
+                    </UncontrolledTooltip>
+                  </div>
+                  {errors.phone && (
+                    <span className="text-danger">{errors.phone}</span>
+                  )}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-9">
+                  <div className="row d-flex align-items-end">
+                    <div className="col-8 mb-4">
+                      <label>Bank verification number (BVN)</label>
+                      <div className="input-group">
                         <input
-                          type="file"
-                          className="file"
-                          accept="image/jpeg"
-                          ref={photoFileInputRef}
-                          onChange={(e) =>
-                            handleFileChange(e, "photoEncodedString")
-                          }
-                          disabled={showEdit}
+                          type="text"
+                          className="form-control"
+                          placeholder="Bank verification number (BVN)"
+                          name="bvn"
+                          value={formData.bvn}
+                          onChange={handleChange}
+                          disabled={showEdit2}
                         />
-                        {showEdit ? (
-                          <button
-                            type="button"
-                            className="grey-button mt-3"
-                            disabled={showEdit}
-                          >
-                            Choose File
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="btn_bg_blue mt-3"
-                            onClick={(e) =>
-                              handleFileSelect(e, photoFileInputRef)
-                            }
-                          >
-                            Choose File
-                          </button>
-                        )}
                       </div>
-                      {/* <button>Choose file</button> */}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-4 mb-4">
-                    <label>First Name</label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="First Name"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        disabled={showEdit}
-                      />
-                    </div>
-                    {errors.firstName && (
-                      <span className="text-danger">{errors.firstName}</span>
-                    )}
-                  </div>
-                  <div className="col-md-4 mb-4">
-                    <label>Middle Name</label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Middle Name"
-                        name="middleName"
-                        value={formData.middleName}
-                        onChange={handleChange}
-                        disabled={showEdit}
-                      />
-                    </div>
-                    {errors.middleName && (
-                      <span className="text-danger">{errors.middleName}</span>
-                    )}
-                  </div>
-                  <div className="col-md-4 mb-4">
-                    <label>Last Name</label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Last Name"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        disabled={showEdit}
-                      />
-                    </div>
-                    {errors.lastName && (
-                      <span className="text-danger">{errors.lastName}</span>
-                    )}
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col mb-4">
-                    <label>Address</label>
-                    <div className="input-group ">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        disabled={showEdit}
-                      />
-                    </div>
-                    {errors.address && (
-                      <span className="text-danger">{errors.address}</span>
-                    )}
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-7 mb-4">
-                    <label>Email Address</label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Email Address"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        disabled={showEdit}
-                      />
-                    </div>
-                    {errors.email && (
-                      <span className="text-danger">{errors.email}</span>
-                    )}
-                  </div>
-                  <div className="col-md-5 mb-4">
-                    <label>Phone Number</label>
-                    <div className="input-group" id="phone">
-                      <PhoneInput
-                        country={"ng"}
-                        inputClass={`form-control phone-input ${
-                          showEdit ? "disable" : ""
-                        }`}
-                        buttonClass={`phone-select-field ${
-                          showEdit ? "disable" : ""
-                        }`}
-                        name="phone"
-                        value={formData?.phone}
-                        // countryCodeEditable={false}
-                        disabled={showEdit}
-                        onChange={(value) => handlePhoneValueChange(value)}
-                        disableCountryCode={true}
-                        placeholder="Phone Number"
-                        disableDropdown
-                        masks={{ ng: ".... ... ...." }}
-                      />
-                      <UncontrolledTooltip placement="bottom" target="phone">
-                        Please provide the Phone Number tied to the BVN
-                      </UncontrolledTooltip>
-                    </div>
-                    {errors.phone && (
-                      <span className="text-danger">{errors.phone}</span>
-                    )}
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-lg-9">
-                    <div className="row d-flex align-items-end">
-                      <div className="col-8 mb-4">
-                        <label>Bank verification number (BVN)</label>
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Bank verification number (BVN)"
-                            name="bvn"
-                            value={formData.bvn}
-                            onChange={handleChange}
-                            disabled={showEdit}
-                          />
-                        </div>
-                        <small className="text-danger">
-                          {bvnError?.message && id === directorNo()
-                            ? bvnError?.message
-                            : ""}
-                        </small>
-                        {errors.bvn && (
-                          <span className="text-danger">{errors.bvn}</span>
-                        )}
-                      </div>
-                      {formData.firstName &&
-                      formData.lastName &&
-                      formData.address &&
-                      formData.phone &&
-                      formData.email &&
-                      formData.bvn &&
-                      !bvnMessage?.isNameMatched &&
-                      !showEdit ? (
-                        <div className="col-4 mt-3 mb-4">
-                          <button
-                            type="button"
-                            onClick={(e) => handleVerifyBVN(e, directorNo())}
-                            className="profile_vify_btn"
-                          >
-                            Verify
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="col-4 mt-3 mb-4">
-                          <button
-                            type="button"
-                            disabled={showEdit}
-                            className="grey_vify_btn"
-                          >
-                            Verify
-                          </button>
-                        </div>
+                      <small className="text-danger">
+                        {bvnError?.message && id === directorNo()
+                          ? bvnError?.message
+                          : ""}
+                      </small>
+                      {errors.bvn && (
+                        <span className="text-danger">{errors.bvn}</span>
                       )}
-
-                      <div>
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "100px",
-                            right: "300px",
-                          }}
+                    </div>
+                    {formData.firstName &&
+                    formData.lastName &&
+                    formData.address &&
+                    formData.phone &&
+                    formData.email &&
+                    formData.bvn &&
+                    !bvnMessage?.isNameMatched &&
+                    !showEdit2 ? (
+                      <div className="col-4 mt-3 mb-4">
+                        <button
+                          type="button"
+                          onClick={(e) => handleVerifyBVN(e, directorNo())}
+                          className="profile_vify_btn"
                         >
-                          <ModalComponent
+                          Verify
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="col-4 mt-3 mb-4">
+                        <button
+                          type="button"
+                          disabled={showEdit2}
+                          className="grey_vify_btn"
+                        >
+                          Verify
+                        </button>
+                      </div>
+                    )}
+
+                    <div>
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "100px",
+                          right: "300px",
+                        }}
+                      >
+                        <ModalComponent
+                          show={showBvnModal}
+                          size={"md"}
+                          handleClose={handleBVNModalClose}
+                        >
+                          <BVNConfirm
                             show={showBvnModal}
-                            size={"md"}
                             handleClose={handleBVNModalClose}
-                          >
-                            <BVNConfirm
-                              show={showBvnModal}
-                              handleClose={handleBVNModalClose}
-                              firstName={bvnMessage?.data?.firstName}
-                              lastName={bvnMessage?.data?.lastName}
-                              bvn={formData.bvn}
-                              confirmName={confirmName}
-                              director="director"
-                              nameMatch={bvnMessage?.isNameMatched}
-                            />
-                          </ModalComponent>
-                        </div>
+                            firstName={bvnMessage?.data?.firstName}
+                            lastName={bvnMessage?.data?.lastName}
+                            bvn={formData.bvn}
+                            confirmName={confirmName}
+                            director="director"
+                            nameMatch={bvnMessage?.isNameMatched}
+                          />
+                        </ModalComponent>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label>ID Type</label>
-                    <div className="input-group">
-                      <select
-                        className="form-select form-select-md"
-                        aria-label=".form-select-md"
-                        name="idTypeId"
-                        value={formData.idTypeId}
-                        onChange={handleChange}
-                        disabled={showEdit}
-                      >
-                        <option value="">Select ID Type...</option>
-                        {idTypes?.map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {errors.idTypeId && (
-                      <span className="text-danger">{errors.idTypeId}</span>
-                    )}
+              </div>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label>ID Type</label>
+                  <div className="input-group">
+                    <select
+                      className="form-select form-select-md"
+                      aria-label=".form-select-md"
+                      name="idTypeId"
+                      value={formData.idTypeId}
+                      onChange={handleChange}
+                      disabled={showEdit2}
+                    >
+                      <option value="">Select ID Type...</option>
+                      {idTypes?.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <div className="col-md-6 mb-4">
-                    <label>ID Number</label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="ID Number"
-                        name="idNumber"
-                        value={formData.idNumber}
-                        onChange={handleChange}
-                        disabled={showEdit}
+                  {errors.idTypeId && (
+                    <span className="text-danger">{errors.idTypeId}</span>
+                  )}
+                </div>
+                <div className="col-md-6 mb-4">
+                  <label>ID Number</label>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="ID Number"
+                      name="idNumber"
+                      value={formData.idNumber}
+                      onChange={handleChange}
+                      disabled={showEdit2}
+                    />
+                  </div>
+                  {errors.idNumber && (
+                    <span className="text-danger">{errors.idNumber}</span>
+                  )}
+                </div>
+              </div>
+              {false ? (
+                <div className="row py-4">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center justify-content-center">
+                      <img
+                        className="file-image image-fluid"
+                        src={FileDoc}
+                        alt="FileDoc"
                       />
+                      <div className="d-flex" style={{ columnGap: "10px" }}>
+                        <h5 className="image-fluid mr-3">ID Card</h5>
+                        <img
+                          // className="position-absolute"
+                          src={Check}
+                          alt="check"
+                          width="15"
+                          height="15"
+                        />
+                      </div>
                     </div>
-                    {errors.idNumber && (
-                      <span className="text-danger">{errors.idNumber}</span>
-                    )}
+                    <div className=" style-attachment">
+                      {/* <a
+												href={companyDocs?.contactPersonIdImage?.imageUrl}
+												target="_blank"
+												rel="noreferrer"
+											> */}
+                      <button type="button" className="normal-btn grey-button">
+                        View
+                      </button>
+                      {/* </a> */}
+                    </div>
                   </div>
                 </div>
-                {false ? (
-                  <div className="row py-4">
+              ) : (
+                <div className="row pt-4">
+                  {!base64File.frontEncodedString ? (
                     <div className="d-flex align-items-center justify-content-between">
                       <div className="d-flex align-items-center justify-content-center">
                         <img
@@ -690,165 +726,135 @@ const AddDirectors = ({
                           src={FileDoc}
                           alt="FileDoc"
                         />
-                        <div className="d-flex" style={{ columnGap: "10px" }}>
-                          <h5 className="image-fluid mr-3">ID Card</h5>
-                          <img
-                            // className="position-absolute"
-                            src={Check}
-                            alt="check"
-                            width="15"
-                            height="15"
-                          />
+                        <div>
+                          <h5 className="">Upload ID Card</h5>
+                          <h5 className="">jpg, pdf, 2 MB</h5>
                         </div>
                       </div>
                       <div className=" style-attachment">
-                        {/* <a
-												href={companyDocs?.contactPersonIdImage?.imageUrl}
-												target="_blank"
-												rel="noreferrer"
-											> */}
-                        <button
-                          type="button"
-                          className="normal-btn grey-button"
-                        >
-                          View
-                        </button>
-                        {/* </a> */}
+                        <input
+                          type="file"
+                          className="file"
+                          ref={frontFileInputRef}
+                          onChange={(e) =>
+                            handleFileChange(e, "frontEncodedString")
+                          }
+                        />
+                        {!showEdit2 ? (
+                          <button
+                            type="button"
+                            className="btn_bg_blue"
+                            onClick={(e) =>
+                              handleFileSelect(e, frontFileInputRef)
+                            }
+                          >
+                            Choose file
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                            disabled={showEdit2}
+                          >
+                            Choose file
+                          </button>
+                        )}
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="row pt-4">
-                    {!base64File.frontEncodedString ? (
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div className="d-flex align-items-center justify-content-center">
-                          <img
-                            className="file-image image-fluid"
-                            src={FileDoc}
-                            alt="FileDoc"
-                          />
-                          <div>
-                            <h5 className="">Upload ID Card</h5>
-                            <h5 className="">jpg, pdf, 2 MB</h5>
-                          </div>
-                        </div>
-                        <div className=" style-attachment">
-                          <input
-                            type="file"
-                            className="file"
-                            ref={frontFileInputRef}
-                            onChange={(e) =>
-                              handleFileChange(e, "frontEncodedString")
-                            }
-                          />
-                          {!showEdit ? (
-                            <button
-                              type="button"
-                              className="btn_bg_blue"
-                              onClick={(e) =>
-                                handleFileSelect(e, frontFileInputRef)
+                  ) : (
+                    <div className="d-flex align-items-center justify-content-between w-100">
+                      <div className="progress-bar-style d-flex align-items-center justify-content-start">
+                        <img
+                          className="file-image image-fluid"
+                          src={FileDoc}
+                          alt="FileDoc"
+                        />
+                        <div className="progress-bar-style">
+                          <h5 className="position-relative">
+                            ID Card{" "}
+                            <span
+                              style={{
+                                cursor: "pointer",
+                                display: "flex",
+                                justifyContent: "flex-end",
+                              }}
+                              onClick={() =>
+                                setBase64File({
+                                  ...base64File,
+                                  frontEncodedString: "",
+                                })
                               }
                             >
-                              Choose file
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              className="normal-btn grey-button"
-                              disabled={showEdit}
-                            >
-                              Choose file
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="d-flex align-items-center justify-content-between w-100">
-                        <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                          <img
-                            className="file-image image-fluid"
-                            src={FileDoc}
-                            alt="FileDoc"
-                          />
-                          <div className="progress-bar-style">
-                            <h5 className="position-relative">
-                              ID Card{" "}
-                              <span
-                                style={{
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  justifyContent: "flex-end",
-                                }}
-                                onClick={() =>
-                                  setBase64File({
-                                    ...base64File,
-                                    frontEncodedString: "",
-                                  })
-                                }
-                              >
-                                <i className="fa-solid fa-xmark"></i>
-                              </span>
-                            </h5>
-                            <div className="progress" style={{ height: "3px" }}>
-                              <div
-                                className="progress-bar"
-                                role="progressbar"
-                                style={{ width: "75%" }}
-                                aria-valuenow="25"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                              ></div>
-                            </div>
+                              <i className="fa-solid fa-xmark"></i>
+                            </span>
+                          </h5>
+                          <div className="progress" style={{ height: "3px" }}>
+                            <div
+                              className="progress-bar"
+                              role="progressbar"
+                              style={{ width: "75%" }}
+                              aria-valuenow="25"
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                            ></div>
                           </div>
                         </div>
-                        <div className=" style-attachment">
-                          <input
-                            type="file"
-                            className="file"
-                            ref={frontFileInputRef}
-                            onChange={(e) =>
-                              handleFileChange(e, "frontEncodedString")
-                            }
-                          />
-                          {!showEdit ? (
-                            <button
-                              type="button"
-                              className="btn_bg_blue"
-                              onClick={(e) =>
-                                handleFileSelect(e, frontFileInputRef)
-                              }
-                            >
-                              Choose file
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              className="normal-btn grey-button"
-                              disabled={showEdit}
-                            >
-                              Choose file
-                            </button>
-                          )}
-                        </div>
                       </div>
-                    )}
-                  </div>
-                )}
-                <div className="row">
-                  <div className="col-md-12 d-flex justify-content-center mt-5">
-                    <button
-                      type="button"
-                      className="btn_bg_blue"
-                      onClick={handleFormSubmit}
-                    >
-                      Add to List of Directors
-                    </button>
-                  </div>
+                      <div className=" style-attachment">
+                        <input
+                          type="file"
+                          className="file"
+                          ref={frontFileInputRef}
+                          onChange={(e) =>
+                            handleFileChange(e, "frontEncodedString")
+                          }
+                        />
+                        {!showEdit2 ? (
+                          <button
+                            type="button"
+                            className="btn_bg_blue"
+                            onClick={(e) =>
+                              handleFileSelect(e, frontFileInputRef)
+                            }
+                          >
+                            Choose file
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="normal-btn grey-button"
+                            disabled={showEdit2}
+                          >
+                            Choose file
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </Collapse>
-            </div>
+              )}
+              <div className="row">
+                <div className="col-md-12 d-flex flex-column justify-content-center mt-5">
+                  <button
+                    type="button"
+                    className="btn_bg_blue"
+                    onClick={handleFormSubmit}
+                  >
+                    Add to List of Directors
+                  </button>
+                  <button
+                    type="button"
+                    className="cancel_btn mt-3"
+                    onClick={() => removeForm(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Collapse>
           </div>
-        </WrapperBody>
+        </div>
+      </WrapperBody>
       {/* </form> */}
       <hr />
     </div>
@@ -961,6 +967,17 @@ const WrapperBody = styled.div`
     font-size: 17px;
     line-height: 21px;
     color: #ffffff;
+  }
+
+  .cancel_btn {
+    margin-top: 35px;
+    background: #f2f2f2;
+    color: #111e6c;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 21px;
   }
 
   .grey_vify_btn {

@@ -11,10 +11,10 @@ import { Toaster } from "react-hot-toast";
 import { getBankDetails, getPenalCharge } from "../../../../store/actions";
 import { formatCurrValue } from "../../Accesssories";
 
-const PartWithdrawal = ({ goBack, amount, reason }) => {
+const PartWithdrawal = ({ goBack, amount, reason, penalAmount }) => {
   const dispatch = useDispatch();
   const [isClicked, setIsClicked] = useState(false);
-  const [penalCharge, setPenalCharge] = useState();
+  // const [penalCharge, setPenalCharge] = useState();
   const [isTerms, setIsTerms] = useState(false);
   const { singlePlan, loading } = useSelector((state) => state.plan);
   const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
@@ -40,7 +40,7 @@ const PartWithdrawal = ({ goBack, amount, reason }) => {
         type="PARTIAL"
         reason={reason}
         goBack={() => setIsClicked(false)}
-        penalCharge={penalCharge}
+        penalAmount={penalAmount}
       />
     );
   }
@@ -99,7 +99,6 @@ const PartWithdrawal = ({ goBack, amount, reason }) => {
                         {formatCurrValue(parseFloat(plan?.planSummary?.principal))}
                       </p>
                     </div>
-                    {/* <i className="fa-solid fa-ellipsis"></i> */}
                   </div>
                 </div>
               </div>
@@ -111,7 +110,7 @@ const PartWithdrawal = ({ goBack, amount, reason }) => {
                 <WithdrawalSummary
                   amount={amount}
                   reason={reason}
-                  compPenalCharge={setPenalCharge}
+                  penalAmount={penalAmount}
                   checkTerms={setIsTerms}
                 />
               </div>

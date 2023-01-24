@@ -2,7 +2,6 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useRef,
   useMemo,
   useCallback,
 } from "react";
@@ -33,7 +32,6 @@ import {
   getClosedTickets,
   getSingleTicket,
   verifyPaystack,
-  createPlan,
   getEachWalletTransaction,
   getEligiblePlans,
   getMyReferrals,
@@ -421,9 +419,9 @@ const PaymentTypeWrapper = styled.div`
 
 export const UserBankDetails = ({ type = null }) => {
   const { users } = useSelector((state) => state.user_profile);
-  const { singlePlan, bank_detail } = useSelector((state) => state.plan);
+  const { bank_detail } = useSelector((state) => state.plan);
   const { dynamic_account, loading } = useSelector((state) => state.providus);
-  const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
+  // const plan = singlePlan?.data.body ? singlePlan?.data.body : {};
 
   let date = new Date();
   const time_format = moment(date).format("HH:mm");
@@ -673,7 +671,7 @@ export const RolloverSummary = ({
 }) => {
   // const [isTerms, setIsTerms] = useState(false);
 
-  const { singlePlan, investment_rates } = useSelector((state) => state.plan);
+  const { singlePlan } = useSelector((state) => state.plan);
   const plan = useMemo(
     () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
     [singlePlan]
@@ -695,7 +693,7 @@ export const RolloverSummary = ({
 
   useEffect(() => {
     setEndDate(endDate);
-  }, []);
+  }, [addedDate, setEndDate, endDate]);
 
   const customTenorDays = moment(addedDate).diff(date, "days");
 
@@ -840,7 +838,7 @@ const RolloverSummaryWrapper = styled.div`
   box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
   padding: 40px;
   background: #ffffff;
-  .withdraw{
+  .withdraw {
     padding-left: 20px;
   }
   p {
@@ -913,14 +911,11 @@ export const RolloverWithdrawMethod = ({
   setWithdrawTo,
   base64File,
   setBase64File,
-  // savingFreq,
   balance,
   type,
 }) => {
   const dispatch = useDispatch();
-  const [withdraw, setWithdraw] = useState("");
-  const { login } = useSelector((state) => state.auth);
-  const { singlePlan, investment_rates } = useSelector((state) => state.plan);
+  const { singlePlan } = useSelector((state) => state.plan);
   const plan = useMemo(
     () => (singlePlan?.data.body ? singlePlan?.data.body : {}),
     [singlePlan]
@@ -984,7 +979,12 @@ export const RolloverWithdrawMethod = ({
                       <option value="" hidden>
                         Select withdrawal destination
                       </option>
-                      <option value="TO_BANK" disabled={!bankDetails}>
+                      <option
+                        value="TO_BANK"
+                        disabled={
+                          !bankDetails && user_role === "INDIVIDUAL_USER"
+                        }
+                      >
                         {user_role === "COMPANY"
                           ? "To Bank"
                           : bankDetails
@@ -1047,12 +1047,6 @@ export const RolloverWithdrawMethod = ({
               ) : (
                 <></>
               )}
-              {/* {savingFreq && (
-                <small className="text-danger">
-                  The tenor days is less than the savings frequency for this
-                  plan. Please Select another tenor.
-                </small>
-              )} */}
             </div>
           </div>
         </div>
@@ -1064,110 +1058,21 @@ export const RolloverWithdrawMethod = ({
 export const WithdrawalSummary = ({
   amount,
   reason,
-  compPenalCharge,
+  penalAmount,
   checkTerms,
   termRequired,
 }) => {
   const [isTerms, setIsTerms] = useState(false);
-  const { singlePlan, penal_charge } = useSelector((state) => state.plan);
+  const { singlePlan } = useSelector((state) => state.plan);
 
   const plan = useMemo(
     () => (singlePlan?.data?.body ? singlePlan?.data.body : {}),
     [singlePlan]
   );
-  const penalCharges = useMemo(
-    () => (penal_charge?.data?.body ? penal_charge?.data?.body : []),
-    [penal_charge]
-  );
-
-  let date = new Date();
-  const recentDate = moment(date).format("YYYY-MM-DD");
-
-  const planProductCharges = penalCharges?.filter(
-    (data) => data.product.id === plan.product.id
-  );
-
-  const computePenalCharge = useCallback(
-    (intRecOption) => {
-      let penalRate = 0;
-      let penalCharge = 0;
-      const maxNumberDays = moment(plan?.actualMaturityDate).diff(
-        plan?.planSummary?.startDate,
-        "days"
-      );
-
-      const currentNumberOfDays = moment(recentDate).diff(
-        plan?.planSummary?.startDate,
-        "days"
-      );
-
-      const penalDays = moment(plan?.planSummary?.endDate).diff(
-        recentDate,
-        "days"
-      );
-
-      planProductCharges.forEach((item) => {
-        const maxDays = (item.maxDaysElapsed * maxNumberDays) / 100;
-        const minDays = (item.minDaysElapsed * maxNumberDays) / 100;
-        if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
-          penalRate = item.penalRate / 100;
-        }
-      });
-
-      if (penalDays > 0) {
-        switch (intRecOption) {
-          case "MATURITY":
-            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays || 1 * penalRate * amount) / 365;
-            } else if (
-              plan?.product?.properties?.penaltyFormula === "TARGET_FORMULA"
-            ) {
-              const totalEarnedInt =
-                (plan?.planSummary?.principal *
-                  plan?.interestRate *
-                  (currentNumberOfDays || 1 / 365)) /
-                100;
-              penalCharge = totalEarnedInt * penalRate;
-            }
-            break;
-
-          case "UPFRONT":
-            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              const excessIntPaid =
-                amount * (plan?.interestRate / 100) * (maxNumberDays / 365) -
-                amount *
-                  (plan?.interestRate / 100) *
-                  (currentNumberOfDays || 1 / 365);
-              penalCharge =
-                (currentNumberOfDays || 1 / 365) * penalRate * amount +
-                excessIntPaid;
-            }
-            break;
-
-          case "MONTHLY":
-          case "QUARTERLY":
-          case "BI_ANNUAL":
-            if (plan?.product?.properties?.penaltyFormula === "FIXED_FORMULA") {
-              penalCharge = (currentNumberOfDays || 1 / 365) * penalRate * amount;
-            }
-            break;
-
-          default:
-            penalCharge = 0;
-            break;
-        }
-      }
-
-      return penalCharge.toFixed(2);
-    },
-    [plan, amount, recentDate, planProductCharges]
-  );
 
   useEffect(() => {
-    const penal = computePenalCharge(plan?.interestReceiptOption);
-    compPenalCharge(penal);
     checkTerms(isTerms);
-  }, [computePenalCharge, plan, compPenalCharge, isTerms, checkTerms]);
+  }, [plan, isTerms, checkTerms]);
 
   return (
     <div>
@@ -1216,14 +1121,7 @@ export const WithdrawalSummary = ({
                   <p className="p-0 m-0">Penal Charges </p>
                   <h4 className="d-flex gap-1">
                     {getCurrIcon(plan?.currency?.name)}
-                    {formatCurrValue(
-                      parseFloat(
-                        computePenalCharge(plan?.interestReceiptOption)
-                      )
-                    )}
-                    {/* {computePenalCharge(
-                      plan?.interestReceiptOption
-                    ).toLocaleString()} */}
+                    {formatCurrValue(parseFloat(penalAmount))}
                   </h4>
                 </div>
                 <div className="rollover-text-left">
@@ -1237,7 +1135,7 @@ export const WithdrawalSummary = ({
                       parseFloat(
                         plan?.planSummary?.principal -
                           amount -
-                          computePenalCharge(plan?.interestReceiptOption)
+                          parseFloat(formatCurrValue(parseFloat(penalAmount)))
                       )
                     )}
                     {/* {parseFloat(
@@ -1649,7 +1547,7 @@ export const AvailableBalance = ({
 }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [withdrawMandateImage, setWithdrawMandateImage] = useState({});
-  const [withdrawInstructionImage, setWithdrawInstructionImage] = useState({});
+  // const [withdrawInstructionImage, setWithdrawInstructionImage] = useState({});
 
   const data = {
     withdrawalAmount: "",
@@ -1679,7 +1577,7 @@ export const AvailableBalance = ({
 
       const data = {
         bankAccountId: Number(bankAccountId),
-        withdrawalAmount: Number(withdrawalAmount),
+        withdrawalAmount: parseFloat(withdrawalAmount),
         withdrawalReasonId,
         withdrawalReasonOthers,
       };
@@ -1690,7 +1588,7 @@ export const AvailableBalance = ({
         formData;
 
       const data = {
-        withdrawalAmount: Number(withdrawalAmount),
+        withdrawalAmount: parseFloat(withdrawalAmount),
         withdrawalReasonId,
         withdrawalReasonOthers,
         // withdrawalInstructionImage: withdrawInstructionImage,
@@ -1705,8 +1603,6 @@ export const AvailableBalance = ({
       setShowTextArea(!showTextArea);
     }
   };
-
-  const formatNumber = new Intl.NumberFormat(undefined, {});
 
   return (
     <AvailableBalanceWapper id={id}>
@@ -1911,7 +1807,7 @@ export const TransferCard = ({
     const { amount, planId } = formData;
 
     const data = {
-      amount: Number(amount),
+      amount: parseFloat(amount),
       description: `Transfer of ${amount ? amount : 0} to ${planName(planId)}`,
       planId: Number(planId),
     };
@@ -1921,8 +1817,6 @@ export const TransferCard = ({
   useEffect(() => {
     dispatch(getEligiblePlans());
   }, [dispatch]);
-
-  const formatNumber = new Intl.NumberFormat(undefined, {});
 
   return (
     <AvailableBalanceWapper id={id}>
@@ -2342,7 +2236,6 @@ export const ReferalTable = () => {
     toast.success("Referral Link Copied");
   };
 
-
   useEffect(() => {
     dispatch(getMyReferrals());
     dispatch(getAuthUsers());
@@ -2449,9 +2342,9 @@ export const ReferalTable = () => {
 
 const ReferalTableWarapper = styled.div`
   padding: 30px;
-  padding-right: 30%;
+  padding-right: 20%;
 
-  @media (max-width: 650px){
+  @media (max-width: 650px) {
     padding-right: 20px;
     .padd-referal {
       width: 100vw;
@@ -2551,8 +2444,9 @@ const ReferalTableWarapper = styled.div`
 export const ReferralBonus = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user_profile);
-  const { loading, refActivities, refRedeemMsg, referralThreshold } =
-    useSelector((state) => state.wallet);
+  const { loading, refActivities, referralThreshold } = useSelector(
+    (state) => state.wallet
+  );
 
   const handleRedeemClick = () => {
     dispatch(redeemReferralBonus());
@@ -2582,14 +2476,14 @@ export const ReferralBonus = () => {
       {
         label: "Amount",
         field: "amount",
-        width: 100,
+        width: 200,
       },
     ],
     rows: refActivities?.entities?.map((data) => ({
       id: data.id,
       date: `${data.createdAt}`,
       description: `${data.description}`,
-      amount: `₦ ${data.amount}`,
+      amount: `₦ ${formatCurrValue(parseFloat(data.amount))}`,
     })),
   };
 
@@ -2670,8 +2564,8 @@ export const ReferralBonus = () => {
 
 const ReferalTableBonusWarapper = styled.div`
   padding: 30px;
-  padding-right: 30%;
-  
+  padding-right: 20%;
+
   button {
     background: #111e6c;
     border-radius: 10px;
@@ -2685,7 +2579,7 @@ const ReferalTableBonusWarapper = styled.div`
     padding: 7px 20px;
   }
 
-  @media (min-width: 0px) and (max-width: 500px){
+  @media (min-width: 0px) and (max-width: 500px) {
     padding-right: 20px;
     .earn-bonus {
       background: #f2f2f2;
@@ -2737,8 +2631,6 @@ const ReferalTableBonusWarapper = styled.div`
     box-shadow: 0px 4px 10px rgba(148, 148, 148, 0.25);
     border-radius: 10px;
   }
-
-  
 
   .total-bonus {
     background: #ffffff;
@@ -2795,7 +2687,6 @@ const ReferalTableBonusWarapper = styled.div`
     letter-spacing: -0.04em;
     color: #242424;
   }
-
 `;
 
 export const TransferDeposit = () => {
@@ -2804,7 +2695,7 @@ export const TransferDeposit = () => {
   const [plan, setPlan] = useState(false);
 
   const dispatch = useDispatch();
-  const { loading, depositActivites } = useSelector((state) => state.wallet);
+  const { depositActivites } = useSelector((state) => state.wallet);
   const activedeposits = depositActivites ? depositActivites?.entities : [];
   const bankDeposits = depositActivites?.entities.filter(
     (item) => item.category === "BANK_ACCOUNT_TO_WALLET_FUNDING"
@@ -2884,8 +2775,8 @@ export const TransferDeposit = () => {
       date: `${data.transactionDate}`,
       description: `${data.description}`,
       type: `${data.transactionType}`,
-      amount: ` + ${data.amount}`,
-      balance: `₦ ${data.balance}`,
+      amount: `+ ₦ ${formatCurrValue(parseFloat(data.amount))}`,
+      balance: `₦ ${formatCurrValue(parseFloat(data.balance))}`,
     })),
   };
 
@@ -3010,10 +2901,10 @@ export const SpecialEarnings = () => {
       },
     ],
     rows: earningsActivities?.map((data) => ({
-      id: `${data.transactionId}`,
+      id: `${data.id}`,
       date: `${data.dateOfTransaction}`,
       description: `${data.description}`,
-      amount: `₦${data.amount}`,
+      amount: `₦${formatCurrValue(parseFloat(data.amount))}`,
     })),
   };
 
@@ -3065,13 +2956,13 @@ export const SpecialEarnings = () => {
 
 const SpecialEarningsWarapper = styled.div`
   padding: 30px;
-  padding-right: 30%;
+  padding-right: 20%;
   button {
     border-radius: 15px;
     /* padding: 10px 15px; */
   }
 
-  @media (min-width: 0px) and (max-width: 500px){
+  @media (min-width: 0px) and (max-width: 500px) {
     padding-right: 20px;
     .redeem-card {
       margin: 20px 0 0 0;
@@ -3094,7 +2985,7 @@ const SpecialEarningsWarapper = styled.div`
     }
   }
 
-  @media (min-width: 501px){
+  @media (min-width: 501px) {
     .redeem-card {
       background: #ffffff;
       box-shadow: 0px 4px 30px rgba(196, 204, 221, 0.28);
@@ -3115,7 +3006,6 @@ const SpecialEarningsWarapper = styled.div`
         padding: 7px 20px;
       }
     }
-
   }
 
   .bonus-card {
@@ -3682,7 +3572,7 @@ export const PayWithCard = ({
   const dispatch = useDispatch();
   const { form } = useContext(PlanContext);
   const { loading } = useSelector((state) => state.plan);
-  const { verify_paystack } = useSelector((state) => state.paystack);
+  // const { verify_paystack } = useSelector((state) => state.paystack);
 
   // you can call this function anything
   const success = async () => {
