@@ -191,7 +191,6 @@ function* sendOtp({ payload: { otpType, dataObj } }) {
   try {
     const response = yield call(sendOtpService, otpType, dataObj);
     yield put(sendOtpSuccess(response.data));
-  
     if (response?.data?.message) {
       toast.success(response?.data?.message, { position: "top-right" });
     }

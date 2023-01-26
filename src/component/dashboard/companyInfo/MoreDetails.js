@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UncontrolledTooltip } from "reactstrap";
-import { toast, Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import { Collapse } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 import User from "../../../asset/user.png";
 import FileDoc from "../../../asset/file.png";
 import Check from "../../../asset/checked.png";
@@ -67,16 +66,7 @@ const MoreDetails = () => {
     (state) => state.updateProfile
   );
 
-  // const [col1, setCol1] = useState("");
   const [col2, setCol2] = useState("");
-
-  // const t_col1 = (val) => {
-  //   if (col1 === val) {
-  //     setCol1("");
-  //   } else {
-  //     setCol1(val);
-  //   }
-  // };
 
   const t_col2 = (val) => {
     if (col2 === val) {
@@ -201,9 +191,6 @@ const MoreDetails = () => {
     if (!values.firstName) {
       errors.firstName = "first name is required";
     }
-    // if (!values.middleName) {
-    //   errors.middleName = "Middle name is required";
-    // }
 
     if (!values.lastName) {
       errors.lastName = "Last name is required";
@@ -427,11 +414,6 @@ const MoreDetails = () => {
     });
   };
 
-  // const deleteDirectorDetails = (id) => {
-  //   const rem = directorField?.filter((item) => item.id !== id);
-  //   setDirectorField(rem);
-  // };
-
   useEffect(() => {
     dispatch(getAllIdTypes());
     dispatch({type: CLEAR_BVN});
@@ -439,7 +421,6 @@ const MoreDetails = () => {
 
   useEffect(() => {
     dispatch(getDirectorDetails());
-    // setDirectorField([]);
   }, [dispatch, deleteDirectorMsg, directorMsg]);
 
   return (
@@ -470,7 +451,6 @@ const MoreDetails = () => {
                       onClick={() => {
                         toggleEdit();
                         if (
-                          // directorField?.length <= 0 &&
                           directors?.length <= 0
                         ) {
                           reset();
@@ -517,14 +497,12 @@ const MoreDetails = () => {
                     </div>
                     {item.id === col2 ? (
                       <div className="details-content">
-                        {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
                         <div className="d-flex flex-column align-items-end">
                           <button
                             type="button"
-                            // className={`${directors?.length < 2 ? "grey-button" : " red-button mb-5"}`}
-                            className="red-button mb-5"
+                            className={`${directors?.length < 2 ? "grey-button" : " red-button mb-5"}`}
                             onClick={() => setShowModal(true)}
-                            // disabled={directors?.length < 2}
+                            disabled={directors?.length < 2}
                           >
                             Delete Director
                           </button>
@@ -1111,419 +1089,10 @@ const MoreDetails = () => {
                             </div>
                           )}
                         </Collapse>
-                        {/* </form> */}
                       </div>
                     ) : null}
-                    {/* <hr /> */}
                   </div>
                 ))}
-                {/* {directorField?.length > 0 &&
-                  directorField?.map((data) => (
-                    <div key={data.id}>
-                      <hr />
-                      <div className="row mt-5">
-                        <div className="d-flex justify-content-between mt-5">
-                          <h4>
-                            Director {data.no}{" "}
-                            <span
-                              className="pl-5"
-                              onClick={() => t_col1(data.id)}
-                            >
-                              {col1 === data.id ? (
-                                <i className="fa-solid fa-angle-down arrow"></i>
-                              ) : (
-                                <i className="fa-solid fa-angle-up arrow"></i>
-                              )}
-                            </span>
-                          </h4>
-                          <div>
-                            <button
-                              type="button"
-                              className="red-button"
-                              onClick={() => deleteDirectorDetails(data.id)}
-                            >
-                              Delete Director Details
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <Collapse isOpen={col1 === data.id}>
-                        <div className="image-holder">
-                          <div className="row">
-                            <div className="d-md-flex align-items-center justify-content-between">
-                              <div className="d-flex align-items-center justify-content-center">
-                                <img
-                                  className="image-frame"
-                                  style={{
-                                    borderRadius: "50%",
-                                    border: "2px solid #FFFFFF",
-                                  }}
-                                  src={
-                                    data?.passportImage?.encodedUpload
-                                      ? `data:image/jpeg;base64,${data?.passportImage?.encodedUpload}`
-                                      : User
-                                  }
-                                  alt="User"
-                                  width="125"
-                                  height="125"
-                                />
-                                {data?.passportImage?.encodedUpload ? (
-                                  <img
-                                    className="image-fluid align-self-start"
-                                    src={Check}
-                                    alt="check"
-                                    width="15"
-                                  />
-                                ) : null}
-                                <div>
-                                  <h5 className="">
-                                    Upload Your Passport Photo
-                                  </h5>
-                                  <p className="">jpg, 2 MB</p>
-                                </div>
-                              </div>
-                              <div>
-                                <input
-                                  type="file"
-                                  className="file"
-                                  accept="image/jpeg"
-                                  ref={photoFileInputRef}
-                                  onChange={(e) =>
-                                    handleFileChange(e, "photoEncodedString")
-                                  }
-                                  disabled={showEdit}
-                                />
-                                {showEdit ? (
-                                  <button
-                                    type="button"
-                                    className="grey-button mt-4"
-                                    disabled={showEdit}
-                                  >
-                                    Choose File
-                                  </button>
-                                ) : null}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="row">
-                          <div className="col-md-4 ">
-                            <label>First Name</label>
-                            <div className="input-group mb-4">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="First Name"
-                                name="firstName"
-                                value={data?.firstName}
-                                onChange={handleChange}
-                                disabled={showEdit}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-4 ">
-                            <label>Middle Name</label>
-                            <div className="input-group mb-4">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Middle Name"
-                                name="middleName"
-                                value={data?.middleName}
-                                onChange={handleChange}
-                                disabled={showEdit}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-4 mb-4">
-                            <label>Last Name</label>
-                            <div className="input-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Last Name"
-                                name="lastName"
-                                value={data?.lastName}
-                                onChange={handleChange}
-                                disabled={showEdit}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col ">
-                            <label>Address</label>
-                            <div className="input-group mb-4">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Address"
-                                name="address"
-                                value={data.address}
-                                onChange={handleChange}
-                                disabled={showEdit}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-md-7 ">
-                            <label>Email Address</label>
-                            <div className="input-group mb-4">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Email Address"
-                                name="email"
-                                value={data?.email}
-                                onChange={handleChange}
-                                disabled={showEdit}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-5 ">
-                            <label>Phone Number</label>
-                            <div className="input-group mb-4" id="phone">
-                              <PhoneInput
-                                country={"ng"}
-                                inputClass={`form-control phone-input disable`}
-                                buttonClass={`phone-select-field disable `}
-                                name="phone"
-                                value={data?.phone}
-                                // countryCodeEditable={false}
-                                disabled
-                                onChange={(value) =>
-                                  handlePhoneValueChange(value)
-                                }
-                                disableCountryCode={true}
-                                placeholder="Phone Number"
-                                disableDropdown
-                                masks={{ ng: ".... ... ...." }}
-                              />
-                              <UncontrolledTooltip
-                                placement="bottom"
-                                target="phone"
-                              >
-                                Please provide the Phone Number tied to the BVN
-                              </UncontrolledTooltip>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-lg-9">
-                            <div className="row">
-                              <div className="col-8 mb-4">
-                                <label>Bank verification number (BVN)</label>
-                                <div className="input-group">
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Bank verification number (BVN)"
-                                    name="bvn"
-                                    value={data?.bvn}
-                                    onChange={handleChange}
-                                    disabled={showEdit}
-                                  />
-                                </div>
-                              </div>
-                              {false ? (
-                                <div className="col-4">
-                                  <button
-                                    type="button"
-                                    onClick={handleVerifyBVN}
-                                    className="profile_vify_btn"
-                                  >
-                                    Verify
-                                  </button>
-                                </div>
-                              ) : (
-                                <div className="col-4">
-                                  <button
-                                    type="button"
-                                    disabled={showEdit}
-                                    className="grey_vify_btn"
-                                  >
-                                    Verify
-                                  </button>
-                                </div>
-                              )}
-
-                              <div>
-                                <div
-                                  style={{
-                                    position: "absolute",
-                                    top: "100px",
-                                    right: "300px",
-                                  }}
-                                >
-                                  <ModalComponent
-                                    show={showBvnModal}
-                                    size={"md"}
-                                    handleClose={handleBVNModalClose}
-                                  >
-                                    <BVNConfirm
-                                      show={showBvnModal}
-                                      handleClose={handleBVNModalClose}
-                                      firstName={bvnMessage?.data?.firstName}
-                                      lastName={bvnMessage?.data?.lastName}
-                                      bvn={data.bvn}
-                                      director="director"
-                                      nameMatch={bvnMessage?.isNameMatched}
-                                    />
-                                  </ModalComponent>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-md-6 ">
-                            <label>ID Type</label>
-                            <select
-                              className="form-select form-select-md mb-3"
-                              aria-label=".form-select-md"
-                              name="idTypeId"
-                              value={data?.idTypeId}
-                              onChange={handleChange}
-                              disabled={showEdit}
-                            >
-                              <option value="">Select ID Type...</option>
-                              {idTypes?.map((item) => (
-                                <option key={item.id} value={item.id}>
-                                  {item.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="col-md-6 ">
-                            <label>ID Number</label>
-                            <div className="input-group mb-4">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="ID Number"
-                                name="idNumber"
-                                value={data.idNumber}
-                                onChange={handleChange}
-                                disabled={showEdit}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row py-4">
-                          {!data.idDocumentImage?.encodedUpload ? (
-                            <div className="d-flex align-items-center justify-content-between">
-                              <div className="d-flex align-items-center justify-content-center">
-                                <img
-                                  className="file-image image-fluid"
-                                  src={FileDoc}
-                                  alt="FileDoc"
-                                />
-                                <div>
-                                  <h5 className="">Upload ID Card</h5>
-                                  <h5 className="">jpg, pdf, 2 MB</h5>
-                                </div>
-                              </div>
-                              <div className=" style-attachment">
-                                <input
-                                  type="file"
-                                  className="file"
-                                  ref={frontFileInputRef}
-                                  onChange={(e) =>
-                                    handleFileChange(e, "frontEncodedString")
-                                  }
-                                />
-                                {!showEdit ? (
-                                  <button
-                                    type="button"
-                                    className="btn_bg_blue"
-                                    onClick={(e) =>
-                                      handleFileSelect(e, frontFileInputRef)
-                                    }
-                                  >
-                                    Choose file
-                                  </button>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    className="normal-btn grey-button"
-                                    disabled={showEdit}
-                                  >
-                                    Choose file
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="d-flex align-items-center justify-content-between w-100">
-                              <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                                <img
-                                  className="file-image image-fluid"
-                                  src={FileDoc}
-                                  alt="FileDoc"
-                                />
-                                <div className="progress-bar-style">
-                                  <h5 className="position-relative">
-                                    ID Card{" "}
-                                    <span
-                                      style={{
-                                        cursor: "pointer",
-                                        display: "flex",
-                                        justifyContent: "flex-end",
-                                      }}
-                                      // onClick={() =>
-                                      // 	setBase64File({
-                                      // 		...base64File,
-                                      // 		frontEncodedString: "",
-                                      // 	})
-                                      // }
-                                    >
-                                      <i className="fa-solid fa-xmark"></i>
-                                    </span>
-                                  </h5>
-                                  <div
-                                    className="progress"
-                                    style={{ height: "3px" }}
-                                  >
-                                    <div
-                                      className="progress-bar"
-                                      role="progressbar"
-                                      style={{ width: "75%" }}
-                                      aria-valuenow="25"
-                                      aria-valuemin="0"
-                                      aria-valuemax="100"
-                                    ></div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="style-attachment">
-                                <input
-                                  type="file"
-                                  className="file"
-                                  ref={frontFileInputRef}
-                                  onChange={(e) =>
-                                    handleFileChange(e, "frontEncodedString")
-                                  }
-                                />
-                                {!showEdit ? null : ( // </button> // 	Choose file // 	}> // 		handleFileSelect(e, frontFileInputRef) // 	onClick={(e) => // 	className="btn_bg_blue" // 	type="button" // <button
-                                  <button
-                                    type="button"
-                                    className="normal-btn grey-button"
-                                    disabled={showEdit}
-                                  >
-                                    Choose file
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </Collapse>
-                       
-                    </div>
-                  ))} */}
                 <ModalComponent
                   show={addDirectors}
                   size={"md"}
@@ -1539,22 +1108,6 @@ const MoreDetails = () => {
                     idTypes={idTypes}
                   />
                 </ModalComponent>
-                {/* <Collapse isOpen={addDirectors}>
-                  {
-                    addDirectors && (
-                      <AddDirectors
-                        updateDirector={(data) => updateMoreDirector(data)}
-                        countNumbers={countNumbers}
-                        number={
-                          directorField[directorField.length - 1]?.no ||
-                          directors?.length
-                        }
-                        removeForm={setAddDirectors}
-                        idTypes={idTypes}
-                      />
-                    )
-                  }
-                </Collapse> */}
                 <div className="row">
                   <div
                     className="d-flex align-items-center mt-5"
@@ -1627,7 +1180,6 @@ const MoreDetails = () => {
                 </div>
 
                 <div className="details-content">
-                  {/* <form autoComplete="off" onSubmit={handleSubmit}> */}
                   <Collapse isOpen={showOne}>
                     <div className="image-holder">
                       <div className="row">
@@ -1692,7 +1244,6 @@ const MoreDetails = () => {
                               </button>
                             )}
                           </div>
-                          {/* <button>Choose file</button> */}
                         </div>
                       </div>
                     </div>
@@ -1799,7 +1350,6 @@ const MoreDetails = () => {
                             }`}
                             name="phone"
                             value={formData?.phone}
-                            // countryCodeEditable={false}
                             disabled={showEdit}
                             onChange={(value) => handlePhoneValueChange(value)}
                             disableCountryCode={true}
@@ -1961,7 +1511,6 @@ const MoreDetails = () => {
                             >
                               <h5 className="image-fluid mr-3">ID Card</h5>
                               <img
-                                // className="position-absolute"
                                 src={Check}
                                 alt="check"
                                 width="15"
@@ -2106,493 +1655,6 @@ const MoreDetails = () => {
                       </div>
                     )}
                   </Collapse>
-                  {/* </form> */}
-                  {/* {directorField?.length > 0 &&
-                    directorField?.map((data) => (
-                      <div key={data.id}>
-                        <hr />
-                        <div className="row mt-5">
-                          <div className="d-flex justify-content-between mt-5">
-                            <h4>
-                              Director {data.no}{" "}
-                              <span
-                                className="pl-5"
-                                onClick={() => t_col1(data.id)}
-                              >
-                                {col1 ? (
-                                  <i className="fa-solid fa-angle-down arrow"></i>
-                                ) : (
-                                  <i className="fa-solid fa-angle-up arrow"></i>
-                                )}
-                              </span>
-                            </h4>
-                            <div>
-                              <button
-                                type="button"
-                                className="red-button"
-                                onClick={() => deleteDirectorDetails(data.id)}
-                              >
-                                Delete Director Details
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      
-                        <Collapse isOpen={col1 === data.id}>
-                          <div className="image-holder">
-                            <div className="row">
-                              <div className="d-md-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center justify-content-center">
-                                  <img
-                                    className="image-frame"
-                                    style={{
-                                      borderRadius: "50%",
-                                      border: "2px solid #FFFFFF",
-                                    }}
-                                    src={
-                                      data?.passportImage?.encodedUpload
-                                        ? `data:image/jpeg;base64,${data?.passportImage?.encodedUpload}`
-                                        : User
-                                    }
-                                    alt="User"
-                                    width="125"
-                                    height="125"
-                                  />
-                                  {data?.passportImage?.encodedUpload ? (
-                                    <img
-                                      className="image-fluid align-self-start"
-                                      src={Check}
-                                      alt="check"
-                                      width="15"
-                                    />
-                                  ) : null}
-                                  <div>
-                                    <h5 className="">
-                                      Upload Your Passport Photo
-                                    </h5>
-                                    <p className="">jpg, 2 MB</p>
-                                  </div>
-                                </div>
-                                <div>
-                                  <input
-                                    type="file"
-                                    className="file"
-                                    accept="image/jpeg"
-                                    ref={photoFileInputRef}
-                                    onChange={(e) =>
-                                      handleFileChange(e, "photoEncodedString")
-                                    }
-                                    disabled={showEdit}
-                                  />
-                                  {showEdit ? (
-                                    <button
-                                      type="button"
-                                      className="grey-button mt-4"
-                                      disabled={showEdit}
-                                    >
-                                      Choose File
-                                    </button>
-                                  ) : null}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="row">
-                            <div className="col-md-4 ">
-                              <label>First Name</label>
-                              <div className="input-group mb-4">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="First Name"
-                                  name="firstName"
-                                  value={data?.firstName}
-                                  onChange={handleChange}
-                                  disabled={showEdit}
-                                />
-                              </div>
-                            </div>
-                            <div className="col-md-4 ">
-                              <label>Middle Name</label>
-                              <div className="input-group mb-4">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Middle Name"
-                                  name="middleName"
-                                  value={data?.middleName}
-                                  onChange={handleChange}
-                                  disabled={showEdit}
-                                />
-                              </div>
-                            </div>
-                            <div className="col-md-4 mb-4">
-                              <label>Last Name</label>
-                              <div className="input-group">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Last Name"
-                                  name="lastName"
-                                  value={data?.lastName}
-                                  onChange={handleChange}
-                                  disabled={showEdit}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col ">
-                              <label>Address</label>
-                              <div className="input-group mb-4">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Address"
-                                  name="address"
-                                  value={data.address}
-                                  onChange={handleChange}
-                                  disabled={showEdit}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-7">
-                              <label>Email Address</label>
-                              <div className="input-group mb-4">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Email Address"
-                                  name="email"
-                                  value={data?.email}
-                                  onChange={handleChange}
-                                  disabled={showEdit}
-                                />
-                              </div>
-                            </div>
-                            <div className="col-md-5">
-                              <label>Phone Number</label>
-                              <div className="input-group mb-4" id="phone">
-                                <PhoneInput
-                                  country={"ng"}
-                                  inputClass={`form-control phone-input disable`}
-                                  buttonClass={`phone-select-field disable`}
-                                  name="phone"
-                                  value={data?.phone}
-                                  // countryCodeEditable={false}
-                                  disabled
-                                  onChange={(value) =>
-                                    handlePhoneValueChange(value)
-                                  }
-                                  disableCountryCode={true}
-                                  placeholder="Phone Number"
-                                  disableDropdown
-                                  masks={{ ng: ".... ... ...." }}
-                                />
-                                <UncontrolledTooltip
-                                  placement="bottom"
-                                  target="phone"
-                                >
-                                  Please provide the Phone Number tied to the
-                                  BVN
-                                </UncontrolledTooltip>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-lg-9">
-                              <div className="row">
-                                <div className="col-8 mb-4">
-                                  <label>Bank verification number (BVN)</label>
-                                  <div className="input-group">
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      placeholder="Bank verification number (BVN)"
-                                      name="bvn"
-                                      value={data?.bvn}
-                                      onChange={handleChange}
-                                      disabled={showEdit}
-                                    />
-                                  </div>
-                                </div>
-                                {data.firstName &&
-                                data.lastName &&
-                                data.address &&
-                                data.phone &&
-                                data.email &&
-                                data.bvn &&
-                                !showEdit &&
-                                !bvnMessage?.isNameMatched ? (
-                                  <div className="col-4">
-                                    <button
-                                      type="button"
-                                      onClick={handleVerifyBVN}
-                                      className="profile_vify_btn"
-                                    >
-                                      Verify
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <div className="col-4">
-                                    <button
-                                      type="button"
-                                      disabled={showEdit}
-                                      className="grey_vify_btn"
-                                    >
-                                      Verify
-                                    </button>
-                                  </div>
-                                )}
-
-                                <div>
-                                  <div
-                                    style={{
-                                      position: "absolute",
-                                      top: "100px",
-                                      right: "300px",
-                                    }}
-                                  >
-                                    <ModalComponent
-                                      show={showBvnModal}
-                                      size={"md"}
-                                      handleClose={handleBVNModalClose}
-                                    >
-                                      <BVNConfirm
-                                        show={showBvnModal}
-                                        handleClose={handleBVNModalClose}
-                                        firstName={bvnMessage?.data?.firstName}
-                                        lastName={bvnMessage?.data?.lastName}
-                                        bvn={formData.bvn}
-                                        director="director"
-                                        nameMatch={bvnMessage?.isNameMatched}
-                                      />
-                                    </ModalComponent>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-6 ">
-                              <label>ID Type</label>
-                              <select
-                                className="form-select form-select-md mb-3"
-                                aria-label=".form-select-md"
-                                name="idTypeId"
-                                value={data?.idTypeId}
-                                onChange={handleChange}
-                                disabled={showEdit}
-                              >
-                                <option value="">Select ID Type...</option>
-                                {idTypes?.map((item) => (
-                                  <option key={item.id} value={item.id}>
-                                    {item.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            <div className="col-md-6 ">
-                              <label>ID Number</label>
-                              <div className="input-group mb-4">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="ID Number"
-                                  name="idNumber"
-                                  value={data.idNumber}
-                                  onChange={handleChange}
-                                  disabled={showEdit}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          {false ? (
-                            <div className="row py-4">
-                              <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center justify-content-center">
-                                  <img
-                                    className="file-image image-fluid"
-                                    src={FileDoc}
-                                    alt="FileDoc"
-                                  />
-                                  <div
-                                    className="d-flex"
-                                    style={{ columnGap: "10px" }}
-                                  >
-                                    <h5 className="image-fluid mr-3">
-                                      ID Card
-                                    </h5>
-                                    <img
-                                      // className="position-absolute"
-                                      src={Check}
-                                      alt="check"
-                                      width="15"
-                                      height="15"
-                                    />
-                                  </div>
-                                </div>
-                                <div className=" style-attachment">
-                                  
-                                  <button
-                                    type="button"
-                                    className="normal-btn grey-button"
-                                  >
-                                    View
-                                  </button>
-                                  
-                                </div>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="row py-4">
-                              {!data.idDocumentImage?.encodedUpload ? (
-                                <div className="d-flex align-items-center justify-content-between">
-                                  <div className="d-flex align-items-center justify-content-center">
-                                    <img
-                                      className="file-image image-fluid"
-                                      src={FileDoc}
-                                      alt="FileDoc"
-                                    />
-                                    <div>
-                                      <h5 className="">Upload ID Card</h5>
-                                      <h5 className="">jpg, pdf, 2 MB</h5>
-                                    </div>
-                                  </div>
-                                  <div className=" style-attachment">
-                                    <input
-                                      type="file"
-                                      className="file"
-                                      ref={frontFileInputRef}
-                                      onChange={(e) =>
-                                        handleFileChange(
-                                          e,
-                                          "frontEncodedString"
-                                        )
-                                      }
-                                    />
-                                    {!showEdit ? (
-                                      <button
-                                        type="button"
-                                        className="btn_bg_blue"
-                                        onClick={(e) =>
-                                          handleFileSelect(e, frontFileInputRef)
-                                        }
-                                      >
-                                        Choose file
-                                      </button>
-                                    ) : (
-                                      <button
-                                        type="button"
-                                        className="normal-btn grey-button"
-                                        disabled={showEdit}
-                                      >
-                                        Choose file
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="d-flex align-items-center justify-content-between w-100">
-                                  <div className="progress-bar-style d-flex align-items-center justify-content-start">
-                                    <img
-                                      className="file-image image-fluid"
-                                      src={FileDoc}
-                                      alt="FileDoc"
-                                    />
-                                    <div className="progress-bar-style">
-                                      <h5 className="position-relative">
-                                        ID Card{" "}
-                                        <span
-                                          style={{
-                                            cursor: "pointer",
-                                            display: "flex",
-                                            justifyContent: "flex-end",
-                                          }}
-                                          // onClick={() =>
-                                          // 	setBase64File({
-                                          // 		...base64File,
-                                          // 		frontEncodedString: "",
-                                          // 	})
-                                          // }
-                                        >
-                                          <i className="fa-solid fa-xmark"></i>
-                                        </span>
-                                      </h5>
-                                      <div
-                                        className="progress"
-                                        style={{ height: "3px" }}
-                                      >
-                                        <div
-                                          className="progress-bar"
-                                          role="progressbar"
-                                          style={{ width: "75%" }}
-                                          aria-valuenow="25"
-                                          aria-valuemin="0"
-                                          aria-valuemax="100"
-                                        ></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="style-attachment">
-                                    <input
-                                      type="file"
-                                      className="file"
-                                      ref={frontFileInputRef}
-                                      onChange={(e) =>
-                                        handleFileChange(
-                                          e,
-                                          "frontEncodedString"
-                                        )
-                                      }
-                                    />
-                                    {!showEdit ? null : (
-                                      <button
-                                        type="button"
-                                        className="normal-btn grey-button"
-                                        disabled={showEdit}
-                                      >
-                                        Choose file
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </Collapse> 
-                        
-                      </div>
-                    ))}*/}
-                  {/* <Collapse isOpen={addDirectors}>
-                    {addDirectors && (
-                      <AddDirectors
-                        updateDirector={(data) => updateMoreDirector(data)}
-                        countNumbers={countNumbers}
-                        number={
-                          directorField[directorField.length - 1]?.no || 1
-                        }
-                        removeForm={setAddDirectors}
-                        idTypes={idTypes}
-                      />
-                    )}
-                  </Collapse>
-                  <div className="row">
-                    <div
-                      className="d-flex align-items-center mt-5"
-                      onClick={() => setAddDirectors(!addDirectors)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <img src={plus} alt="plus" className="mx-2" />
-                      <span style={{ color: "#111E6C", marginRight: "30px" }}>
-                        {" "}
-                        Add More Directors
-                      </span>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             )}

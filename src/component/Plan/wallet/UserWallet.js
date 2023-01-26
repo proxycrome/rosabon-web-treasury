@@ -33,17 +33,21 @@ const UserWallet = () => {
   const [transferError, setTransferError] = useState({});
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isTransferSubmit, setIsTransferSubmit] = useState(false);
   // const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [IsWithDraw, setIsWithDraw] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
-  const { users, bankDetails, bankDetailsError, withdrawReasons, loading: userLoading, } = useSelector(
-    (state) => state.user_profile
-  );
+  const {
+    users,
+    bankDetails,
+    bankDetailsError,
+    withdrawReasons,
+    loading: userLoading,
+  } = useSelector((state) => state.user_profile);
   const { walletBalance, loading } = useSelector((state) => state.wallet);
 
-  
   const handleClick = (value) => {
     if (value === "transfer") {
       setIsWithDraw(true);
@@ -174,6 +178,7 @@ const UserWallet = () => {
       toast.error("Provide an amount and beneficiary account");
     } else {
       dispatch(postTransferToPlan(transferFormData));
+      setIsTransferSubmit(true)
     }
   };
 
@@ -330,7 +335,8 @@ const UserWallet = () => {
                             bankDetails={bankDetails}
                             bankDetailsError={bankDetailsError?.message}
                             withdrawReasons={withdrawReasons?.data?.body}
-                            withdrawData={(data) => handleFormData(data)}
+                            withdrawData={handleFormData}
+                            isSubmitted={isSubmitted}
                             errors={errors}
                             walletBalance={walletBalance}
                             id="withdraw"
@@ -350,6 +356,7 @@ const UserWallet = () => {
                             setTransferError={setTransferError}
                             transferError={transferError}
                             id="transfer"
+                            isTransferSubmit={isTransferSubmit}
                           />
                         </div>
                       </div>

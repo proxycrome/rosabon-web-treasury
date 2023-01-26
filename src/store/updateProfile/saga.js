@@ -87,11 +87,9 @@ function* changeUserPassword({
         toast.success(response.data.message, {position: "top-right"});
         setTimeout(() => {
           dispatch(logout(navigate, dispatch));
-        }, 2000);
-      } else {
-        setTimeout(() => {
-          toast.success(response.data.message, {position: "top-right"});
         }, 1000);
+      } else {
+        toast.success(response.data.message, {position: "top-right"});
       }
     }
   } catch (error) {

@@ -80,7 +80,7 @@ const PlanCardPayment = ({ goBack }) => {
   let amount = parseInt(
     product.properties.hasTargetAmount &&
       product?.properties?.hasSavingFrequency
-      ? (form?.contributionValue * form?.exchangeRate).toFixed(2) * 100
+      ? (form?.contributionValue * form?.exchangeRate) * 100
       : (form?.planSummary.principal * form?.exchangeRate).toFixed(2) * 100
   );
 

@@ -1544,6 +1544,7 @@ export const AvailableBalance = ({
   errors,
   walletBalance,
   id,
+  isSubmitted,
 }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [withdrawMandateImage, setWithdrawMandateImage] = useState({});
@@ -1551,7 +1552,7 @@ export const AvailableBalance = ({
 
   const data = {
     withdrawalAmount: "",
-    bankAccountId: 0,
+    bankAccountId: "",
     withdrawalReasonId: "",
     withdrawalReasonOthers: "",
   };
@@ -1594,15 +1595,36 @@ export const AvailableBalance = ({
         // withdrawalInstructionImage: withdrawInstructionImage,
         withdrawalMandateLetterImage: withdrawMandateImage,
       };
-      withdrawData(data);
+      withdrawData(data, resetCorporate);
     }
   }, [formData]);
 
-  const handleOnclick = (e) => {
-    if (e.target.value === "others") {
-      setShowTextArea(!showTextArea);
-    }
+  const resetIndividual = () => {
+    setFormData({
+      bankAccountId: "",
+      withdrawalAmount: "",
+      withdrawalReasonId: "",
+      withdrawalReasonOthers: "",
+    });
   };
+
+  const resetCorporate = () => {
+    setFormData({
+      withdrawalAmount: "",
+      withdrawalReasonId: "",
+      withdrawalReasonOthers: "",
+    });
+    setWithdrawMandateImage({});
+  };
+
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmitted && role === "COMPANY") {
+      resetCorporate();
+    }
+    if (Object.keys(errors).length === 0 && isSubmitted && role !== "COMPANY") {
+      resetIndividual()
+    }
+  }, [isSubmitted, errors]);
 
   return (
     <AvailableBalanceWapper id={id}>
@@ -1632,10 +1654,13 @@ export const AvailableBalance = ({
         <div className="mb-4">
           <label>Withdrawal Amount</label>
           <div className="input-group">
+            <div className=" input-group-prepend curr-icon">
+              {getCurrIcon("NGN")}
+            </div>
             <input
               type="number"
-              className="form-control"
-              placeholder="N 1,500,000"
+              className="form-control curr-input"
+              placeholder="1,500,000"
               name="withdrawalAmount"
               value={formData.withdrawalAmount}
               onChange={handleChange}
@@ -1679,7 +1704,9 @@ export const AvailableBalance = ({
           <div className="mb-4">
             <FileUpload
               fileName="withdrawal mandate instruction letter"
-              setFile={(file) => setWithdrawMandateImage(file)}
+              setFile={setWithdrawMandateImage}
+              errors={errors}
+              isSubmitted={isSubmitted}
               id="mandate"
             />
             {errors.withdrawalMandateLetterImage && (
@@ -1712,7 +1739,6 @@ export const AvailableBalance = ({
             <select
               className="form-select form-select-md select-field"
               aria-label=".form-select-md"
-              onClick={handleOnclick}
               name="withdrawalReasonId"
               value={formData.withdrawalReasonId}
               onChange={handleChange}
@@ -1733,7 +1759,7 @@ export const AvailableBalance = ({
           )}
         </div>
       </div>
-      {showTextArea ? (
+      {formData.withdrawalReasonId === "others" ? (
         <>
           <div className="pb-4">
             <div className="mb-4">
@@ -1769,6 +1795,7 @@ export const TransferCard = ({
   id,
   transferError,
   setTransferError,
+  isTransferSubmit,
 }) => {
   const dispatch = useDispatch();
 
@@ -1778,12 +1805,12 @@ export const TransferCard = ({
       plan.interestReceiptOption === "MATURITY" && plan.planStatus === "ACTIVE"
   );
 
-  const data = {
+  const tdata = {
     amount: "",
     planId: "",
   };
 
-  const [formData, setFormData] = useState(data);
+  const [formData, setFormData] = useState(tdata);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -1818,6 +1845,12 @@ export const TransferCard = ({
     dispatch(getEligiblePlans());
   }, [dispatch]);
 
+  useEffect(() => {
+    if(isTransferSubmit){
+      setFormData(tdata);
+    }
+  }, [isTransferSubmit])
+
   return (
     <AvailableBalanceWapper id={id}>
       <h3>Transfer</h3>
@@ -1834,11 +1867,14 @@ export const TransferCard = ({
         <div className=" ">
           <label>Transfer Amount</label>
           <div className="input-group">
+            <div className="input-group-prepend curr-icon">
+              {getCurrIcon("NGN")}
+            </div>
             <input
-              className={`form-control ${
+              className={`form-control curr-input ${
                 transferError?.amount ? "tr-error" : "mb-4"
               }`}
-              placeholder="N1,500,000"
+              placeholder="1,500,000"
               type="number"
               required
               name="amount"
@@ -1886,17 +1922,17 @@ const AvailableBalanceWapper = styled.div`
   input {
     font-family: "Montserrat";
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 12px;
     line-height: 15px;
     letter-spacing: -0.01em;
-    color: #bdbdbd;
+    color: #242424;
     padding: 0.7rem;
   }
   textarea {
     font-family: "Montserrat";
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 12px;
     line-height: 15px;
     letter-spacing: -0.01em;
@@ -1951,6 +1987,15 @@ const AvailableBalanceWapper = styled.div`
   }
   .tr-error {
     border: 2px solid red;
+  }
+  .curr-icon {
+    position: absolute;
+    margin-top: 7px;
+    margin-left: 15px;
+    z-index: 10;
+  }
+  .curr-input {
+    padding-left: 30px;
   }
 `;
 

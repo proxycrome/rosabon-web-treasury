@@ -3,7 +3,7 @@ import styled from "styled-components";
 import FileDoc from "../../asset/file.png";
 import Check from "../../asset/checked.png";
 
-const FileUpload = ({ showEdit, setFile, fileName, id }) => {
+const FileUpload = ({ showEdit, setFile, fileName, id, errors, isSubmitted }) => {
   const [base64File, setBase64File] = useState({});
   const fileInputRef = useRef(null);
 
@@ -39,12 +39,19 @@ const FileUpload = ({ showEdit, setFile, fileName, id }) => {
     if (Object.keys(base64File).length > 0) {
       setFile(base64File);
     }
-  }, [base64File]);
+  }, [base64File, setFile]);
 
   const handleFileSelect = (e, reference) => {
     e.preventDefault();
     reference.current.click();
   };
+
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmitted) {
+      setBase64File({});
+      setFile({});
+    }
+  }, [isSubmitted, errors])
 
   return (
     <Wrapper>

@@ -156,7 +156,6 @@ const Wrapper = styled.div`
       }
     }
     .smaller {
-      border: 3px solid red;
       margin: 0 auto;
     }
   }
