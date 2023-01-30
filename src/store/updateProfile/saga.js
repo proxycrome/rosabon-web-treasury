@@ -90,6 +90,9 @@ function* changeUserPassword({
         }, 1000);
       } else {
         toast.success(response.data.message, {position: "top-right"});
+        setTimeout(() => {
+          dispatch(logout(navigate, dispatch));
+        }, 1000);
       }
     }
   } catch (error) {

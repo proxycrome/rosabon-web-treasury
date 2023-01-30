@@ -421,7 +421,7 @@ const PlanForm = () => {
     let rate = inv_rates?.find((item) => {
       return (
         item.product.id === parseInt(id) &&
-        item.currency.name === formData.currency &&
+        item.currency.name?.toLowerCase() === formData.currency?.toLowerCase() &&
         convPrincipal() >= item.minimumAmount &&
         convPrincipal() <= item.maximumAmount &&
         maxTenorDays() >= item.minimumTenor &&

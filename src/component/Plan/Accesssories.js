@@ -2809,11 +2809,11 @@ export const TransferDeposit = () => {
         field: "amount",
         width: 100,
       },
-      {
-        label: "Balance",
-        field: "balance",
-        width: 100,
-      },
+      // {
+      //   label: "Balance",
+      //   field: "balance",
+      //   width: 100,
+      // },
     ],
     rows: deposits?.map((data) => ({
       sn: `${data.transactionId}`,
@@ -2821,7 +2821,7 @@ export const TransferDeposit = () => {
       description: `${data.description}`,
       type: `${data.transactionType}`,
       amount: `+ ₦ ${formatCurrValue(parseFloat(data.amount))}`,
-      balance: `₦ ${formatCurrValue(parseFloat(data.balance))}`,
+      // balance: `₦ ${formatCurrValue(parseFloat(data.balance))}`,
     })),
   };
 
@@ -3134,6 +3134,8 @@ export const FeedbackTickets = () => {
   const { my_tickets, loading } = useSelector((state) => state.feedback);
   const tickets = my_tickets ? my_tickets : [];
 
+  console.log(tickets);
+
   useEffect(() => {
     dispatch(getTickets());
   }, []);
@@ -3194,11 +3196,11 @@ export const FeedbackTickets = () => {
                               borderRadius: "10px",
                             }}
                           >
-                            {item.status}
+                            {item.status === "OPENED" ? "OPEN" : item.status}
                           </button>
                         </td>
-                        <td>{item.createdAt.split(" ")[0]}</td>
-                        <td>{item.modifiedAt.split(" ")[0]}</td>
+                        <td>{item.createdAt}</td>
+                        <td>{item.modifiedAt}</td>
                         <td>
                           <button
                             style={{
@@ -3352,11 +3354,11 @@ export const FeedbackOpenTickets = () => {
                               borderRadius: "10px",
                             }}
                           >
-                            {item.status}
+                            {item.status === "OPENED" ? "OPEN" : item.status}
                           </button>
                         </td>
-                        <td>{item.createdAt.split(" ")[0]}</td>
-                        <td>{item.modifiedAt.split(" ")[0]}</td>
+                        <td>{item.createdAt}</td>
+                        <td>{item.modifiedAt}</td>
                         <td>
                           <button
                             style={{
@@ -3453,7 +3455,7 @@ export const FeedbackCloseTickets = () => {
                               borderRadius: "10px",
                             }}
                           >
-                            {item.status}
+                            {item.status === "OPENED" ? "OPEN" : item.status}
                           </button>
                         </td>
                         <td>{item.createdAt.split(" ")[0]}</td>

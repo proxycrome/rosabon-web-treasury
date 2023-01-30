@@ -18,7 +18,7 @@ const VerifyEmailSuccess = () => {
             </div>
           </div>
           <div className="btnContain">
-            <Link to="/" style={{ width: "100%" }}>
+            <Link to="/login" style={{ width: "100%" }}>
               <button className="verifyBtn">OK</button>
             </Link>
           </div>
