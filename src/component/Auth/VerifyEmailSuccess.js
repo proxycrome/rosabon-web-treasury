@@ -1,9 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Mail from "../../asset/mail.svg";
 import styled from "styled-components";
 
 const VerifyEmailSuccess = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/login");
+  };
+
   return (
     <Wrapper>
       <div className="container">
@@ -18,9 +24,9 @@ const VerifyEmailSuccess = () => {
             </div>
           </div>
           <div className="btnContain">
-            <Link to="/login" style={{ width: "100%" }}>
-              <button className="verifyBtn">OK</button>
-            </Link>
+            <button className="verifyBtn" onClick={handleClick}>
+              OK
+            </button>
           </div>
         </div>
       </div>
