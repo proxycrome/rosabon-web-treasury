@@ -8,6 +8,7 @@ const VerifyEmailSuccess = () => {
 
   const handleClick = () => {
     navigate("/login");
+    window.location.reload();
   };
 
   return (
