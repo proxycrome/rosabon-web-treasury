@@ -423,21 +423,35 @@ const Statement = () => {
           <></>
         )}
 
-        {category === "WALLET" || category === "PLAN" ? (
+        {category === "WALLET" ? (
           <div className="row">
             <div className="d-flex justify-content-center my-5">
               <button
                 className="btn-view"
                 onClick={generatePDF}
                 disabled={
-                  walletData.rows.length === 0 || planData.rows.length === 0
+                  (walletData.rows.length === 0)
                 }
               >
                 Download Pdf
               </button>
             </div>
           </div>
-        ) : null}
+        ) : category === "PLAN" ? (
+          <div className="row">
+            <div className="d-flex justify-content-center my-5">
+              <button
+                className="btn-view"
+                onClick={generatePDF}
+                disabled={
+                  (planData.rows.length === 0)
+                }
+              >
+                Download Pdf
+              </button>
+            </div>
+          </div>
+        ): null}
       </HistoryTableWarapper>
     </div>
   );

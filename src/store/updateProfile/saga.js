@@ -97,10 +97,8 @@ function* changeUserPassword({
     }
   } catch (error) {
     yield put(changeUserPasswordError(error?.response?.data));
-    if (error?.response) {
-      setTimeout(() => {
-        toast.error(error?.response?.data?.message);
-      }, 1000);
+    if (error?.response?.data?.message) {
+      toast.error(error?.response?.data?.message, {position: "top-right"});
     }
   }
 }

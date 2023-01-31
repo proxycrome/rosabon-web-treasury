@@ -246,8 +246,16 @@ function* planAction({
     yield put(planActionSuccess(response.data));
     if (response) {
       if (planAction === "WITHDRAW") {
-        onSuccess(true);
-        toast.success(response.data.message, { position: "top-right" });
+        if (
+          response.data.message ===
+          "There is a pending withdrawal on this plan. Kindly await approval before making another request"
+        ) {
+          onSuccess(false);
+          toast.success(response.data.message, { position: "top-center" });
+        } else {
+          onSuccess(true);
+          toast.success(response.data.message, { position: "top-right" });
+        }
       } else if (planAction === "TOP_UP" && paymentType === "BANK_TRANSFER") {
         toast.success("Top-up saved", { position: "top-right" });
         setTimeout(() => {

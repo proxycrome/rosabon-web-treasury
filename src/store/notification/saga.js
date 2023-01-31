@@ -7,6 +7,7 @@ import {
 } from "./actionTypes";
 
 import {
+  getNotification,
   getNotificationError,
   getNotificationSuccess,
   readAllNotificationsError,
@@ -20,8 +21,9 @@ import {
   readAllNotificationsService,
   readNotificationService,
 } from "../../services/notificationService";
+import { toast } from "react-hot-toast";
 
-function* getNotification() {
+function* getNotifications() {
   try {
     const response = yield call(getNotificationService);
     yield put(getNotificationSuccess(response.data));
@@ -39,17 +41,25 @@ function* readNotification({ payload: { id } }) {
   }
 }
 
-function* readAllNotifications() {
+function* readAllNotifications({payload: {setIsView, dispatch}}) {
   try {
     const response = yield call(readAllNotificationsService);
     yield put(readAllNotificationsSuccess(response.data));
+    console.log(response.data);
+    if (response){
+      toast.success("All notifications have been marked as Read", {position : "top-right"});
+      dispatch(getNotification());
+      setTimeout(() => {
+        setIsView(true);
+      }, 2000)  
+    }
   } catch (error) {
     yield put(readAllNotificationsError(error?.response?.data));
   }
 }
 
 export function* watchGetNotification() {
-  yield takeEvery(GET_NOTIFICATION, getNotification);
+  yield takeEvery(GET_NOTIFICATION, getNotifications);
 }
 
 export function* watchReadNotification() {
