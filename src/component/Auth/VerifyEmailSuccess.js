@@ -1,10 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import Mail from "../../asset/mail.svg";
 import styled from "styled-components";
 
 const VerifyEmailSuccess = () => {
-  const navigate = useNavigate();
 
   const handleClick = async() => {
     window.location.href = "/login";
