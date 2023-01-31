@@ -6,9 +6,8 @@ import styled from "styled-components";
 const VerifyEmailSuccess = () => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/login");
-    window.location.reload();
+  const handleClick = async() => {
+    window.location.href = "/login";
   };
 
   return (
