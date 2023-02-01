@@ -3514,7 +3514,7 @@ export const paymentAtMaturity = (
   principal,
   withholdingTax,
   tenorMonths,
-  calculatedInterest
+  calculatedInterest,
 ) => {
   let result = 0;
   const interestMonthly = calculatedInterest / tenorMonths;
@@ -3522,7 +3522,15 @@ export const paymentAtMaturity = (
   const interestBiAnnual = calculatedInterest / (tenorMonths / 6);
   switch (intRecOption) {
     case "MATURITY":
-      result =
+      if(withholdingTax===null) {
+        result =
+        Math.round(
+          (principal + calculatedInterest) *
+            100 +
+            Number.EPSILON
+        ) / 100;
+      } else {
+        result =
         Math.round(
           (principal +
             calculatedInterest -
@@ -3530,6 +3538,7 @@ export const paymentAtMaturity = (
             100 +
             Number.EPSILON
         ) / 100;
+      }
       break;
 
     case "UPFRONT":

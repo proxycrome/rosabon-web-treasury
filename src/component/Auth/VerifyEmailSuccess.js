@@ -93,6 +93,7 @@ const Wrapper = styled.div`
     color: #ffffff;
     font-weight: 700;
     font-size: 18px;
+    cursor: pointer;
   }
 
   @media (max-width: 700px) {
