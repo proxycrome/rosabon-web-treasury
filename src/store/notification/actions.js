@@ -51,9 +51,10 @@ export const readNotificationError = (error) => {
   };
 };
 
-export const readAllNotifications = () => {
+export const readAllNotifications = (setIsView, dispatch) => {
     return {
         type: READ_ALL_NOTIFICATIONS,
+        payload: {setIsView, dispatch},
     }
 }
 

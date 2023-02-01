@@ -79,23 +79,33 @@ const Withdrawal = () => {
         "days"
       );
 
-      const currentNumberOfDays =
-        moment(recentDate).diff(plan?.planSummary?.startDate, "days") === 0
-          ? 1
-          : moment(recentDate).diff(plan?.planSummary?.startDate, "days");
+      let currentNumberOfDays = moment(recentDate).diff(
+        plan?.planSummary?.startDate,
+        "days"
+      );
 
       const penalDays = moment(plan?.planSummary?.endDate).diff(
         recentDate,
         "days"
       );
 
-      planProductCharges.forEach((item) => {
-        const maxDays = Math.floor((item.maxDaysElapsed * maxNumberDays) / 100);
-        const minDays = Math.floor((item.minDaysElapsed * maxNumberDays) / 100);
-        if (currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays) {
-          penalRate = item.penalRate / 100;
-        }
-      });
+      const penalObj = planProductCharges
+        ?.sort((a, b) => a.minDaysElapsed - b.minDaysElapsed)
+        ?.find((item) => {
+          const maxDays = Math.floor(
+            (item.maxDaysElapsed * maxNumberDays) / 100
+          );
+          const minDays = Math.floor(
+            (item.minDaysElapsed * maxNumberDays) / 100
+          );
+          return (
+            currentNumberOfDays >= minDays && currentNumberOfDays <= maxDays
+          );
+        });
+
+      penalRate = penalObj?.penalRate / 100;
+
+      currentNumberOfDays = currentNumberOfDays === 0 ? 1 : currentNumberOfDays;
 
       if (penalDays > 0) {
         switch (intRecOption) {

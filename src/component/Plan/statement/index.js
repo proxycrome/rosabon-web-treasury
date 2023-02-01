@@ -135,7 +135,7 @@ const Statement = () => {
     "December",
   ];
 
-  const history_list =
+  const plan_history_list =
     filteredPlanTransactions.length > 0 ||
     (formData.startDate !== "" && formData.endDate !== "")
       ? filteredPlanTransactions.map((item) => ({
@@ -192,8 +192,38 @@ const Statement = () => {
         width: 100,
       },
     ],
-    rows: history_list,
+    rows: plan_history_list,
   };
+
+  const wallet_history_list = filteredWalletTransactions?.length > 0 ||
+  (formData.startDate !== "" && formData.endDate !== "")
+    ? filteredWalletTransactions?.map((data) => ({
+        id: `${data?.transactionId}`,
+        date: `${moment(
+          data?.transactionDate?.split(" ")[0],
+          "DD-MM-YYYY"
+        ).format("DD-MM-YYYY")}`,
+        description: `${data?.description ? data?.description : ""}`,
+        type: `${data?.transactionType}`,
+        amount: `${
+          data?.transactionType === "CREDIT"
+            ? "+ " + data?.debit?.toLocaleString()
+            : "- " + data?.debit?.toLocaleString()
+        }`,
+        balance: `${data?.balanceAfterTransaction?.toLocaleString()}`,
+      }))
+    : checkHistoryDisplay()?.map((data) => ({
+        id: `${data?.transactionId}`,
+        date: `${data?.transactionDate?.split(" ")[0]}`,
+        description: `${data?.description ? data?.description : ""}`,
+        type: `${data?.transactionType}`,
+        amount: `${
+          data?.transactionType === "CREDIT"
+            ? "+ " + data?.debit?.toLocaleString()
+            : "- " + data?.debit?.toLocaleString()
+        }`,
+        balance: `${data?.balanceAfterTransaction?.toLocaleString()}`,
+      }));
 
   const walletData = {
     columns: [
@@ -228,36 +258,8 @@ const Statement = () => {
         width: 100,
       },
     ],
-    rows:
-      filteredWalletTransactions?.length > 0 ||
-      (formData.startDate !== "" && formData.endDate !== "")
-        ? filteredWalletTransactions?.map((data) => ({
-            id: `${data?.transactionId}`,
-            date: `${moment(
-              data?.transactionDate?.split(" ")[0],
-              "DD-MM-YYYY"
-            ).format("DD-MM-YYYY")}`,
-            description: `${data?.description ? data?.description : ""}`,
-            type: `${data?.transactionType}`,
-            amount: `${
-              data?.transactionType === "CREDIT"
-                ? "+ " + data?.debit?.toLocaleString()
-                : "- " + data?.debit?.toLocaleString()
-            }`,
-            balance: `${data?.balanceAfterTransaction?.toLocaleString()}`,
-          }))
-        : checkHistoryDisplay()?.map((data) => ({
-            id: `${data?.transactionId}`,
-            date: `${data?.transactionDate?.split(" ")[0]}`,
-            description: `${data?.description ? data?.description : ""}`,
-            type: `${data?.transactionType}`,
-            amount: `${
-              data?.transactionType === "CREDIT"
-                ? "+ " + data?.debit?.toLocaleString()
-                : "- " + data?.debit?.toLocaleString()
-            }`,
-            balance: `${data?.balanceAfterTransaction?.toLocaleString()}`,
-          })),
+    rows: wallet_history_list,
+      
   };
 
   const startDate = new Date(formData.startDate);
@@ -421,21 +423,35 @@ const Statement = () => {
           <></>
         )}
 
-        {category === "WALLET" || category === "PLAN" ? (
+        {category === "WALLET" ? (
           <div className="row">
             <div className="d-flex justify-content-center my-5">
               <button
                 className="btn-view"
                 onClick={generatePDF}
                 disabled={
-                  walletData.rows.length === 0 || planData.rows.length === 0
+                  (walletData.rows.length === 0)
                 }
               >
                 Download Pdf
               </button>
             </div>
           </div>
-        ) : null}
+        ) : category === "PLAN" ? (
+          <div className="row">
+            <div className="d-flex justify-content-center my-5">
+              <button
+                className="btn-view"
+                onClick={generatePDF}
+                disabled={
+                  (planData.rows.length === 0)
+                }
+              >
+                Download Pdf
+              </button>
+            </div>
+          </div>
+        ): null}
       </HistoryTableWarapper>
     </div>
   );

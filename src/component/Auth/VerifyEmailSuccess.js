@@ -1,9 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Mail from "../../asset/mail.svg";
 import styled from "styled-components";
 
 const VerifyEmailSuccess = () => {
+
+  const handleClick = async() => {
+    window.location.href = "/login";
+  };
+
   return (
     <Wrapper>
       <div className="container">
@@ -18,9 +22,9 @@ const VerifyEmailSuccess = () => {
             </div>
           </div>
           <div className="btnContain">
-            <Link to="/" style={{ width: "100%" }}>
-              <button className="verifyBtn">OK</button>
-            </Link>
+            <button className="verifyBtn" onClick={handleClick}>
+              OK
+            </button>
           </div>
         </div>
       </div>

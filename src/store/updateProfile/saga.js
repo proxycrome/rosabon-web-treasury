@@ -87,19 +87,18 @@ function* changeUserPassword({
         toast.success(response.data.message, {position: "top-right"});
         setTimeout(() => {
           dispatch(logout(navigate, dispatch));
-        }, 2000);
+        }, 1000);
       } else {
+        toast.success(response.data.message, {position: "top-right"});
         setTimeout(() => {
-          toast.success(response.data.message, {position: "top-right"});
+          dispatch(logout(navigate, dispatch));
         }, 1000);
       }
     }
   } catch (error) {
     yield put(changeUserPasswordError(error?.response?.data));
-    if (error?.response) {
-      setTimeout(() => {
-        toast.error(error?.response?.data?.message);
-      }, 1000);
+    if (error?.response?.data?.message) {
+      toast.error(error?.response?.data?.message, {position: "top-right"});
     }
   }
 }

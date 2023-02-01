@@ -64,25 +64,7 @@ const Login = () => {
     };
     dispatch(loginUser(data, navigate, dispatch));
   };
-  // useEffect(() => {
-  //   if (users && users.kyc && users.role === "COMPANY") {
-  //     navigate("/company-profile");
-  //   } else if (users && users.kyc && users.role === "INDIVIDUAL_USER") {
-  //     navigate("/personal-profile");
-  //   } else if (isLoggedIn || users) {
-  //     if (
-  //       (login && login.role && login.role.name === "COMPANY") ||
-  //       (users && users.role === "COMPANY")
-  //     ) {
-  //       navigate("/kyc/company");
-  //     } else if (
-  //       (login && login.role && login.role.name === "INDIVIDUAL_USER") ||
-  //       (users && users.role === "INDIVIDUAL_USER")
-  //     ) {
-  //       navigate("/kyc/person");
-  //     }
-  //   }
-  // }, [isLoggedIn, users]);
+  
 
   return (
     <WrapperContainer>

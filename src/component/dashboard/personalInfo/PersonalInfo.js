@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { UncontrolledTooltip, Alert } from "reactstrap";
+import {
+  UncontrolledTooltip,
+  Alert,
+  FormGroup,
+  Input,
+  Label,
+  FormFeedback,
+} from "reactstrap";
 // import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -32,6 +39,7 @@ const PersonalInfo = () => {
   const [showEditEmpoy, setShowEditEmpoy] = useState(true);
   const [showEditNOK, setShowEditNOK] = useState(true);
   const [validateInfo, setValldateInfo] = useState(null);
+  const [emailError, setError] = useState(false);
 
   const {
     users,
@@ -74,10 +82,10 @@ const PersonalInfo = () => {
 
   const [formData, setformData] = useState({
     houseNoAddress: "",
-    state: users?.creationSource === "BACKEND"
-    ? users?.individualUser?.address?.state ||
-      users?.individualUser?.state
-    : users?.individualUser?.address?.state,
+    state:
+      users?.creationSource === "BACKEND"
+        ? users?.individualUser?.address?.state || users?.individualUser?.state
+        : users?.individualUser?.address?.state,
     city: "",
     country: "",
     stateId: "",
@@ -93,13 +101,34 @@ const PersonalInfo = () => {
     phone: "",
   });
 
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setformData({
+    if(name === "email"){
+      if (!isValidEmail(value)) {
+        setError(true);
+        setformData({
+          ...formData,
+          [name]: value,
+        });
+      } else {
+        setError(false);
+        setformData({
+          ...formData,
+          [name]: value,
+        });
+      }  
+    } else {
+      setformData({
       ...formData,
       [name]: value,
     });
+    }
+    
   };
 
   const handlePhoneValueChange = (value) => {
@@ -175,6 +204,11 @@ const PersonalInfo = () => {
 
   const handleInfoSubmit = (e) => {
     e.preventDefault();
+
+    if (emailError) {
+      return;
+    }
+
     const {
       occupation,
       employerName,
@@ -569,9 +603,7 @@ const PersonalInfo = () => {
                         aria-label=".form-select-md"
                         disabled={showEditCont}
                         onChange={handleChange}
-                        value={
-                          formData?.state
-                        }
+                        value={formData?.state}
                         name="state"
                       >
                         <option value="">Select State...</option>
@@ -755,10 +787,10 @@ const PersonalInfo = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-md-8 ">
-                      <label>Next of Kin Email</label>
-                      <div className="input-group mb-4">
-                        <input
+                    <div className="col-md-8">
+                      <FormGroup className="mb-4">
+                        <label>Next of Kin Email</label>
+                        <Input
                           className="form-control"
                           placeholder={
                             users?.individualUser?.nokDetail?.email ||
@@ -769,8 +801,10 @@ const PersonalInfo = () => {
                           value={formData?.email}
                           onChange={handleChange}
                           disabled={showEditNOK}
+                          invalid={emailError}
                         />
-                      </div>
+                        <FormFeedback>Valid Email is Required</FormFeedback>
+                      </FormGroup>
                     </div>
                   </div>
                   <div className="row">

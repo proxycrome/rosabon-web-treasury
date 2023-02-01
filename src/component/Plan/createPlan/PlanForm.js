@@ -192,9 +192,9 @@ const PlanForm = () => {
           ? moment(formData.actualMaturityDate).format("YYYY-MM-DD")
           : moment(endDate).format("YYYY-MM-DD"),
         contributionValue:
-          formData.contributionValue === "" ? 0 : formData.contributionValue,
-        amount: formData.amount === "" ? 0 : formData.amount,
-        targetAmount: formData.targetAmount === "" ? 0 : formData.targetAmount,
+          formData.contributionValue === "" ? 0 : parseFloat(formData.contributionValue)?.toFixed(2),
+        amount: formData.amount === "" ? 0 : parseFloat(formData.amount)?.toFixed(2),
+        targetAmount: formData.targetAmount === "" ? 0 : parseFloat(formData.targetAmount)?.toFixed(2),
         currency: currencies_list.find(
           (item) => item.name === formData.currency
         )?.id,
@@ -307,7 +307,7 @@ const PlanForm = () => {
           }
           setFormData({
             ...formData,
-            contributionValue: parseFloat(computedValue),
+            contributionValue: parseFloat(computedValue).toFixed(2),
           });
         } else if (
           conValue === "contributionValue" &&
@@ -366,7 +366,7 @@ const PlanForm = () => {
             }
             setFormData({
               ...formData,
-              targetAmount: parseFloat(computedValue),
+              targetAmount: parseFloat(computedValue).toFixed(2),
             });
           }
         }
@@ -421,7 +421,7 @@ const PlanForm = () => {
     let rate = inv_rates?.find((item) => {
       return (
         item.product.id === parseInt(id) &&
-        item.currency.name === formData.currency &&
+        item.currency.name?.toLowerCase() === formData.currency?.toLowerCase() &&
         convPrincipal() >= item.minimumAmount &&
         convPrincipal() <= item.maximumAmount &&
         maxTenorDays() >= item.minimumTenor &&
@@ -490,7 +490,7 @@ const PlanForm = () => {
     () => contribValue(),
     [
       formData.savingFrequency,
-      formData.tenor,
+      // formData.tenor,
       formData.targetAmount,
       formData.contributionValue,
       formData.actualMaturityDate,
@@ -535,7 +535,7 @@ const PlanForm = () => {
         product?.properties?.hasTargetAmount &&
         product?.properties?.hasSavingFrequency
           ? formData.contributionValue
-          : product?.properties.hasTargetAmount
+          : product?.properties?.hasTargetAmount
           ? formData.targetAmount
           : formData.amount,
       withholdingTax: calc_withholding_tax,

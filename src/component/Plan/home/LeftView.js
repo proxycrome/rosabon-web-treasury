@@ -141,8 +141,8 @@ export const LeftView = ({ view }) => {
     );
   };
 
-  const handleReadAll = () => {
-    dispatch(readAllNotifications());
+  const handleReadAll = async() => {
+    await dispatch(readAllNotifications(setIsView, dispatch));
   };
 
   const copyReferralLink = () => {

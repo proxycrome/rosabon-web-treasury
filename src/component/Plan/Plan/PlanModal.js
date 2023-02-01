@@ -29,6 +29,8 @@ const PlanModal = ({ handleClose }) => {
     // dispatch(getSinglePlan(plan.id));
   };
 
+  console.log(plan);
+
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getCurrencies());
@@ -112,7 +114,7 @@ const PlanModal = ({ handleClose }) => {
                   </p>
                   <p className="p-dark flex justify-content-end">
                     {getCurrIcon(current_currency)}
-                    {plan.contributionValue}
+                    {formatCurrValue(parseFloat(plan.contributionValue))}
                   </p>
                 </div>
               </div>
@@ -166,9 +168,9 @@ const PlanModal = ({ handleClose }) => {
                 <p className="p-light">Interest earned</p>
                 <p className="p-dark flex justify-content-end">
                   {getCurrIcon(current_currency)}
-                  {formatCurrValue(
-                    parseFloat(plan.planSummary.calculatedInterest)
-                  )}
+                  {plan.dailyInterestAccrued === 0
+                    ? "0.00"
+                    : formatCurrValue(parseFloat(plan.dailyInterestAccrued))}
                 </p>
               </div>
             </div>
