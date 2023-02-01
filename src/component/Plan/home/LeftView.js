@@ -21,6 +21,7 @@ export const LeftView = ({ view }) => {
   const dispatch = useDispatch();
   const [isView, setIsView] = useState(false);
   const [open, setOpen] = useState(false);
+  const [touched, setTouched] = useState(false)
   const [data, setData] = useState({
     product: 0,
     amount: "",
@@ -106,6 +107,14 @@ export const LeftView = ({ view }) => {
     }
   }, [data.product]);
 
+  const maxTransaction = activeProductList?.find(
+    item => item.id===data.product
+    )?.maxTransactionLimit
+
+    const minTransaction = activeProductList?.find(
+      item => item.id===data.product
+      )?.minTransactionLimit
+
   const handleChange = (e) => {
     if (e.target.name === "amount") {
       setData({
@@ -125,7 +134,7 @@ export const LeftView = ({ view }) => {
       paymentAtMaturity(
         "MATURITY",
         data.amount,
-        withhold_tax[0]?.rate,
+        null,
         0,
         calculateSI(data.amount, interest_rate, data.tenor)
       )
@@ -184,17 +193,30 @@ export const LeftView = ({ view }) => {
               </div>
             </div>
             <div className="row">
-              <div className=" ">
+              <div className="mb-2">
                 <label>Enter Amount</label>
-                <div className="input-group mb-2">
+                <div className="input-group">
                   <Input
                     className="form-control"
                     name="amount"
                     value={data.amount}
                     onChange={handleChange}
                     type="number"
+                    max={maxTransaction}
+                    min={minTransaction}
                   />
                 </div>
+                {
+                  (data.amount < minTransaction) ? (
+                    <small className="disclaimer">
+                      Value cannot be below {minTransaction}
+                    </small>
+                  ) : (data.amount > maxTransaction) ? (
+                    <small className="disclaimer">
+                      Value cannot be above {maxTransaction}
+                    </small>
+                  ) : null
+                }
               </div>
             </div>
             <div className="row">
@@ -223,7 +245,11 @@ export const LeftView = ({ view }) => {
               </div>
             </div>
             <div className="text-center calc-mty">
-              <button onClick={calculate}>Calculate Amount at maturity</button>
+              <button 
+                onClick={calculate}
+                disabled={data.amount>maxTransaction||data.amount<minTransaction}
+                style={{opacity:(data.amount>maxTransaction||data.amount<minTransaction)&&"50%"}}
+              >Calculate Amount at maturity</button>
             </div>
             <div className="row pt-4">
               <div className=" ">
