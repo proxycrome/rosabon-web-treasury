@@ -76,7 +76,7 @@ const PlanPayment = () => {
   };
 
   const onClose = () => {
-    console.log("Paystack closed");
+    
   };
 
   const back = () => {

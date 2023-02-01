@@ -3134,7 +3134,6 @@ export const FeedbackTickets = () => {
   const { my_tickets, loading } = useSelector((state) => state.feedback);
   const tickets = my_tickets ? my_tickets : [];
 
-  console.log(tickets);
 
   useEffect(() => {
     dispatch(getTickets());
@@ -3635,7 +3634,7 @@ export const PayWithCard = ({
 
   const onClose = () => {
     // implementation for  whatever you want to do when the Paystack dialog closed.
-    console.log("closed");
+  
   };
 
   const initializePayment = usePaystackPayment(config);

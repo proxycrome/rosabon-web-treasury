@@ -1103,10 +1103,6 @@ export function ProceedPayCard({
     }
   }, [reg_transaction, amount, users?.email]);
 
-  // const onClose = () => {
-  //   SetIsConfigSet(false);
-  //   console.log("Paystack Closed");
-  // }
 
   const initializePayment = usePaystackPayment(config);
 

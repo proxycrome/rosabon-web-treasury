@@ -163,7 +163,7 @@ const MoreDetails = () => {
           });
         };
         reader.onerror = (error) => {
-          console.log({ error });
+        
         };
       }
     };

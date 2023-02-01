@@ -45,9 +45,8 @@ function* readAllNotifications({payload: {setIsView, dispatch}}) {
   try {
     const response = yield call(readAllNotificationsService);
     yield put(readAllNotificationsSuccess(response.data));
-    console.log(response.data);
     if (response){
-      toast.success("All notifications have been marked as Read", {position : "top-right"});
+      toast.success("All notifications have been marked as read", {position : "top-right"});
       dispatch(getNotification());
       setTimeout(() => {
         setIsView(true);

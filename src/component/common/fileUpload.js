@@ -21,7 +21,7 @@ const FileUpload = ({ showEdit, setFile, fileName, id, errors, isSubmitted }) =>
           });
         };
         reader.onerror = (error) => {
-          console.log({error});
+          
         };
       }
     };

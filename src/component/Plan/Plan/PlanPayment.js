@@ -110,7 +110,6 @@ const PlanPayment = () => {
   const onClose = () => {
     setIsClicked(false);
     setDebitPopup(false);
-    console.log("Paystack closed");
   };
 
   const back = () => {

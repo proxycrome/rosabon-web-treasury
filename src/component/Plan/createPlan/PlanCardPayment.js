@@ -74,7 +74,7 @@ const PlanCardPayment = ({ goBack }) => {
   };
 
   const onClose = () => {
-    console.log("Paystack closed");
+  
   };
 
   let amount = parseInt(

@@ -85,7 +85,7 @@ const MyDocu = () => {
         };
     
         reader.onerror = (error) => {
-          console.log({error});
+          
         };
       }
     };

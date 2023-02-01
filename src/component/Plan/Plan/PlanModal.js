@@ -29,7 +29,6 @@ const PlanModal = ({ handleClose }) => {
     // dispatch(getSinglePlan(plan.id));
   };
 
-  console.log(plan);
 
   useEffect(() => {
     dispatch(getProducts());

@@ -104,7 +104,7 @@ const AddDirectors = ({
           });
         };
         reader.onerror = (error) => {
-          console.log({ error });
+        
         };
       }
     };
@@ -287,7 +287,6 @@ const AddDirectors = ({
     });
   };
 
-  console.log(bvnMessage);
 
   const reset = () => {
     setformData({

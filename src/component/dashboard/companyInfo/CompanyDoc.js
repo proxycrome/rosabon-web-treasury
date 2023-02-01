@@ -96,7 +96,7 @@ const CompanyDoc = () => {
           });
         };
         reader.onerror = (error) => {
-          console.log({error});
+          
         };
       }
     };

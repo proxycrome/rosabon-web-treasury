@@ -123,7 +123,7 @@ function* refreshUser() {
       yield put(logoutSuccess());
     }
   } catch (error) {
-    console.log(error);
+    
   }
 }
 
